@@ -12,19 +12,17 @@ Take a look at the [Kedro documentation](https://docs.kedro.org/) to get started
 
 In order to get the best out of the template:
 
-* Don't remove any lines from the `.gitignore` file we provide
-* Make sure your results can be reproduced by following a [data engineering convention](https://docs.kedro.org/en/stable/faq/faq.html#what-is-data-engineering-convention)
-* Don't commit data to your repository
-* Don't commit any credentials or your local configuration to your repository. Keep all your credentials and local configuration in `conf/local/`
+- Don't remove any lines from the `.gitignore` file we provide
+- Make sure your results can be reproduced by following a [data engineering convention](https://docs.kedro.org/en/stable/faq/faq.html#what-is-data-engineering-convention)
+- Don't commit data to your repository
+- Don't commit any credentials or your local configuration to your repository. Keep all your credentials and local configuration in `conf/local/`
 
 ## How to install dependencies
 
-Declare any dependencies in `requirements.txt` for `pip` installation.
-
-To install them, run:
+Add a dependency by running
 
 ```
-pip install -r requirements.txt
+uv add dependency-name
 ```
 
 ## How to run your Kedro pipeline
@@ -32,7 +30,7 @@ pip install -r requirements.txt
 You can run your Kedro project with:
 
 ```
-kedro run
+uv tool run kedro run
 ```
 
 ## How to test your Kedro project
@@ -40,7 +38,7 @@ kedro run
 Have a look at the file `src/tests/test_run.py` for instructions on how to write your tests. You can run your tests as follows:
 
 ```
-pytest
+uv tool run pytest
 ```
 
 To configure the coverage threshold, look at the `.coveragerc` file.
@@ -53,47 +51,51 @@ To see and update the dependency requirements for your project use `requirements
 
 ## How to work with Kedro and notebooks
 
-> Note: Using `kedro jupyter` or `kedro ipython` to run your notebook provides these variables in scope: `catalog`, `context`, `pipelines` and `session`.
+> Note: Using `uv tool run kedro jupyter` or `uv tool run kedro ipython` to run your notebook provides these variables in scope: `catalog`, `context`, `pipelines` and `session`.
 >
-> Jupyter, JupyterLab, and IPython are already included in the project requirements by default, so once you have run `pip install -r requirements.txt` you will not need to take any extra steps before you use them.
+> Jupyter, JupyterLab, and IPython are already included in the project requirements by default, so once you have run `uv sync` you will not need to take any extra steps before you use them.
 
 ### Jupyter
+
 To use Jupyter notebooks in your Kedro project, you need to install Jupyter:
 
 ```
-pip install jupyter
+uv add jupyter
 ```
 
 After installing Jupyter, you can start a local notebook server:
 
 ```
-kedro jupyter notebook
+uv tool run kedro jupyter notebook
 ```
 
 ### JupyterLab
+
 To use JupyterLab, you need to install it:
 
 ```
-pip install jupyterlab
+uv add jupyterlab
 ```
 
 You can also start JupyterLab:
 
 ```
-kedro jupyter lab
+uv tool run kedro jupyter lab
 ```
 
 ### IPython
+
 And if you want to run an IPython session:
 
 ```
-kedro ipython
+uv tool run kedro ipython
 ```
 
 ### How to ignore notebook output cells in `git`
+
 To automatically strip out all output cell contents before committing to `git`, you can use tools like [`nbstripout`](https://github.com/kynan/nbstripout). For example, you can add a hook in `.git/config` with `nbstripout --install`. This will run `nbstripout` before anything is committed to `git`.
 
-> *Note:* Your output cells will be retained locally.
+> _Note:_ Your output cells will be retained locally.
 
 ## Package your Kedro project
 
@@ -105,23 +107,27 @@ The easiest way to run your project in Airflow is by [installing the Astronomer 
 and follow the following instructions:
 
 Package your project:
+
 ```shell
-kedro package
+uv tool run kedro package
 ```
 
-Copy the package at the root of the project such that the Docker images 
+Copy the package at the root of the project such that the Docker images
 created by the Astronomer CLI can pick it up:
+
 ```shell
 cp src/dist/*.whl ./
 ```
 
 Generate a catalog file with placeholders for all the in-memory datasets:
+
 ```shell
-kedro catalog create --pipeline=__default__
+uv tool run kedro catalog create --pipeline=__default__
 ```
 
-Edit the file `conf/base/catalog/__default__.yml` and choose a way to 
+Edit the file `conf/base/catalog/__default__.yml` and choose a way to
 persist the datasets rather than store them in-memory. E.g.:
+
 ```yaml
 example_train_x:
   type: pickle.PickleDataset
@@ -144,12 +150,14 @@ example_predictions:
 ```
 
 Install the Kedro Airflow plugin and convert your pipeline into an Airflow dag:
+
 ```shell
-pip install kedro-airflow
-kedro airflow create -t dags/
+uv add kedro-airflow
+uv tool run kedro airflow create -t dags/
 ```
 
 Run your local Airflow instance through Astronomer:
+
 ```shell
 astro dev start
 ```
