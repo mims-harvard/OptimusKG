@@ -17,9 +17,6 @@ data/**
 # also keep all .gitkeep files
 !.gitkeep
 
-# also keep the example dataset
-!data/01_raw/iris.csv
-
 # ignore kedro-viz metadata
 .viz
 

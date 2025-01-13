@@ -14,6 +14,11 @@ dependencies = [
   "kedro[jupyter]~=0.19.10",
   "kedro-datasets[pandas-csvdataset]>=3.0",
   "kedro-airflow~=0.5",
+  "typedframe>=0.11.0",
+  "polars>=1.19.0",
+  "biocypher>=0.6.1",
+  "requests>=2.32.3",
+  "aiohttp>=3.11.11",
 ]
 
 [project.scripts]
@@ -62,6 +67,10 @@ addopts = """
 fail_under = 0
 show_missing = true
 exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
 
 [tool.ruff.format]
 docstring-code-format = true
