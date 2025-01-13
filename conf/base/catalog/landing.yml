@@ -37,3 +37,11 @@ landing.bgee.homo_sapiens_expressions_advanced:
   filepath: "data/landing/bgee/Homo_sapiens_expr_advanced.tsv"
   load_args:
     separator: "\t"
+
+landing.ctd.ctd_exposure_events:
+  type: polars.CSVDataset
+  filepath: "data/landing/ctd/CTD_exposure_events.csv"
+
+landing.ctd.exposure_data:
+  type: polars.CSVDataset
+  filepath: "data/landing/ctd/exposure_data.csv"
