@@ -161,3 +161,12 @@ Run your local Airflow instance through Astronomer:
 ```shell
 astro dev start
 ```
+
+
+## Install pre-commit hooks
+
+To install the pre-commit hooks run:
+
+```bash
+uv tool run pre-commit install
+```
