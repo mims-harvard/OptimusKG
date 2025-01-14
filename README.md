@@ -30,7 +30,7 @@ uv add dependency-name
 You can run your Kedro project with:
 
 ```
-uv tool run kedro run
+uv run kedro run
 ```
 
 ## How to test your Kedro project

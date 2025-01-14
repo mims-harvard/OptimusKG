@@ -1,8 +1,8 @@
-from typing import Any, final
+from typing import final
 import logging
 
 import polars as pl
-from typedframe import PolarsTypedFrame, TypedDataFrame
+from typedframe import PolarsTypedFrame
 from kedro.pipeline import node
 
 log = logging.getLogger(__name__)
@@ -10,34 +10,59 @@ log = logging.getLogger(__name__)
 
 @final
 class HomoSapiensExpressionsAdvanced(PolarsTypedFrame):
+    """Raw data schema for the landing zone. Some columns have extra spaces"""
+
     schema = {
-        "Gene ID": str,
-        "Gene name": str,
-        "Anatomical entity ID": str,
-        "Anatomical entity name": str,
-        "Expression": str,
-        "Call quality": str,
-        "Expression rank": int,
+        "Gene ID": pl.String,
+        "Gene name": pl.String,
+        "Anatomical entity ID": pl.String,
+        "Anatomical entity name": pl.String,
+        "Expression": pl.String,
+        "Call quality": pl.String,
+        "Expression rank": pl.Int64,
+        "Including observed data": pl.Utf8,
+        "Affymetrix data": pl.Utf8,
+        "Affymetrix  experiment count showing expression of this gene in this condition or in sub-conditions with a high quality": pl.Int64,
+        "Affymetrix experiment count showing expression of this gene in this condition or in sub-conditions with a low quality": pl.Int64,
+        "Affymetrix experiment count showing absence of expression of this gene in this condition or valid parent conditions with a high quality": pl.Int64,
+        "Affymetrix experiment count showing absence of expression of this gene in this condition or valid parent conditions with a low quality": pl.Int64,
+        "Including Affymetrix observed data": pl.Utf8,
+        "EST data": pl.Utf8,
+        "EST experiment count showing expression of this gene in this condition or in sub-conditions with a high quality": pl.Int64,
+        "EST experiment count showing expression of this gene in this condition or in sub-conditions with a low quality": pl.Int64,
+        "Including EST observed data": pl.Utf8,
+        "In situ hybridization data": pl.Utf8,
+        "In situ hybridization experiment count showing expression of this gene in this condition or in sub-conditions with a high quality": pl.Int64,
+        "In situ hybridization experiment count showing expression of this gene in this condition or in sub-conditions with a low quality": pl.Int64,
+        "In situ hybridization experiment count showing absence of expression of this gene in this condition or valid parent conditions with a high quality": pl.Int64,
+        "In situ hybridization experiment count showing absence of expression of this gene in this condition or valid parent conditions with a low quality": pl.Int64,
+        "Including in situ hybridization observed data": pl.Utf8,
+        "RNA-Seq data": pl.Utf8,
+        "RNA-Seq  experiment count showing expression of this gene in this condition or in sub-conditions with a high quality": pl.Int64,
+        "RNA-Seq  experiment count showing expression of this gene in this condition or in sub-conditions with a low quality": pl.Int64,
+        "RNA-Seq  experiment count showing absence of expression of this gene in this condition or valid parent conditions with a high quality": pl.Int64,
+        "RNA-Seq  experiment count showing absence of expression of this gene in this condition or valid parent conditions with a low quality": pl.Int64,
+        "Including RNA-Seq observed data": pl.Utf8,
     }
 
 
 @final
 class GeneExpressionsInAnatomy(PolarsTypedFrame):
     schema = {
-        "gene_id": str,
-        "gene_name": str,
-        "anatomy_id": str,
-        "anatomy_name": str,
-        "expression": str,
-        "call_quality": str,
-        "expression_rank": str,
+        "gene_id": pl.String,
+        "gene_name": pl.String,
+        "anatomy_id": pl.String,
+        "anatomy_name": pl.String,
+        "expression": pl.String,
+        "call_quality": pl.String,
+        "expression_rank": pl.String,
     }
 
 
 def process_bgee(
     homo_sapiens_expressions_advanced: pl.DataFrame,
-) -> GeneExpressionsInAnatomy:
-    df = HomoSapiensExpressionsAdvanced.convert(homo_sapiens_expressions_advanced)
+) -> pl.DataFrame:
+    df = HomoSapiensExpressionsAdvanced.convert(homo_sapiens_expressions_advanced).df
     # Filter rows where 'Anatomical entity ID' starts with 'UBERON'
     df = df.filter(pl.col("Anatomical entity ID").str.starts_with("UBERON"))
 
@@ -59,7 +84,8 @@ def process_bgee(
             pl.col("call_quality") == "gold quality"
         )  # We only take the highest quality datapoints
         & (
-            pl.col("expression_rank") < 25000
+            pl.col("expression_rank")
+            < 25000  # TODO: This magic number should be a parameter in the pipeline.
         )  # We take the most expressing genes within each tissue
         & (
             ~pl.col("anatomy_id").str.contains("∩")
@@ -67,14 +93,14 @@ def process_bgee(
     )
 
     log.info(f"Wrote {len(df)} anatomy-gene pairs")
-    return GeneExpressionsInAnatomy.convert(df)
+    return GeneExpressionsInAnatomy.convert(df).df
 
 
 bgee_node = node(
     process_bgee,
-    {
+    inputs={
         "homo_sapiens_expressions_advanced": "landing.bgee.homo_sapiens_expressions_advanced"
     },
-    "gene_expressions_in_anatomy",
+    outputs="bgee.gene_expressions_in_anatomy",
     name="bgee",
 )
