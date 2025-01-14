@@ -89,7 +89,6 @@ landing.ctd.ctd_exposure_events:
         "enrollmentendyear",
         "studyfactors",
       ]
-    # infer_schema_length: 10000
     infer_schema: false
     comment_prefix: "#"
 
