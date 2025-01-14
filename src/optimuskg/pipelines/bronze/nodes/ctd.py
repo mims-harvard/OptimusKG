@@ -67,7 +67,7 @@ def process_ctd(
 
 ctd_node = node(
     process_ctd,
-    inputs=dict(ctd_exposure_events="landing.ctd.ctd_exposure_events"),
+    inputs={"ctd_exposure_events": "landing.ctd.ctd_exposure_events"},
     outputs="ctd.ctd_exposure_events",
     name="ctd",
 )

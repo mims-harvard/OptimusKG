@@ -50,10 +50,10 @@ def process_reactome_pathways(
 
 reactome_pathways_node = node(
     process_reactome_pathways,
-    inputs=dict(
-        reactome_pathways_relation="landing.reactome.reactome_pathways_relation",
-        reactome_pathways="landing.reactome.reactome_pathways",
-    ),
+    inputs={
+        "reactome_pathways_relation": "landing.reactome.reactome_pathways_relation",
+        "reactome_pathways": "landing.reactome.reactome_pathways",
+    },
     outputs=[
         "reactome.reactome_relations",
         "reactome.reactome_terms",

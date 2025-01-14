@@ -21,6 +21,7 @@ class LandingReactomeNcbi(PolarsTypedFrame):
         "species": pl.String,
     }
 
+
 @final
 class BronzeReactomeNcbi(PolarsTypedFrame):
     schema: Final = {
@@ -44,7 +45,7 @@ def process_reactome_ncbi(
 
 reactome_ncbi_node = node(
     process_reactome_ncbi,
-    inputs=dict(ncbi2_reactome="landing.reactome.ncbi2_reactome"),
+    inputs={"ncbi2_reactome": "landing.reactome.ncbi2_reactome"},
     outputs="reactome.reactome_ncbi",
     name="reactome_ncbi",
 )

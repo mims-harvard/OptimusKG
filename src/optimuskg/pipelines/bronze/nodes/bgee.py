@@ -98,9 +98,9 @@ def process_bgee(
 
 bgee_node = node(
     process_bgee,
-    inputs=dict(
-        homo_sapiens_expressions_advanced="landing.bgee.homo_sapiens_expressions_advanced"
-    ),
+    inputs={
+        "homo_sapiens_expressions_advanced": "landing.bgee.homo_sapiens_expressions_advanced"
+    },
     outputs="bgee.gene_expressions_in_anatomy",
     name="bgee",
 )
