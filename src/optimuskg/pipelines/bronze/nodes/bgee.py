@@ -82,14 +82,14 @@ def process_bgee(
     df = df.filter(
         (
             pl.col("call_quality") == "gold quality"
-        )  # We only take the highest quality datapopl.Int64s
+        )  # We only take the highest quality datapoints
         & (
             pl.col("expression_rank")
             < 25000  # TODO: This magic number should be a parameter in the pipeline.
         )  # We take the most expressing genes within each tissue
         & (
             ~pl.col("anatomy_id").str.contains("∩")
-        )  # NOTE: New versions of the dataset include measurements with an pl.Int64ersection of tissues. We want to remove this measurements.
+        )  # NOTE: New versions of the dataset include measurements with an intersection of tissues. We want to remove this measurements.
     )
 
     log.info(f"Wrote {len(df)} anatomy-gene pairs")
