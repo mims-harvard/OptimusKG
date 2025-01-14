@@ -60,7 +60,7 @@ class GeneExpressionsInAnatomy(PolarsTypedFrame):
 
 def process_bgee(
     homo_sapiens_expressions_advanced: pl.DataFrame,
-) -> GeneExpressionsInAnatomy:
+) -> pl.DataFrame:
     df = HomoSapiensExpressionsAdvanced.convert(homo_sapiens_expressions_advanced).df
     # Filter rows where 'Anatomical entity ID' starts with 'UBERON'
     df = df.filter(pl.col("Anatomical entity ID").str.starts_with("UBERON"))
@@ -92,7 +92,7 @@ def process_bgee(
     )
 
     log.info(f"Wrote {len(df)} anatomy-gene pairs")
-    return GeneExpressionsInAnatomy.convert(df)
+    return GeneExpressionsInAnatomy.convert(df).df
 
 
 bgee_node = node(
@@ -100,6 +100,6 @@ bgee_node = node(
     inputs=dict(
         homo_sapiens_expressions_advanced="landing.bgee.homo_sapiens_expressions_advanced"
     ),
-    outputs="gene_expressions_in_anatomy",
+    outputs="bgee.gene_expressions_in_anatomy",
     name="bgee",
 )
