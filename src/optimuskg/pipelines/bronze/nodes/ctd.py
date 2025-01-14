@@ -1,76 +1,73 @@
-from typing import Any, final
+from typing import final
 import logging
 
 import polars as pl
-from typedframe import PolarsTypedFrame, TypedDataFrame
+from typedframe import PolarsTypedFrame
 from kedro.pipeline import node
 
 log = logging.getLogger(__name__)
 
-
-from dataclasses import dataclass
-from polars.datatypes import DataType
 from typing import Final
+
 
 @final
 class CTDExposureEvents(PolarsTypedFrame):
     schema: Final = {
-        "exposurestressorname": str,
-        "exposurestressorid": str,
-        "stressorsourcecategory": str,
-        "stressorsourcedetails": str,
-        "numberofstressorsamples": str,
-        "stressornotes": str,
-        "numberofreceptors": str,
-        "receptors": str,
-        "receptornotes": str,
-        "smokingstatus": str,
-        "age": str,
-        "ageunitsofmeasurement": str,
-        "agequalifier": str,
-        "sex": str,
-        "race": str,
-        "methods": str,
+        "exposurestressorname": pl.String,
+        "exposurestressorid": pl.String,
+        "stressorsourcecategory": pl.String,
+        "stressorsourcedetails": pl.String,
+        "numberofstressorsamples": pl.String,
+        "stressornotes": pl.String,
+        "numberofreceptors": pl.String,
+        "receptors": pl.String,
+        "receptornotes": pl.String,
+        "smokingstatus": pl.String,
+        "age": pl.String,
+        "ageunitsofmeasurement": pl.String,
+        "agequalifier": pl.String,
+        "sex": pl.String,
+        "race": pl.String,
+        "methods": pl.String,
         "detectionlimit": pl.Utf8,
-        "detectionlimituom": str,
+        "detectionlimituom": pl.String,
         "detectionfrequency": pl.Utf8,
-        "medium": str,
-        "exposuremarker": str,
-        "exposuremarkerid": str,
-        "markerlevel": str,
-        "markerunitsofmeasurement": str,
-        "markermeasurementstatistic": str,
-        "assaynotes": str,
-        "studycountries": str,
-        "stateorprovince": str,
-        "citytownregionarea": str,
-        "exposureeventnotes": str,
-        "outcomerelationship": str,
-        "diseasename": str,
-        "diseaseid": str,
-        "phenotypename": str,
-        "phenotypeid": str,
-        "phenotypeactiondegreetype": str,
-        "anatomy": str,
-        "exposureoutcomenotes": str,
-        "reference": str,
-        "associatedstudytitles": str,
-        "enrollmentstartyear": str,
-        "enrollmentendyear": str,
-        "studyfactors": str
+        "medium": pl.String,
+        "exposuremarker": pl.String,
+        "exposuremarkerid": pl.String,
+        "markerlevel": pl.String,
+        "markerunitsofmeasurement": pl.String,
+        "markermeasurementstatistic": pl.String,
+        "assaynotes": pl.String,
+        "studycountries": pl.String,
+        "stateorprovince": pl.String,
+        "citytownregionarea": pl.String,
+        "exposureeventnotes": pl.String,
+        "outcomerelationship": pl.String,
+        "diseasename": pl.String,
+        "diseaseid": pl.String,
+        "phenotypename": pl.String,
+        "phenotypeid": pl.String,
+        "phenotypeactiondegreetype": pl.String,
+        "anatomy": pl.String,
+        "exposureoutcomenotes": pl.String,
+        "reference": pl.String,
+        "associatedstudytitles": pl.String,
+        "enrollmentstartyear": pl.String,
+        "enrollmentendyear": pl.String,
+        "studyfactors": pl.String,
     }
+
 
 def process_cte(
     ctd_exposure_events: pl.DataFrame,
-) -> :
-    
+) -> pl.DataFrame:
+    return CTDExposureEvents(ctd_exposure_events).df
 
 
-cte_node = node(
-    cte_node,
-    {
-        "ctd_exposure_events": "landing.ctd.ctd_exposure_events"
-    },
-    "",
+ctd_node = node(
+    process_cte,
+    inputs=dict(ctd_exposure_events="landing.ctd.ctd_exposure_events"),
+    outputs="ctd.ctd_exposure_events",
     name="ctd",
 )

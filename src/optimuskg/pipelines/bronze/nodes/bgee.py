@@ -11,6 +11,7 @@ log = logging.getLogger(__name__)
 @final
 class HomoSapiensExpressionsAdvanced(PolarsTypedFrame):
     """Raw data schema for the landing zone. Some columns have extra spaces"""
+
     schema = {
         "Gene ID": pl.String,
         "Gene name": pl.String,
@@ -21,7 +22,7 @@ class HomoSapiensExpressionsAdvanced(PolarsTypedFrame):
         "Expression rank": pl.Int64,
         "Including observed data": pl.Utf8,
         "Affymetrix data": pl.Utf8,
-        "Affymetrix  experiment count showing expression of this gene in this condition or in sub-conditions with a high quality": pl.Int64,  
+        "Affymetrix  experiment count showing expression of this gene in this condition or in sub-conditions with a high quality": pl.Int64,
         "Affymetrix experiment count showing expression of this gene in this condition or in sub-conditions with a low quality": pl.Int64,
         "Affymetrix experiment count showing absence of expression of this gene in this condition or valid parent conditions with a high quality": pl.Int64,
         "Affymetrix experiment count showing absence of expression of this gene in this condition or valid parent conditions with a low quality": pl.Int64,

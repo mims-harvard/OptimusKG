@@ -41,7 +41,32 @@ landing.bgee.homo_sapiens_expressions_advanced:
 landing.ctd.ctd_exposure_events:
   type: polars.CSVDataset
   filepath: "data/landing/ctd/CTD_exposure_events.csv"
+  load_args:
+    infer_schema_length: 10000
+    comment_prefix: "#"
 
 landing.ctd.exposure_data:
   type: polars.CSVDataset
   filepath: "data/landing/ctd/exposure_data.csv"
+
+landing.reactome.ncbi2_reactome:
+  type: polars.CSVDataset
+  filepath: "data/landing/reactome/NCBI2Reactome.txt"
+  load_args:
+    separator: "\t"
+    has_header: false
+
+
+landing.reactome.reactome_pathways:
+  type: polars.CSVDataset
+  filepath: "data/landing/reactome/ReactomePathways.txt"
+  load_args:
+    separator: "\t"
+    has_header: false
+
+landing.reactome.reactome_pathways_relation:
+  type: polars.CSVDataset
+  filepath: "data/landing/reactome/ReactomePathwaysRelation.txt"
+  load_args:
+    separator: "\t"
+    has_header: false
