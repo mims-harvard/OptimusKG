@@ -42,12 +42,56 @@ landing.ctd.ctd_exposure_events:
   type: polars.CSVDataset
   filepath: "data/landing/ctd/CTD_exposure_events.csv"
   load_args:
-    infer_schema_length: 10000
+    has_header: false
+    new_columns:
+      [
+        "exposurestressorname",
+        "exposurestressorid",
+        "stressorsourcecategory",
+        "stressorsourcedetails",
+        "numberofstressorsamples",
+        "stressornotes",
+        "numberofreceptors",
+        "receptors",
+        "receptornotes",
+        "smokingstatus",
+        "age",
+        "ageunitsofmeasurement",
+        "agequalifier",
+        "sex",
+        "race",
+        "methods",
+        "detectionlimit",
+        "detectionlimituom",
+        "detectionfrequency",
+        "medium",
+        "exposuremarker",
+        "exposuremarkerid",
+        "markerlevel",
+        "markerunitsofmeasurement",
+        "markermeasurementstatistic",
+        "assaynotes",
+        "studycountries",
+        "stateorprovince",
+        "citytownregionarea",
+        "exposureeventnotes",
+        "outcomerelationship",
+        "diseasename",
+        "diseaseid",
+        "phenotypename",
+        "phenotypeid",
+        "phenotypeactiondegreetype",
+        "anatomy",
+        "exposureoutcomenotes",
+        "reference",
+        "associatedstudytitles",
+        "enrollmentstartyear",
+        "enrollmentendyear",
+        "studyfactors",
+      ]
+    # infer_schema_length: 10000
+    infer_schema: false
     comment_prefix: "#"
-
-landing.ctd.exposure_data:
-  type: polars.CSVDataset
-  filepath: "data/landing/ctd/exposure_data.csv"
 
 landing.reactome.ncbi2_reactome:
   type: polars.CSVDataset
@@ -55,7 +99,16 @@ landing.reactome.ncbi2_reactome:
   load_args:
     separator: "\t"
     has_header: false
-
+    infer_schema: false
+    new_columns:
+      [
+        "ncbi_id",
+        "reactome_id",
+        "url",
+        "reactome_name",
+        "evidence_code",
+        "species",
+      ]
 
 landing.reactome.reactome_pathways:
   type: polars.CSVDataset
@@ -63,6 +116,12 @@ landing.reactome.reactome_pathways:
   load_args:
     separator: "\t"
     has_header: false
+    new_columns:
+      [
+        "reactome_id",
+        "reactome_name",
+        "species",
+      ]
 
 landing.reactome.reactome_pathways_relation:
   type: polars.CSVDataset
@@ -70,3 +129,8 @@ landing.reactome.reactome_pathways_relation:
   load_args:
     separator: "\t"
     has_header: false
+    new_columns:
+      [
+        "reactome_id_1",
+        "reactome_id_2",
+      ]

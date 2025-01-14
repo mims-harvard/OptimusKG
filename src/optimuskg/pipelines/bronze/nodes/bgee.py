@@ -1,4 +1,4 @@
-from typing import Any, final
+from typing import final
 import logging
 
 import polars as pl

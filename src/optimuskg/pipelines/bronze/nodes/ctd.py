@@ -59,14 +59,14 @@ class CTDExposureEvents(PolarsTypedFrame):
     }
 
 
-def process_cte(
+def process_ctd(
     ctd_exposure_events: pl.DataFrame,
 ) -> pl.DataFrame:
     return CTDExposureEvents(ctd_exposure_events).df
 
 
 ctd_node = node(
-    process_cte,
+    process_ctd,
     inputs=dict(ctd_exposure_events="landing.ctd.ctd_exposure_events"),
     outputs="ctd.ctd_exposure_events",
     name="ctd",

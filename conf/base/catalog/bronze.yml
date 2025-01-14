@@ -6,10 +6,14 @@ bronze.ctd.ctd_exposure_events:
   type: polars.CSVDataset
   filepath: "data/bronze/ctd/ctd_exposure_events.csv"
 
+bronze.reactome.reactome_ncbi:
+  type: polars.CSVDataset
+  filepath: "data/bronze/reactome/reactome_ncbi.csv"
+
 bronze.reactome.reactome_relations:
   type: polars.CSVDataset
   filepath: "data/bronze/reactome/reactome_relations.csv"
 
-bronze.reactome.reactome_pathways:
+bronze.reactome.reactome_terms:
   type: polars.CSVDataset
-  filepath: "data/bronze/reactome/reactome_pathways.csv"
+  filepath: "data/bronze/reactome/reactome_terms.csv"

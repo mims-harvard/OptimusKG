@@ -11,7 +11,7 @@ from typing import Final
 
 
 @final
-class ReactomeNcbi(PolarsTypedFrame):
+class LandingReactomeNcbi(PolarsTypedFrame):
     schema: Final = {
         "ncbi_id": pl.Utf8,
         "reactome_id": pl.String,
@@ -21,18 +21,29 @@ class ReactomeNcbi(PolarsTypedFrame):
         "species": pl.String,
     }
 
+@final
+class BronzeReactomeNcbi(PolarsTypedFrame):
+    schema: Final = {
+        "ncbi_id": pl.Utf8,
+        "reactome_id": pl.String,
+        "url": pl.String,
+        "reactome_name": pl.String,
+        "evidence_code": pl.String,
+    }
 
-def process_reactome(
+
+def process_reactome_ncbi(
     ncbi2_reactome: pl.DataFrame,
-) -> ReactomeNcbi:
-    df_ncbi = ncbi2_reactome.filter(pl.col("species") == "Homo sapiens")
+) -> pl.DataFrame:
+    df_ncbi = LandingReactomeNcbi.convert(ncbi2_reactome).df
+    df_ncbi = df_ncbi.filter(pl.col("species") == "Homo sapiens")
     df_ncbi = df_ncbi.drop(["species"])
     df_ncbi = df_ncbi.unique()
-    return ReactomeNcbi.convert(df_ncbi)
+    return BronzeReactomeNcbi.convert(df_ncbi).df
 
 
 reactome_ncbi_node = node(
-    process_reactome,
+    process_reactome_ncbi,
     inputs=dict(ncbi2_reactome="landing.reactome.ncbi2_reactome"),
     outputs="reactome.reactome_ncbi",
     name="reactome_ncbi",
