@@ -116,6 +116,7 @@ landing.reactome.reactome_pathways:
   load_args:
     separator: "\t"
     has_header: false
+    infer_schema: false
     new_columns:
       [
         "reactome_id",
@@ -129,6 +130,7 @@ landing.reactome.reactome_pathways_relation:
   load_args:
     separator: "\t"
     has_header: false
+    infer_schema: false
     new_columns:
       [
         "reactome_id_1",
