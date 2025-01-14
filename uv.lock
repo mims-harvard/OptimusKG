@@ -1541,6 +1541,7 @@ dependencies = [
 
 [package.optional-dependencies]
 dev = [
+    { name = "pre-commit" },
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pytest-mock" },
@@ -1556,11 +1557,6 @@ docs = [
     { name = "sphinx-autodoc-typehints" },
     { name = "sphinx-copybutton" },
     { name = "sphinx-rtd-theme" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "pre-commit" },
 ]
 
 [package.metadata]
@@ -1579,6 +1575,7 @@ requires-dist = [
     { name = "nbsphinx", marker = "extra == 'docs'", specifier = "==0.8.1" },
     { name = "notebook" },
     { name = "polars", specifier = ">=1.19.0" },
+    { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.0.1" },
     { name = "pytest", marker = "extra == 'dev'", specifier = "~=7.2" },
     { name = "pytest-cov", marker = "extra == 'dev'", specifier = "~=3.0" },
     { name = "pytest-mock", marker = "extra == 'dev'", specifier = ">=1.7.1,<2.0" },
@@ -1590,9 +1587,6 @@ requires-dist = [
     { name = "sphinx-rtd-theme", marker = "extra == 'docs'", specifier = "==0.5.1" },
     { name = "typedframe", specifier = ">=0.11.0" },
 ]
-
-[package.metadata.requires-dev]
-dev = [{ name = "pre-commit", specifier = ">=4.0.1" }]
 
 [[package]]
 name = "overrides"
