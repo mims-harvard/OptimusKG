@@ -142,3 +142,21 @@ landing.gene_names.gene_names:
   load_args:
     separator: "\t"
     infer_schema: false
+
+landing.ncbigene.gene2go:
+  type: polars.CSVDataset
+  filepath: "data/landing/ncbigene/gene2go"
+  load_args:
+    separator: "\t"
+    infer_schema: false
+    new_columns:
+      [
+        "tax_id",
+        "gene_id",
+        "go_id",
+        "evidence",
+        "qualifier",
+        "go_term",
+        "pubmed",
+        "category",
+      ]
