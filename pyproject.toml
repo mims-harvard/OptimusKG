@@ -19,6 +19,7 @@ dependencies = [
   "biocypher>=0.6.1",
   "requests>=2.32.3",
   "aiohttp>=3.11.11",
+  "lxml>=5.3.0",
 ]
 
 [project.scripts]
