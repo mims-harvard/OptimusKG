@@ -1,18 +1,21 @@
-from typing import final
 import logging
+from typing import Final, final
 
 import polars as pl
-from typedframe import PolarsTypedFrame
 from kedro.pipeline import node
+from typedframe import PolarsTypedFrame
 
 log = logging.getLogger(__name__)
+
+# TODO: This constant should be a parameter in the pipeline.
+EXPRESSION_RANK_THRESHOLD = 25000
 
 
 @final
 class HomoSapiensExpressionsAdvanced(PolarsTypedFrame):
     """Raw data schema for the landing zone. Some columns have extra spaces"""
 
-    schema = {
+    schema: Final = {
         "Gene ID": pl.String,
         "Gene name": pl.String,
         "Anatomical entity ID": pl.String,
@@ -48,7 +51,7 @@ class HomoSapiensExpressionsAdvanced(PolarsTypedFrame):
 
 @final
 class GeneExpressionsInAnatomy(PolarsTypedFrame):
-    schema = {
+    schema: Final = {
         "gene_id": pl.String,
         "gene_name": pl.String,
         "anatomy_id": pl.String,
@@ -84,8 +87,7 @@ def process_bgee(
             pl.col("call_quality") == "gold quality"
         )  # We only take the highest quality datapoints
         & (
-            pl.col("expression_rank")
-            < 25000  # TODO: This magic number should be a parameter in the pipeline.
+            pl.col("expression_rank") < EXPRESSION_RANK_THRESHOLD
         )  # We take the most expressing genes within each tissue
         & (
             ~pl.col("anatomy_id").str.contains("∩")
