@@ -46,6 +46,8 @@ dev = [
   "pytest~=7.2",
   "ruff~=0.1.8",
   "pre-commit>=4.0.1",
+  "mypy>=1.14.1",
+  "bandit>=1.8.2",
 ]
 
 [tool.setuptools.dynamic]
@@ -94,3 +96,6 @@ lint.ignore = ["E501"] # Ruff format takes care of line-too-long
 
 [tool.kedro_telemetry]
 project_id = "dc32d474bbc84fc49bf67c0f87edf02e"
+
+[tool.bandit]
+skips = ["B101"]
