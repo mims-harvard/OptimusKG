@@ -25,3 +25,16 @@ repos:
         language: system
         entry: uv tool run bandit -v -c pyproject.toml -r src/* tests/*
         types: [python]
+        
+      - id: mypy
+        name: mypy
+        language: system
+        entry: uv tool run mypy --config-file pyproject.toml -p src -p tests
+        types: [python]
+        pass_filenames: false
+
+      - id: interrogate
+        name: interrogate
+        language: system
+        entry: uv tool run interrogate --config pyproject.toml
+        pass_filenames: false
