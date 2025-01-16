@@ -6,9 +6,10 @@ filesystem (e.g.: local, S3, GCS). It uses pandas to handle the XML file.
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 import logging
 from copy import deepcopy
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 from typing import Any, override
 
 import fsspec
@@ -25,9 +26,13 @@ from kedro.io.core import (
 logger = logging.getLogger(__name__)
 
 
-class OWLDataset(
-    AbstractVersionedDataset[pd.DataFrame, tuple[pd.DataFrame, PurePosixPath]]
-):
+@dataclass
+class LoadedOWLDataset:
+    content: str
+    filepath: str
+
+
+class OWLDataset(AbstractVersionedDataset[pd.DataFrame, LoadedOWLDataset]):
     """``OWLDataset`` loads/saves data from/to a XML file using an underlying
     filesystem (e.g.: local, S3, GCS). It uses pandas to handle the XML file.
 
@@ -147,7 +152,7 @@ class OWLDataset(
         }
 
     @override
-    def load(self) -> tuple[pd.DataFrame, PurePosixPath]:
+    def load(self) -> LoadedOWLDataset:
         load_path = self._get_load_path()
         load_path_str = str(self._get_load_path())
         if self._protocol == "file":
@@ -155,14 +160,19 @@ class OWLDataset(
             # (<urlopen error file not on local host>),
             # so we don't join that back to the filepath;
             # storage_options also don't work with local paths
-            return (pd.read_xml(load_path_str, **self._load_args), load_path)
+            return LoadedOWLDataset(
+                # pd.read_xml(load_path_str, **self._load_args), # FIX: Old code
+                "",
+                load_path_str,
+            )
 
         load_path_str = f"{self._protocol}{PROTOCOL_DELIMITER}{load_path_str}"
-        return (
-            pd.read_xml(
-                load_path_str, storage_options=self._storage_options, **self._load_args
-            ),
-            load_path,
+        return LoadedOWLDataset(
+            # pd.read_xml(
+            #     load_path_str, storage_options=self._storage_options, **self._load_args
+            # ), # FIX: Old code
+            "",
+            load_path_str,
         )
 
     @override

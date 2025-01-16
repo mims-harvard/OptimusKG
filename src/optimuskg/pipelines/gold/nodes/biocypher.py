@@ -3,26 +3,69 @@ import logging
 import polars as pl
 from biocypher import BioCypher, _ontology
 from kedro.pipeline import node
-from typedframe import PolarsTypedFrame, TypedDataFrame
+
+from optimuskg.datasets.owl_dataset import LoadedOWLDataset
 
 log = logging.getLogger(__name__)
 
 
 def process_biocypher(
-    homo_sapiens_expressions_advanced: pl.DataFrame,
-    biolink_ontology: "landing.biolink.ontology",
-    disease_ontology: "landing.disease_ontology.ontology",
-    gene_ontology: "landing.gene_ontology.ontology",
-    human_phenotype_ontology: "landing.human_phenotype_ontology.ontology",
-    mondo_ontology: "landing.mondo_ontology",
-    orphanet_ontology: "landing.orphanet.ontology",
-    uberon_ontology: "landing.uber_anatomy_ontology.ontology",
-) -> None:
-    # bc = BioCypher(head_ontology={
-    #     url=""
-    # }, tail_ontologies={})
-    # bc._ontology = _ontology.Ontology()
-    return None
+    biolink_ontology: LoadedOWLDataset,
+    disease_ontology: LoadedOWLDataset,
+    gene_ontology: LoadedOWLDataset,
+    human_phenotype_ontology: LoadedOWLDataset,
+    mondo_ontology: LoadedOWLDataset,
+    orphanet_ontology: LoadedOWLDataset,
+    uberon_ontology: LoadedOWLDataset,
+) -> pl.DataFrame:
+    bc = BioCypher(
+        head_ontology={
+            "url": biolink_ontology.filepath,
+            "root_node": "entity",
+            "format": "ttl",
+        },
+        tail_ontologies={
+            "doid": {
+                "url": disease_ontology.filepath,
+                "head_join_node": "disease",
+                "tail_join_node": "human disease",
+                "merge_nodes": False,
+                "format": "owl",
+            },
+            "go": {
+                "url": gene_ontology.filepath,
+                "head_join_node": "disease",
+                "tail_join_node": "human disease",
+                "merge_nodes": False,
+            },
+            "hpo": {
+                "url": human_phenotype_ontology.filepath,
+                "head_join_node": "disease",
+                "tail_join_node": "human disease",
+                "merge_nodes": False,
+            },
+            "mondo": {
+                "url": mondo_ontology.filepath,
+                "head_join_node": "disease",
+                "tail_join_node": "human disease",
+                "merge_nodes": False,
+            },
+            "ordo": {
+                "url": orphanet_ontology.filepath,
+                "head_join_node": "disease",
+                "tail_join_node": "human disease",
+                "merge_nodes": False,
+            },
+            "uberon": {
+                "url": uberon_ontology.filepath,
+                "head_join_node": "disease",
+                "tail_join_node": "human disease",
+                "merge_nodes": False,
+            },
+        },
+    )
+    bc.show_ontology_structure()
+    return pl.DataFrame()
 
 
 biocypher_node = node(
@@ -32,10 +75,10 @@ biocypher_node = node(
         "disease_ontology": "landing.disease_ontology.ontology",
         "gene_ontology": "landing.gene_ontology.ontology",
         "human_phenotype_ontology": "landing.human_phenotype_ontology.ontology",
-        "mondo_ontology": "landing.mondo_ontology",
+        "mondo_ontology": "landing.mondo.ontology",
         "orphanet_ontology": "landing.orphanet.ontology",
         "uberon_ontology": "landing.uber_anatomy_ontology.ontology",
     },
     "biocypher_graph",
-    name="bgee",
+    name="biocypher",
 )

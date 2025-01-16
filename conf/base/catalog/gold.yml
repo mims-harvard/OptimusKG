@@ -1,0 +1,3 @@
+gold.graph.nodes:
+  type: polars.CSVDataset
+  filepath: "data/gold/graph/nodes.csv"
