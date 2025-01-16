@@ -1,6 +1,7 @@
 from .bgee import bgee_node
 from .ctd import ctd_node
 from .gene_names import gene_names_node
+from .ncbigene import gene2go_node
 from .reactome import reactome_ncbi_node, reactome_pathways_node
 
 __all__ = [
@@ -9,4 +10,5 @@ __all__ = [
     "reactome_ncbi_node",
     "reactome_pathways_node",
     "gene_names_node",
+    "gene2go_node",
 ]

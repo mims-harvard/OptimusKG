@@ -1,31 +1,43 @@
 import logging
-from typing import Final, final
 
 import polars as pl
+from goatools.anno.genetogo_reader import Gene2GoReader
 from kedro.pipeline import node
-from typedframe import PolarsTypedFrame
 
 log = logging.getLogger(__name__)
 
 
-@final
-class Gene2Go(PolarsTypedFrame):
-    schema: Final = {
-        "tax_id": pl.String,
-        "gene_id": pl.String,
-        "go_id": pl.String,
-        "evidence": pl.String,
-        "qualifier": pl.String,
-        "go_term": pl.String,
-        "pubmed": pl.String,
-        "category": pl.String,
+def process_gene2go(
+    gene2go: Gene2GoReader,
+) -> pl.DataFrame:
+    ns2assc_has1 = gene2go.get_ns2assc()  # {'BP': ..., 'CC': ..., 'MF': ...}
+
+    # Collect associations into a list of (gene, go_id, type) where go_term_type is one of: 'molecular_function', 'biological_process', 'cellular_component'
+    namespace_mapping = {
+        "MF": "molecular_function",
+        "BP": "biological_process",
+        "CC": "cellular_component",
     }
 
+    associations = []
+    for ns, go_type in namespace_mapping.items():
+        for gene, goterms in ns2assc_has1[ns].items():
+            for go_id in goterms:
+                associations.append((gene, go_id, go_type))
 
-def process_gene2go(
-    gene2go: pl.DataFrame,
-) -> pl.DataFrame:
-    df = Gene2Go(gene2go).df
+    df = pl.DataFrame(
+        associations,
+        schema=["ncbi_gene_id", "go_term_id", "go_term_type"],
+        orient="row",
+    )
+
+    # Extract numeric part from 'GO:#######'
+    df = df.with_columns(
+        pl.col("go_term_id")
+        .map_elements(lambda x: str(int(x.split(":")[1])), return_dtype=pl.Utf8)
+        .alias("go_term_id")
+    )
+
     return df
 
 
