@@ -29,7 +29,7 @@ repos:
       - id: mypy
         name: mypy
         language: system
-        entry: uv tool run mypy --config-file pyproject.toml -p src -p tests
+        entry: bash -c 'uv tool run mypy --install-types --config-file pyproject.toml --non-interactive --python-executable=$(uv run python -c "import sys; print(sys.executable)") -p src -p tests'
         types: [python]
         pass_filenames: false
 

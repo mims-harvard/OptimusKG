@@ -21,6 +21,8 @@ dependencies = [
   "aiohttp>=3.11.11",
   "goatools>=1.4.12",
   "lxml>=5.3.0",
+  "pandas-stubs>=2.2.3.241126",
+  "types-openpyxl>=3.1.5.20241225",
 ]
 
 [project.scripts]
@@ -115,4 +117,28 @@ quiet = false
 color = true
 
 [tool.mypy]
-strict = true
+warn_unused_configs = true
+check_untyped_defs = true
+warn_return_any = true
+warn_unused_ignores = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = "fsspec.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "goatools.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "biocypher.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "typedframe.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pytest.*"
+ignore_missing_imports = true

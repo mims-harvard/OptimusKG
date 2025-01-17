@@ -13,7 +13,7 @@ def create_pipeline(**kwargs):
     return pipeline(
         [getattr(nodes, name) for name in nodes.__all__],
         namespace="gold",
-        inputs=[
+        inputs={
             "landing.biolink.ontology",
             "landing.disease_ontology.ontology",
             "landing.gene_ontology.ontology",
@@ -21,5 +21,5 @@ def create_pipeline(**kwargs):
             "landing.mondo.ontology",
             "landing.orphanet.ontology",
             "landing.uber_anatomy_ontology.ontology",
-        ],
+        },
     )

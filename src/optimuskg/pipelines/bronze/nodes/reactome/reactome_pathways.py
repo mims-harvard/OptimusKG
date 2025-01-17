@@ -1,15 +1,16 @@
-from typing import final, Final
 import logging
+from typing import Final, final
+
 import polars as pl
-from typedframe import PolarsTypedFrame
 from kedro.pipeline import node
+from typedframe import PolarsTypedFrame
 
 log = logging.getLogger(__name__)
 
 
 @final
 class ReactomeRelations(PolarsTypedFrame):
-    schema: Final = {
+    schema: Final[dict[str, type[pl.DataType]]] = {
         "reactome_id_1": pl.String,
         "reactome_id_2": pl.String,
     }
@@ -17,7 +18,7 @@ class ReactomeRelations(PolarsTypedFrame):
 
 @final
 class ReactomeTerms(PolarsTypedFrame):
-    schema: Final = {
+    schema: Final[dict[str, type[pl.DataType]]] = {
         "reactome_id": pl.String,
         "reactome_name": pl.String,
         "species": pl.String,

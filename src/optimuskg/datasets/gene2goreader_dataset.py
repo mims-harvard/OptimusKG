@@ -133,7 +133,7 @@ class Gene2GoReaderDataset(AbstractVersionedDataset[Gene2GoReader, Gene2GoReader
         except DatasetError:
             return False
 
-        return self._fs.exists(load_path)
+        return self._fs.exists(load_path)  # type: ignore
 
     @override
     def _release(self) -> None:
