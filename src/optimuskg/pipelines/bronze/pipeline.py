@@ -13,5 +13,7 @@ def create_pipeline(**kwargs):
             "landing.reactome.ncbi2_reactome",
             "landing.reactome.reactome_pathways_relation",
             "landing.reactome.reactome_pathways",
+            "landing.gene_names.gene_names",
+            "landing.ncbigene.gene2go",
         },
     )

@@ -17,3 +17,11 @@ bronze.reactome.reactome_relations:
 bronze.reactome.reactome_terms:
   type: polars.CSVDataset
   filepath: "data/bronze/reactome/reactome_terms.csv"
+
+bronze.gene_names.gene_names:
+  type: polars.CSVDataset
+  filepath: "data/bronze/gene_names/gene_names.csv"
+
+bronze.ncbigene.protein_go_associations:
+  type: polars.CSVDataset
+  filepath: "data/bronze/ncbigene/protein_go_associations.csv"

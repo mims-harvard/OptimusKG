@@ -125,4 +125,21 @@ landing.reactome.reactome_pathways_relation:
     separator: "\t"
     has_header: false
     infer_schema: false
-    new_columns: ["reactome_id_1", "reactome_id_2"]
+    new_columns:
+      [
+        "reactome_id_1",
+        "reactome_id_2",
+      ]
+
+landing.gene_names.gene_names:
+  type: polars.CSVDataset
+  filepath: "https://www.genenames.org/cgi-bin/download/custom?col=gd_app_sym&col=gd_app_name&col=gd_pub_acc_ids&col=gd_pub_refseq_ids&col=gd_pub_eg_id&col=md_eg_id&col=md_prot_id&col=md_mim_id&status=Approved&hgnc_dbtag=on&order_by=gd_app_sym_sort&format=text&submit=submit"
+  load_args:
+    separator: "\t"
+    infer_schema: false
+
+landing.ncbigene.gene2go:
+  type: optimuskg.datasets.Gene2GoReaderDataset
+  filepath: "data/landing/ncbigene/gene2go"
+  load_args:
+    taxids: [9606] # Parse gene2go for human (taxid=9606)
