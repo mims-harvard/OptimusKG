@@ -1,64 +1,67 @@
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
-requires-python = ">=3.12"
 name = "optimuskg"
-readme = "README.md"
 dynamic = ["version"]
+readme = "README.md"
+requires-python = ">=3.12"
 dependencies = [
-  "ipython>=8.10",
-  "jupyterlab>=3.0",
-  "notebook",
-  "kedro[jupyter]~=0.19.10",
-  "kedro-datasets[pandas-csvdataset]>=3.0",
-  "kedro-airflow~=0.5",
-  "typedframe>=0.11.0",
-  "polars>=1.19.0",
-  "biocypher>=0.6.1",
-  "requests>=2.32.3",
-  "aiohttp>=3.11.11",
-  "goatools>=1.4.12",
-  "lxml>=5.3.0",
-  "pandas-stubs>=2.2.3.241126",
-  "types-openpyxl>=3.1.5.20241225",
+    "ipython>=8.10",
+    "jupyterlab>=3.0",
+    "notebook",
+    "kedro[jupyter]~=0.19.10",
+    "kedro-datasets[pandas-csvdataset]>=3.0",
+    "kedro-airflow~=0.5",
+    "typedframe>=0.11.0",
+    "polars>=1.19.0",
+    "biocypher>=0.6.1",
+    "requests>=2.32.3",
+    "aiohttp>=3.11.11",
+    "goatools>=1.4.12",
+    "lxml>=5.3.0",
+    "pandas-stubs>=2.2.3.241126",
+    "types-openpyxl>=3.1.5.20241225",
 ]
-
-[project.scripts]
-"optimuskg" = "optimuskg.__main__:main"
-
-[project.entry-points."kedro.hooks"]
 
 [project.optional-dependencies]
 docs = [
-  "docutils<0.18.0",
-  "sphinx~=3.4.3",
-  "sphinx_rtd_theme==0.5.1",
-  "nbsphinx==0.8.1",
-  "sphinx-autodoc-typehints==1.11.1",
-  "sphinx_copybutton==0.3.1",
-  "ipykernel>=5.3, <7.0",
-  "Jinja2<3.1.0",
-  "myst-parser~=0.17.2",
+    "docutils<0.18.0",
+    "sphinx~=3.4.3",
+    "sphinx_rtd_theme==0.5.1",
+    "nbsphinx==0.8.1",
+    "sphinx-autodoc-typehints==1.11.1",
+    "sphinx_copybutton==0.3.1",
+    "ipykernel>=5.3,<7.0",
+    "Jinja2<3.1.0",
+    "myst-parser~=0.17.2",
 ]
 dev = [
-  "pytest-cov~=3.0",
-  "pytest-mock>=1.7.1, <2.0",
-  "pytest~=7.2",
-  "ruff~=0.1.8",
-  "pre-commit>=4.0.1",
-  "mypy>=1.14.1",
-  "bandit>=1.8.2",
-  "interrogate>=1.7.0",
+    "pytest-cov~=3.0",
+    "pytest-mock>=1.7.1,<2.0",
+    "pytest~=7.2",
+    "ruff~=0.1.8",
+    "pre-commit>=4.0.1",
+    "mypy>=1.14.1",
+    "bandit>=1.8.2",
+    "interrogate>=1.7.0",
 ]
 
-[tool.setuptools.dynamic]
-version = { attr = "optimuskg.__version__" }
+[project.scripts]
+optimuskg = "optimuskg.__main__:main"
 
-[tool.setuptools.packages.find]
-where = ["src"]
-namespaces = false
+[tool.hatch.version]
+path = "src/optimuskg/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/optimuskg"]
+
+[tool.hatch.envs.default]
+path = ".venv"
+
+[tool.hatch.envs.default.scripts]
+mypy = 'uv tool run mypy --install-types --config-file pyproject.toml --non-interactive --python-executable=$(uv run python -c "import sys; print(sys.executable)") -p src -p tests'
 
 [tool.kedro]
 package_name = "optimuskg"
@@ -87,13 +90,13 @@ docstring-code-format = true
 line-length = 88
 show-fixes = true
 lint.select = [
-  "F",    # Pyflakes
-  "W",    # pycodestyle
-  "E",    # pycodestyle
-  "I",    # isort
-  "UP",   # pyupgrade
-  "PL",   # Pylint
-  "T201", # Print Statement
+    "F",    # Pyflakes
+    "W",    # pycodestyle
+    "E",    # pycodestyle
+    "I",    # isort
+    "UP",   # pyupgrade
+    "PL",   # Pylint
+    "T201", # Print Statement
 ]
 lint.ignore = ["E501"] # Ruff format takes care of line-too-long
 
