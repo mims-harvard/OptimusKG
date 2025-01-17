@@ -6,10 +6,10 @@ filesystem (e.g.: local, S3, GCS). It uses pandas to handle the XML file.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 import logging
 from copy import deepcopy
-from pathlib import Path, PurePosixPath
+from dataclasses import dataclass
+from pathlib import PurePosixPath
 from typing import Any, override
 
 import fsspec
@@ -153,7 +153,6 @@ class OWLDataset(AbstractVersionedDataset[pd.DataFrame, LoadedOWLDataset]):
 
     @override
     def load(self) -> LoadedOWLDataset:
-        load_path = self._get_load_path()
         load_path_str = str(self._get_load_path())
         if self._protocol == "file":
             # file:// protocol seems to misbehave on Windows
@@ -191,7 +190,7 @@ class OWLDataset(AbstractVersionedDataset[pd.DataFrame, LoadedOWLDataset]):
         except DatasetError:
             return False
 
-        return self._fs.exists(load_path)
+        return self._fs.exists(load_path)  # type: ignore
 
     @override
     def _release(self) -> None:

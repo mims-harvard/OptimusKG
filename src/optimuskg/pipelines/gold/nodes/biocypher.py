@@ -1,15 +1,15 @@
 import logging
 
 import polars as pl
-from biocypher import BioCypher, _ontology
+from biocypher import BioCypher
 from kedro.pipeline import node
 
-from optimuskg.datasets.owl_dataset import LoadedOWLDataset
+from optimuskg.datasets.owl_dataset import LoadedOWLDataset  # type: ignore
 
 log = logging.getLogger(__name__)
 
 
-def process_biocypher(
+def process_biocypher(  # noqa: PLR0913
     biolink_ontology: LoadedOWLDataset,
     disease_ontology: LoadedOWLDataset,
     gene_ontology: LoadedOWLDataset,
@@ -70,7 +70,7 @@ def process_biocypher(
 
 biocypher_node = node(
     process_biocypher,
-    {
+    inputs={
         "biolink_ontology": "landing.biolink.ontology",
         "disease_ontology": "landing.disease_ontology.ontology",
         "gene_ontology": "landing.gene_ontology.ontology",
@@ -79,6 +79,6 @@ biocypher_node = node(
         "orphanet_ontology": "landing.orphanet.ontology",
         "uberon_ontology": "landing.uber_anatomy_ontology.ontology",
     },
-    "biocypher_graph",
+    outputs="biocypher_graph",
     name="biocypher",
 )

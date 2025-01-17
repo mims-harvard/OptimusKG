@@ -17,3 +17,24 @@ repos:
         args: [--fix, --exit-non-zero-on-fix]
         types_or: [python, pyi]
         require_serial: true
+
+  - repo: local
+    hooks:
+      - id: bandit
+        name: bandit
+        language: system
+        entry: uv tool run bandit -v -c pyproject.toml -r src/* tests/*
+        types: [python]
+        
+      - id: mypy
+        name: mypy
+        language: system
+        entry: bash -c 'uv tool run mypy --install-types --config-file pyproject.toml --non-interactive --python-executable=$(uv run python -c "import sys; print(sys.executable)") -p src -p tests'
+        types: [python]
+        pass_filenames: false
+
+      - id: interrogate
+        name: interrogate
+        language: system
+        entry: uv tool run interrogate --config pyproject.toml
+        pass_filenames: false

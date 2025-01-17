@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 @final
 class GeneNames(PolarsTypedFrame):
-    schema: Final = {
+    schema: Final[dict[str, type[pl.DataType]]] = {
         "Approved symbol": pl.String,
         "Approved name": pl.String,
         "Accession numbers": pl.String,
@@ -25,7 +25,8 @@ class GeneNames(PolarsTypedFrame):
 def process_gene_names(
     gene_names: pl.DataFrame,
 ) -> pl.DataFrame:
-    return GeneNames(gene_names).df
+    processed_df: pl.DataFrame = GeneNames(gene_names).df
+    return processed_df
 
 
 gene_names_node = node(

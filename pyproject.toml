@@ -21,6 +21,8 @@ dependencies = [
   "aiohttp>=3.11.11",
   "goatools>=1.4.12",
   "lxml>=5.3.0",
+  "pandas-stubs>=2.2.3.241126",
+  "types-openpyxl>=3.1.5.20241225",
 ]
 
 [project.scripts]
@@ -46,6 +48,9 @@ dev = [
   "pytest~=7.2",
   "ruff~=0.1.8",
   "pre-commit>=4.0.1",
+  "mypy>=1.14.1",
+  "bandit>=1.8.2",
+  "interrogate>=1.7.0",
 ]
 
 [tool.setuptools.dynamic]
@@ -94,3 +99,46 @@ lint.ignore = ["E501"] # Ruff format takes care of line-too-long
 
 [tool.kedro_telemetry]
 project_id = "dc32d474bbc84fc49bf67c0f87edf02e"
+
+[tool.bandit]
+skips = ["B101"]
+
+[tool.interrogate]
+ignore-init-method = true
+ignore-init-module = false
+ignore-magic = false
+ignore-semiprivate = false
+ignore-private = false
+ignore-property-decorators = false
+ignore-module = false
+fail-under = 20
+verbose = 2
+quiet = false
+color = true
+
+[tool.mypy]
+warn_unused_configs = true
+check_untyped_defs = true
+warn_return_any = true
+warn_unused_ignores = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = "fsspec.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "goatools.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "biocypher.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "typedframe.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "pytest.*"
+ignore_missing_imports = true

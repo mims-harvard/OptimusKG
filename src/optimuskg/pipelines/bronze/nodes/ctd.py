@@ -10,7 +10,7 @@ log = logging.getLogger(__name__)
 
 @final
 class CTDExposureEvents(PolarsTypedFrame):
-    schema: Final = {
+    schema: Final[dict[str, type[pl.DataType]]] = {
         "exposurestressorname": pl.String,
         "exposurestressorid": pl.String,
         "stressorsourcecategory": pl.String,
@@ -60,7 +60,8 @@ class CTDExposureEvents(PolarsTypedFrame):
 def process_ctd(
     ctd_exposure_events: pl.DataFrame,
 ) -> pl.DataFrame:
-    return CTDExposureEvents(ctd_exposure_events).df
+    processed_df: pl.DataFrame = CTDExposureEvents(ctd_exposure_events).df
+    return processed_df
 
 
 ctd_node = node(

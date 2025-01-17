@@ -8,14 +8,14 @@ from typedframe import PolarsTypedFrame
 log = logging.getLogger(__name__)
 
 # TODO: This constant should be a parameter in the pipeline.
-EXPRESSION_RANK_THRESHOLD = 25000
+EXPRESSION_RANK_THRESHOLD: Final[int] = 25000
 
 
 @final
 class HomoSapiensExpressionsAdvanced(PolarsTypedFrame):
     """Raw data schema for the landing zone. Some columns have extra spaces"""
 
-    schema: Final = {
+    schema: Final[dict[str, type[pl.DataType]]] = {
         "Gene ID": pl.String,
         "Gene name": pl.String,
         "Anatomical entity ID": pl.String,
@@ -51,7 +51,7 @@ class HomoSapiensExpressionsAdvanced(PolarsTypedFrame):
 
 @final
 class GeneExpressionsInAnatomy(PolarsTypedFrame):
-    schema: Final = {
+    schema: Final[dict[str, type[pl.DataType]]] = {
         "gene_id": pl.String,
         "gene_name": pl.String,
         "anatomy_id": pl.String,
@@ -95,7 +95,9 @@ def process_bgee(
     )
 
     log.info(f"Wrote {len(df)} anatomy-gene pairs")
-    return GeneExpressionsInAnatomy.convert(df).df
+
+    processed_df: pl.DataFrame = GeneExpressionsInAnatomy.convert(df).df
+    return processed_df
 
 
 bgee_node = node(
