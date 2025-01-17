@@ -4,7 +4,7 @@ landing.biolink.ontology:
 
 landing.disease_ontology.ontology:
   type: optimuskg.datasets.OWLDataset
-  filepath: "https://data.bioontology.org/ontologies/DOID/submissions/656/download?apikey=168d52c1-bd36-4866-aa99-0aa8eb06f29"
+  filepath: "https://data.bioontology.org/ontologies/DOID/submissions/656/download?apikey=168d52c1-bd36-4866-aa99-0aa8eb06f295"
 
 landing.gene_ontology.ontology:
   type: optimuskg.datasets.OWLDataset
@@ -116,12 +116,7 @@ landing.reactome.reactome_pathways:
     separator: "\t"
     has_header: false
     infer_schema: false
-    new_columns:
-      [
-        "reactome_id",
-        "reactome_name",
-        "species",
-      ]
+    new_columns: ["reactome_id", "reactome_name", "species"]
 
 landing.reactome.reactome_pathways_relation:
   type: polars.CSVDataset
@@ -130,8 +125,4 @@ landing.reactome.reactome_pathways_relation:
     separator: "\t"
     has_header: false
     infer_schema: false
-    new_columns:
-      [
-        "reactome_id_1",
-        "reactome_id_2",
-      ]
+    new_columns: ["reactome_id_1", "reactome_id_2"]
