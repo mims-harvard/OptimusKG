@@ -62,6 +62,8 @@ path = ".venv"
 
 [tool.hatch.envs.default.scripts]
 mypy = 'uv tool run mypy --install-types --config-file pyproject.toml --non-interactive --python-executable=$(uv run python -c "import sys; print(sys.executable)") -p src -p tests'
+bandit = 'uv tool run bandit -v -c pyproject.toml -r src/* tests/*'
+interrogate = 'uv tool run interrogate --config pyproject.toml'
 
 [tool.kedro]
 package_name = "optimuskg"
