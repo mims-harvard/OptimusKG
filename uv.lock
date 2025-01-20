@@ -1709,6 +1709,7 @@ dependencies = [
     { name = "polars" },
     { name = "requests" },
     { name = "typedframe" },
+    { name = "types-beautifulsoup4" },
     { name = "types-openpyxl" },
 ]
 
@@ -1749,7 +1750,7 @@ requires-dist = [
     { name = "jupyterlab", specifier = ">=3.0" },
     { name = "kedro", extras = ["jupyter"], specifier = "~=0.19.10" },
     { name = "kedro-airflow", specifier = "~=0.5" },
-    { name = "kedro-datasets", extras = ["pandas-csvdataset"], specifier = ">=3.0" },
+    { name = "kedro-datasets", extras = ["pandas-csvdataset", "text-textdataset"], specifier = ">=3.0" },
     { name = "lxml", specifier = ">=5.3.0" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.14.1" },
     { name = "myst-parser", marker = "extra == 'docs'", specifier = "~=0.17.2" },
@@ -1768,6 +1769,7 @@ requires-dist = [
     { name = "sphinx-copybutton", marker = "extra == 'docs'", specifier = "==0.3.1" },
     { name = "sphinx-rtd-theme", marker = "extra == 'docs'", specifier = "==0.5.1" },
     { name = "typedframe", specifier = ">=0.11.0" },
+    { name = "types-beautifulsoup4", specifier = ">=4.12.0.20241020" },
     { name = "types-openpyxl", specifier = ">=3.1.5.20241225" },
 ]
 
@@ -2904,6 +2906,27 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/17/b8/c6610673b5bb14906500f0c2cd5b9e396d18042d03a5f050763809285490/typedframe-0.11.0.tar.gz", hash = "sha256:d77c12369a0954a305f2e912c433367235d36c61d2f3b37090a8ad6ec4285443", size = 9337 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a6/4f/58a6dc92c3476461b240131183caa50378507b28d9d998af4aaa4a77f0bd/typedframe-0.11.0-py3-none-any.whl", hash = "sha256:d38ed1206072c5953e846be6e29fce0f657a82de3937023292bd2a9ffd8d4832", size = 7484 },
+]
+
+[[package]]
+name = "types-beautifulsoup4"
+version = "4.12.0.20241020"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "types-html5lib" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/45/ae/5a7571c649cdd9f3c07d16790467a4fe1191f12a3ad7eecd1097cb8b1d9f/types-beautifulsoup4-4.12.0.20241020.tar.gz", hash = "sha256:158370d08d0cd448bd11b132a50ff5279237a5d4b5837beba074de152a513059", size = 11682 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/7c/43/0f96cdf27d7da7dea729af3476b7be997205765209651a42a4e1895bab72/types_beautifulsoup4-4.12.0.20241020-py3-none-any.whl", hash = "sha256:c95e66ce15a4f5f0835f7fbc5cd886321ae8294f977c495424eaf4225307fd30", size = 12170 },
+]
+
+[[package]]
+name = "types-html5lib"
+version = "1.1.11.20241018"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/b6/9d/f6fbcc8246f5e46845b4f989c4e17e6fb3ce572f7065b185e515bf8a3be7/types-html5lib-1.1.11.20241018.tar.gz", hash = "sha256:98042555ff78d9e3a51c77c918b1041acbb7eb6c405408d8a9e150ff5beccafa", size = 11370 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ba/7c/f862b1dc31268ef10fe95b43dcdf216ba21a592fafa2d124445cd6b92e93/types_html5lib-1.1.11.20241018-py3-none-any.whl", hash = "sha256:3f1e064d9ed2c289001ae6392c84c93833abb0816165c6ff0abfc304a779f403", size = 17292 },
 ]
 
 [[package]]
