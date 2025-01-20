@@ -27,14 +27,17 @@ def process_drug_drug(full_database: etree._ElementTree) -> pl.DataFrame:
     interactions = []
 
     for drug in root.findall(f".//{ns}drug"):
-        drug_id = drug.find(f"{ns}drugbank-id").text  # type: ignore
+        head_drug_id = drug.find(f"{ns}drugbank-id").text  # type: ignore
 
         # Find all drug interactions
         for interaction in drug.findall(f".//{ns}drug-interaction"):
-            interacting_id = interaction.find(f"{ns}drugbank-id").text  # type: ignore
-            interactions.append((drug_id, interacting_id))
+            tail_drug_id = interaction.find(f"{ns}drugbank-id").text  # type: ignore
+            interaction_description = interaction.find(f"{ns}description").text  # type: ignore
+            interactions.append((tail_drug_id, head_drug_id, interaction_description))
 
-    return pl.DataFrame(interactions, schema=["drug1", "drug2"], orient="row")
+    return pl.DataFrame(
+        interactions, schema=["tail_drug", "head_drug", "description"], orient="row"
+    )
 
 
 drug_drug_node = node(
