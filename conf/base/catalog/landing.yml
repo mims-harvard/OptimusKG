@@ -141,12 +141,8 @@ landing.ncbigene.gene2go:
     taxids: [9606] # Parse gene2go for human (taxid=9606)
 
 landing.drugbank.full_database:
-  type: text.TextDataset
-  filepath: "data/landing/drugbank/full database.xml"
-  fs_args:
-    open_args_load:
-      encoding: "utf-8"
-      mode: "rb"
+  type: optimuskg.datasets.LXMLDataset
+  filepath: data/landing/drugbank/full database.xml
 
 # Maybe we should use dataset factories here: https://docs.kedro.org/en/stable/data/kedro_dataset_factories.html
 landing.drugbank.carrier:
