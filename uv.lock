@@ -1220,15 +1220,15 @@ wheels = [
 
 [[package]]
 name = "kedro-datasets"
-version = "4.1.0"
+version = "6.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "kedro" },
     { name = "lazy-loader" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/81/3c/e67bb977654e52a7795f5969d7d495e5ac0de9a5aed94bf0487c9bb12e1f/kedro_datasets-4.1.0.tar.gz", hash = "sha256:56e67fdc9cd7670a811407c471b0c7d98e81daaa66043ff052f0a0b0b6b2d4af", size = 99991 }
+sdist = { url = "https://files.pythonhosted.org/packages/23/00/9cd5ed25df12332dbe0cde093c41e2d66dad49e88b84d6115db43d986f23/kedro_datasets-6.0.0.tar.gz", hash = "sha256:6dc964d4b60bab89c9836044fe2a027676395acac610a1500a4727036c38a3c4", size = 119216 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/97/e9/7dc3ed5a4b45e829b46049126d0d9fc2e9c137874154623594df33b056ba/kedro_datasets-4.1.0-py3-none-any.whl", hash = "sha256:d3f0c71af072878729871160a17f6e1a23679f01848b17ac955891b2778bc9a2", size = 174150 },
+    { url = "https://files.pythonhosted.org/packages/da/57/29be152276926f976c2041a9fa2712935ab10351d135f552e00b8508ce4b/kedro_datasets-6.0.0-py3-none-any.whl", hash = "sha256:64b538291217afcc16b9c24ca2937c132c486b7303a3d707e07ade9b51426914", size = 210825 },
 ]
 
 [package.optional-dependencies]
@@ -1759,7 +1759,7 @@ requires-dist = [
     { name = "jupyterlab", specifier = ">=3.0" },
     { name = "kedro", extras = ["jupyter"], specifier = "~=0.19.10" },
     { name = "kedro-airflow", specifier = "~=0.5" },
-    { name = "kedro-datasets", extras = ["pandas-csvdataset", "text-textdataset"], specifier = ">=3.0" },
+    { name = "kedro-datasets", extras = ["pandas-csvdataset"], specifier = ">=3.0" },
     { name = "lxml", specifier = ">=5.3.0" },
     { name = "lxml-stubs", specifier = ">=0.5.1" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.14.1" },
