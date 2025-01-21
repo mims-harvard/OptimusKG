@@ -22,5 +22,6 @@ def create_pipeline(**kwargs):
             "landing.drugbank.transporter",
             "landing.drugbank.gene_map",
             "landing.drugbank.vocabulary",
+            "landing.drugcentral.psql_dump",
         },
     )

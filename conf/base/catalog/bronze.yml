@@ -33,3 +33,7 @@ bronze.drugbank.drug_protein:
 bronze.drugbank.drug_drug:
   type: polars.CSVDataset
   filepath: "data/bronze/drugbank/drug_drug.csv"
+
+bronze.drugcentral.drug_disease:
+  type: polars.CSVDataset
+  filepath: "data/bronze/drugcentral/drug_disease.csv"
