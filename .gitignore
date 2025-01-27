@@ -154,3 +154,6 @@ venv.bak/
 
 # Docker volumes
 .volumes/
+
+# Track bash script to download opentarget datasets
+!data/landing/opentargets/download_source_files.sh 

@@ -37,3 +37,21 @@ bronze.drugbank.drug_drug:
 bronze.drugcentral.drug_disease:
   type: polars.CSVDataset
   filepath: "data/bronze/drugcentral/drug_disease.csv"
+
+"bronze.opentargers.evidence.{source_id}":
+  type: pandas.JSONDataset
+  filepath: "data/bronze/opentargers/evidence/{source_id}.json"
+  save_args:
+    lines: true
+    orient: records
+
+bronze.opentargets.targets:
+  type: pandas.JSONDataset
+  filepath: "data/bronze/opentargers/targets.json"
+  save_args:
+    lines: true
+    orient: records
+
+bronze.opentargets.drug_mappings:
+  type: polars.CSVDataset
+  filepath: "data/bronze/opentargers/drug_mappings.csv"
