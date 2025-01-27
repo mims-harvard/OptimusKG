@@ -15,6 +15,7 @@ def process_targets(
     targets: dict[str, Callable[[], Any]], primekg_nodes: pl.DataFrame
 ) -> pd.DataFrame:
     concated_df = concat_json_partitions(targets)
+    concated_df = concated_df.select("id", "approvedName", "approvedSymbol")
     primekg_nodes_df = KGNodeSchema.convert(primekg_nodes).df
     df = TargetSchema.convert(concated_df).df
     df = df.unique(subset=["approvedSymbol"])

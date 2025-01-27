@@ -443,7 +443,8 @@ def concat_json_partitions(
         partitions.append(partition_data)
 
     concated_df = pd.concat(partitions)
-    concated_df = concated_df[["id", "approvedName", "approvedSymbol"]]
+    # return concated_df
+    # concated_df = concated_df[["id", "approvedName", "approvedSymbol"]]
     concated_df = pl.from_pandas(concated_df)
     assert isinstance(concated_df, pl.DataFrame)
     return concated_df

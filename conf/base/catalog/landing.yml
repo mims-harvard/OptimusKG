@@ -267,6 +267,17 @@ landing.opentargets.targets:
       dtype: false
   filename_suffix: ".json"
 
+
+landing.opentargets.molecule:
+  type: partitions.PartitionedDataset
+  path: "data/landing/opentargets/molecule"
+  dataset:
+    type: pandas.JSONDataset
+    load_args:
+      lines: true
+      dtype: false
+  filename_suffix: ".json"
+
 landing.opentargets.primekg_nodes:
   type: polars.CSVDataset
   filepath: "data/landing/opentargets/primekg_nodes.csv"

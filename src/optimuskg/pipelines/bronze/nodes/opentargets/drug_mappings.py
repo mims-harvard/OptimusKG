@@ -1,11 +1,12 @@
 import logging
-from typing import Final, final
+from collections.abc import Callable
+from typing import Any, Final, final
 
 import polars as pl
 from kedro.pipeline import node
 from typedframe import PolarsTypedFrame
 
-from .utils import KGNodeSchema
+from .utils import KGNodeSchema, concat_json_partitions
 
 log = logging.getLogger(__name__)
 
@@ -29,9 +30,23 @@ class DrugMappingSchema(PolarsTypedFrame):
     }
 
 
+@final
+class MoleculeSchema(PolarsTypedFrame):
+    schema: Final[dict[str, type[pl.DataType]]] = {
+        "id": pl.String,
+        "name": pl.String,
+        "description": pl.String,
+    }
+
+
 def process_drug_mappings(
-    drug_mappings: pl.DataFrame, primekg_nodes: pl.DataFrame
+    drug_mappings: pl.DataFrame,
+    primekg_nodes: pl.DataFrame,
+    molecule: dict[str, Callable[[], Any]],
 ) -> pl.DataFrame:
+    molecule_df = concat_json_partitions(molecule)
+    ot_drugs = molecule_df.select("id", "name", "description")
+    ot_drugs_df = MoleculeSchema.convert(ot_drugs).df
     drug_mappings_df = DrugMappingSchema.convert(drug_mappings).df
     primekg_nodes_df = KGNodeSchema.convert(primekg_nodes).df
 
@@ -58,6 +73,8 @@ def process_drug_mappings(
         ~pl.col("chembl_id").is_in(chembl_to_drop)
     )
     drug_mappings_df = drug_mappings_df.rename({"chembl_id": "id"})
+
+    drug_mappings_df = drug_mappings_df.join(ot_drugs_df, on="id", how="inner")
     return drug_mappings_df  # type: ignore[no-any-return]
 
 
@@ -66,6 +83,7 @@ drug_mappings_node = node(
     inputs={
         "drug_mappings": "landing.opentargets.drug_mappings",
         "primekg_nodes": "landing.opentargets.primekg_nodes",
+        "molecule": "landing.opentargets.molecule",
     },
     outputs="opentargers.drug_mappings",
     name="drug_mappings",

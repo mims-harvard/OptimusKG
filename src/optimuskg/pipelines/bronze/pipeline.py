@@ -41,5 +41,6 @@ def create_pipeline(**kwargs):
             "landing.opentargets.targets",
             "landing.opentargets.primekg_nodes",
             "landing.opentargets.drug_mappings",
+            "landing.opentargets.molecule",
         },
     )
