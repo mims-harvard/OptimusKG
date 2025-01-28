@@ -11,10 +11,12 @@ log = logging.getLogger(__name__)
 
 @final
 class TargetDiseaseEvidenceSchema(PolarsTypedFrame):
+    # NOTE: this schema is not in the website (https://platform.opentargets.org/downloads)
+    # But assumed from reading all the evidence datasets
     schema: Final[dict[str, type[pl.DataType] | pl.List]] = {
         "datasourceId": pl.String,
         "targetId": pl.String,
-        "alleleOrigins": pl.String,
+        "alleleOrigins": pl.List(pl.String),
         "allelicRequirements": pl.List(pl.String),
         "ancestry": pl.String,
         "ancestryId": pl.String,
