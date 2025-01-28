@@ -82,7 +82,7 @@ def process_chembl(  # noqa: PLR0913
     )
 
     drug_disease = construct_edges(
-        evidence_df=df,
+        evidence_df=drug_disease,
         targets_df=pl.DataFrame(targets),
         phenotypes_df=pl.DataFrame(phenotypes),
         diseases_df=diseases,
@@ -94,7 +94,7 @@ def process_chembl(  # noqa: PLR0913
     )
 
     drug_gene = construct_edges(
-        evidence_df=df,
+        evidence_df=drug_gene,
         targets_df=pl.DataFrame(targets),
         phenotypes_df=pl.DataFrame(phenotypes),
         diseases_df=diseases,

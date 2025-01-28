@@ -24,6 +24,8 @@ def create_pipeline(**kwargs):
             "bronze.opentargets.evidence.sysbio",
             "bronze.opentargets.evidence.uniprot_literature",
             "bronze.opentargets.evidence.orphanet",
+            "landing.opentargets.primekg_nodes",
+            "landing.opentargets.primekg_edges",
             "bronze.opentargets.disease_to_phenotype",
             "bronze.opentargets.targets",
             "bronze.opentargets.diseases",
