@@ -1,0 +1,28 @@
+services:
+   postgres:
+        image: postgres:16.1
+        container_name: drugcentral_postgres
+        ports:
+            - 5432:5432
+        restart: unless-stopped
+        volumes:
+            - .volumes/:/var/lib/postgresql/data
+        environment:
+            POSTGRES_USER: optimuskg
+            POSTGRES_PASSWORD: optimuskg
+            POSTGRES_HOST: postgres
+            POSTGRES_PORT: 5432
+            POSTGRES_DB: drugcentral
+        healthcheck:
+            test:
+                [
+                    "CMD",
+                    "pg_isready",
+                    "--username",
+                    "optimuskg",
+                    "--dbname",
+                    "drugcentral",
+                ]
+            interval: 10s
+            timeout: 5s
+            retries: 5
