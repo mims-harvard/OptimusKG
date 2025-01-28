@@ -152,5 +152,5 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-# mlflow local runs
-mlruns/*
+# Docker volumes
+.volumes/

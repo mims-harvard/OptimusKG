@@ -15,5 +15,13 @@ def create_pipeline(**kwargs):
             "landing.reactome.reactome_pathways",
             "landing.gene_names.gene_names",
             "landing.ncbigene.gene2go",
+            "landing.drugbank.full_database",
+            "landing.drugbank.carrier",
+            "landing.drugbank.enzyme",
+            "landing.drugbank.target",
+            "landing.drugbank.transporter",
+            "landing.drugbank.gene_map",
+            "landing.drugbank.vocabulary",
+            "landing.drugcentral.psql_dump",
         },
     )

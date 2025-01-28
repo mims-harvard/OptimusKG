@@ -25,3 +25,15 @@ bronze.gene_names.gene_names:
 bronze.ncbigene.protein_go_associations:
   type: polars.CSVDataset
   filepath: "data/bronze/ncbigene/protein_go_associations.csv"
+
+bronze.drugbank.drug_protein:
+  type: polars.CSVDataset
+  filepath: "data/bronze/drugbank/drug_protein.csv"
+
+bronze.drugbank.drug_drug:
+  type: polars.CSVDataset
+  filepath: "data/bronze/drugbank/drug_drug.csv"
+
+bronze.drugcentral.drug_disease:
+  type: polars.CSVDataset
+  filepath: "data/bronze/drugcentral/drug_disease.csv"
