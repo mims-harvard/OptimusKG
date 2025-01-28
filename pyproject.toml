@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 requires-python = ">=3.12"
@@ -29,11 +29,6 @@ dependencies = [
   "sqlalchemy>=2.0.37",
 ]
 
-[project.scripts]
-"optimuskg" = "optimuskg.__main__:main"
-
-[project.entry-points."kedro.hooks"]
-
 [project.optional-dependencies]
 docs = [
   "docutils<0.18.0",
@@ -57,12 +52,23 @@ dev = [
   "interrogate>=1.7.0",
 ]
 
-[tool.setuptools.dynamic]
-version = { attr = "optimuskg.__version__" }
+[project.scripts]
+optimuskg = "optimuskg.__main__:main"
 
-[tool.setuptools.packages.find]
-where = ["src"]
-namespaces = false
+[tool.hatch.version]
+path = "src/optimuskg/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/optimuskg"]
+
+[tool.hatch.envs.default]
+path = ".venv"
+
+[tool.hatch.envs.default.scripts]
+mypy = 'uv tool run mypy --install-types --config-file pyproject.toml --non-interactive --python-executable=$(uv run python -c "import sys; print(sys.executable)") -p src -p tests'
+bandit = 'uv tool run bandit -v -c pyproject.toml -r src/* tests/*'
+interrogate = 'uv tool run interrogate --config pyproject.toml'
+download_landing_files = 'uv run bash scripts/download_landing_files.sh'
 
 [tool.kedro]
 package_name = "optimuskg"

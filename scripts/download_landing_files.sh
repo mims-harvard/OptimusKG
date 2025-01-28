@@ -2,13 +2,13 @@
 
 # Base URLs and directories
 BASE_URL="http://ftp.ebi.ac.uk/pub/databases/opentargets/platform/24.09/output/etl"
-BASE_DIR="."
+BASE_DIR="./data/landing/opentargets"
 
 # Subdirectories
-EVIDENCE_SUBDIR="evidence"
+EVIDENCE_SUBDIR="./evidence"
 TARGETS_DIR="./targets"
 MOLECULE_DIR="./molecule"
-DISEASES_DOR="./diseases"
+DISEASES_DIR="./diseases"
 DISEASES_TO_PHENOTYPE="./disease_to_phenotype"
 
 # Evidence source IDs
@@ -58,10 +58,10 @@ for source in "${SOURCE_IDS[@]}"; do
     download_files "$source" "$BASE_DIR/$EVIDENCE_SUBDIR/$source" "$BASE_URL/parquet/evidence/sourceId=$source/" "parquet"
 done
 
-download_files "targets" "$TARGETS_DIR" "$BASE_URL/json/targets/" "json"
+download_files "targets" "$BASE_DIR/$TARGETS_DIR" "$BASE_URL/json/targets/" "json"
 
-download_files "molecule" "$MOLECULE_DIR" "$BASE_URL/json/molecule/" "json"
+download_files "molecule" "$BASE_DIR/$MOLECULE_DIR" "$BASE_URL/json/molecule/" "json"
 
-download_files "diseases" "$DISEASES_DOR" "$BASE_URL/json/diseases/" "json"
+download_files "diseases" "$BASE_DIR/$DISEASES_DIR" "$BASE_URL/json/diseases/" "json"
 
-download_files "diseaseToPhenotype" "$DISEASES_TO_PHENOTYPE" "$BASE_URL/json/diseaseToPhenotype/" "json"
+download_files "diseaseToPhenotype" "$BASE_DIR/$DISEASES_TO_PHENOTYPE" "$BASE_URL/json/diseaseToPhenotype/" "json"
