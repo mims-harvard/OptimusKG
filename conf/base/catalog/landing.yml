@@ -233,3 +233,4 @@ landing.drugcentral.psql_dump:
         WHERE relationship_name IN ('indication', 'contraindication', 'off-label use')
     ) AS drug_disease ON structures.id = drug_disease.struct_id
   db_name: "drugcentral"
+
