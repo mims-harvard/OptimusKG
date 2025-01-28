@@ -21,6 +21,6 @@ def process_chembl(
 chembl_node = node(
     process_chembl,
     inputs={"chembl": "landing.opentargets.evidence.chembl"},
-    outputs="opentargers.evidence.chembl",
+    outputs="opentargets.evidence.chembl",
     name="chembl",
 )

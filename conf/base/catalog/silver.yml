@@ -1,3 +1,13 @@
-silver.opentargets.drug_mappings:
+# silver.opentargets.drug_mappings:
+#   type: polars.CSVDataset
+#   filepath: "data/silver/opetargets/drug_mappings.csv"
+
+
+"silver.opentargets.evidence.{source_id}":
   type: polars.CSVDataset
-  filepath: "data/silver/opetargets/drug_mappings.csv"
+  filepath: "data/silver/opentargets/evidence/{source_id}.csv"
+
+
+silver.opentargets.disease_to_phenotype:
+  type: polars.CSVDataset
+  filepath: "data/silver/opentargets/disease_to_phenotype.csv"

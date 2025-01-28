@@ -8,6 +8,8 @@ BASE_DIR="."
 EVIDENCE_SUBDIR="evidence"
 TARGETS_DIR="./targets"
 MOLECULE_DIR="./molecule"
+DISEASES_DOR="./diseases"
+DISEASES_TO_PHENOTYPE="./disease_to_phenotype"
 
 # Evidence source IDs
 SOURCE_IDS=(
@@ -26,6 +28,7 @@ SOURCE_IDS=(
     "slapenrich"
     "sysbio"
     "uniprot_literature"
+    "orphanet"
 )
 
 download_files() {
@@ -51,13 +54,14 @@ download_files() {
     cd - > /dev/null
 }
 
-# Download evidence files into ./evidence/<source_name> (parquet)
 for source in "${SOURCE_IDS[@]}"; do
     download_files "$source" "$BASE_DIR/$EVIDENCE_SUBDIR/$source" "$BASE_URL/parquet/evidence/sourceId=$source/" "parquet"
 done
 
-# Download targets files (JSON version) directly into ./targets
 download_files "targets" "$TARGETS_DIR" "$BASE_URL/json/targets/" "json"
 
-# Download molecule files (JSON version) directly into ./molecule
 download_files "molecule" "$MOLECULE_DIR" "$BASE_URL/json/molecule/" "json"
+
+download_files "diseases" "$DISEASES_DOR" "$BASE_URL/json/diseases/" "json"
+
+download_files "diseaseToPhenotype" "$DISEASES_TO_PHENOTYPE" "$BASE_URL/json/diseaseToPhenotype/" "json"

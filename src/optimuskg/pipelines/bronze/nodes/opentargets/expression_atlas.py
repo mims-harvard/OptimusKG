@@ -21,6 +21,6 @@ def process_expression_atlas(
 expression_atlas_node = node(
     process_expression_atlas,
     inputs={"expression_atlas": "landing.opentargets.evidence.expression_atlas"},
-    outputs="opentargers.evidence.expression_atlas",
+    outputs="opentargets.evidence.expression_atlas",
     name="expression_atlas",
 )

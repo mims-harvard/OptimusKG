@@ -21,6 +21,6 @@ def process_progeny(
 progeny_node = node(
     process_progeny,
     inputs={"progeny": "landing.opentargets.evidence.progeny"},
-    outputs="opentargers.evidence.progeny",
+    outputs="opentargets.evidence.progeny",
     name="progeny",
 )

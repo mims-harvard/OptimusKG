@@ -1,14 +1,24 @@
 import logging
 from collections.abc import Callable
-from typing import Any
+from typing import Any, Final, final
 
 import pandas as pd
 import polars as pl
 from kedro.pipeline import node
+from typedframe import PolarsTypedFrame
 
-from .utils import KGNodeSchema, TargetSchema, concat_json_partitions
+from .utils import KGNodeSchema, concat_json_partitions
 
 log = logging.getLogger(__name__)
+
+
+@final
+class TargetSchema(PolarsTypedFrame):
+    schema: Final[dict[str, type[pl.DataType] | pl.List]] = {
+        "id": pl.String,
+        "approvedSymbol": pl.String,
+        "approvedName": pl.String,
+    }
 
 
 def process_targets(

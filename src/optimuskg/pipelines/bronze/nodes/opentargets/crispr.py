@@ -21,6 +21,6 @@ def process_crispr(
 crispr_node = node(
     process_crispr,
     inputs={"crispr": "landing.opentargets.evidence.crispr"},
-    outputs="opentargers.evidence.crispr",
+    outputs="opentargets.evidence.crispr",
     name="crispr",
 )

@@ -10,17 +10,17 @@ from .utils import TargetDiseaseEvidenceSchema, concat_partitions
 log = logging.getLogger(__name__)
 
 
-def process_intogen(
-    intogen: dict[str, Callable[[], Any]],
+def process_orphanet(
+    orphanet: dict[str, Callable[[], Any]],
 ) -> pd.DataFrame:
-    concated_df = concat_partitions(intogen)
+    concated_df = concat_partitions(orphanet)
     df = TargetDiseaseEvidenceSchema.convert(concated_df).df
     return df.to_pandas()  # type: ignore[no-any-return]
 
 
-intogen_node = node(
-    process_intogen,
-    inputs={"intogen": "landing.opentargets.evidence.intogen"},
-    outputs="opentargets.evidence.intogen",
-    name="intogen",
+orphanet_node = node(
+    process_orphanet,
+    inputs={"orphanet": "landing.opentargets.evidence.orphanet"},
+    outputs="opentargets.evidence.orphanet",
+    name="orphanet",
 )

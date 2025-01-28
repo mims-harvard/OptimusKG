@@ -21,6 +21,6 @@ def process_clingen(
 clingen_node = node(
     process_clingen,
     inputs={"clingen": "landing.opentargets.evidence.clingen"},
-    outputs="opentargers.evidence.clingen",
+    outputs="opentargets.evidence.clingen",
     name="clingen",
 )

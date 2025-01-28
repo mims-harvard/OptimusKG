@@ -38,20 +38,49 @@ bronze.drugcentral.drug_disease:
   type: polars.CSVDataset
   filepath: "data/bronze/drugcentral/drug_disease.csv"
 
-"bronze.opentargers.evidence.{source_id}":
+"bronze.opentargets.evidence.{source_id}":
   type: pandas.JSONDataset
-  filepath: "data/bronze/opentargers/evidence/{source_id}.json"
+  filepath: "data/bronze/opentargets/evidence/{source_id}.json"
   save_args:
     lines: true
     orient: records
+  load_args:
+    lines: true
 
 bronze.opentargets.targets:
   type: pandas.JSONDataset
-  filepath: "data/bronze/opentargers/targets.json"
+  filepath: "data/bronze/opentargets/targets.json"
   save_args:
     lines: true
     orient: records
+  load_args:
+    lines: true
+
+bronze.opentargets.disease_to_phenotype:
+  type: pandas.JSONDataset
+  filepath: "data/bronze/opentargets/disease_to_phenotype.json"
+  save_args:
+    lines: true
+    orient: records
+  load_args:
+    lines: true
 
 bronze.opentargets.drug_mappings:
   type: polars.CSVDataset
-  filepath: "data/bronze/opentargers/drug_mappings.csv"
+  filepath: "data/bronze/opentargets/drug_mappings.csv"
+
+bronze.opentargets.mondo_efo_mappings:
+  type: polars.CSVDataset
+  filepath: "data/bronze/opentargets/mondo_efo_mappings.csv"
+
+bronze.opentargets.diseases:
+  type: polars.CSVDataset
+  filepath: "data/bronze/opentargets/diseases.csv"
+
+bronze.opentargets.phenotypes:
+  type: polars.CSVDataset
+  filepath: "data/bronze/opentargets/phenotypes.csv"
+
+bronze.opentargets.disease_phenotype_ids:
+  type: polars.CSVDataset
+  filepath: "data/bronze/opentargets/disease_phenotype_ids.csv"

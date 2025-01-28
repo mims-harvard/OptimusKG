@@ -21,6 +21,6 @@ def process_crispr_screen(
 crispr_screen_node = node(
     process_crispr_screen,
     inputs={"crispr_screen": "landing.opentargets.evidence.crispr_screen"},
-    outputs="opentargers.evidence.crispr_screen",
+    outputs="opentargets.evidence.crispr_screen",
     name="crispr_screen",
 )

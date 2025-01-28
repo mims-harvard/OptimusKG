@@ -21,6 +21,6 @@ def process_sysbio(
 sysbio_node = node(
     process_sysbio,
     inputs={"sysbio": "landing.opentargets.evidence.sysbio"},
-    outputs="opentargers.evidence.sysbio",
+    outputs="opentargets.evidence.sysbio",
     name="sysbio",
 )

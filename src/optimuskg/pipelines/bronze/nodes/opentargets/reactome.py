@@ -21,6 +21,6 @@ def process_reactome(
 reactome_node = node(
     process_reactome,
     inputs={"reactome": "landing.opentargets.evidence.reactome"},
-    outputs="opentargers.evidence.reactome",
+    outputs="opentargets.evidence.reactome",
     name="reactome",
 )

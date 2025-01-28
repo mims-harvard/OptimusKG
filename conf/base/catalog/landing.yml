@@ -278,6 +278,26 @@ landing.opentargets.molecule:
       dtype: false
   filename_suffix: ".json"
 
+landing.opentargets.diseases:
+  type: partitions.PartitionedDataset
+  path: "data/landing/opentargets/diseases"
+  dataset:
+    type: pandas.JSONDataset
+    load_args:
+      lines: true
+      dtype: false
+  filename_suffix: ".json"
+
+landing.opentargets.disease_to_phenotype:
+  type: partitions.PartitionedDataset
+  path: "data/landing/opentargets/disease_to_phenotype"
+  dataset:
+    type: pandas.JSONDataset
+    load_args:
+      lines: true
+      dtype: false
+  filename_suffix: ".json"
+
 landing.opentargets.primekg_nodes:
   type: polars.CSVDataset
   filepath: "data/landing/opentargets/primekg_nodes.csv"

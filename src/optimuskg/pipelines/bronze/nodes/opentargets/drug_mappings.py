@@ -85,6 +85,6 @@ drug_mappings_node = node(
         "primekg_nodes": "landing.opentargets.primekg_nodes",
         "molecule": "landing.opentargets.molecule",
     },
-    outputs="opentargers.drug_mappings",
+    outputs="opentargets.drug_mappings",
     name="drug_mappings",
 )

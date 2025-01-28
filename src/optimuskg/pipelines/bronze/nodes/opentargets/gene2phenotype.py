@@ -21,6 +21,6 @@ def process_gene2phenotype(
 gene2phenotype_node = node(
     process_gene2phenotype,
     inputs={"gene2phenotype": "landing.opentargets.evidence.gene2phenotype"},
-    outputs="opentargers.evidence.gene2phenotype",
+    outputs="opentargets.evidence.gene2phenotype",
     name="gene2phenotype",
 )

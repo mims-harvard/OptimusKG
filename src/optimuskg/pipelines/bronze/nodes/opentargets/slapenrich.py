@@ -21,6 +21,6 @@ def process_slapenrich(
 slapenrich_node = node(
     process_slapenrich,
     inputs={"slapenrich": "landing.opentargets.evidence.slapenrich"},
-    outputs="opentargers.evidence.slapenrich",
+    outputs="opentargets.evidence.slapenrich",
     name="slapenrich",
 )

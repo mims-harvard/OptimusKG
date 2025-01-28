@@ -21,6 +21,6 @@ def process_uniprot_literature(
 uniprot_literature_node = node(
     process_uniprot_literature,
     inputs={"uniprot_literature": "landing.opentargets.evidence.uniprot_literature"},
-    outputs="opentargers.evidence.uniprot_literature",
+    outputs="opentargets.evidence.uniprot_literature",
     name="uniprot_literature",
 )

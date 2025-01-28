@@ -21,6 +21,6 @@ def process_gene_burden(
 gene_burden_node = node(
     process_gene_burden,
     inputs={"gene_burden": "landing.opentargets.evidence.gene_burden"},
-    outputs="opentargers.evidence.gene_burden",
+    outputs="opentargets.evidence.gene_burden",
     name="gene_burden",
 )
