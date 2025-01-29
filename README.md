@@ -1,36 +1,51 @@
 # OptimusKG
 
-[![Powered by Kedro](https://img.shields.io/badge/powered_by-kedro-ffc900?logo=kedro)](https://kedro.org)
+## Installation
 
-## Overview
+Prerequisites for this project are:
 
-This is your new Kedro project, which was generated using `kedro 0.19.10`.
+- [uv](https://github.com/astral-sh/uv)
+- [docker](https://docs.docker.com/engine/install/)
 
-Take a look at the [Kedro documentation](https://docs.kedro.org/) to get started.
+Install with:
 
-## Rules and guidelines
+```console
+$ uv sync --all-extras
 
-In order to get the best out of the template:
-
-- Don't remove any lines from the `.gitignore` file we provide
-- Make sure your results can be reproduced by following a [data engineering convention](https://docs.kedro.org/en/stable/faq/faq.html#what-is-data-engineering-convention)
-- Don't commit data to your repository
-- Don't commit any credentials or your local configuration to your repository. Keep all your credentials and local configuration in `conf/local/`
-
-## How to install dependencies
-
-Add a dependency by running
-
-```
-uv add dependency-name
+Resolved 218 packages in 3ms
+Audited 215 packages in 0.28ms
 ```
 
-## How to run your Kedro pipeline
+## Run it
 
-You can run your Kedro project with:
+### How to run your Kedro pipeline
 
+You can run your the pipeline with:
+
+```console
+$ uv run kedro run
+
+[01/28/25 19:29:07] INFO     Using 'conf/logging.yml' as logging configuration. You can change this by setting the KEDRO_LOGGING_CONFIG environment variable accordingly.
+[01/28/25 19:29:08] INFO     Kedro project optimuskg
+[01/28/25 19:29:09] INFO     Using synchronous mode for loading and saving data. Use the --async flag for potential performance gains.       
 ```
-uv run kedro run
+
+You can also run specific nodes:
+
+```console
+$ uv run kedro run --nodes bronze.ctd
+
+uv run kedro run --nodes bronze.ctd
+[01/28/25 19:31:35] INFO     Using 'conf/logging.yml' as logging configuration. You can change this by setting the KEDRO_LOGGING_CONFIG environment variable
+                             accordingly.                                                                                                                                   
+                    INFO     Kedro project optimuskg                                                                                                          session.py:329
+[01/28/25 19:31:36] INFO     Using synchronous mode for loading and saving data. Use the --async flag for potential performance gains.               sequential_runner.py:68
+                             https://docs.kedro.org/en/stable/nodes_and_pipelines/run_a_pipeline.html#load-and-save-asynchronously                                          
+                    INFO     Loading data from landing.ctd.ctd_exposure_events (CSVDataset)...                                                           data_catalog.py:389
+                    INFO     Running node: ctd: process_ctd([landing.ctd.ctd_exposure_events]) -> [bronze.ctd.ctd_exposure_events]                               node.py:367
+                    INFO     Saving data to bronze.ctd.ctd_exposure_events (CSVDataset)...                                                               data_catalog.py:431
+[01/28/25 19:31:37] INFO     Completed 1 out of 1 tasks                                                                                              sequential_runner.py:93
+                    INFO     Pipeline execution completed successfully.      
 ```
 
 ## How to test your Kedro project
@@ -55,27 +70,7 @@ To see and update the dependency requirements for your project use `requirements
 >
 > Jupyter, JupyterLab, and IPython are already included in the project requirements by default, so once you have run `uv sync` you will not need to take any extra steps before you use them.
 
-### Jupyter
-
-To use Jupyter notebooks in your Kedro project, you need to install Jupyter:
-
-```
-uv add jupyter
-```
-
-After installing Jupyter, you can start a local notebook server:
-
-```
-uv tool run kedro jupyter notebook
-```
-
 ### JupyterLab
-
-To use JupyterLab, you need to install it:
-
-```
-uv add jupyterlab
-```
 
 You can also start JupyterLab:
 
@@ -83,61 +78,11 @@ You can also start JupyterLab:
 uv tool run kedro jupyter lab
 ```
 
-### IPython
-
-And if you want to run an IPython session:
-
-```
-uv tool run kedro ipython
-```
-
 ### How to ignore notebook output cells in `git`
 
 To automatically strip out all output cell contents before committing to `git`, you can use tools like [`nbstripout`](https://github.com/kynan/nbstripout). For example, you can add a hook in `.git/config` with `nbstripout --install`. This will run `nbstripout` before anything is committed to `git`.
 
 > _Note:_ Your output cells will be retained locally.
-
-## Package your Kedro project
-
-[Further information about building project documentation and packaging your project](https://docs.kedro.org/en/stable/tutorial/package_a_project.html)
-
-## Run your project in Airflow
-
-The easiest way to run your project in Airflow is by [installing the Astronomer CLI](https://www.astronomer.io/docs/cloud/stable/get-started/quickstart#step-4-install-the-astronomer-cli)
-and follow the following instructions:
-
-Package your project:
-
-```shell
-uv tool run kedro package
-```
-
-Copy the package at the root of the project such that the Docker images
-created by the Astronomer CLI can pick it up:
-
-```shell
-cp src/dist/*.whl ./
-```
-
-Generate a catalog file with placeholders for all the in-memory datasets:
-
-```shell
-uv tool run kedro catalog create --pipeline=__default__
-```
-
-Install the Kedro Airflow plugin and convert your pipeline into an Airflow dag:
-
-```shell
-uv add kedro-airflow
-uv tool run kedro airflow create -t dags/
-```
-
-Run your local Airflow instance through Astronomer:
-
-```shell
-astro dev start
-```
-
 
 ## Install pre-commit hooks
 

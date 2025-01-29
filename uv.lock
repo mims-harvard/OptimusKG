@@ -1238,20 +1238,6 @@ jupyter = [
 ]
 
 [[package]]
-name = "kedro-airflow"
-version = "0.9.2"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "kedro" },
-    { name = "python-slugify" },
-    { name = "semver" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/db/36/c1ed6c0093f139ee8daf236a0ebb499aa103d8425e6491486115995c571e/kedro_airflow-0.9.2.tar.gz", hash = "sha256:90d77caa523ce838297ac5a7d1d0c11e53ce89f56cdfcb5b868e3738008c0c3a", size = 16099 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/aa/6b/afa988619f899af4f4a77bb301320936782451a64ae9428eb30e297d7edc/kedro_airflow-0.9.2-py3-none-any.whl", hash = "sha256:8b3cbf23f60b592d8c7f882427f44582a726ebabd9d9a65eff5f0920b8dff871", size = 10605 },
-]
-
-[[package]]
 name = "kedro-datasets"
 version = "6.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1267,6 +1253,12 @@ wheels = [
 [package.optional-dependencies]
 pandas-csvdataset = [
     { name = "pandas" },
+]
+pandas-jsondataset = [
+    { name = "pandas" },
+]
+polars-csvdataset = [
+    { name = "polars" },
 ]
 
 [[package]]
@@ -1763,8 +1755,7 @@ dependencies = [
     { name = "ipython" },
     { name = "jupyterlab" },
     { name = "kedro", extra = ["jupyter"] },
-    { name = "kedro-airflow" },
-    { name = "kedro-datasets", extra = ["pandas-csvdataset"] },
+    { name = "kedro-datasets", extra = ["pandas-csvdataset", "pandas-jsondataset", "polars-csvdataset"] },
     { name = "lxml" },
     { name = "lxml-stubs" },
     { name = "notebook" },
@@ -1814,8 +1805,7 @@ requires-dist = [
     { name = "jinja2", marker = "extra == 'docs'", specifier = "<3.1.0" },
     { name = "jupyterlab", specifier = ">=3.0" },
     { name = "kedro", extras = ["jupyter"], specifier = "~=0.19.10" },
-    { name = "kedro-airflow", specifier = "~=0.5" },
-    { name = "kedro-datasets", extras = ["pandas-csvdataset"], specifier = ">=3.0" },
+    { name = "kedro-datasets", extras = ["pandas-csvdataset", "pandas-jsondataset", "polars-csvdataset"], specifier = ">=3.0" },
     { name = "lxml", specifier = ">=5.3.0" },
     { name = "lxml-stubs", specifier = ">=0.5.1" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.14.1" },
@@ -2672,15 +2662,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/84/9d/8f539002b5e203723af6a6f513a45e0a7671e9dabeedb08f417ac17e4edc/scipy-1.15.1-cp313-cp313t-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f735bc41bd1c792c96bc426dece66c8723283695f02df61dcc4d0a707a42fc54", size = 39883261 },
     { url = "https://files.pythonhosted.org/packages/97/c0/62fd3bab828bcccc9b864c5997645a3b86372a35941cdaf677565c25c98d/scipy-1.15.1-cp313-cp313t-musllinux_1_2_x86_64.whl", hash = "sha256:2722a021a7929d21168830790202a75dbb20b468a8133c74a2c0230c72626b6c", size = 42093299 },
     { url = "https://files.pythonhosted.org/packages/e4/1f/5d46a8d94e9f6d2c913cbb109e57e7eed914de38ea99e2c4d69a9fc93140/scipy-1.15.1-cp313-cp313t-win_amd64.whl", hash = "sha256:bc7136626261ac1ed988dca56cfc4ab5180f75e0ee52e58f1e6aa74b5f3eacd5", size = 43181730 },
-]
-
-[[package]]
-name = "semver"
-version = "3.0.4"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/72/d1/d3159231aec234a59dd7d601e9dd9fe96f3afff15efd33c1070019b26132/semver-3.0.4.tar.gz", hash = "sha256:afc7d8c584a5ed0a11033af086e8af226a9c0b206f313e0301f8dd7b6b589602", size = 269730 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a6/24/4d91e05817e92e3a61c8a21e08fd0f390f5301f1c448b137c57c4bc6e543/semver-3.0.4-py3-none-any.whl", hash = "sha256:9c824d87ba7f7ab4a1890799cec8596f15c1241cb473404ea1cb0c55e4b04746", size = 17912 },
 ]
 
 [[package]]
