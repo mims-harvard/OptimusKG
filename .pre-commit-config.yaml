@@ -23,18 +23,18 @@ repos:
       - id: bandit
         name: bandit
         language: system
-        entry: uv tool run bandit -v -c pyproject.toml -r src/* tests/*
+        entry: uv tool run hatch run bandit
         types: [python]
         
       - id: mypy
         name: mypy
         language: system
-        entry: bash -c 'uv tool run mypy --install-types --config-file pyproject.toml --non-interactive --python-executable=$(uv run python -c "import sys; print(sys.executable)") -p src -p tests'
+        entry: uv tool run hatch run mypy
         types: [python]
         pass_filenames: false
 
       - id: interrogate
         name: interrogate
         language: system
-        entry: uv tool run interrogate --config pyproject.toml
+        entry: uv tool run hatch run interrogate
         pass_filenames: false

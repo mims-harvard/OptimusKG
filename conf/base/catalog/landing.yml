@@ -234,3 +234,100 @@ landing.drugcentral.psql_dump:
     ) AS drug_disease ON structures.id = drug_disease.struct_id
   db_name: "drugcentral"
 
+# If we're using pyspark, we need to edit the docker image to add java dependencies.
+# References:
+# 1) https://docs.kedro.org/en/0.18.14/integrations/pyspark_integration.html
+# 2) https://medium.com/@talha.97.mahmood/dockerizing-a-kedro-project-a-step-by-step-guide-7be8f22fb246
+# 3) https://github.com/kedro-org/kedro-starters/tree/main/spaceflights-pyspark
+# landing.opentargets.cancer_gene_census:
+#   type: spark.SparkDataset
+#   filepath: "http://ftp.ebi.ac.uk/pub/databases/opentargets/platform/24.09/output/etl/parquet/evidence/sourceId=cancer_gene_census/"
+#   file_format: parquet
+#   load_args:
+#     header: true
+#     inferSchema: true
+#     recursiveFileLookup: true
+
+"landing.opentargets.evidence.{source_id}":
+  type: partitions.PartitionedDataset
+  path: "data/landing/opentargets/evidence/{source_id}"
+  dataset:
+    type: pandas.ParquetDataset
+    load_args:
+      engine: pyarrow
+  filename_suffix: ".parquet"
+
+landing.opentargets.targets:
+  type: partitions.PartitionedDataset
+  path: "data/landing/opentargets/targets"
+  dataset:
+    type: pandas.JSONDataset
+    load_args:
+      lines: true
+      dtype: false
+  filename_suffix: ".json"
+
+
+landing.opentargets.molecule:
+  type: partitions.PartitionedDataset
+  path: "data/landing/opentargets/molecule"
+  dataset:
+    type: pandas.JSONDataset
+    load_args:
+      lines: true
+      dtype: false
+  filename_suffix: ".json"
+
+landing.opentargets.diseases:
+  type: partitions.PartitionedDataset
+  path: "data/landing/opentargets/diseases"
+  dataset:
+    type: pandas.JSONDataset
+    load_args:
+      lines: true
+      dtype: false
+  filename_suffix: ".json"
+
+landing.opentargets.disease_to_phenotype:
+  type: partitions.PartitionedDataset
+  path: "data/landing/opentargets/disease_to_phenotype"
+  dataset:
+    type: pandas.JSONDataset
+    load_args:
+      lines: true
+      dtype: false
+  filename_suffix: ".json"
+
+landing.opentargets.primekg_nodes:
+  type: polars.CSVDataset
+  filepath: "data/landing/opentargets/primekg_nodes.csv"
+  load_args:
+    infer_schema: false
+
+landing.opentargets.primekg_edges:
+  type: polars.CSVDataset
+  filepath: "data/landing/opentargets/primekg_edges.csv"
+  load_args:
+    infer_schema: false
+
+landing.opentargets.mondo_efo_mappings:
+  type: polars.CSVDataset
+  filepath: "https://raw.githubusercontent.com/EBISPOT/efo/refs/heads/master/src/ontology/components/mondo_efo_mappings.tsv"
+  load_args:
+    separator: "\t"
+    has_header: false
+    infer_schema: false
+    new_columns:
+      [
+        "mondo_id",
+        "efo_id",
+        "mondo_name",
+        "efo_name",
+      ]
+
+landing.opentargets.drug_mappings:
+  type: polars.CSVDataset
+  filepath: "https://raw.githubusercontent.com/iit-Demokritos/drug_id_mapping/refs/heads/main/drug-mappings.tsv"
+  load_args:
+    separator: "\t"
+    infer_schema: false

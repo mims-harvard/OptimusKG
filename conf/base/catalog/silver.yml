@@ -1,0 +1,12 @@
+"silver.opentargets.evidence.{source_id}":
+  type: polars.CSVDataset
+  filepath: "data/silver/opentargets/evidence/{source_id}.csv"
+
+
+silver.opentargets.disease_to_phenotype:
+  type: polars.CSVDataset
+  filepath: "data/silver/opentargets/disease_to_phenotype.csv"
+
+silver.opentargets.opentargets_edges:
+  type: polars.CSVDataset
+  filepath: "data/silver/opentargets/opentargets_edges.csv"
