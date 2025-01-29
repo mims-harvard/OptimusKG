@@ -98,8 +98,6 @@ def process_opentargets_edges(  # noqa: PLR0913
         ).alias("dup")
     )
 
-    # log.info(open_targets_edges.schema)
-
     dup_list = (
         open_targets_edges.filter(pl.col("dup").is_duplicated())
         .get_column("dup")
@@ -132,8 +130,6 @@ def process_opentargets_edges(  # noqa: PLR0913
     # Add back duplicated edges
     open_targets_edges = pl.concat([open_targets_edges, dup_edges])
     open_targets_edges = open_targets_edges.drop("dup")
-
-    # log.info(open_targets_edges.schema)
 
     # Add to PrimeKG
     # Create reverse edges
