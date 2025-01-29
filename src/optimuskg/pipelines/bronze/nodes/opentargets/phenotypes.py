@@ -23,8 +23,6 @@ def process_phenotypes(
     # Reorder columns with id first
     all_cols = ["id"] + [col for col in pheno_df.columns if col != "id"]
     pheno_df = pheno_df.select(all_cols)
-    # NOTE: this column never existed
-    # df = df.drop("joint_id")
 
     return pheno_df  # type: ignore[no-any-return]
 
