@@ -34,7 +34,7 @@ jobs:
 
   quality-check:
     runs-on: ubuntu-latest
-    needs: install-and-validate
+    needs: install-uv
     steps:
       - name: Spell Check
         uses: crate-ci/typos@v1.29.4
