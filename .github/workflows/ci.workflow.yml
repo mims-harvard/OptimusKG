@@ -57,4 +57,4 @@ jobs:
         uses: astral-sh/ruff-action@v3
         with:
           version: ${{ env.RUFF_VERSION }}
-          args: --fix --exit-non-zero-on-fix
+          args: check --fix --exit-non-zero-on-fix
