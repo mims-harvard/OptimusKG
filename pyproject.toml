@@ -70,6 +70,9 @@ interrogate = 'uv tool run interrogate --config pyproject.toml'
 download_landing_files = 'uv run bash scripts/download_landing_files.sh'
 clean = 'uv run bash scripts/clean_files.sh'
 
+[tool.uv]
+cache-keys = [{ file = "pyproject.toml" }, { file = "src/optimuskg/__init__.py" }]
+
 [tool.kedro]
 package_name = "optimuskg"
 project_name = "OptimusKG"
