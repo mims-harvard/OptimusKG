@@ -9,7 +9,7 @@ env:
   RUFF_VERSION: 0.9.1 # Using same version as pre-commit-config.yaml
 
 jobs:
-  uv-checks:
+  uv:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -59,8 +59,7 @@ jobs:
           version: ${{ env.RUFF_VERSION }}
           args: check --fix --exit-non-zero-on-fix
 
-  semver-check:
-    name: Check semver bump
+  semver-bump:
     runs-on: ubuntu-latest
     env:
       TARGET_BRANCH: ${{ github.base_ref }}
