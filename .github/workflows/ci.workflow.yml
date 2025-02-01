@@ -12,18 +12,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install required-version defined in pyproject.toml
+      - name: Setup uv
         uses: astral-sh/setup-uv@v5
         id: setup-uv
         with:
           enable-cache: true
+          ignore-nothing-to-cache: true
           pyproject-file: "pyproject.toml"
           python-version: ${{ env.PYTHON_VERSION }}
           cache-dependency-glob: |
             **/pyproject.toml
             **/uv.lock
 
-      - name: Log if cache was restored
+      - name: Log if uv cache was restored
         if: steps.setup-uv.outputs.cache-hit == 'true'
         run: echo "Cache was restored"
 
