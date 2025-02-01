@@ -7,11 +7,14 @@ env:
   PYTHON_VERSION: 3.12
 
 jobs:
-  install-uvgit status:
+  install-uv:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
         uses: actions/checkout@main
+
+      - name: Validate pyproject.toml
+        uses: abravalheri/validate-pyproject@v0.23
 
       - name: Install required-version defined in pyproject.toml
         uses: astral-sh/setup-uv@v5
@@ -30,3 +33,12 @@ jobs:
 
       - name: Print the installed uv version
         run: echo "Installed uv version is ${{ steps.setup-uv.outputs.uv-version }}"
+
+  quality-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for typos
+        uses: crate-ci/typos@v1.29.4
+
+      - name: Run MyPy type checker
+        run: uv tool run hatch run mypy
