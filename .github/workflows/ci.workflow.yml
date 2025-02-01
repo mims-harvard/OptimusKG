@@ -1,19 +1,18 @@
 name: integration
-
 on:
   pull_request:
 
 env:
-  PYTHON_VERSION: 3.12
+  PYTHON_VERSION: "3.12"
 
 jobs:
-  install-uv:
+  install-and-validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - name: Validate pyproject.toml
-        uses: abravalheri/validate-pyproject@v0.23
+        uses: metadata-check/action-validate-pyproject@v1
 
       - name: Install required-version defined in pyproject.toml
         uses: astral-sh/setup-uv@v5
@@ -34,10 +33,18 @@ jobs:
         run: echo "Installed uv version is ${{ steps.setup-uv.outputs.uv-version }}"
 
   quality-check:
+    needs: install-and-validate
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
       - name: Check for typos
         uses: crate-ci/typos@v1.29.4
 
       - name: Run MyPy type checker
-        run: uv tool run hatch run mypy
+        run: uv pip install mypy && uv run mypy
