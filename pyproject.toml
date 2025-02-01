@@ -68,6 +68,9 @@ interrogate = 'uv tool run interrogate --config pyproject.toml'
 download_landing_files = 'uv run bash scripts/download_landing_files.sh'
 clean = 'uv run bash scripts/clean_files.sh'
 
+[tool.uv]
+required-version = ">=0.5.18"
+
 [tool.kedro]
 package_name = "optimuskg"
 project_name = "OptimusKG"
