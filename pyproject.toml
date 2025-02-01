@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 requires-python = ">=3.12"
 name = "optimuskg"
 readme = "README.md"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
   "ipython>=8.10",
   "jupyterlab>=3.0",
@@ -68,6 +68,9 @@ interrogate = 'uv tool run interrogate --config pyproject.toml'
 download_landing_files = 'uv run bash scripts/download_landing_files.sh'
 clean = 'uv run bash scripts/clean_files.sh'
 
+[tool.uv]
+required-version = ">=0.5.18"
+
 [tool.kedro]
 package_name = "optimuskg"
 project_name = "OptimusKG"
@@ -87,6 +90,10 @@ exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
 [tool.pyright]
 venvPath = "."
 venv = ".venv"
+
+[tool.typos.default.extend-words]
+# Don't correct the OpenTargets Abbreviation
+ot = "ot"
 
 [tool.ruff.format]
 docstring-code-format = true

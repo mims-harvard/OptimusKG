@@ -23,7 +23,6 @@ from kedro.framework.cli.utils import find_stylesheets
 
 from optimuskg import __version__ as release
 
-
 # -- Project information -----------------------------------------------------
 
 project = "optimuskg"
@@ -209,11 +208,11 @@ def remove_arrows_in_examples(lines):
         lines[i] = line.replace(">>>", "")
 
 
-def autodoc_process_docstring(app, what, name, obj, options, lines):
+def autodoc_process_docstring(app, what, name, obj, options, lines):  # noqa: PLR0913
     remove_arrows_in_examples(lines)
 
 
-def skip(app, what, name, obj, skip, options):
+def skip(app, what, name, obj, skip, options):  # noqa: PLR0913
     if name == "__init__":
         return False
     return skip

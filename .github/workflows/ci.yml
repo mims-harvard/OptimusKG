@@ -1,0 +1,114 @@
+name: Integration checks
+
+on:
+  pull_request:
+
+env:
+  CLICOLOR: 1
+  PYTHON_VERSION: 3.12
+  RUFF_VERSION: 0.9.1 # Using same version as pre-commit-config.yaml
+
+jobs:
+  uv:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v5
+        id: setup-uv
+        with:
+          enable-cache: true
+          ignore-nothing-to-cache: true
+          pyproject-file: "pyproject.toml"
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache-dependency-glob: |
+            **/pyproject.toml
+            **/uv.lock
+
+      - name: Log if uv cache was restored
+        if: steps.setup-uv.outputs.cache-hit == 'true'
+        run: echo "Cache was restored"
+
+      - name: Print the installed uv version
+        run: echo "Installed uv version is ${{ steps.setup-uv.outputs.uv-version }}"
+
+      - name: Install the project dependencies
+        run: uv sync --all-extras
+
+      - name: Run mypy
+        run: uv tool run hatch run mypy
+
+      - name: Run bandit
+        run: uv tool run hatch run bandit
+
+      - name: Run interrogate
+        run: uv tool run hatch run interrogate
+
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Spell Check
+        uses: crate-ci/typos@v1.29.4
+
+      - name: Formatting
+        uses: astral-sh/ruff-action@v3
+        with:
+          version: ${{ env.RUFF_VERSION }}
+          args: check --fix --exit-non-zero-on-fix
+
+  semver-bump:
+    runs-on: ubuntu-latest
+    env:
+      TARGET_BRANCH: ${{ github.base_ref }}
+      HEAD_BRANCH: ${{ github.head_ref }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Fetch branches
+        run: |
+          git fetch origin ${TARGET_BRANCH}
+          git fetch origin ${HEAD_BRANCH}
+
+      - name: Install dependencies
+        run: pip install packaging
+
+      - name: Check version bump
+        shell: bash
+        run: |
+          # Extract versions from both branches
+          old_version=$(git show origin/${TARGET_BRANCH}:pyproject.toml | grep "^version = " | cut -d'"' -f2 || echo "0.0.0")
+          new_version=$(git show origin/${HEAD_BRANCH}:pyproject.toml | grep "^version = " | cut -d'"' -f2)
+
+          echo "Previous version: ${old_version}"
+          echo "New version: ${new_version}"
+
+          # Compare versions using Python
+          version_increased=$(python - <<EOF
+          from packaging import version
+          old = version.parse("${old_version}")
+          new = version.parse("${new_version}")
+          print(new > old)
+          EOF
+          )
+
+          if [ "${version_increased}" = "False" ]; then
+            echo "::error::Version must be bumped according to semantic versioning."
+            echo "Current version: ${old_version}"
+            echo "Proposed version: ${new_version}"
+            echo "Please update the version in pyproject.toml"
+            exit 1
+          else
+            echo "✅ Version bump verified: ${old_version} -> ${new_version}"
+          fi
