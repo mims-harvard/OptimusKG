@@ -10,8 +10,9 @@ jobs:
   install-uv:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2
+      - name: Check out repository
+      - uses: actions/checkout@v4
+        uses: ./
 
       - name: Validate pyproject.toml
         uses: abravalheri/validate-pyproject@v0.23
