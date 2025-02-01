@@ -32,6 +32,12 @@ jobs:
       - name: Print the installed uv version
         run: echo "Installed uv version is ${{ steps.setup-uv.outputs.uv-version }}"
 
+      - name: Run mypy
+        run: uv tool run hatch run mypy
+
+      - name: Run bandit
+        run: uv tool run hatch run bandit
+
   quality-check:
     runs-on: ubuntu-latest
     needs: install-uv
@@ -40,6 +46,3 @@ jobs:
 
       - name: Spell Check
         uses: crate-ci/typos@v1.29.4
-
-      - name: Run MyPy type checker
-        run: uv tool run hatch run mypy
