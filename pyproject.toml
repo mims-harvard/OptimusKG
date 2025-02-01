@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 requires-python = ">=3.12"
 name = "optimuskg"
 readme = "README.md"
-dynamic = ["version"]
+version = "0.2.0"
 dependencies = [
   "ipython>=8.10",
   "jupyterlab>=3.0",
@@ -54,9 +54,6 @@ dev = [
 [project.scripts]
 optimuskg = "optimuskg.__main__:main"
 
-[tool.hatch.version]
-path = "src/optimuskg/__init__.py"
-
 [tool.hatch.build.targets.wheel]
 packages = ["src/optimuskg"]
 
@@ -64,14 +61,12 @@ packages = ["src/optimuskg"]
 path = ".venv"
 
 [tool.hatch.envs.default.scripts]
+list = ["hatch env show --json | jq --raw-output '.default.scripts | keys[]'"]
 mypy = 'uv tool run mypy --install-types --config-file pyproject.toml --non-interactive --python-executable=$(uv run python -c "import sys; print(sys.executable)") -p src -p tests'
 bandit = 'uv tool run bandit -v -c pyproject.toml -r src/* tests/*'
 interrogate = 'uv tool run interrogate --config pyproject.toml'
 download_landing_files = 'uv run bash scripts/download_landing_files.sh'
 clean = 'uv run bash scripts/clean_files.sh'
-
-[tool.uv]
-cache-keys = [{ file = "pyproject.toml" }, { file = "src/optimuskg/__init__.py" }]
 
 [tool.kedro]
 package_name = "optimuskg"
