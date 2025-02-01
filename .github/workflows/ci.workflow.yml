@@ -4,6 +4,7 @@ on:
   pull_request:
 
 env:
+  CLICOLOR: 1
   PYTHON_VERSION: 3.12
 
 jobs:
@@ -33,8 +34,9 @@ jobs:
 
   quality-check:
     runs-on: ubuntu-latest
+    needs: install-and-validate
     steps:
-      - name: Check for typos
+      - name: Spell Check
         uses: crate-ci/typos@v1.29.4
 
       - name: Run MyPy type checker
