@@ -162,6 +162,7 @@ class SQLDumpQueryDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
         logger.info("Executing query on PostgreSQL database...")
         try:
             df = pd.read_sql_query(self._query, self._conn_string)
+            self._shutdown_database()
             return pl.DataFrame(df)
         except Exception as e:
             self._shutdown_database()
