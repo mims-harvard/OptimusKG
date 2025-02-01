@@ -12,7 +12,7 @@ biocypher:
   strict_mode: false
 
   # Schema configuration: mapping of inputs to ontology
-  user_schema_config_path: biocypher/_config/test_schema_config.yaml
+  user_schema_config_path: conf/base/biocypher/schema_config.yaml
 
   # Ontology configuration
   head_ontology:
