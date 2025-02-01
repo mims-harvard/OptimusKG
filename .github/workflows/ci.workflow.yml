@@ -32,6 +32,9 @@ jobs:
       - name: Print the installed uv version
         run: echo "Installed uv version is ${{ steps.setup-uv.outputs.uv-version }}"
 
+      - name: Install the project
+        run: uv sync --all-extras
+
       - name: Run mypy
         run: uv tool run hatch run mypy
 
