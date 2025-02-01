@@ -91,6 +91,10 @@ exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
 venvPath = "."
 venv = ".venv"
 
+[tool.typos.default.extend-words]
+# Don't correct the OpenTargets Abbreviation
+ot = "ot"
+
 [tool.ruff.format]
 docstring-code-format = true
 
