@@ -25,46 +25,48 @@ def process_biocypher(  # noqa: PLR0913
             "format": "ttl",
         },
         tail_ontologies={
-            "doid": {
-                "url": disease_ontology.filepath,
-                "head_join_node": "disease",
-                "tail_join_node": "human disease",
-                "merge_nodes": False,
-                "format": "owl",
-            },
-            "go": {
-                "url": gene_ontology.filepath,
-                "head_join_node": "disease",
-                "tail_join_node": "human disease",
-                "merge_nodes": False,
-            },
-            "hpo": {
-                "url": human_phenotype_ontology.filepath,
-                "head_join_node": "disease",
-                "tail_join_node": "human disease",
-                "merge_nodes": False,
-            },
-            "mondo": {
-                "url": mondo_ontology.filepath,
-                "head_join_node": "disease",
-                "tail_join_node": "human disease",
-                "merge_nodes": False,
-            },
-            "ordo": {
-                "url": orphanet_ontology.filepath,
-                "head_join_node": "disease",
-                "tail_join_node": "human disease",
-                "merge_nodes": False,
-            },
+            # "doid": {
+            #     "url": disease_ontology.filepath,
+            #     "head_join_node": "disease",
+            #     "tail_join_node": "human disease",
+            #     "merge_nodes": False,
+            # },
+            # "go": {
+            #     "url": gene_ontology.filepath,
+            #     "head_join_node": "disease",
+            #     "tail_join_node": "human disease",
+            #     "merge_nodes": False,
+            # },
+            # "hpo": {
+            #     "url": human_phenotype_ontology.filepath,
+            #     "head_join_node": "disease",
+            #     "tail_join_node": "human disease",
+            #     "merge_nodes": False,
+            # },
+            # "mondo": {
+            #     "url": mondo_ontology.filepath,
+            #     "head_join_node": "disease",
+            #     "tail_join_node": "human disease",
+            #     "merge_nodes": False,
+            # },
+            # "ordo": {
+            #     "url": orphanet_ontology.filepath,
+            #     "head_join_node": "disease",
+            #     "tail_join_node": "human disease",
+            #     "merge_nodes": False,
+            # },
             "uberon": {
                 "url": uberon_ontology.filepath,
                 "head_join_node": "disease",
                 "tail_join_node": "human disease",
                 "merge_nodes": False,
+                "format": "owl",
             },
         },
     )
-    bc.show_ontology_structure()
+    bc.show_ontology_structure(
+        to_disk="/Users/inakiarango/Documents/Harvard/Research/Zitnik Lab/optimuskg/pedropicapiedras",
+    )  # NOTE: Don't print in prod
     return pl.DataFrame()
 
 
