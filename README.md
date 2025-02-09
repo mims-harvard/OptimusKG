@@ -4,7 +4,7 @@
 
 Prerequisites for this project are:
 
-- [uv](https://github.com/astral-sh/uv)
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
 - [docker](https://docs.docker.com/engine/install/)
 
 Install dependencies with:
@@ -16,7 +16,66 @@ Resolved 218 packages in 3ms
 Audited 215 packages in 0.28ms
 ```
 
+## Running hatch scripts
+
+We use [hatch](https://hatch.pypa.io/latest/) as our project manager. You can see all the available scripts with:
+
+```consoleE21: Cannot make changes, 'modifiable' is off
+$ uv tool run hatch run list
+bandit
+clean
+download_landing_files
+interrogate
+list
+mypy
+...
+```
+
 ## Run it
+
+### Download landing files
+
+In order to run the project, you need to download the landing files. You can do this with the following command:
+
+```console
+$ uv tool run hatch run download_landing_files
+```
+
+There are some files that are not downloaded automatically, so you need to download them manually. Ask the team for the files and put them in the `data/landing` folder as follows:
+
+```console
+optimuskg/
+└── data/
+    └── landing/
+        ├── bgee/
+        │   └── Homo_sapiens_expr_advanced.tsv
+        ├── ctd/
+        │   └── CTD_exposure_events.csv
+        ├── reactome/
+        │   └── NCBI2Reactome.txt
+        │   └── ReactomePathways.txt
+        │   └── ReactomePathwaysRelation.txt
+        ├── ncbigene/
+        │   └── gene2go
+        ├── drugbank/
+        │   └── full database.xml
+        │   └── drugbank_all_carrier_polypeptide_ids.csv
+        │   └── drugbank_all_enzyme_polypeptide_ids.csv
+        │   └── drugbank_all_target_polypeptide_ids.csv
+        │   └── drugbank_all_transporter_polypeptide_ids.csv
+        │   └── drugbank_vocabulary.csv
+        ├── drugcentral/
+        │   └── drugcentral-pgdump_20200918.sql
+
+```
+
+
+
+
+
+
+
+
 
 ### How to run your Kedro pipeline
 
@@ -66,21 +125,6 @@ $ uv run kedro run --pipeline bronze
                     INFO     Completed node: bronze.drug_mappings                                                                                                                               runner.py:250
                     INFO     Completed 1 out of 32 tasks                                                                                                                                        runner.py:251
                     INFO     Running node: chembl: process_chembl([landing.opentargets.evidence.chembl]) -> [bronze.opentargets.evidence.chembl]                                                  node.py:367
-```
-
-### Running hatch scripts
-
-We use [hatch](https://hatch.pypa.io/latest/) as our project manager. You can see all the available scripts with:
-
-```console
-$ uv tool run hatch run list
-bandit
-clean
-download_landing_files
-interrogate
-list
-mypy
-...
 ```
 
 ## How to work with notebooks
