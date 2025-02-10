@@ -43,12 +43,12 @@ def process_biocypher(  # noqa: PLR0913
             #     "tail_join_node": "human disease",
             #     "merge_nodes": False,
             # },
-            # "mondo": {
-            #     "url": mondo_ontology.filepath,
-            #     "head_join_node": "disease",
-            #     "tail_join_node": "human disease",
-            #     "merge_nodes": False,
-            # },
+            "mondo": {
+                "url": mondo_ontology.filepath,
+                "head_join_node": "disease",
+                "tail_join_node": "human disease",
+                "merge_nodes": False,
+            },
             # "ordo": {
             #     "url": orphanet_ontology.filepath,
             #     "head_join_node": "disease",
@@ -72,6 +72,7 @@ def process_biocypher(  # noqa: PLR0913
     except Exception as e:
         # TODO: Remove this once we have a way to handle this error
         log.error(f"Error showing ontology structure... skipping")
+        raise
     return pl.DataFrame()
 
 
