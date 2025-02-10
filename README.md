@@ -33,6 +33,12 @@ mypy
 
 ## Run it
 
+### Set script permissions
+
+```console
+$ chmod +x scripts/*.sh
+```
+
 ### Download landing files
 
 In order to run the project, you need to download the landing files. You can do this with the following command:
@@ -69,13 +75,19 @@ optimuskg/
 
 ```
 
+### Set up Neo4j volume permissions
 
+Before running the project, ensure proper permissions are set for the Neo4j import volume. This allows both the Neo4j container and Kedro to write the BioCypher GraphML file. Run:
 
+```console
+$ sudo chmod -R 777 data/gold/neo4j_import_volume && sudo chown -R $(id -u):$(id -g) data/gold/neo4j_import_volume
+```
 
+### Run the project
 
-
-
-
+```console
+$ uv run kedro run
+```
 
 ### How to run your Kedro pipeline
 

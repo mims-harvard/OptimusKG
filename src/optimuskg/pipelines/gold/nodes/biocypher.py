@@ -55,17 +55,18 @@ def process_biocypher(  # noqa: PLR0913
             #     "tail_join_node": "human disease",
             #     "merge_nodes": False,
             # },
-            "uberon": {
-                "url": uberon_ontology.filepath,
-                "head_join_node": "disease",
-                "tail_join_node": "human disease",
-                "merge_nodes": False,
-                "format": "owl",
-            },
+            # "uberon": {
+            #     "url": uberon_ontology.filepath,
+            #     "head_join_node": "disease",
+            #     "tail_join_node": "human disease",
+            #     "merge_nodes": False,
+            #     "format": "owl",
+            # },
         },
     )
     bc.show_ontology_structure(
-        to_disk="/Users/inakiarango/Documents/Harvard/Research/Zitnik Lab/optimuskg/pedropicapiedras",
+        full=True,
+        to_disk="data/gold/neo4j_import_volume",
     )  # NOTE: Don't print in prod
     return pl.DataFrame()
 

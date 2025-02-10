@@ -1,20 +1,20 @@
 landing.biolink.ontology:
   type: optimuskg.datasets.OWLDataset
-  filepath: "https://data.bioontology.org/ontologies/BIOLINK/submissions/68/download?apikey=168d52c1-bd36-4866-aa99-0aa8eb06f295"
+  filepath: "data/landing/ontologies/biolink.owl"
 
 landing.disease_ontology.ontology:
   type: optimuskg.datasets.OWLDataset
-  filepath: "https://data.bioontology.org/ontologies/DOID/submissions/656/download?apikey=168d52c1-bd36-4866-aa99-0aa8eb06f295"
+  filepath: "data/landing/ontologies/disease_ontology.owl"
 
 landing.gene_ontology.ontology:
   type: optimuskg.datasets.OWLDataset
-  filepath: "https://data.bioontology.org/ontologies/GO-PLUS/submissions/701/download?apikey=168d52c1-bd36-4866-aa99-0aa8eb06f295"
+  filepath: "data/landing/ontologies/gene_ontology.owl"
 
 landing.human_phenotype_ontology.ontology:
   type: optimuskg.datasets.OWLDataset
-  filepath: "http://purl.obolibrary.org/obo/hp.owl"
+  filepath: "data/landing/ontologies/human_phenotype_ontology.owl"
 
-# TODO: This dataset is never used, and the filepath is not valid (i.e it should be data/landing/hpo/phenotype.hpoa)
+# TODO: This dataset is never used, and the filepath is not valid (i.e it should be data/landing/hpo/phenotype.hpoa)  
 landing.human_phenotype_ontology.phenotype:
   type: polars.CSVDataset
   filepath: "landing/hpo/phenotype.hpoa"
@@ -23,15 +23,15 @@ landing.human_phenotype_ontology.phenotype:
 
 landing.mondo.ontology:
   type: optimuskg.datasets.OWLDataset
-  filepath: "http://purl.obolibrary.org/obo/mondo.owl"
+  filepath: "data/landing/ontologies/mondo.owl"
 
 landing.orphanet.ontology:
   type: optimuskg.datasets.OWLDataset
-  filepath: "https://data.bioontology.org/ontologies/ORDO/submissions/30/download?apikey=168d52c1-bd36-4866-aa99-0aa8eb06f295"
+  filepath: "data/landing/ontologies/orphanet.owl"
 
 landing.uber_anatomy_ontology.ontology:
   type: optimuskg.datasets.OWLDataset
-  filepath: "https://data.bioontology.org/ontologies/UBERON/submissions/348/download?apikey=168d52c1-bd36-4866-aa99-0aa8eb06f295"
+  filepath: "data/landing/ontologies/uber_anatomy_ontology.owl"
 
 landing.bgee.homo_sapiens_expressions_advanced:
   type: polars.CSVDataset
@@ -267,7 +267,6 @@ landing.opentargets.targets:
       lines: true
       dtype: false
   filename_suffix: ".json"
-
 
 landing.opentargets.molecule:
   type: partitions.PartitionedDataset

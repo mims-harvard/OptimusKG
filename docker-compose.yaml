@@ -1,0 +1,32 @@
+services:
+  # TODO: Remove anonymous usage data report for production
+  # Reference: https://neo4j.com/docs/reference/usage-data/
+  neo4j:
+    image: neo4j:5.26.2-community-bullseye
+    container_name: neo4j
+    ports:
+      - "7474:7474" # HTTP
+      - "7687:7687" # Bolt
+      - "7473:7473" # HTTPS
+    volumes:
+      - neo4j_data:/data
+      - ./data/gold/neo4j_import_volume:/var/lib/neo4j/import
+      - ./scripts/neo4j_entrypoint.sh:/startup/neo4j_entrypoint.sh
+    environment:
+      NEO4J_AUTH: none # no need for auth for local development
+      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_apoc_export_file_enabled: true
+      NEO4J_apoc_import_file_enabled: true
+      NEO4J_apoc_import_file_use__neo4j__config: true
+      NEO4J_dbms_security_procedures_unrestricted: apoc.*
+      NEO4J_ACCEPT_LICENSE_AGREEMENT: "yes"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:7474"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    entrypoint: ["/startup/neo4j_entrypoint.sh"]
+
+volumes:
+  neo4j_data:

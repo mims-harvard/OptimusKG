@@ -67,6 +67,7 @@ bandit = 'uv tool run bandit -v -c pyproject.toml -r src/* tests/*'
 interrogate = 'uv tool run interrogate --config pyproject.toml'
 download_landing_files = 'uv run bash scripts/download_landing_files.sh'
 clean = 'uv run bash scripts/clean_files.sh'
+neo4j = 'docker compose up -d'
 
 [tool.uv]
 required-version = ">=0.5.18"
