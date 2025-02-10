@@ -72,6 +72,9 @@ optimuskg/
         │   └── drugbank_vocabulary.csv
         ├── drugcentral/
         │   └── drugcentral-pgdump_20200918.sql
+        └── opentargets/
+            └── primekg_nodes.csv
+            └── primekg_edges.csv
 
 ```
 

@@ -28,7 +28,7 @@ def process_biocypher(  # noqa: PLR0913
             # "doid": {
             #     "url": disease_ontology.filepath,
             #     "head_join_node": "disease",
-            #     "tail_join_node": "human disease",
+            #     "tail_join_node": "disease",
             #     "merge_nodes": False,
             # },
             # "go": {
@@ -64,10 +64,14 @@ def process_biocypher(  # noqa: PLR0913
             # },
         },
     )
-    bc.show_ontology_structure(
-        full=True,
-        to_disk="data/gold/neo4j_import_volume",
-    )  # NOTE: Don't print in prod
+    try:
+        bc.show_ontology_structure(
+            full=True,
+            to_disk="data/gold/neo4j_import_volume",
+        )
+    except Exception as e:
+        # TODO: Remove this once we have a way to handle this error
+        log.error(f"Error showing ontology structure... skipping")
     return pl.DataFrame()
 
 
