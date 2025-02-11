@@ -10,3 +10,12 @@ silver.opentargets.disease_to_phenotype:
 silver.opentargets.opentargets_edges:
   type: polars.CSVDataset
   filepath: "data/silver/opentargets/opentargets_edges.csv"
+
+silver.bgee.gene_expressions_in_anatomy.nodes:
+  type: polars.CSVDataset
+  filepath: "data/silver/bgee/gene_expressions_in_anatomy/nodes.csv"
+
+silver.bgee.gene_expressions_in_anatomy.edges:
+  type: polars.CSVDataset
+  filepath: "data/silver/bgee/gene_expressions_in_anatomy/edges.csv"
+
