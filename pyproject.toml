@@ -29,10 +29,6 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-docs = [
-  "Jinja2<3.1.0",
-  "myst-parser~=0.17.2",
-]
 dev = [
   "pytest-cov~=3.0",
   "pytest-mock>=1.7.1, <2.0",
