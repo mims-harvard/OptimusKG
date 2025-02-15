@@ -1,36 +1,30 @@
 landing.biolink.ontology:
   type: optimuskg.datasets.OWLDataset
-  filepath: "https://data.bioontology.org/ontologies/BIOLINK/submissions/68/download?apikey=168d52c1-bd36-4866-aa99-0aa8eb06f295"
+  filepath: "data/landing/ontologies/biolink.owl"
 
 landing.disease_ontology.ontology:
   type: optimuskg.datasets.OWLDataset
-  filepath: "https://data.bioontology.org/ontologies/DOID/submissions/656/download?apikey=168d52c1-bd36-4866-aa99-0aa8eb06f295"
+  filepath: "data/landing/ontologies/disease_ontology.owl"
 
 landing.gene_ontology.ontology:
   type: optimuskg.datasets.OWLDataset
-  filepath: "https://data.bioontology.org/ontologies/GO-PLUS/submissions/701/download?apikey=168d52c1-bd36-4866-aa99-0aa8eb06f295"
+  filepath: "data/landing/ontologies/gene_ontology.owl"
 
 landing.human_phenotype_ontology.ontology:
   type: optimuskg.datasets.OWLDataset
-  filepath: "http://purl.obolibrary.org/obo/hp.owl"
-
-landing.human_phenotype_ontology.phenotype:
-  type: polars.CSVDataset
-  filepath: "landing/hpo/phenotype.hpoa"
-  load_args:
-    sep: "\t"
+  filepath: "data/landing/ontologies/human_phenotype_ontology.owl"
 
 landing.mondo.ontology:
   type: optimuskg.datasets.OWLDataset
-  filepath: "http://purl.obolibrary.org/obo/mondo.owl"
+  filepath: "data/landing/ontologies/mondo.owl"
 
 landing.orphanet.ontology:
   type: optimuskg.datasets.OWLDataset
-  filepath: "https://data.bioontology.org/ontologies/ORDO/submissions/30/download?apikey=168d52c1-bd36-4866-aa99-0aa8eb06f295"
+  filepath: "data/landing/ontologies/orphanet.owl"
 
 landing.uber_anatomy_ontology.ontology:
   type: optimuskg.datasets.OWLDataset
-  filepath: "https://data.bioontology.org/ontologies/UBERON/submissions/348/download?apikey=168d52c1-bd36-4866-aa99-0aa8eb06f295"
+  filepath: "data/landing/ontologies/uber_anatomy_ontology.owl"
 
 landing.bgee.homo_sapiens_expressions_advanced:
   type: polars.CSVDataset
@@ -144,28 +138,28 @@ landing.drugbank.full_database:
   type: optimuskg.datasets.LXMLDataset
   filepath: data/landing/drugbank/full database.xml
 
-# Maybe we should use dataset factories here: https://docs.kedro.org/en/stable/data/kedro_dataset_factories.html
+# NOTE: Maybe we should use dataset factories here: https://docs.kedro.org/en/stable/data/kedro_dataset_factories.html
 landing.drugbank.carrier:
   type: polars.CSVDataset
-  filepath: "data/landing/drugbank/drugbank_all_carrier_polypeptide_ids.csv/all.csv"
+  filepath: "data/landing/drugbank/drugbank_all_carrier_polypeptide_ids.csv"
   load_args:
     infer_schema: false
 
 landing.drugbank.enzyme:
   type: polars.CSVDataset
-  filepath: "data/landing/drugbank/drugbank_all_enzyme_polypeptide_ids.csv/all.csv"
+  filepath: "data/landing/drugbank/drugbank_all_enzyme_polypeptide_ids.csv"
   load_args:
     infer_schema: false
 
 landing.drugbank.target:
   type: polars.CSVDataset
-  filepath: "data/landing/drugbank/drugbank_all_target_polypeptide_ids.csv/all.csv"
+  filepath: "data/landing/drugbank/drugbank_all_target_polypeptide_ids.csv"
   load_args:
     infer_schema: false
 
 landing.drugbank.transporter:
   type: polars.CSVDataset
-  filepath: "data/landing/drugbank/drugbank_all_transporter_polypeptide_ids.csv/all.csv"
+  filepath: "data/landing/drugbank/drugbank_all_transporter_polypeptide_ids.csv"
   load_args:
     infer_schema: false
 
@@ -184,7 +178,7 @@ landing.drugbank.vocabulary:
 
 landing.drugcentral.psql_dump:
   type: optimuskg.datasets.SQLDumpQueryDataset
-  filepath: "data/landing/drugcentral/drugcentral-pgdump_20200918-001.sql"
+  filepath: "data/landing/drugcentral/drugcentral-pgdump_20200918.sql"
   query: >
     SELECT DISTINCT
         structures.id AS structure_id,
@@ -266,7 +260,6 @@ landing.opentargets.targets:
       lines: true
       dtype: false
   filename_suffix: ".json"
-
 
 landing.opentargets.molecule:
   type: partitions.PartitionedDataset
