@@ -14,13 +14,6 @@ landing.human_phenotype_ontology.ontology:
   type: optimuskg.datasets.OWLDataset
   filepath: "data/landing/ontologies/human_phenotype_ontology.owl"
 
-# TODO: This dataset is never used, and the filepath is not valid (i.e it should be data/landing/hpo/phenotype.hpoa)  
-landing.human_phenotype_ontology.phenotype:
-  type: polars.CSVDataset
-  filepath: "landing/hpo/phenotype.hpoa"
-  load_args:
-    sep: "\t"
-
 landing.mondo.ontology:
   type: optimuskg.datasets.OWLDataset
   filepath: "data/landing/ontologies/mondo.owl"
@@ -145,7 +138,7 @@ landing.drugbank.full_database:
   type: optimuskg.datasets.LXMLDataset
   filepath: data/landing/drugbank/full database.xml
 
-# Maybe we should use dataset factories here: https://docs.kedro.org/en/stable/data/kedro_dataset_factories.html
+# NOTE: Maybe we should use dataset factories here: https://docs.kedro.org/en/stable/data/kedro_dataset_factories.html
 landing.drugbank.carrier:
   type: polars.CSVDataset
   filepath: "data/landing/drugbank/drugbank_all_carrier_polypeptide_ids.csv"

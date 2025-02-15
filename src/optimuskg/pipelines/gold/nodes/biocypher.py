@@ -71,7 +71,7 @@ def process_biocypher(  # noqa: PLR0913
         )
     except Exception as e:
         # TODO: Remove this once we have a way to handle this error
-        log.error(f"Error showing ontology structure... skipping")
+        log.error(f"Error showing ontology structure... skipping: {e}")
         raise
     return pl.DataFrame()
 

@@ -20,7 +20,7 @@ Audited 215 packages in 0.28ms
 
 We use [hatch](https://hatch.pypa.io/latest/) as our project manager. You can see all the available scripts with:
 
-```consoleE21: Cannot make changes, 'modifiable' is off
+```console
 $ uv tool run hatch run list
 bandit
 clean
@@ -75,7 +75,6 @@ optimuskg/
         └── opentargets/
             └── primekg_nodes.csv
             └── primekg_edges.csv
-
 ```
 
 ### Set up Neo4j volume permissions
