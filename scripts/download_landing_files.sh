@@ -65,3 +65,6 @@ download_files "molecule" "$BASE_DIR/$MOLECULE_DIR" "$BASE_URL/json/molecule/" "
 download_files "diseases" "$BASE_DIR/$DISEASES_DIR" "$BASE_URL/json/diseases/" "json"
 
 download_files "diseaseToPhenotype" "$BASE_DIR/$DISEASES_TO_PHENOTYPE" "$BASE_URL/json/diseaseToPhenotype/" "json"
+
+# Download ontologies
+./scripts/download_landing_ontologies.sh

@@ -25,46 +25,54 @@ def process_biocypher(  # noqa: PLR0913
             "format": "ttl",
         },
         tail_ontologies={
-            "doid": {
-                "url": disease_ontology.filepath,
-                "head_join_node": "disease",
-                "tail_join_node": "human disease",
-                "merge_nodes": False,
-                "format": "owl",
-            },
-            "go": {
-                "url": gene_ontology.filepath,
-                "head_join_node": "disease",
-                "tail_join_node": "human disease",
-                "merge_nodes": False,
-            },
-            "hpo": {
-                "url": human_phenotype_ontology.filepath,
-                "head_join_node": "disease",
-                "tail_join_node": "human disease",
-                "merge_nodes": False,
-            },
+            # "doid": {
+            #     "url": disease_ontology.filepath,
+            #     "head_join_node": "disease",
+            #     "tail_join_node": "disease",
+            #     "merge_nodes": False,
+            # },
+            # "go": {
+            #     "url": gene_ontology.filepath,
+            #     "head_join_node": "disease",
+            #     "tail_join_node": "human disease",
+            #     "merge_nodes": False,
+            # },
+            # "hpo": {
+            #     "url": human_phenotype_ontology.filepath,
+            #     "head_join_node": "disease",
+            #     "tail_join_node": "human disease",
+            #     "merge_nodes": False,
+            # },
             "mondo": {
                 "url": mondo_ontology.filepath,
                 "head_join_node": "disease",
                 "tail_join_node": "human disease",
                 "merge_nodes": False,
             },
-            "ordo": {
-                "url": orphanet_ontology.filepath,
-                "head_join_node": "disease",
-                "tail_join_node": "human disease",
-                "merge_nodes": False,
-            },
-            "uberon": {
-                "url": uberon_ontology.filepath,
-                "head_join_node": "disease",
-                "tail_join_node": "human disease",
-                "merge_nodes": False,
-            },
+            # "ordo": {
+            #     "url": orphanet_ontology.filepath,
+            #     "head_join_node": "disease",
+            #     "tail_join_node": "human disease",
+            #     "merge_nodes": False,
+            # },
+            # "uberon": {
+            #     "url": uberon_ontology.filepath,
+            #     "head_join_node": "disease",
+            #     "tail_join_node": "human disease",
+            #     "merge_nodes": False,
+            #     "format": "owl",
+            # },
         },
     )
-    bc.show_ontology_structure()
+    try:
+        bc.show_ontology_structure(
+            full=True,
+            to_disk="data/gold/neo4j_import_volume",
+        )
+    except Exception as e:
+        # TODO: Remove this once we have a way to handle this error
+        log.error(f"Error showing ontology structure... skipping: {e}")
+        raise
     return pl.DataFrame()
 
 

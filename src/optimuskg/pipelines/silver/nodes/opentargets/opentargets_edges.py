@@ -5,7 +5,6 @@ from kedro.pipeline import node
 
 log = logging.getLogger(__name__)
 
-
 def process_opentargets_edges(  # noqa: PLR0913
     cancer_gene_census: pl.DataFrame,
     chembl_drug_disease: pl.DataFrame,
@@ -134,24 +133,29 @@ def process_opentargets_edges(  # noqa: PLR0913
     # Add to PrimeKG
     # Create reverse edges
     rev_edges = open_targets_edges.clone()
+
+    # NOTE: Commented columns are not in the rev_edges schema,
+    # but they were in the original code (private repo):
+    # https://github.com/Vir-M/OpenTargets/blob/main/primekg.py#L143
     rev_cols = {
         "x_index": "y_index",
-        "x_id": "y_id",
-        "x_type": "y_type",
-        "x_name": "y_name",
-        "x_source": "y_source",
+        # "x_id": "y_id",
+        # "x_type": "y_type",
+        # "x_name": "y_name",
+        # "x_source": "y_source",
         "y_index": "x_index",
-        "y_id": "x_id",
-        "y_type": "x_type",
-        "y_name": "x_name",
-        "y_source": "x_source",
+        # "y_id": "x_id",
+        # "y_type": "x_type",
+        # "y_name": "x_name",
+        # "y_source": "x_source",
     }
     rev_edges = rev_edges.rename(rev_cols)
     rev_edges = rev_edges.select(primekg_edges.columns)
 
     # Merge with PrimeKG
-    open_targets_edges = open_targets_edges.cast({"y_index": pl.Float64})
-    rev_edges = rev_edges.cast({"y_index": pl.Float64})
+    # NOTE: We need to cast y_index to Utf8 to avoid type mismatch.
+    open_targets_edges = open_targets_edges.cast({"y_index": pl.Utf8})
+    rev_edges = rev_edges.cast({"y_index": pl.Utf8})
     new_kg_edges = pl.concat([primekg_edges, open_targets_edges, rev_edges])
 
     # Check for duplicates
