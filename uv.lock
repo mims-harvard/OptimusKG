@@ -1586,23 +1586,6 @@ wheels = [
 ]
 
 [[package]]
-name = "nbsphinx"
-version = "0.8.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "docutils" },
-    { name = "jinja2" },
-    { name = "nbconvert" },
-    { name = "nbformat" },
-    { name = "sphinx" },
-    { name = "traitlets" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/5f/37/07d6de8430b0975a185508e90ced2b5ab34cad2e58608f43a1fac232a8b9/nbsphinx-0.8.1.tar.gz", hash = "sha256:24d59aa3a1077ba58d9769c64c38fb05b761a1af21c1ac15f6393500cd008ea6", size = 134540 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/1b/1d/b65dff2f8dc45460e77cef7bb8b761444ecf25759d847c955db02277eb3a/nbsphinx-0.8.1-py3-none-any.whl", hash = "sha256:ef75e15047e36faa9741267286b9dc7d5a0d16302f65adee73885e8949ec6f75", size = 24396 },
-]
-
-[[package]]
 name = "neo4j"
 version = "4.4.12"
 source = { registry = "https://pypi.org/simple" }
@@ -1781,15 +1764,8 @@ dev = [
     { name = "ruff" },
 ]
 docs = [
-    { name = "docutils" },
-    { name = "ipykernel" },
     { name = "jinja2" },
     { name = "myst-parser" },
-    { name = "nbsphinx" },
-    { name = "sphinx" },
-    { name = "sphinx-autodoc-typehints" },
-    { name = "sphinx-copybutton" },
-    { name = "sphinx-rtd-theme" },
 ]
 
 [package.metadata]
@@ -1797,10 +1773,8 @@ requires-dist = [
     { name = "aiohttp", specifier = ">=3.11.11" },
     { name = "bandit", marker = "extra == 'dev'", specifier = ">=1.8.2" },
     { name = "biocypher", specifier = ">=0.6.1" },
-    { name = "docutils", marker = "extra == 'docs'", specifier = "<0.18.0" },
     { name = "goatools", specifier = ">=1.4.12" },
     { name = "interrogate", marker = "extra == 'dev'", specifier = ">=1.7.0" },
-    { name = "ipykernel", marker = "extra == 'docs'", specifier = ">=5.3,<7.0" },
     { name = "ipython", specifier = ">=8.10" },
     { name = "jinja2", marker = "extra == 'docs'", specifier = "<3.1.0" },
     { name = "jupyterlab", specifier = ">=3.0" },
@@ -1810,7 +1784,6 @@ requires-dist = [
     { name = "lxml-stubs", specifier = ">=0.5.1" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.14.1" },
     { name = "myst-parser", marker = "extra == 'docs'", specifier = "~=0.17.2" },
-    { name = "nbsphinx", marker = "extra == 'docs'", specifier = "==0.8.1" },
     { name = "notebook" },
     { name = "pandas-stubs", specifier = ">=2.2.3.241126" },
     { name = "polars", specifier = ">=1.19.0" },
@@ -1822,10 +1795,6 @@ requires-dist = [
     { name = "pytest-mock", marker = "extra == 'dev'", specifier = ">=1.7.1,<2.0" },
     { name = "requests", specifier = ">=2.32.3" },
     { name = "ruff", marker = "extra == 'dev'", specifier = "~=0.1.8" },
-    { name = "sphinx", marker = "extra == 'docs'", specifier = "~=3.4.3" },
-    { name = "sphinx-autodoc-typehints", marker = "extra == 'docs'", specifier = "==1.11.1" },
-    { name = "sphinx-copybutton", marker = "extra == 'docs'", specifier = "==0.3.1" },
-    { name = "sphinx-rtd-theme", marker = "extra == 'docs'", specifier = "==0.5.1" },
     { name = "sqlalchemy", specifier = ">=2.0.37" },
     { name = "typedframe", specifier = ">=0.11.0" },
     { name = "types-openpyxl", specifier = ">=3.1.5.20241225" },
@@ -2753,42 +2722,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/7b/a6/3556d79927ed18a0b528dd7a9061921a6b2310fc65873d3077e3c62ae85f/Sphinx-3.4.3.tar.gz", hash = "sha256:41cad293f954f7d37f803d97eb184158cfd90f51195131e94875bc07cd08b93c", size = 5997116 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/10/97/2077054b2676718170ff45f09730852e96a042dcd9d0535a56e682f9fc32/Sphinx-3.4.3-py3-none-any.whl", hash = "sha256:c314c857e7cd47c856d2c5adff514ac2e6495f8b8e0f886a8a37e9305dfea0d8", size = 2877432 },
-]
-
-[[package]]
-name = "sphinx-autodoc-typehints"
-version = "1.11.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "sphinx" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/17/ba/1c5ecf82003a607d7d75ee049c6da579d94e91297572ee38e0646fc8272a/sphinx-autodoc-typehints-1.11.1.tar.gz", hash = "sha256:244ba6d3e2fdb854622f643c7763d6f95b6886eba24bec28e86edf205e4ddb20", size = 17361 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/86/d3/554cf6d1f88ace1f086912818247e7ee79222fd99128f1a0a477c2ba8131/sphinx_autodoc_typehints-1.11.1-py3-none-any.whl", hash = "sha256:da049791d719f4c9813642496ee4764203e317f0697eb75446183fa2a68e3f77", size = 8709 },
-]
-
-[[package]]
-name = "sphinx-copybutton"
-version = "0.3.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "sphinx" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/9b/5d/1f09cae70eb51ff15a60b0e6f1cea9215abacdccdafb35e0406bf6088431/sphinx-copybutton-0.3.1.tar.gz", hash = "sha256:0e0461df394515284e3907e3f418a0c60ef6ab6c9a27a800c8552772d0a402a2", size = 112606 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/07/1b/691407165e9104569d10ed568438003a32168772c47eacc3a473caa7dddd/sphinx_copybutton-0.3.1-py3-none-any.whl", hash = "sha256:5125c718e763596e6e52d92e15ee0d6f4800ad3817939be6dee51218870b3e3d", size = 10994 },
-]
-
-[[package]]
-name = "sphinx-rtd-theme"
-version = "0.5.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "sphinx" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/4e/e5/0d55470572e0a0934c600c4cda0c98209883aaeb45ff6bfbadcda7006255/sphinx_rtd_theme-0.5.1.tar.gz", hash = "sha256:eda689eda0c7301a80cf122dad28b1861e5605cbf455558f3775e1e8200e83a5", size = 2774928 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/76/81/d5af3a50a45ee4311ac2dac5b599d69f68388401c7a4ca902e0e450a9f94/sphinx_rtd_theme-0.5.1-py2.py3-none-any.whl", hash = "sha256:fa6bebd5ab9a73da8e102509a86f3fcc36dec04a0b52ea80e5a033b2aba00113", size = 2793140 },
 ]
 
 [[package]]
