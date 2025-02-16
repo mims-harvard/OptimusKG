@@ -53,7 +53,7 @@ def process_reactome(  # noqa: PLR0913
     return df
 
 
-reactome_node = node(
+ot_reactome_node = node(
     process_reactome,
     inputs={
         "reactome": "bronze.opentargets.evidence.reactome",
@@ -64,5 +64,5 @@ reactome_node = node(
         "drug_mappings": "bronze.opentargets.drug_mappings",
     },
     outputs="opentargets.evidence.reactome",
-    name="reactome",
+    name="ot_reactome",
 )

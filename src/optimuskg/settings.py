@@ -2,12 +2,10 @@
 from the Kedro defaults. For further information, including these default values, see
 https://docs.kedro.org/en/stable/kedro_project_setup/settings.html."""
 
-# Instantiated project hooks.
-# For example, after creating a hooks.py and defining a ProjectHooks class there, do
-# from optimuskg.hooks import ProjectHooks
+from optimuskg.hooks import ConvertColumnsToSnakeCase
 
 # Hooks are executed in a Last-In-First-Out (LIFO) order.
-# HOOKS = (ProjectHooks(),)
+HOOKS = (ConvertColumnsToSnakeCase(),)
 
 # Installed plugins for which to disable hook auto-registration.
 # DISABLE_HOOKS_FOR_PLUGINS = ("kedro-viz",)
