@@ -12,7 +12,7 @@ from .intogen import intogen_node
 from .opentargets_edges import opentargets_edges_node
 from .orphanet import orphanet_node
 from .progeny import progeny_node
-from .reactome import ot_reactome_node
+from .reactome import ot__reactome_node
 from .slapenrich import slapenrich_node
 from .sysbio import sysbio_node
 from .uniprot_literature import uniprot_literature_node
@@ -28,7 +28,7 @@ __all__ = [
     "intogen_node",
     "progeny_node",
     "orphanet_node",
-    "ot_reactome_node",
+    "ot__reactome_node",
     "slapenrich_node",
     "sysbio_node",
     "chembl_node",

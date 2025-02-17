@@ -5,6 +5,9 @@ bronze.bgee.gene_expressions_in_anatomy:
 bronze.ctd.ctd_exposure_events:
   type: polars.CSVDataset
   filepath: "data/bronze/ctd/ctd_exposure_events.csv"
+  load_args:
+    infer_schema: false
+
 
 bronze.reactome.reactome_ncbi:
   type: polars.CSVDataset
