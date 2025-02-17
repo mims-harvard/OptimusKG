@@ -65,7 +65,7 @@ required-version = ">=0.5.18"
 package_name = "optimuskg"
 project_name = "OptimusKG"
 kedro_init_version = "0.19.10"
-source_dir = "optimuskg" # TODO: change to src
+source_dir = "optimuskg"
 
 [tool.pytest.ini_options]
 addopts = """
