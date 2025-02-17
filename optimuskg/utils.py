@@ -2,7 +2,8 @@ import re
 
 import polars as pl
 
-def to_snake_case(text: str) -> str:
+
+def _to_snake_case(text: str) -> str:
     """
     Convert a string to valid snake_case following Python naming conventions.
 
@@ -55,13 +56,13 @@ def to_snake_case(text: str) -> str:
     if text and not re.match(r"^[a-z_]", text):
         text = "_" + text
 
-    if not is_snake_case(text):
+    if not _is_snake_case(text):
         raise NameError(f"{text} is not in snake_case format")
 
     return text
 
 
-def is_snake_case(text: str) -> bool:
+def _is_snake_case(text: str) -> bool:
     """
     Check if a string follows Python snake_case naming convention using regex.
 
@@ -109,4 +110,4 @@ def convert_columns_to_snake_case(df: pl.DataFrame) -> pl.DataFrame:
     Returns:
         pl.DataFrame: A new DataFrame with all column names converted to snake_case
     """
-    return df.rename({col: to_snake_case(col) for col in df.columns})
+    return df.rename({col: _to_snake_case(col) for col in df.columns})

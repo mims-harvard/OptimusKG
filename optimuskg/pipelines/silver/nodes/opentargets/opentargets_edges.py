@@ -5,6 +5,7 @@ from kedro.pipeline import node
 
 log = logging.getLogger(__name__)
 
+
 def process_opentargets_edges(  # noqa: PLR0913
     cancer_gene_census: pl.DataFrame,
     chembl_drug_disease: pl.DataFrame,
