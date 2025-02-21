@@ -1,6 +1,16 @@
 bronze.bgee.gene_expressions_in_anatomy:
   type: polars.CSVDataset
   filepath: "data/bronze/bgee/gene_expressions_in_anatomy.csv"
+  save_args:
+    infer_schema: false
+    schema:
+      "gene_id": "${pl:String}"
+      "gene_name": "${pl:String}"
+      "anatomy_id": "${pl:String}"
+      "anatomy_name": "${pl:String}"
+      "expression": "${pl:String}"
+      "call_quality": "${pl:String}"
+      "expression_rank": "${pl:String}"
 
 bronze.ctd.ctd_exposure_events:
   type: polars.CSVDataset
@@ -14,6 +24,14 @@ bronze.reactome.reactome_ncbi:
   filepath: "data/bronze/reactome/reactome_ncbi.csv"
   load_args:
     infer_schema: false
+  save_args:
+    infer_schema: false
+    schema:
+      "ncbi_id": "${pl:String}"
+      "reactome_id": "${pl:String}"
+      "url": "${pl:String}"
+      "reactome_name": "${pl:String}"
+      "evidence_code": "${pl:String}"
 
 bronze.reactome.reactome_relations:
   type: polars.CSVDataset

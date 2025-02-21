@@ -3,16 +3,12 @@ import logging
 import polars as pl
 from kedro.pipeline import node
 
-from .utils import KGNodeSchema
-
 log = logging.getLogger(__name__)
 
 
 def process_phenotypes(
-    primekg_nodes: pl.DataFrame,
+    primekg_nodes_df: pl.DataFrame,
 ) -> pl.DataFrame:
-    primekg_nodes_df = KGNodeSchema.convert(primekg_nodes).df
-
     pheno_df = primekg_nodes_df.filter(
         pl.col("node_type") == "effect/phenotype"
     ).clone()
@@ -24,13 +20,13 @@ def process_phenotypes(
     all_cols = ["id"] + [col for col in pheno_df.columns if col != "id"]
     pheno_df = pheno_df.select(all_cols)
 
-    return pheno_df  # type: ignore[no-any-return]
+    return pheno_df
 
 
 phenotypes_node = node(
     process_phenotypes,
     inputs={
-        "primekg_nodes": "landing.opentargets.primekg_nodes",
+        "primekg_nodes_df": "landing.opentargets.primekg_nodes",
     },
     outputs="opentargets.phenotypes",
     name="phenotypes",

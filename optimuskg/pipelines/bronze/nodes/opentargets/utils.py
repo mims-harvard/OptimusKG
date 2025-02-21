@@ -137,27 +137,6 @@ class TargetDiseaseEvidenceSchema(PolarsTypedFrame):
     }
 
 
-@final
-class KGNodeSchema(PolarsTypedFrame):
-    schema: Final[dict[str, type[pl.DataType]]] = {
-        "node_index": pl.String,
-        "node_id": pl.String,
-        "node_type": pl.String,
-        "node_name": pl.String,
-        "node_source": pl.String,
-    }
-
-
-@final
-class KGEdgeSchema(PolarsTypedFrame):
-    schema: Final[dict[str, type[pl.DataType]]] = {
-        "relation": pl.String,
-        "display_relation": pl.String,
-        "x_index": pl.String,
-        "y_index": pl.String,
-    }
-
-
 def concat_partitions(
     partitioned_input: dict[str, Callable[[], Any]],
 ) -> pl.DataFrame:
