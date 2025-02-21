@@ -9,18 +9,6 @@ log = logging.getLogger(__name__)
 
 
 @final
-class LandingReactomeNcbi(PolarsTypedFrame):
-    schema: Final[dict[str, type[pl.DataType]]] = {
-        "ncbi_id": pl.Utf8,
-        "reactome_id": pl.String,
-        "url": pl.String,
-        "reactome_name": pl.String,
-        "evidence_code": pl.String,
-        "species": pl.String,
-    }
-
-
-@final
 class BronzeReactomeNcbi(PolarsTypedFrame):
     schema: Final[dict[str, type[pl.DataType]]] = {
         "ncbi_id": pl.Utf8,
@@ -34,8 +22,7 @@ class BronzeReactomeNcbi(PolarsTypedFrame):
 def process_reactome_ncbi(
     ncbi2_reactome: pl.DataFrame,
 ) -> pl.DataFrame:
-    df_ncbi = LandingReactomeNcbi.convert(ncbi2_reactome).df
-    df_ncbi = df_ncbi.filter(pl.col("species") == "Homo sapiens")
+    df_ncbi = ncbi2_reactome.filter(pl.col("species") == "Homo sapiens")
     df_ncbi = df_ncbi.drop(["species"])
     df_ncbi = df_ncbi.unique()
 

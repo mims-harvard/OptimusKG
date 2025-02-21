@@ -43,12 +43,48 @@ landing.orphanet.ontology:
 landing.uber_anatomy_ontology.ontology:
   type: optimuskg.datasets.OWLDataset
   filepath: "data/landing/ontologies/uber_anatomy_ontology.owl"
+  metadata:
+    title: "Uber Anatomy Ontology"
+    description: "Uberon is an integrated cross-species anatomy ontology representing a variety of entities classified according to traditional anatomical criteria such as structure, function and developmental lineage."
 
 landing.bgee.homo_sapiens_expressions_advanced:
   type: polars.CSVDataset
   filepath: "data/landing/bgee/Homo_sapiens_expr_advanced.tsv"
   load_args:
     separator: "\t"
+    infer_schema: false
+    schema:
+      # Note: The raw data has some column names with extra spaces. We keep them as is.
+      "Gene ID": "${pl:String}"
+      "Gene name": "${pl:String}"
+      "Anatomical entity ID": "${pl:String}"
+      "Anatomical entity name": "${pl:String}"
+      "Expression": "${pl:String}"
+      "Call quality": "${pl:String}"
+      "Expression rank": "${pl:Float64}" # TODO: Check if this type is correct
+      "Including observed data": "${pl:Utf8}"
+      "Affymetrix data": "${pl:Utf8}"
+      "Affymetrix  experiment count showing expression of this gene in this condition or in sub-conditions with a high quality": "${pl:Int64}"
+      "Affymetrix experiment count showing expression of this gene in this condition or in sub-conditions with a low quality": "${pl:Int64}"
+      "Affymetrix experiment count showing absence of expression of this gene in this condition or valid parent conditions with a high quality": "${pl:Int64}"
+      "Affymetrix experiment count showing absence of expression of this gene in this condition or valid parent conditions with a low quality": "${pl:Int64}"
+      "Including Affymetrix observed data": "${pl:Utf8}"
+      "EST data": "${pl:Utf8}"
+      "EST experiment count showing expression of this gene in this condition or in sub-conditions with a high quality": "${pl:Int64}"
+      "EST experiment count showing expression of this gene in this condition or in sub-conditions with a low quality": "${pl:Int64}"
+      "Including EST observed data": "${pl:Utf8}"
+      "In situ hybridization data": "${pl:Utf8}"
+      "In situ hybridization experiment count showing expression of this gene in this condition or in sub-conditions with a high quality": "${pl:Int64}"
+      "In situ hybridization experiment count showing expression of this gene in this condition or in sub-conditions with a low quality": "${pl:Int64}"
+      "In situ hybridization experiment count showing absence of expression of this gene in this condition or valid parent conditions with a high quality": "${pl:Int64}"
+      "In situ hybridization experiment count showing absence of expression of this gene in this condition or valid parent conditions with a low quality": "${pl:Int64}"
+      "Including in situ hybridization observed data": "${pl:Utf8}"
+      "RNA-Seq data": "${pl:Utf8}"
+      "RNA-Seq  experiment count showing expression of this gene in this condition or in sub-conditions with a high quality": "${pl:Int64}"
+      "RNA-Seq  experiment count showing expression of this gene in this condition or in sub-conditions with a low quality": "${pl:Int64}"
+      "RNA-Seq  experiment count showing absence of expression of this gene in this condition or valid parent conditions with a high quality": "${pl:Int64}"
+      "RNA-Seq  experiment count showing absence of expression of this gene in this condition or valid parent conditions with a low quality": "${pl:Int64}"
+      "Including RNA-Seq observed data": "${pl:Utf8}"
 
 landing.ctd.ctd_exposure_events:
   type: polars.CSVDataset
@@ -103,6 +139,50 @@ landing.ctd.ctd_exposure_events:
       ]
     infer_schema: false
     comment_prefix: "#"
+    schema_overrides: # TODO: Change schema_overrides to schema if possible
+      "exposurestressorname": "${pl:String}"
+      "exposurestressorid": "${pl:String}"
+      "stressorsourcecategory": "${pl:String}"
+      "stressorsourcedetails": "${pl:String}"
+      "numberofstressorsamples": "${pl:String}"
+      "stressornotes": "${pl:String}"
+      "numberofreceptors": "${pl:String}"
+      "receptors": "${pl:String}"
+      "receptornotes": "${pl:String}"
+      "smokingstatus": "${pl:String}"
+      "age": "${pl:String}"
+      "ageunitsofmeasurement": "${pl:String}"
+      "agequalifier": "${pl:String}"
+      "sex": "${pl:String}"
+      "race": "${pl:String}"
+      "methods": "${pl:String}"
+      "detectionlimit": "${pl:Utf8}"
+      "detectionlimituom": "${pl:String}"
+      "detectionfrequency": "${pl:Utf8}"
+      "medium": "${pl:String}"
+      "exposuremarker": "${pl:String}"
+      "exposuremarkerid": "${pl:String}"
+      "markerlevel": "${pl:String}"
+      "markerunitsofmeasurement": "${pl:String}"
+      "markermeasurementstatistic": "${pl:String}"
+      "assaynotes": "${pl:String}"
+      "studycountries": "${pl:String}"
+      "stateorprovince": "${pl:String}"
+      "citytownregionarea": "${pl:String}"
+      "exposureeventnotes": "${pl:String}"
+      "outcomerelationship": "${pl:String}"
+      "diseasename": "${pl:String}"
+      "diseaseid": "${pl:String}"
+      "phenotypename": "${pl:String}"
+      "phenotypeid": "${pl:String}"
+      "phenotypeactiondegreetype": "${pl:String}"
+      "anatomy": "${pl:String}"
+      "exposureoutcomenotes": "${pl:String}"
+      "reference": "${pl:String}"
+      "associatedstudytitles": "${pl:String}"
+      "enrollmentstartyear": "${pl:String}"
+      "enrollmentendyear": "${pl:String}"
+      "studyfactors": "${pl:String}"
 
 landing.reactome.ncbi2_reactome:
   type: polars.CSVDataset
@@ -120,6 +200,13 @@ landing.reactome.ncbi2_reactome:
         "evidence_code",
         "species",
       ]
+    schema_overrides:
+      "ncbi_id": "${pl:Utf8}"
+      "reactome_id": "${pl:String}"
+      "url": "${pl:String}"
+      "reactome_name": "${pl:String}"
+      "evidence_code": "${pl:String}"
+      "species": "${pl:String}"
 
 landing.reactome.reactome_pathways:
   type: polars.CSVDataset
@@ -129,6 +216,10 @@ landing.reactome.reactome_pathways:
     has_header: false
     infer_schema: false
     new_columns: ["reactome_id", "reactome_name", "species"]
+    schema_overrides:
+      "reactome_id": "${pl:String}"
+      "reactome_name": "${pl:String}"
+      "species": "${pl:String}"
 
 landing.reactome.reactome_pathways_relation:
   type: polars.CSVDataset
@@ -138,6 +229,9 @@ landing.reactome.reactome_pathways_relation:
     has_header: false
     infer_schema: false
     new_columns: ["reactome_id_1", "reactome_id_2"]
+    schema_overrides:
+      "reactome_id_1": "${pl:String}"
+      "reactome_id_2": "${pl:String}"
 
 landing.gene_names.gene_names:
   type: polars.CSVDataset
@@ -145,6 +239,15 @@ landing.gene_names.gene_names:
   load_args:
     separator: "\t"
     infer_schema: false
+    schema_overrides:
+      "Approved symbol": "${pl:String}"
+      "Approved name": "${pl:String}"
+      "Accession numbers": "${pl:String}"
+      "RefSeq IDs": "${pl:String}"
+      "NCBI Gene ID": "${pl:String}"
+      "NCBI Gene ID(supplied by NCBI)": "${pl:String}"
+      "UniProt ID(supplied by UniProt)": "${pl:String}"
+      "OMIM ID(supplied by OMIM)": "${pl:String}"
 
 landing.ncbigene.gene2go:
   type: optimuskg.datasets.Gene2GoReaderDataset
@@ -162,24 +265,41 @@ landing.drugbank.carrier:
   filepath: "data/landing/drugbank/drugbank_all_carrier_polypeptide_ids.csv"
   load_args:
     infer_schema: false
+    schema: &drugbank_schema
+      "ID": "${pl:String}"
+      "Name": "${pl:String}"
+      "Gene Name": "${pl:String}"
+      "GenBank Protein ID": "${pl:String}"
+      "GenBank Gene ID": "${pl:String}"
+      "UniProt ID": "${pl:String}"
+      "Uniprot Title": "${pl:String}"
+      "PDB ID": "${pl:String}"
+      "GeneCard ID": "${pl:String}"
+      "GenAtlas ID": "${pl:String}"
+      "HGNC ID": "${pl:String}"
+      "Species": "${pl:String}"
+      "Drug IDs": "${pl:String}"
 
 landing.drugbank.enzyme:
   type: polars.CSVDataset
   filepath: "data/landing/drugbank/drugbank_all_enzyme_polypeptide_ids.csv"
   load_args:
     infer_schema: false
+    schema: *drugbank_schema
 
 landing.drugbank.target:
   type: polars.CSVDataset
   filepath: "data/landing/drugbank/drugbank_all_target_polypeptide_ids.csv"
   load_args:
     infer_schema: false
+    schema: *drugbank_schema
 
 landing.drugbank.transporter:
   type: polars.CSVDataset
   filepath: "data/landing/drugbank/drugbank_all_transporter_polypeptide_ids.csv"
   load_args:
     infer_schema: false
+    schema: *drugbank_schema
 
 landing.drugbank.gene_map:
   type: polars.CSVDataset
@@ -187,12 +307,23 @@ landing.drugbank.gene_map:
   load_args:
     separator: "\t"
     infer_schema: false
+    schema:
+      "NCBI Gene ID(supplied by NCBI)": "${pl:Utf8}"
+      "UniProt ID(supplied by UniProt)": "${pl:Utf8}"
 
 landing.drugbank.vocabulary:
   type: polars.CSVDataset
   filepath: "data/landing/drugbank/drugbank_vocabulary.csv"
   load_args:
     infer_schema: false
+    schema:
+      "DrugBank ID": "${pl:String}"
+      "Accession Numbers": "${pl:String}"
+      "Common name": "${pl:String}"
+      "CAS": "${pl:String}"
+      "UNII": "${pl:String}"
+      "Synonyms": "${pl:String}"
+      "Standard InChI Key": "${pl:String}"
 
 landing.drugcentral.psql_dump:
   type: optimuskg.datasets.SQLDumpQueryDataset
@@ -314,12 +445,23 @@ landing.opentargets.primekg_nodes:
   filepath: "data/landing/opentargets/primekg_nodes.csv"
   load_args:
     infer_schema: false
+    schema:
+      "node_index": "${pl:String}"
+      "node_id": "${pl:String}"
+      "node_type": "${pl:String}"
+      "node_name": "${pl:String}"
+      "node_source": "${pl:String}"
 
 landing.opentargets.primekg_edges:
   type: polars.CSVDataset
   filepath: "data/landing/opentargets/primekg_edges.csv"
   load_args:
     infer_schema: false
+    schema:
+      "relation": "${pl:String}"
+      "display_relation": "${pl:String}"
+      "x_index": "${pl:String}"
+      "y_index": "${pl:String}"
 
 landing.opentargets.mondo_efo_mappings:
   type: polars.CSVDataset
@@ -335,6 +477,11 @@ landing.opentargets.mondo_efo_mappings:
         "mondo_name",
         "efo_name",
       ]
+    schema_overrides:
+      "mondo_id": "${pl:String}"
+      "efo_id": "${pl:String}"
+      "mondo_name": "${pl:String}"
+      "efo_name": "${pl:String}"
 
 landing.opentargets.drug_mappings:
   type: polars.CSVDataset
@@ -342,3 +489,17 @@ landing.opentargets.drug_mappings:
   load_args:
     separator: "\t"
     infer_schema: false
+    schema:
+      "drugbankId": "${pl:String}"
+      "name": "${pl:String}"
+      "ttd_id": "${pl:String}"
+      "pubchem_cid": "${pl:String}"
+      "cas_num": "${pl:String}"
+      "chembl_id": "${pl:String}"
+      "zinc_id": "${pl:String}"
+      "chebi_id": "${pl:String}"
+      "kegg_cid": "${pl:String}"
+      "kegg_id": "${pl:String}"
+      "bindingDB_id": "${pl:String}"
+      "UMLS_cuis": "${pl:String}"
+      "stitch_id": "${pl:String}"

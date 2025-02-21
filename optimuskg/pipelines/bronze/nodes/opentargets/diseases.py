@@ -6,7 +6,7 @@ import polars as pl
 from kedro.pipeline import node
 from typedframe import PolarsTypedFrame
 
-from .utils import KGNodeSchema, concat_json_partitions
+from .utils import concat_json_partitions
 
 log = logging.getLogger(__name__)
 
@@ -47,17 +47,16 @@ class DiseaseSchema(PolarsTypedFrame):
 
 def process_diseases(
     diseases: dict[str, Callable[[], Any]],
-    mondo_efo_mappings: pl.DataFrame,
-    primekg_nodes: pl.DataFrame,
+    mondo_efo_mappings_df: pl.DataFrame,
+    primekg_nodes_df: pl.DataFrame,
 ) -> pl.DataFrame:
     concated_df = concat_json_partitions(diseases)
     df = DiseaseSchema.convert(concated_df).df
-    primekg_nodes_df = KGNodeSchema.convert(primekg_nodes).df
 
     df = df.select("id", "name", "description")
 
     df = df.join(
-        mondo_efo_mappings,
+        mondo_efo_mappings_df,
         left_on="id",
         right_on="efo_id",
         how="left",
@@ -99,8 +98,8 @@ diseases_node = node(
     process_diseases,
     inputs={
         "diseases": "landing.opentargets.diseases",
-        "mondo_efo_mappings": "opentargets.mondo_efo_mappings",
-        "primekg_nodes": "landing.opentargets.primekg_nodes",
+        "mondo_efo_mappings_df": "opentargets.mondo_efo_mappings",
+        "primekg_nodes_df": "landing.opentargets.primekg_nodes",
     },
     outputs="opentargets.diseases",
     name="diseases",

@@ -3,30 +3,14 @@ from typing import Final, final
 
 import polars as pl
 from kedro.pipeline import node
-from typedframe import PolarsTypedFrame
 
 log = logging.getLogger(__name__)
-
-
-@final
-class GeneNames(PolarsTypedFrame):
-    schema: Final[dict[str, type[pl.DataType]]] = {
-        "Approved symbol": pl.String,
-        "Approved name": pl.String,
-        "Accession numbers": pl.String,
-        "RefSeq IDs": pl.String,
-        "NCBI Gene ID": pl.String,
-        "NCBI Gene ID(supplied by NCBI)": pl.String,
-        "UniProt ID(supplied by UniProt)": pl.String,
-        "OMIM ID(supplied by OMIM)": pl.String,
-    }
 
 
 def process_gene_names(
     gene_names: pl.DataFrame,
 ) -> pl.DataFrame:
-    processed_df: pl.DataFrame = GeneNames(gene_names).df
-    return processed_df
+    return gene_names
 
 
 gene_names_node = node(

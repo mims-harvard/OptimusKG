@@ -7,7 +7,7 @@ import polars as pl
 from kedro.pipeline import node
 from typedframe import PolarsTypedFrame
 
-from .utils import KGNodeSchema, concat_json_partitions
+from .utils import concat_json_partitions
 
 log = logging.getLogger(__name__)
 
@@ -22,11 +22,10 @@ class TargetSchema(PolarsTypedFrame):
 
 
 def process_targets(
-    targets: dict[str, Callable[[], Any]], primekg_nodes: pl.DataFrame
+    targets: dict[str, Callable[[], Any]], primekg_nodes_df: pl.DataFrame
 ) -> pd.DataFrame:
     concated_df = concat_json_partitions(targets)
     concated_df = concated_df.select("id", "approvedName", "approvedSymbol")
-    primekg_nodes_df = KGNodeSchema.convert(primekg_nodes).df
     df = TargetSchema.convert(concated_df).df
     df = df.unique(subset=["approvedSymbol"])
     df = df.join(
@@ -42,7 +41,7 @@ targets_node = node(
     process_targets,
     inputs={
         "targets": "landing.opentargets.targets",
-        "primekg_nodes": "landing.opentargets.primekg_nodes",
+        "primekg_nodes_df": "landing.opentargets.primekg_nodes",
     },
     outputs="opentargets.targets",
     name="targets",
