@@ -1,5 +1,4 @@
 import logging
-from typing import Final, final
 
 import polars as pl
 from kedro.pipeline import node

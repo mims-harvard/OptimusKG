@@ -1,4 +1,5 @@
 import polars as pl
+
 from optimuskg.hooks import SilverHooks
 
 # Hooks are executed in a Last-In-First-Out (LIFO) order.
@@ -32,7 +33,7 @@ CONFIG_LOADER_ARGS = {
     #       }
     "custom_resolvers": {
         "pl": lambda x: getattr(pl, x),  # Polars types
-    }
+    },
 }
 
 # Class that manages Kedro's library components.

@@ -1,15 +1,16 @@
 import logging
-from typing import Final, final
 
 import polars as pl
 from kedro.pipeline import node
 
 log = logging.getLogger(__name__)
 
+
 def process_ctd(
     ctd_exposure_events: pl.DataFrame,
 ) -> pl.DataFrame:
     return ctd_exposure_events
+
 
 ctd_node = node(
     process_ctd,

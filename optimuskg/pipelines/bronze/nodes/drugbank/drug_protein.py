@@ -1,10 +1,10 @@
 import logging
-from typing import Final, final
 
 import polars as pl
 from kedro.pipeline import node
 
 log = logging.getLogger(__name__)
+
 
 def to_dict_mapping(
     df: pl.DataFrame, key_col: str, val_col: str
