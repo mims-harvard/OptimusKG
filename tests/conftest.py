@@ -1,22 +1,20 @@
 from pathlib import Path
 
 import pytest
-from kedro.config import OmegaConfigLoader
-from kedro.framework.context import KedroContext
-from kedro.framework.hooks import _create_hook_manager
+from kedro.framework.session import KedroSession
+from kedro.framework.startup import bootstrap_project
+
+SUCCESSFUL_RUN_MSG = "Pipeline execution completed successfully."
 
 
 @pytest.fixture
-def config_loader():
-    return OmegaConfigLoader(conf_source=str(Path.cwd()))
+def session():
+    # TODO: Set a stub_data/ directory to ensure that the data is present in different contexts like CI/CD.
+    bootstrap_project(Path.cwd())
+    with KedroSession.create(project_path=Path.cwd()) as session:
+        yield session
 
 
 @pytest.fixture
-def project_context(config_loader):
-    return KedroContext(
-        package_name="optimuskg",
-        project_path=Path.cwd(),
-        env="local",
-        config_loader=config_loader,
-        hook_manager=_create_hook_manager(),
-    )
+def context(session):
+    return session.load_context()

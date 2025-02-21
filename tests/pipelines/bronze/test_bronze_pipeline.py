@@ -1,6 +1,6 @@
-from optimuskg.pipelines.bronze import create_pipeline as create_bronze_pipeline
+from tests.conftest import SUCCESSFUL_RUN_MSG
 
 
-def test_bronze_pipeline(project_context):
-    pipeline = create_bronze_pipeline()
-    pipeline.run(project_context)
+def test_bronze_pipeline(session, context, caplog):
+    session.run(node_names=["bronze.bgee"])
+    assert SUCCESSFUL_RUN_MSG in caplog.text

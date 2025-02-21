@@ -57,6 +57,7 @@ interrogate = 'uv tool run interrogate --config pyproject.toml'
 download_landing_files = 'uv run bash scripts/download_landing_files.sh'
 clean = 'uv run bash scripts/clean_files.sh'
 neo4j = 'docker compose up -d'
+pytest = 'uv run pytest -W ignore --no-cov-on-fail'
 
 [tool.uv]
 required-version = ">=0.5.18"
