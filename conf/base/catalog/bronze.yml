@@ -1,7 +1,7 @@
 bronze.bgee.gene_expressions_in_anatomy:
   type: polars.CSVDataset
   filepath: "data/bronze/bgee/gene_expressions_in_anatomy.csv"
-  save_args:
+  load_args:
     infer_schema: false
     schema:
       "gene_id": "${pl:String}"
@@ -23,8 +23,6 @@ bronze.reactome.reactome_ncbi:
   type: polars.CSVDataset
   filepath: "data/bronze/reactome/reactome_ncbi.csv"
   load_args:
-    infer_schema: false
-  save_args:
     infer_schema: false
     schema:
       "ncbi_id": "${pl:String}"
