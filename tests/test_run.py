@@ -15,12 +15,12 @@ from kedro.framework.hooks import _create_hook_manager
 
 
 @pytest.fixture
-def config_loader():
+def config_loader() -> OmegaConfigLoader:
     return OmegaConfigLoader(conf_source=str(Path.cwd()))
 
 
 @pytest.fixture
-def project_context(config_loader):
+def project_context(config_loader: OmegaConfigLoader) -> KedroContext:
     return KedroContext(
         package_name="optimuskg",
         project_path=Path.cwd(),
