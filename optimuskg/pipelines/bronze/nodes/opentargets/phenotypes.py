@@ -20,7 +20,7 @@ def process_phenotypes(
     all_cols = ["id"] + [col for col in pheno_df.columns if col != "id"]
     pheno_df = pheno_df.select(all_cols)
 
-    return pheno_df  # type: ignore[no-any-return]
+    return pheno_df
 
 
 phenotypes_node = node(

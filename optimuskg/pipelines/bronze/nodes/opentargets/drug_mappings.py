@@ -1,9 +1,10 @@
 import logging
 from collections.abc import Callable
-from typing import Any, Final, final
+from typing import Any
 
 import polars as pl
 from kedro.pipeline import node
+
 from .utils import concat_json_partitions
 
 log = logging.getLogger(__name__)
@@ -17,8 +18,8 @@ def process_drug_mappings(
     molecule_df = concat_json_partitions(molecule)
     ot_drugs_df = molecule_df.select(
         pl.col("id").cast(pl.String),
-        pl.col("name").cast(pl.String), 
-        pl.col("description").cast(pl.String)
+        pl.col("name").cast(pl.String),
+        pl.col("description").cast(pl.String),
     )
 
     drug_mappings_df = drug_mappings_df.select(["drugbankId", "chembl_id"]).unique()
@@ -46,7 +47,7 @@ def process_drug_mappings(
     drug_mappings_df = drug_mappings_df.rename({"chembl_id": "id"})
 
     drug_mappings_df = drug_mappings_df.join(ot_drugs_df, on="id", how="inner")
-    return drug_mappings_df  # type: ignore[no-any-return]
+    return drug_mappings_df
 
 
 drug_mappings_node = node(
