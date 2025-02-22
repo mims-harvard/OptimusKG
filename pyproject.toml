@@ -38,6 +38,7 @@ dev = [
   "mypy>=1.14.1",
   "bandit>=1.8.2",
   "interrogate>=1.7.0",
+  "pydantic>=2.10.6",
 ]
 
 [project.scripts]
@@ -57,7 +58,7 @@ interrogate = 'uv tool run interrogate --config pyproject.toml'
 download_landing_files = 'uv run bash scripts/download_landing_files.sh'
 clean = 'uv run bash scripts/clean_files.sh'
 neo4j = 'docker compose up -d'
-pytest = 'uv run pytest -W ignore --no-cov-on-fail'
+pytest = 'uv run pytest -W ignore --no-cov-on-fail --log-cli-level=INFO'
 
 [tool.uv]
 required-version = ">=0.5.18"

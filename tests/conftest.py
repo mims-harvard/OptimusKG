@@ -1,20 +1,24 @@
+from collections.abc import Generator
 from pathlib import Path
 
 import pytest
+from kedro.framework.context import KedroContext
 from kedro.framework.session import KedroSession
 from kedro.framework.startup import bootstrap_project
+from pydantic import BaseModel, ConfigDict
 
-SUCCESSFUL_RUN_MSG = "Pipeline execution completed successfully."
+
+class KedroSettings(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    session: KedroSession
+    context: KedroContext
+    SUCCESSFUL_RUN_MSG: str = "Pipeline execution completed successfully."
 
 
 @pytest.fixture
-def session():
+def kedro() -> Generator[KedroSettings, None, None]:
     # TODO: Set a stub_data/ directory to ensure that the data is present in different contexts like CI/CD.
     bootstrap_project(Path.cwd())
     with KedroSession.create(project_path=Path.cwd()) as session:
-        yield session
-
-
-@pytest.fixture
-def context(session):
-    return session.load_context()
+        yield KedroSettings(session=session, context=session.load_context())
