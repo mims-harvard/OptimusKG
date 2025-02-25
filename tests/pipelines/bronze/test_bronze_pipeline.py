@@ -12,15 +12,16 @@ def test_bronze_pipeline(kedro: KedroSettings, caplog):
         if hasattr(dataset, "_filepath"):
             # NOTE: Here we are assuming that the dataset filepath is always a local path.
             original_path = Path(dataset._filepath)
-            test_path = Path(str(original_path).replace("data/", "tests/stub_data/"))
-            dataset._filepath = str(test_path)
+            dataset._filepath = str(original_path).replace("data/", "tests/stub_data/")
+            logger.info(f"Updated filepath for {dataset._filepath}")
 
     kedro.session.run(
         node_names=[
             "bronze.bgee",
             "bronze.ctd",
             "bronze.gene2go",
-            "bronze.reactome",
+            "bronze.reactome_ncbi",
+            "bronze.reactome_pathways",
             "bronze.gene_names",
         ]
     )
