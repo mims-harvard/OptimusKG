@@ -18,7 +18,6 @@ class KedroSettings(BaseModel):
 
 @pytest.fixture
 def kedro() -> Generator[KedroSettings, None, None]:
-    # TODO: Set a stub_data/ directory to ensure that the data is present in different contexts like CI/CD.
     bootstrap_project(Path.cwd())
     with KedroSession.create(project_path=Path.cwd()) as session:
         yield KedroSettings(session=session, context=session.load_context())
