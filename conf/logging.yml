@@ -31,6 +31,8 @@ handlers:
     # Advance options for customisation.
     # See https://docs.kedro.org/en/stable/logging/logging.html#project-side-logging-configuration
     tracebacks_show_locals: False
+    console:
+      force_terminal: True # This is to ensure rich colors in GitHub Actions.
 
 loggers:
   kedro:
