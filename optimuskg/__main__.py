@@ -1,7 +1,3 @@
-"""OptimusKG file for ensuring the package is executable
-as `optimuskg` and `python -m optimuskg`
-"""
-
 import sys
 from pathlib import Path
 from typing import Any

@@ -1,22 +1,24 @@
+from collections.abc import Generator
 from pathlib import Path
 
 import pytest
-from kedro.config import OmegaConfigLoader
 from kedro.framework.context import KedroContext
-from kedro.framework.hooks import _create_hook_manager
+from kedro.framework.session import KedroSession
+from kedro.framework.startup import bootstrap_project
+from pydantic import BaseModel, ConfigDict
+
+
+class KedroSettings(BaseModel):
+    model_config = ConfigDict(arbitrary_types_allowed=True)
+
+    session: KedroSession
+    context: KedroContext
+    SUCCESSFUL_RUN_MSG: str = "Pipeline execution completed successfully."
 
 
 @pytest.fixture
-def config_loader():
-    return OmegaConfigLoader(conf_source=str(Path.cwd()))
-
-
-@pytest.fixture
-def project_context(config_loader):
-    return KedroContext(
-        package_name="optimuskg",
-        project_path=Path.cwd(),
-        env="local",
-        config_loader=config_loader,
-        hook_manager=_create_hook_manager(),
-    )
+def kedro() -> Generator[KedroSettings, None, None]:
+    # TODO: Set a stub_data/ directory to ensure that the data is present in different contexts like CI/CD.
+    bootstrap_project(Path.cwd())
+    with KedroSession.create(project_path=Path.cwd()) as session:
+        yield KedroSettings(session=session, context=session.load_context())
