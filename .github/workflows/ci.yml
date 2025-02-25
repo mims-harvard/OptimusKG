@@ -45,6 +45,9 @@ jobs:
       - name: Run interrogate
         run: uv tool run hatch run interrogate
 
+      - name: Run pytest
+        run: uv tool run hatch run pytest
+
   formatting:
     runs-on: ubuntu-latest
     steps:
