@@ -1,5 +1,8 @@
 # OptimusKG
 
+[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/mims-harvard/optimuskg)
+[![Release](https://github.com/mims-harvard/optimuskg/actions/workflows/cd.yml/badge.svg)](https://github.com/mims-harvard/optimuskg)
+
 ## Installation
 
 Prerequisites for this project are:
