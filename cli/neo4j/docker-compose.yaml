@@ -10,8 +10,8 @@ services:
       - "7473:7473" # HTTPS
     volumes:
       - neo4j_data:/data
-      - ./data/gold/neo4j_import_volume:/var/lib/neo4j/import
-      - ./scripts/neo4j_entrypoint.sh:/startup/neo4j_entrypoint.sh
+      - ../../data/gold/neo4j:/var/lib/neo4j/import
+      - ./neo4j_entrypoint.sh:/startup/neo4j_entrypoint.sh
     environment:
       NEO4J_AUTH: none # no need for auth for local development
       NEO4J_PLUGINS: '["apoc"]'
