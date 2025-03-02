@@ -67,7 +67,7 @@ def process_biocypher(  # noqa: PLR0913
     try:
         bc.show_ontology_structure(
             full=True,
-            to_disk="data/gold/neo4j_import_volume",
+            to_disk="data/gold/neo4j",
         )
     except Exception as e:
         # TODO: Remove this once we have a way to handle this error

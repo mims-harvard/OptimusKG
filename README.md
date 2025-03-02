@@ -1,5 +1,8 @@
 # OptimusKG
 
+[![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)](https://github.com/mims-harvard/optimuskg)
+[![Release](https://github.com/mims-harvard/optimuskg/actions/workflows/cd.yml/badge.svg)](https://github.com/mims-harvard/optimuskg)
+
 ## Installation
 
 Prerequisites for this project are:
@@ -16,35 +19,14 @@ Resolved 218 packages in 3ms
 Audited 215 packages in 0.28ms
 ```
 
-## Running hatch scripts
-
-We use [hatch](https://hatch.pypa.io/latest/) as our project manager. You can see all the available scripts with:
-
-```console
-$ uv tool run hatch run list
-bandit
-clean
-download_landing_files
-interrogate
-list
-mypy
-...
-```
-
 ## Run it
-
-### Set script permissions
-
-```console
-$ chmod +x scripts/*.sh
-```
 
 ### Download landing files
 
 In order to run the project, you need to download the landing files. You can do this with the following command:
 
 ```console
-$ uv tool run hatch run download_landing_files
+uv run cli landing
 ```
 
 There are some files that are not downloaded automatically, so you need to download them manually. Ask the team for the files and put them in the `data/landing` folder as follows:
@@ -82,7 +64,7 @@ optimuskg/
 Before running the project, ensure proper permissions are set for the Neo4j import volume. This allows both the Neo4j container and Kedro to write the BioCypher GraphML file. Run:
 
 ```console
-$ sudo chmod -R 777 data/gold/neo4j_import_volume && sudo chown -R $(id -u):$(id -g) data/gold/neo4j_import_volume
+$ sudo chmod -R 777 data/gold/neo4j && sudo chown -R $(id -u):$(id -g) data/gold/neo4j
 ```
 
 ### Run the project
@@ -183,19 +165,16 @@ $ uv run kedro jupyter lab
         http://127.0.0.1:8888/lab?token=3398bd1a7d0991e2079181a5c037e4d9cc757f37247eba27
 ```
 
-## How to test the project
-
-Have a look at the file `tests/test_run.py` for instructions on how to write your tests. You can run your tests as follows:
-
-```
-uv tool run pytest
-```
-
-## Install pre-commit hooks
-
-To install the pre-commit hooks run:
+## Spin up Neo4j
 
 ```console
-$ uv tool run pre-commit install
-pre-commit installed at .git/hooks/pre-commit
+$ uv run cli neo4j
+
+[02/26/25 02:37:40] INFO     Using 'conf/logging.yml' as logging configuration. You can change this by setting the KEDRO_LOGGING_CONFIG  __init__.py:270
+                             environment variable accordingly.                                                                                          
+                    INFO     Spinning up Neo4j service...                                                                                 __main__.py:28
+                    INFO     Neo4j service started successfully.                                                                          __main__.py:33
+                    INFO     Web interface (HTTP): http://localhost:7474                                                                  __main__.py:34
+                    INFO     Web interface (HTTPS): https://localhost:7473  
 ```
+

@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 requires-python = ">=3.12"
 name = "optimuskg"
 readme = "README.md"
-version = "0.7.0"
+version = "0.7.1"
 dependencies = [
   "ipython>=8.10",
   "jupyterlab>=3.0",
@@ -39,10 +39,12 @@ dev = [
   "bandit>=1.8.2",
   "interrogate>=1.7.0",
   "pydantic>=2.10.6",
+  "typer>=0.15.1",
 ]
 
 [project.scripts]
 optimuskg = "optimuskg.__main__:main"
+cli = "cli.__main__:app"
 
 [tool.hatch.build.targets.wheel]
 packages = ["optimuskg"]
@@ -55,8 +57,7 @@ list = ["hatch env show --json | jq --raw-output '.default.scripts | keys[]'"]
 mypy = 'uv tool run mypy --install-types --config-file pyproject.toml --non-interactive --python-executable=$(uv run python -c "import sys; print(sys.executable)") -p optimuskg -p tests'
 bandit = 'uv tool run bandit -v -c pyproject.toml -r optimuskg/* tests/*'
 interrogate = 'uv tool run interrogate --config pyproject.toml'
-download_landing_files = 'uv run bash scripts/download_landing_files.sh'
-clean = 'uv run bash scripts/clean_files.sh'
+clean = 'uv run bash scripts/clean.sh'
 neo4j = 'docker compose up -d'
 pytest = 'uv run pytest -W ignore --no-cov-on-fail --log-cli-level=INFO'
 
@@ -139,6 +140,7 @@ module = [
     "biocypher.*",
     "typedframe.*",
     "pytest.*",
+    "pydantic.*",
 ]
 
 [tool.typos.files]
