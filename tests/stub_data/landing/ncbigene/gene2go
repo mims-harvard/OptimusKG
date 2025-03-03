@@ -198,3 +198,23 @@
 3702	814657	GO:0009507	ISM	located_in	chloroplast	-	Component
 3702	814657	GO:0010228	IMP	acts_upstream_of_or_within	vegetative to reproductive phase transition of meristem	19744161	Process
 3702	814658	GO:0003674	ND	enables	molecular_function	-	Function
+9606	1	GO:0002576	TAS	involved_in	platelet degranulation	-	Process
+9606	1	GO:0003674	ND	enables	molecular_function	-	Function
+9606	1	GO:0005576	HDA	located_in	extracellular region	27068509	Component
+9606	1	GO:0005576	IDA	located_in	extracellular region	3458201	Component
+9606	1	GO:0005576	TAS	located_in	extracellular region	-	Component
+9606	1	GO:0005615	HDA	located_in	extracellular space	16502470	Component
+9606	1	GO:0008150	ND	involved_in	biological_process	-	Process
+9606	1	GO:0031093	TAS	located_in	platelet alpha granule lumen	-	Component
+9606	1	GO:0034774	TAS	located_in	secretory granule lumen	-	Component
+9606	1	GO:0043312	TAS	involved_in	neutrophil degranulation	-	Process
+9606	1	GO:0062023	HDA	located_in	collagen-containing extracellular matrix	27559042	Component
+9606	1	GO:0070062	HDA	located_in	extracellular exosome	19056867|23533145	Component
+9606	1	GO:0072562	HDA	located_in	blood microparticle	22516433	Component
+9606	1	GO:1904813	TAS	located_in	ficolin-1-rich granule lumen	-	Component
+9606	2	GO:0001869	IDA	involved_in	negative regulation of complement activation, lectin pathway	12538697	Process
+9606	2	GO:0002020	IBA	enables	protease binding	21873635	Function
+9606	2	GO:0002020	IPI	enables	protease binding	18485748	Function
+9606	2	GO:0002576	TAS	involved_in	platelet degranulation	-	Process
+9606	2	GO:0004866	IBA	enables	endopeptidase inhibitor activity	21873635	Function
+9606	2	GO:0004867	IDA	enables	serine-type endopeptidase inhibitor activity	12538697	Function

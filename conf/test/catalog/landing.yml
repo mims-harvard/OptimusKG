@@ -1,0 +1,491 @@
+landing.biolink.ontology:
+  type: optimuskg.datasets.OWLDataset
+  filepath: "tests/stub_data/landing/ontologies/biolink.owl"
+  metadata:
+    title: "Biolink Ontology"
+    description: "The Biolink Model is a high-level, open-source data model designed to standardize types and relationships in biological knowledge graphs, covering entities like genes, diseases, chemical substances, organisms, genomics, phenotypes, and more."
+
+landing.disease_ontology.ontology:
+  type: optimuskg.datasets.OWLDataset
+  filepath: "tests/stub_data/landing/ontologies/disease_ontology.owl"
+  metadata:
+    title: "Disease Ontology"
+    description: "The Disease Ontology has been developed as a standardized ontology for human disease with the purpose of providing the biomedical community with consistent, reusable and sustainable descriptions of human disease terms, phenotype characteristics and related medical vocabulary disease concepts through collaborative efforts with biomedical researchers, coordinated by the University of Maryland School of Medicine, Institute for Genome Sciences."
+
+landing.gene_ontology.ontology:
+  type: optimuskg.datasets.OWLDataset
+  filepath: "tests/stub_data/landing/ontologies/gene_ontology.owl"
+  metadata:
+    title: "Gene Ontology"
+    description: "The GO is designed to be species-agnostic to enable the annotation of gene products across the entire tree of life. The computational framework of the GO enables consistent gene annotation, comparison of functions across organisms, and integration of knowledge across diverse biological databases."
+
+landing.human_phenotype_ontology.ontology:
+  type: optimuskg.datasets.OWLDataset
+  filepath: "tests/stub_data/landing/ontologies/human_phenotype_ontology.owl"
+  metadata:
+    title: "Human Phenotype Ontology"
+    description: "The Human Phenotype Ontology (HPO) provides a standardized vocabulary of phenotypic abnormalities encountered in human disease."
+
+landing.mondo.ontology:
+  type: optimuskg.datasets.OWLDataset
+  filepath: "tests/stub_data/landing/ontologies/mondo.owl"
+  metadata:
+    title: "Mondo Ontology"
+    description: "The Mondo Disease Ontology (Mondo) aims to harmonize disease definitions across the world. The name Mondo comes from the Latin word 'mundus' and means 'for the world.'"
+
+landing.orphanet.ontology:
+  type: optimuskg.datasets.OWLDataset
+  filepath: "tests/stub_data/landing/ontologies/orphanet.owl"
+  metadata:
+    title: "Orphanet Ontology"
+    description: "The Orphanet Rare Disease ontology (ORDO) is jointly developed by Orphanet and the EBI to provide a structured vocabulary for rare diseases capturing relationships between diseases, genes and other relevant features which will form a useful resource for the computational analysis of rare diseases."
+
+landing.uber_anatomy_ontology.ontology:
+  type: optimuskg.datasets.OWLDataset
+  filepath: "tests/stub_data/landing/ontologies/uber_anatomy_ontology.owl"
+  metadata:
+    title: "Uber Anatomy Ontology"
+    description: "Uberon is an integrated cross-species anatomy ontology representing a variety of entities classified according to traditional anatomical criteria such as structure, function and developmental lineage."
+
+landing.bgee.homo_sapiens_expressions_advanced:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/bgee/Homo_sapiens_expr_advanced.tsv"
+  load_args:
+    separator: "\t"
+    infer_schema: false
+    schema:
+      # Note: The raw data has some column names with extra spaces. We keep them as is.
+      "Gene ID": "${pl:String}"
+      "Gene name": "${pl:String}"
+      "Anatomical entity ID": "${pl:String}"
+      "Anatomical entity name": "${pl:String}"
+      "Expression": "${pl:String}"
+      "Call quality": "${pl:String}"
+      "Expression rank": "${pl:Float64}" # TODO: Check if this type is correct
+      "Including observed data": "${pl:Utf8}"
+      "Affymetrix data": "${pl:Utf8}"
+      "Affymetrix  experiment count showing expression of this gene in this condition or in sub-conditions with a high quality": "${pl:Int64}"
+      "Affymetrix experiment count showing expression of this gene in this condition or in sub-conditions with a low quality": "${pl:Int64}"
+      "Affymetrix experiment count showing absence of expression of this gene in this condition or valid parent conditions with a high quality": "${pl:Int64}"
+      "Affymetrix experiment count showing absence of expression of this gene in this condition or valid parent conditions with a low quality": "${pl:Int64}"
+      "Including Affymetrix observed data": "${pl:Utf8}"
+      "EST data": "${pl:Utf8}"
+      "EST experiment count showing expression of this gene in this condition or in sub-conditions with a high quality": "${pl:Int64}"
+      "EST experiment count showing expression of this gene in this condition or in sub-conditions with a low quality": "${pl:Int64}"
+      "Including EST observed data": "${pl:Utf8}"
+      "In situ hybridization data": "${pl:Utf8}"
+      "In situ hybridization experiment count showing expression of this gene in this condition or in sub-conditions with a high quality": "${pl:Int64}"
+      "In situ hybridization experiment count showing expression of this gene in this condition or in sub-conditions with a low quality": "${pl:Int64}"
+      "In situ hybridization experiment count showing absence of expression of this gene in this condition or valid parent conditions with a high quality": "${pl:Int64}"
+      "In situ hybridization experiment count showing absence of expression of this gene in this condition or valid parent conditions with a low quality": "${pl:Int64}"
+      "Including in situ hybridization observed data": "${pl:Utf8}"
+      "RNA-Seq data": "${pl:Utf8}"
+      "RNA-Seq  experiment count showing expression of this gene in this condition or in sub-conditions with a high quality": "${pl:Int64}"
+      "RNA-Seq  experiment count showing expression of this gene in this condition or in sub-conditions with a low quality": "${pl:Int64}"
+      "RNA-Seq  experiment count showing absence of expression of this gene in this condition or valid parent conditions with a high quality": "${pl:Int64}"
+      "RNA-Seq  experiment count showing absence of expression of this gene in this condition or valid parent conditions with a low quality": "${pl:Int64}"
+      "Including RNA-Seq observed data": "${pl:Utf8}"
+
+landing.ctd.ctd_exposure_events:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/ctd/CTD_exposure_events.csv"
+  load_args:
+    has_header: false
+    new_columns:
+      [
+        "exposurestressorname",
+        "exposurestressorid",
+        "stressorsourcecategory",
+        "stressorsourcedetails",
+        "numberofstressorsamples",
+        "stressornotes",
+        "numberofreceptors",
+        "receptors",
+        "receptornotes",
+        "smokingstatus",
+        "age",
+        "ageunitsofmeasurement",
+        "agequalifier",
+        "sex",
+        "race",
+        "methods",
+        "detectionlimit",
+        "detectionlimituom",
+        "detectionfrequency",
+        "medium",
+        "exposuremarker",
+        "exposuremarkerid",
+        "markerlevel",
+        "markerunitsofmeasurement",
+        "markermeasurementstatistic",
+        "assaynotes",
+        "studycountries",
+        "stateorprovince",
+        "citytownregionarea",
+        "exposureeventnotes",
+        "outcomerelationship",
+        "diseasename",
+        "diseaseid",
+        "phenotypename",
+        "phenotypeid",
+        "phenotypeactiondegreetype",
+        "anatomy",
+        "exposureoutcomenotes",
+        "reference",
+        "associatedstudytitles",
+        "enrollmentstartyear",
+        "enrollmentendyear",
+        "studyfactors",
+      ]
+    infer_schema: false
+    comment_prefix: "#"
+    schema_overrides: # TODO: Change schema_overrides to schema if possible
+      "exposurestressorname": "${pl:String}"
+      "exposurestressorid": "${pl:String}"
+      "stressorsourcecategory": "${pl:String}"
+      "stressorsourcedetails": "${pl:String}"
+      "numberofstressorsamples": "${pl:String}"
+      "stressornotes": "${pl:String}"
+      "numberofreceptors": "${pl:String}"
+      "receptors": "${pl:String}"
+      "receptornotes": "${pl:String}"
+      "smokingstatus": "${pl:String}"
+      "age": "${pl:String}"
+      "ageunitsofmeasurement": "${pl:String}"
+      "agequalifier": "${pl:String}"
+      "sex": "${pl:String}"
+      "race": "${pl:String}"
+      "methods": "${pl:String}"
+      "detectionlimit": "${pl:Utf8}"
+      "detectionlimituom": "${pl:String}"
+      "detectionfrequency": "${pl:Utf8}"
+      "medium": "${pl:String}"
+      "exposuremarker": "${pl:String}"
+      "exposuremarkerid": "${pl:String}"
+      "markerlevel": "${pl:String}"
+      "markerunitsofmeasurement": "${pl:String}"
+      "markermeasurementstatistic": "${pl:String}"
+      "assaynotes": "${pl:String}"
+      "studycountries": "${pl:String}"
+      "stateorprovince": "${pl:String}"
+      "citytownregionarea": "${pl:String}"
+      "exposureeventnotes": "${pl:String}"
+      "outcomerelationship": "${pl:String}"
+      "diseasename": "${pl:String}"
+      "diseaseid": "${pl:String}"
+      "phenotypename": "${pl:String}"
+      "phenotypeid": "${pl:String}"
+      "phenotypeactiondegreetype": "${pl:String}"
+      "anatomy": "${pl:String}"
+      "exposureoutcomenotes": "${pl:String}"
+      "reference": "${pl:String}"
+      "associatedstudytitles": "${pl:String}"
+      "enrollmentstartyear": "${pl:String}"
+      "enrollmentendyear": "${pl:String}"
+      "studyfactors": "${pl:String}"
+
+landing.reactome.ncbi2_reactome:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/reactome/NCBI2Reactome.txt"
+  load_args:
+    separator: "\t"
+    has_header: false
+    infer_schema: false
+    new_columns:
+      [
+        "ncbi_id",
+        "reactome_id",
+        "url",
+        "reactome_name",
+        "evidence_code",
+        "species",
+      ]
+    schema_overrides:
+      "ncbi_id": "${pl:Utf8}"
+      "reactome_id": "${pl:String}"
+      "url": "${pl:String}"
+      "reactome_name": "${pl:String}"
+      "evidence_code": "${pl:String}"
+      "species": "${pl:String}"
+
+landing.reactome.reactome_pathways:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/reactome/ReactomePathways.txt"
+  load_args:
+    separator: "\t"
+    has_header: false
+    infer_schema: false
+    new_columns: ["reactome_id", "reactome_name", "species"]
+    schema_overrides:
+      "reactome_id": "${pl:String}"
+      "reactome_name": "${pl:String}"
+      "species": "${pl:String}"
+
+landing.reactome.reactome_pathways_relation:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/reactome/ReactomePathwaysRelation.txt"
+  load_args:
+    separator: "\t"
+    has_header: false
+    infer_schema: false
+    new_columns: ["reactome_id_1", "reactome_id_2"]
+    schema_overrides:
+      "reactome_id_1": "${pl:String}"
+      "reactome_id_2": "${pl:String}"
+
+landing.gene_names.gene_names:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/gene_names/gene_names.tsv"
+  load_args:
+    separator: "\t"
+    infer_schema: false
+    schema_overrides:
+      "Approved symbol": "${pl:String}"
+      "Approved name": "${pl:String}"
+      "Accession numbers": "${pl:String}"
+      "RefSeq IDs": "${pl:String}"
+      "NCBI Gene ID": "${pl:String}"
+      "NCBI Gene ID(supplied by NCBI)": "${pl:String}"
+      "UniProt ID(supplied by UniProt)": "${pl:String}"
+      "OMIM ID(supplied by OMIM)": "${pl:String}"
+
+landing.ncbigene.gene2go:
+  type: optimuskg.datasets.Gene2GoReaderDataset
+  filepath: "tests/stub_data/landing/ncbigene/gene2go"
+  load_args:
+    taxids: [9606] # Parse gene2go for human (taxid=9606)
+
+landing.drugbank.full_database:
+  type: optimuskg.datasets.LXMLDataset
+  filepath: tests/stub_data/landing/drugbank/full database.xml
+
+# NOTE: Maybe we should use dataset factories here: https://docs.kedro.org/en/stable/data/kedro_dataset_factories.html
+landing.drugbank.carrier:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/drugbank/drugbank_all_carrier_polypeptide_ids.csv"
+  load_args:
+    infer_schema: false
+    schema: &drugbank_schema
+      "ID": "${pl:String}"
+      "Name": "${pl:String}"
+      "Gene Name": "${pl:String}"
+      "GenBank Protein ID": "${pl:String}"
+      "GenBank Gene ID": "${pl:String}"
+      "UniProt ID": "${pl:String}"
+      "Uniprot Title": "${pl:String}"
+      "PDB ID": "${pl:String}"
+      "GeneCard ID": "${pl:String}"
+      "GenAtlas ID": "${pl:String}"
+      "HGNC ID": "${pl:String}"
+      "Species": "${pl:String}"
+      "Drug IDs": "${pl:String}"
+
+landing.drugbank.enzyme:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/drugbank/drugbank_all_enzyme_polypeptide_ids.csv"
+  load_args:
+    infer_schema: false
+    schema: *drugbank_schema
+
+landing.drugbank.target:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/drugbank/drugbank_all_target_polypeptide_ids.csv"
+  load_args:
+    infer_schema: false
+    schema: *drugbank_schema
+
+landing.drugbank.transporter:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/drugbank/drugbank_all_transporter_polypeptide_ids.csv"
+  load_args:
+    infer_schema: false
+    schema: *drugbank_schema
+
+landing.drugbank.gene_map:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/drugbank/drugbank_gene_map.tsv"
+  load_args:
+    separator: "\t"
+    infer_schema: false
+    schema:
+      "NCBI Gene ID(supplied by NCBI)": "${pl:Utf8}"
+      "UniProt ID(supplied by UniProt)": "${pl:Utf8}"
+
+landing.drugbank.vocabulary:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/drugbank/drugbank_vocabulary.csv"
+  load_args:
+    infer_schema: false
+    schema:
+      "DrugBank ID": "${pl:String}"
+      "Accession Numbers": "${pl:String}"
+      "Common name": "${pl:String}"
+      "CAS": "${pl:String}"
+      "UNII": "${pl:String}"
+      "Synonyms": "${pl:String}"
+      "Standard InChI Key": "${pl:String}"
+
+landing.drugcentral.psql_dump:
+  type: optimuskg.datasets.SQLDumpQueryDataset
+  filepath: "tests/stub_data/landing/drugcentral/drugcentral-pgdump_20200918.sql"
+  query: >
+    SELECT DISTINCT
+        structures.id AS structure_id,
+        drug_disease.id AS drug_disease_id,
+        cd_id,
+        cd_formula,
+        cd_molweight,
+        clogp,
+        alogs,
+        cas_reg_no,
+        tpsa,
+        lipinski,
+        name,
+        no_formulations,
+        stem,
+        encode(molfile::bytea, 'base64') as molfile_base64,
+        mrdef,
+        enhanced_stereo,
+        arom_c,
+        sp3_c,
+        sp2_c,
+        sp_c,
+        halogen,
+        hetero_sp2_c,
+        rotb,
+        encode(molimg::bytea, 'base64') as molimg_base64,
+        o_n,
+        oh_nh,
+        inchi,
+        smiles,
+        rgb,
+        fda_labels,
+        inchikey,
+        status,
+        struct_id,
+        concept_id,
+        relationship_name,
+        concept_name,
+        umls_cui,
+        snomed_full_name,
+        cui_semantic_type,
+        snomed_conceptid
+    FROM structures
+            RIGHT JOIN (
+        SELECT * FROM omop_relationship
+        WHERE relationship_name IN ('indication', 'contraindication', 'off-label use')
+    ) AS drug_disease ON structures.id = drug_disease.struct_id
+  db_name: "drugcentral"
+
+"landing.opentargets.evidence.{source_id}":
+  type: partitions.PartitionedDataset
+  path: "tests/stub_data/landing/opentargets/evidence/{source_id}"
+  dataset:
+    type: pandas.ParquetDataset
+    load_args:
+      engine: pyarrow
+  filename_suffix: ".parquet"
+
+landing.opentargets.targets:
+  type: partitions.PartitionedDataset
+  path: "tests/stub_data/landing/opentargets/targets"
+  dataset:
+    type: pandas.JSONDataset
+    load_args:
+      lines: true
+      dtype: false
+  filename_suffix: ".json"
+
+landing.opentargets.molecule:
+  type: partitions.PartitionedDataset
+  path: "tests/stub_data/landing/opentargets/molecule"
+  dataset:
+    type: pandas.JSONDataset
+    load_args:
+      lines: true
+      dtype: false
+  filename_suffix: ".json"
+
+landing.opentargets.diseases:
+  type: partitions.PartitionedDataset
+  path: "tests/stub_data/landing/opentargets/diseases"
+  dataset:
+    type: pandas.JSONDataset
+    load_args:
+      lines: true
+      dtype: false
+  filename_suffix: ".json"
+
+landing.opentargets.disease_to_phenotype:
+  type: partitions.PartitionedDataset
+  path: "tests/stub_data/landing/opentargets/disease_to_phenotype"
+  dataset:
+    type: pandas.JSONDataset
+    load_args:
+      lines: true
+      dtype: false
+  filename_suffix: ".json"
+
+landing.opentargets.primekg_nodes:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/opentargets/primekg_nodes.csv"
+  load_args:
+    infer_schema: false
+    schema:
+      "node_index": "${pl:String}"
+      "node_id": "${pl:String}"
+      "node_type": "${pl:String}"
+      "node_name": "${pl:String}"
+      "node_source": "${pl:String}"
+
+landing.opentargets.primekg_edges:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/opentargets/primekg_edges.csv"
+  load_args:
+    infer_schema: false
+    schema:
+      "relation": "${pl:String}"
+      "display_relation": "${pl:String}"
+      "x_index": "${pl:String}"
+      "y_index": "${pl:String}"
+
+landing.opentargets.mondo_efo_mappings:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/opentargets/mondo_efo_mappings.tsv"
+  load_args:
+    separator: "\t"
+    has_header: false
+    infer_schema: false
+    new_columns:
+      [
+        "mondo_id",
+        "efo_id",
+        "mondo_name",
+        "efo_name",
+      ]
+    schema_overrides:
+      "mondo_id": "${pl:String}"
+      "efo_id": "${pl:String}"
+      "mondo_name": "${pl:String}"
+      "efo_name": "${pl:String}"
+
+landing.opentargets.drug_mappings:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/opentargets/drug_mappings.tsv"
+  load_args:
+    separator: "\t"
+    infer_schema: false
+    schema:
+      "drugbankId": "${pl:String}"
+      "name": "${pl:String}"
+      "ttd_id": "${pl:String}"
+      "pubchem_cid": "${pl:String}"
+      "cas_num": "${pl:String}"
+      "chembl_id": "${pl:String}"
+      "zinc_id": "${pl:String}"
+      "chebi_id": "${pl:String}"
+      "kegg_cid": "${pl:String}"
+      "kegg_id": "${pl:String}"
+      "bindingDB_id": "${pl:String}"
+      "UMLS_cuis": "${pl:String}"
+      "stitch_id": "${pl:String}"

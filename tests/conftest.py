@@ -19,5 +19,5 @@ class KedroSettings(BaseModel):
 @pytest.fixture
 def kedro() -> Generator[KedroSettings, None, None]:
     bootstrap_project(Path.cwd())
-    with KedroSession.create(project_path=Path.cwd()) as session:
+    with KedroSession.create(project_path=Path.cwd(), env="test") as session:
         yield KedroSettings(session=session, context=session.load_context())
