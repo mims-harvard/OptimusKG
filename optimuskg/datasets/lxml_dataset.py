@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from copy import deepcopy
 from pathlib import PurePosixPath
-from typing import Any, override  # type: ignore[attr-defined]
+from typing import Any, override
 
 import fsspec
 from kedro.io.core import (

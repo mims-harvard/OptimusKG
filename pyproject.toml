@@ -143,5 +143,9 @@ module = [
     "pydantic.*",
 ]
 
+[[tool.mypy.overrides]]
+module = ["optimuskg.datasets.*"]
+disable_error_code = ["attr-defined"]
+
 [tool.typos.files]
 extend-exclude = ["tests/stub_data/*"]

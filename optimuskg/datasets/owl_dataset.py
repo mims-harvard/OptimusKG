@@ -10,7 +10,7 @@ import logging
 from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import PurePosixPath
-from typing import Any, override  # type: ignore[attr-defined]
+from typing import Any, override
 
 import fsspec
 import pandas as pd
