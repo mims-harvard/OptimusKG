@@ -36,7 +36,7 @@ dev = [
   "ruff~=0.1.8",
   "pre-commit>=4.0.1",
   "mypy>=1.14.1",
-  "bandit>=1.8.2",
+  "bandit[toml]>=1.8.2",
   "interrogate>=1.7.0",
   "pydantic>=2.10.6",
   "typer>=0.15.1",
@@ -55,7 +55,7 @@ path = ".venv"
 [tool.hatch.envs.default.scripts]
 list = ["hatch env show --json | jq --raw-output '.default.scripts | keys[]'"]
 mypy = 'uv tool run mypy --install-types --config-file pyproject.toml --non-interactive --python-executable=$(uv run python -c "import sys; print(sys.executable)") -p optimuskg -p tests'
-bandit = 'uv tool run bandit -v -c pyproject.toml -r optimuskg/* tests/*'
+bandit = 'uv tool run bandit[toml] -v -c pyproject.toml -r optimuskg/* tests/*'
 interrogate = 'uv tool run interrogate --config pyproject.toml'
 clean = 'uv run bash scripts/clean.sh'
 neo4j = 'docker compose up -d'

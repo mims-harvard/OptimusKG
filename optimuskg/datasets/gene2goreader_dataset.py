@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from copy import deepcopy
 from pathlib import PurePosixPath
-from typing import Any, override
+from typing import Any, override  # type: ignore[attr-defined]
 
 import fsspec
 from goatools.anno.genetogo_reader import Gene2GoReader

@@ -5,7 +5,7 @@ import shutil
 import subprocess  # nosec B404
 from copy import deepcopy
 from pathlib import Path, PurePosixPath
-from typing import Any, override
+from typing import Any, override  # type: ignore[attr-defined]
 
 import fsspec
 import pandas as pd
