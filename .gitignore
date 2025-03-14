@@ -154,3 +154,7 @@ venv.bak/
 
 # Docker volumes
 .volumes/
+
+# stub data
+tests/stub_data/
+!tests/stub_data/landing/

@@ -48,3 +48,11 @@ We use [`pytest`](https://docs.pytest.org/en/stable/) to run our tests. You can 
 uv tool run pytest
 ```
 
+However, is recommended to run them with pre-configured flags:
+
+```console
+uv tool run hatch run pytest
+```
+
+
+

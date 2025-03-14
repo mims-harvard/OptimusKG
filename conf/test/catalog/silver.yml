@@ -1,0 +1,51 @@
+"silver.opentargets.evidence.{source_id}":
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/silver/opentargets/evidence/{source_id}.csv"
+
+silver.opentargets.disease_to_phenotype:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/silver/opentargets/disease_to_phenotype.csv"
+
+silver.opentargets.opentargets_edges:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/silver/opentargets/opentargets_edges.csv"
+
+silver.bgee.gene_expressions_in_anatomy:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/silver/bgee/gene_expressions_in_anatomy.csv"
+
+silver.ctd.ctd_exposure_events:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/silver/ctd/ctd_exposure_events.csv"
+
+silver.drugcentral.drug_disease:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/silver/drugcentral/drug_disease.csv"
+
+silver.gene_names.gene_names:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/silver/gene_names/gene_names.csv"
+
+silver.ncbigene.protein_go_associations:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/silver/ncbigene/protein_go_associations.csv"
+
+silver.reactome.reactome_ncbi:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/silver/reactome/reactome_ncbi.csv"
+
+silver.reactome.reactome_relations:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/silver/reactome/reactome_relations.csv"
+
+silver.reactome.reactome_terms:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/silver/reactome/reactome_terms.csv"
+
+silver.drugbank.drug_drug:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/silver/drugbank/drug_drug.csv"
+
+silver.drugbank.drug_protein:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/silver/drugbank/drug_protein.csv"

@@ -18,7 +18,6 @@ bronze.ctd.ctd_exposure_events:
   load_args:
     infer_schema: false
 
-
 bronze.reactome.reactome_ncbi:
   type: polars.CSVDataset
   filepath: "data/bronze/reactome/reactome_ncbi.csv"

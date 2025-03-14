@@ -235,7 +235,7 @@ landing.reactome.reactome_pathways_relation:
 
 landing.gene_names.gene_names:
   type: polars.CSVDataset
-  filepath: "https://www.genenames.org/cgi-bin/download/custom?col=gd_app_sym&col=gd_app_name&col=gd_pub_acc_ids&col=gd_pub_refseq_ids&col=gd_pub_eg_id&col=md_eg_id&col=md_prot_id&col=md_mim_id&status=Approved&hgnc_dbtag=on&order_by=gd_app_sym_sort&format=text&submit=submit"
+  filepath: "data/landing/gene_names/gene_names.tsv"
   load_args:
     separator: "\t"
     infer_schema: false
@@ -303,7 +303,7 @@ landing.drugbank.transporter:
 
 landing.drugbank.gene_map:
   type: polars.CSVDataset
-  filepath: "https://www.genenames.org/cgi-bin/download/custom?col=md_eg_id&col=md_prot_id&status=Approved&hgnc_dbtag=on&order_by=gd_app_sym_sort&format=text&submit=submit"
+  filepath: "data/landing/drugbank/drugbank_gene_map.tsv"
   load_args:
     separator: "\t"
     infer_schema: false
@@ -376,20 +376,6 @@ landing.drugcentral.psql_dump:
         WHERE relationship_name IN ('indication', 'contraindication', 'off-label use')
     ) AS drug_disease ON structures.id = drug_disease.struct_id
   db_name: "drugcentral"
-
-# If we're using pyspark, we need to edit the docker image to add java dependencies.
-# References:
-# 1) https://docs.kedro.org/en/0.18.14/integrations/pyspark_integration.html
-# 2) https://medium.com/@talha.97.mahmood/dockerizing-a-kedro-project-a-step-by-step-guide-7be8f22fb246
-# 3) https://github.com/kedro-org/kedro-starters/tree/main/spaceflights-pyspark
-# landing.opentargets.cancer_gene_census:
-#   type: spark.SparkDataset
-#   filepath: "http://ftp.ebi.ac.uk/pub/databases/opentargets/platform/24.09/output/etl/parquet/evidence/sourceId=cancer_gene_census/"
-#   file_format: parquet
-#   load_args:
-#     header: true
-#     inferSchema: true
-#     recursiveFileLookup: true
 
 "landing.opentargets.evidence.{source_id}":
   type: partitions.PartitionedDataset
@@ -465,7 +451,7 @@ landing.opentargets.primekg_edges:
 
 landing.opentargets.mondo_efo_mappings:
   type: polars.CSVDataset
-  filepath: "https://raw.githubusercontent.com/EBISPOT/efo/refs/heads/master/src/ontology/components/mondo_efo_mappings.tsv"
+  filepath: "data/landing/opentargets/mondo_efo_mappings.tsv"
   load_args:
     separator: "\t"
     has_header: false
@@ -485,7 +471,7 @@ landing.opentargets.mondo_efo_mappings:
 
 landing.opentargets.drug_mappings:
   type: polars.CSVDataset
-  filepath: "https://raw.githubusercontent.com/iit-Demokritos/drug_id_mapping/refs/heads/main/drug-mappings.tsv"
+  filepath: "data/landing/opentargets/drug_mappings.tsv"
   load_args:
     separator: "\t"
     infer_schema: false

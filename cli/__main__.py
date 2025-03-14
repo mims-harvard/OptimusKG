@@ -5,7 +5,12 @@ from pathlib import Path
 import typer
 from kedro.framework.project import LOGGING  # noqa: F401
 
-from cli.utils import download_ontologies, download_opentargets
+from cli.utils import (
+    download_drugbank_files,
+    download_gene_names_files,
+    download_ontologies,
+    download_opentargets,
+)
 
 app = typer.Typer(help="Main entry point for the CLI.")
 
@@ -18,6 +23,8 @@ def landing():
 
     download_opentargets()
     download_ontologies()
+    download_drugbank_files()
+    download_gene_names_files()
 
     logger.info("All landing files downloaded successfully")
 

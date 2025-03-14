@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 requires-python = ">=3.12"
 name = "optimuskg"
 readme = "README.md"
-version = "0.7.1"
+version = "0.8.0"
 dependencies = [
   "ipython>=8.10",
   "jupyterlab>=3.0",
@@ -36,8 +36,9 @@ dev = [
   "ruff~=0.1.8",
   "pre-commit>=4.0.1",
   "mypy>=1.14.1",
-  "bandit>=1.8.2",
+  "bandit[toml]>=1.8.2",
   "interrogate>=1.7.0",
+  "pydantic>=2.10.6",
   "typer>=0.15.1",
 ]
 
@@ -54,10 +55,11 @@ path = ".venv"
 [tool.hatch.envs.default.scripts]
 list = ["hatch env show --json | jq --raw-output '.default.scripts | keys[]'"]
 mypy = 'uv tool run mypy --install-types --config-file pyproject.toml --non-interactive --python-executable=$(uv run python -c "import sys; print(sys.executable)") -p optimuskg -p tests'
-bandit = 'uv tool run bandit -v -c pyproject.toml -r optimuskg/* tests/*'
+bandit = 'uv tool run bandit[toml] -v -c pyproject.toml -r optimuskg/* tests/*'
 interrogate = 'uv tool run interrogate --config pyproject.toml'
 clean = 'uv run bash scripts/clean.sh'
 neo4j = 'docker compose up -d'
+pytest = 'uv run pytest -W ignore --no-cov-on-fail --log-cli-level=INFO'
 
 [tool.uv]
 required-version = ">=0.5.18"
@@ -138,5 +140,12 @@ module = [
     "biocypher.*",
     "typedframe.*",
     "pytest.*",
+    "pydantic.*",
 ]
 
+[[tool.mypy.overrides]]
+module = ["optimuskg.datasets.*"]
+disable_error_code = ["attr-defined"]
+
+[tool.typos.files]
+extend-exclude = ["tests/stub_data/*"]
