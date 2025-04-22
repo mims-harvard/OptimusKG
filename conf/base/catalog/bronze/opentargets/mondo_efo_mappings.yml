@@ -1,0 +1,3 @@
+bronze.opentargets.mondo_efo_mappings:
+  type: polars.CSVDataset
+  filepath: "data/bronze/opentargets/mondo_efo_mappings.csv"

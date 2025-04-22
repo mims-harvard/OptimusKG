@@ -1,0 +1,8 @@
+"landing.opentargets.evidence.{source_id}":
+  type: partitions.PartitionedDataset
+  path: "data/landing/opentargets/evidence/{source_id}"
+  dataset:
+    type: pandas.ParquetDataset
+    load_args:
+      engine: pyarrow
+  filename_suffix: ".parquet"

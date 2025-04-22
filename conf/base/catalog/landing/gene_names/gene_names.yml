@@ -1,0 +1,15 @@
+landing.gene_names.gene_names:
+  type: polars.CSVDataset
+  filepath: "data/landing/gene_names/gene_names.tsv"
+  load_args:
+    separator: "\t"
+    infer_schema: false
+    schema_overrides:
+      "Approved symbol": "${pl:String}"
+      "Approved name": "${pl:String}"
+      "Accession numbers": "${pl:String}"
+      "RefSeq IDs": "${pl:String}"
+      "NCBI Gene ID": "${pl:String}"
+      "NCBI Gene ID(supplied by NCBI)": "${pl:String}"
+      "UniProt ID(supplied by UniProt)": "${pl:String}"
+      "OMIM ID(supplied by OMIM)": "${pl:String}"

@@ -1,0 +1,9 @@
+landing.opentargets.disease_to_phenotype:
+  type: partitions.PartitionedDataset
+  path: "data/landing/opentargets/disease_to_phenotype"
+  dataset:
+    type: pandas.JSONDataset
+    load_args:
+      lines: true
+      dtype: false
+  filename_suffix: ".json"

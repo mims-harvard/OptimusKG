@@ -1,0 +1,9 @@
+landing.opentargets.targets:
+  type: partitions.PartitionedDataset
+  path: "data/landing/opentargets/targets"
+  dataset:
+    type: pandas.JSONDataset
+    load_args:
+      lines: true
+      dtype: false
+  filename_suffix: ".json"

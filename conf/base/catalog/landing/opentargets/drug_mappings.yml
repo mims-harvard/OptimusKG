@@ -1,0 +1,20 @@
+landing.opentargets.drug_mappings:
+  type: polars.CSVDataset
+  filepath: "data/landing/opentargets/drug_mappings.tsv"
+  load_args:
+    separator: "\t"
+    infer_schema: false
+    schema:
+      "drugbankId": "${pl:String}"
+      "name": "${pl:String}"
+      "ttd_id": "${pl:String}"
+      "pubchem_cid": "${pl:String}"
+      "cas_num": "${pl:String}"
+      "chembl_id": "${pl:String}"
+      "zinc_id": "${pl:String}"
+      "chebi_id": "${pl:String}"
+      "kegg_cid": "${pl:String}"
+      "kegg_id": "${pl:String}"
+      "bindingDB_id": "${pl:String}"
+      "UMLS_cuis": "${pl:String}"
+      "stitch_id": "${pl:String}"

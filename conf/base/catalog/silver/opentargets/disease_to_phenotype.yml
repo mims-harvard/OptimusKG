@@ -1,0 +1,3 @@
+silver.opentargets.disease_to_phenotype:
+  type: polars.CSVDataset
+  filepath: "data/silver/opentargets/disease_to_phenotype.csv"

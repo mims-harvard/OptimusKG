@@ -1,0 +1,6 @@
+landing.ontology.orphanet:
+  type: optimuskg.datasets.OWLDataset
+  filepath: "data/landing/ontology/orphanet.owl"
+  metadata:
+    title: "Orphanet Ontology"
+    description: "The Orphanet Rare Disease ontology (ORDO) is jointly developed by Orphanet and the EBI to provide a structured vocabulary for rare diseases capturing relationships between diseases, genes and other relevant features which will form a useful resource for the computational analysis of rare diseases."

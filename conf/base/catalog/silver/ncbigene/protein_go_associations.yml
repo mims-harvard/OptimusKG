@@ -1,0 +1,3 @@
+silver.ncbigene.protein_go_associations:
+  type: polars.CSVDataset
+  filepath: "data/silver/ncbigene/protein_go_associations.csv"

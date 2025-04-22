@@ -1,0 +1,3 @@
+silver.drugcentral.drug_disease:
+  type: polars.CSVDataset
+  filepath: "data/silver/drugcentral/drug_disease.csv"

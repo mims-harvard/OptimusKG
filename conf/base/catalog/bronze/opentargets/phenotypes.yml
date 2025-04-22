@@ -1,0 +1,3 @@
+bronze.opentargets.phenotypes:
+  type: polars.CSVDataset
+  filepath: "data/bronze/opentargets/phenotypes.csv"

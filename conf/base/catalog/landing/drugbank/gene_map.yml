@@ -1,0 +1,9 @@
+landing.drugbank.gene_map:
+  type: polars.CSVDataset
+  filepath: "data/landing/drugbank/drugbank_gene_map.tsv"
+  load_args:
+    separator: "\t"
+    infer_schema: false
+    schema:
+      "NCBI Gene ID(supplied by NCBI)": "${pl:Utf8}"
+      "UniProt ID(supplied by UniProt)": "${pl:Utf8}"

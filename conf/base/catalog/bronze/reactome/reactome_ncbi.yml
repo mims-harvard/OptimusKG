@@ -1,0 +1,11 @@
+bronze.reactome.reactome_ncbi:
+  type: polars.CSVDataset
+  filepath: "data/bronze/reactome/reactome_ncbi.csv"
+  load_args:
+    infer_schema: false
+    schema:
+      "ncbi_id": "${pl:String}"
+      "reactome_id": "${pl:String}"
+      "url": "${pl:String}"
+      "reactome_name": "${pl:String}"
+      "evidence_code": "${pl:String}"

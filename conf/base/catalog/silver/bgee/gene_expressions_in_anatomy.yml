@@ -1,0 +1,3 @@
+silver.bgee.gene_expressions_in_anatomy:
+  type: polars.CSVDataset
+  filepath: "data/silver/bgee/gene_expressions_in_anatomy.csv"

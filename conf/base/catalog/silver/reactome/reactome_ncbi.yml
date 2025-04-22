@@ -1,0 +1,3 @@
+silver.reactome.reactome_ncbi:
+  type: polars.CSVDataset
+  filepath: "data/silver/reactome/reactome_ncbi.csv"

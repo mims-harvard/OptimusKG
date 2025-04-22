@@ -1,46 +1,46 @@
-landing.biolink.ontology:
+landing.ontology.biolink:
   type: optimuskg.datasets.OWLDataset
   filepath: "tests/stub_data/landing/ontologies/biolink.owl"
   metadata:
     title: "Biolink Ontology"
     description: "The Biolink Model is a high-level, open-source data model designed to standardize types and relationships in biological knowledge graphs, covering entities like genes, diseases, chemical substances, organisms, genomics, phenotypes, and more."
 
-landing.disease_ontology.ontology:
+landing.ontology.disease:
   type: optimuskg.datasets.OWLDataset
   filepath: "tests/stub_data/landing/ontologies/disease_ontology.owl"
   metadata:
     title: "Disease Ontology"
     description: "The Disease Ontology has been developed as a standardized ontology for human disease with the purpose of providing the biomedical community with consistent, reusable and sustainable descriptions of human disease terms, phenotype characteristics and related medical vocabulary disease concepts through collaborative efforts with biomedical researchers, coordinated by the University of Maryland School of Medicine, Institute for Genome Sciences."
 
-landing.gene_ontology.ontology:
+landing.ontology.gene:
   type: optimuskg.datasets.OWLDataset
   filepath: "tests/stub_data/landing/ontologies/gene_ontology.owl"
   metadata:
     title: "Gene Ontology"
     description: "The GO is designed to be species-agnostic to enable the annotation of gene products across the entire tree of life. The computational framework of the GO enables consistent gene annotation, comparison of functions across organisms, and integration of knowledge across diverse biological databases."
 
-landing.human_phenotype_ontology.ontology:
+landing.ontology.human_phenotype:
   type: optimuskg.datasets.OWLDataset
   filepath: "tests/stub_data/landing/ontologies/human_phenotype_ontology.owl"
   metadata:
     title: "Human Phenotype Ontology"
     description: "The Human Phenotype Ontology (HPO) provides a standardized vocabulary of phenotypic abnormalities encountered in human disease."
 
-landing.mondo.ontology:
+landing.ontology.mondo:
   type: optimuskg.datasets.OWLDataset
   filepath: "tests/stub_data/landing/ontologies/mondo.owl"
   metadata:
     title: "Mondo Ontology"
     description: "The Mondo Disease Ontology (Mondo) aims to harmonize disease definitions across the world. The name Mondo comes from the Latin word 'mundus' and means 'for the world.'"
 
-landing.orphanet.ontology:
+landing.ontology.orphanet:
   type: optimuskg.datasets.OWLDataset
   filepath: "tests/stub_data/landing/ontologies/orphanet.owl"
   metadata:
     title: "Orphanet Ontology"
     description: "The Orphanet Rare Disease ontology (ORDO) is jointly developed by Orphanet and the EBI to provide a structured vocabulary for rare diseases capturing relationships between diseases, genes and other relevant features which will form a useful resource for the computational analysis of rare diseases."
 
-landing.uber_anatomy_ontology.ontology:
+landing.ontology.uber_anatomy:
   type: optimuskg.datasets.OWLDataset
   filepath: "tests/stub_data/landing/ontologies/uber_anatomy_ontology.owl"
   metadata:

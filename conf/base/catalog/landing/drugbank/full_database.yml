@@ -1,0 +1,3 @@
+landing.drugbank.full_database:
+  type: optimuskg.datasets.LXMLDataset
+  filepath: data/landing/drugbank/full database.xml

@@ -1,0 +1,3 @@
+"silver.opentargets.evidence.{source_id}":
+  type: polars.CSVDataset
+  filepath: "data/silver/opentargets/evidence/{source_id}.csv"

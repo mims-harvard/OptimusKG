@@ -1,0 +1,3 @@
+bronze.opentargets.disease_phenotype_ids:
+  type: polars.CSVDataset
+  filepath: "data/bronze/opentargets/disease_phenotype_ids.csv"

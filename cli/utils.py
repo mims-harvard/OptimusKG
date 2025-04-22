@@ -146,38 +146,38 @@ def download_ontologies(  # noqa: PLR0913
     chunk_size: int = 8192,
 ) -> None:
     """Download all ontology files to the landing zone."""
-    _mkdir(paths.DATA_LANDING_ONTOLOGIES_DIR)
+    _mkdir(paths.DATA_LANDING_ONTOLOGY_DIR)
 
     ontologies = {
         "Biolink": {
             "url": f"https://data.bioontology.org/ontologies/BIOLINK/submissions/{biolink_version}/download?apikey={bioontology_api_key}",
-            "output_path": paths.DATA_LANDING_ONTOLOGIES_DIR / "biolink.owl",
+            "output_path": paths.DATA_LANDING_ONTOLOGY_DIR / "biolink.owl",
         },
         "Disease": {
             "url": f"https://data.bioontology.org/ontologies/DOID/submissions/{doid_version}/download?apikey={bioontology_api_key}",
-            "output_path": paths.DATA_LANDING_ONTOLOGIES_DIR / "disease_ontology.owl",
+            "output_path": paths.DATA_LANDING_ONTOLOGY_DIR / "disease_ontology.owl",
         },
         "Gene": {
             "url": f"https://data.bioontology.org/ontologies/GO-PLUS/submissions/{go_plus_version}/download?apikey={bioontology_api_key}",
-            "output_path": paths.DATA_LANDING_ONTOLOGIES_DIR / "gene_ontology.owl",
+            "output_path": paths.DATA_LANDING_ONTOLOGY_DIR / "gene_ontology.owl",
         },
         "Uber Anatomy": {
             "url": f"https://data.bioontology.org/ontologies/UBERON/submissions/{uberon_version}/download?apikey={bioontology_api_key}",
-            "output_path": paths.DATA_LANDING_ONTOLOGIES_DIR
+            "output_path": paths.DATA_LANDING_ONTOLOGY_DIR
             / "uber_anatomy_ontology.owl",
         },
         "Human Phenotype": {
             "url": "http://purl.obolibrary.org/obo/hp.owl",
-            "output_path": paths.DATA_LANDING_ONTOLOGIES_DIR
+            "output_path": paths.DATA_LANDING_ONTOLOGY_DIR
             / "human_phenotype_ontology.owl",
         },
         "Mondo": {
             "url": "http://purl.obolibrary.org/obo/mondo.owl",
-            "output_path": paths.DATA_LANDING_ONTOLOGIES_DIR / "mondo.owl",
+            "output_path": paths.DATA_LANDING_ONTOLOGY_DIR / "mondo.owl",
         },
         "Orphanet": {
             "url": "http://purl.obolibrary.org/obo/ordo.owl",
-            "output_path": paths.DATA_LANDING_ONTOLOGIES_DIR / "orphanet.owl",
+            "output_path": paths.DATA_LANDING_ONTOLOGY_DIR / "orphanet.owl",
         },
     }
 

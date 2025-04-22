@@ -1,0 +1,8 @@
+bronze.opentargets.targets:
+  type: pandas.JSONDataset
+  filepath: "data/bronze/opentargets/targets.json"
+  save_args:
+    lines: true
+    orient: records
+  load_args:
+    lines: true

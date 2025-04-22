@@ -1,0 +1,6 @@
+landing.ontology.disease:
+  type: optimuskg.datasets.OWLDataset
+  filepath: "data/landing/ontology/disease.owl"
+  metadata:
+    title: "Disease Ontology"
+    description: "The Disease Ontology has been developed as a standardized ontology for human disease with the purpose of providing the biomedical community with consistent, reusable and sustainable descriptions of human disease terms, phenotype characteristics and related medical vocabulary disease concepts through collaborative efforts with biomedical researchers, coordinated by the University of Maryland School of Medicine, Institute for Genome Sciences."
