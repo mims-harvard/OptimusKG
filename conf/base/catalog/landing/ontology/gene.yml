@@ -1,0 +1,6 @@
+landing.ontology.gene:
+  type: optimuskg.datasets.OWLDataset
+  filepath: "data/landing/ontology/gene.owl"
+  metadata:
+    title: "Gene Ontology"
+    description: "The GO is designed to be species-agnostic to enable the annotation of gene products across the entire tree of life. The computational framework of the GO enables consistent gene annotation, comparison of functions across organisms, and integration of knowledge across diverse biological databases."

@@ -1,0 +1,3 @@
+bronze.opentargets.diseases:
+  type: polars.CSVDataset
+  filepath: "data/bronze/opentargets/diseases.csv"

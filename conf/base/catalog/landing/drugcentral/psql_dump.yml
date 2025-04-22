@@ -1,0 +1,51 @@
+landing.drugcentral.psql_dump:
+  type: optimuskg.datasets.SQLDumpQueryDataset
+  filepath: "data/landing/drugcentral/drugcentral-pgdump_20200918.sql"
+  query: >
+    SELECT DISTINCT
+        structures.id AS structure_id,
+        drug_disease.id AS drug_disease_id,
+        cd_id,
+        cd_formula,
+        cd_molweight,
+        clogp,
+        alogs,
+        cas_reg_no,
+        tpsa,
+        lipinski,
+        name,
+        no_formulations,
+        stem,
+        encode(molfile::bytea, 'base64') as molfile_base64,
+        mrdef,
+        enhanced_stereo,
+        arom_c,
+        sp3_c,
+        sp2_c,
+        sp_c,
+        halogen,
+        hetero_sp2_c,
+        rotb,
+        encode(molimg::bytea, 'base64') as molimg_base64,
+        o_n,
+        oh_nh,
+        inchi,
+        smiles,
+        rgb,
+        fda_labels,
+        inchikey,
+        status,
+        struct_id,
+        concept_id,
+        relationship_name,
+        concept_name,
+        umls_cui,
+        snomed_full_name,
+        cui_semantic_type,
+        snomed_conceptid
+    FROM structures
+            RIGHT JOIN (
+        SELECT * FROM omop_relationship
+        WHERE relationship_name IN ('indication', 'contraindication', 'off-label use')
+    ) AS drug_disease ON structures.id = drug_disease.struct_id
+  db_name: "drugcentral"

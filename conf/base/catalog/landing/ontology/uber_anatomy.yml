@@ -1,0 +1,6 @@
+landing.ontology.uber_anatomy:
+  type: optimuskg.datasets.OWLDataset
+  filepath: "data/landing/ontology/uber_anatomy.owl"
+  metadata:
+    title: "Uber Anatomy Ontology"
+    description: "Uberon is an integrated cross-species anatomy ontology representing a variety of entities classified according to traditional anatomical criteria such as structure, function and developmental lineage."

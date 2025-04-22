@@ -1,0 +1,3 @@
+bronze.reactome.reactome_relations:
+  type: polars.CSVDataset
+  filepath: "data/bronze/reactome/reactome_relations.csv"

@@ -1,0 +1,8 @@
+"bronze.opentargets.evidence.{source_id}":
+  type: pandas.JSONDataset
+  filepath: "data/bronze/opentargets/evidence/{source_id}.json"
+  save_args:
+    lines: true
+    orient: records
+  load_args:
+    lines: true

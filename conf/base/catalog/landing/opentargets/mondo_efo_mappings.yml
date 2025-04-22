@@ -1,0 +1,19 @@
+landing.opentargets.mondo_efo_mappings:
+  type: polars.CSVDataset
+  filepath: "data/landing/opentargets/mondo_efo_mappings.tsv"
+  load_args:
+    separator: "\t"
+    has_header: false
+    infer_schema: false
+    new_columns:
+      [
+        "mondo_id",
+        "efo_id",
+        "mondo_name",
+        "efo_name",
+      ]
+    schema_overrides:
+      "mondo_id": "${pl:String}"
+      "efo_id": "${pl:String}"
+      "mondo_name": "${pl:String}"
+      "efo_name": "${pl:String}"

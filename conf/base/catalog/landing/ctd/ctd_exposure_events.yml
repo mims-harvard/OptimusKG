@@ -1,0 +1,97 @@
+landing.ctd.ctd_exposure_events:
+  type: polars.CSVDataset
+  filepath: "data/landing/ctd/CTD_exposure_events.csv"
+  load_args:
+    has_header: false
+    new_columns:
+      [
+        "exposurestressorname",
+        "exposurestressorid",
+        "stressorsourcecategory",
+        "stressorsourcedetails",
+        "numberofstressorsamples",
+        "stressornotes",
+        "numberofreceptors",
+        "receptors",
+        "receptornotes",
+        "smokingstatus",
+        "age",
+        "ageunitsofmeasurement",
+        "agequalifier",
+        "sex",
+        "race",
+        "methods",
+        "detectionlimit",
+        "detectionlimituom",
+        "detectionfrequency",
+        "medium",
+        "exposuremarker",
+        "exposuremarkerid",
+        "markerlevel",
+        "markerunitsofmeasurement",
+        "markermeasurementstatistic",
+        "assaynotes",
+        "studycountries",
+        "stateorprovince",
+        "citytownregionarea",
+        "exposureeventnotes",
+        "outcomerelationship",
+        "diseasename",
+        "diseaseid",
+        "phenotypename",
+        "phenotypeid",
+        "phenotypeactiondegreetype",
+        "anatomy",
+        "exposureoutcomenotes",
+        "reference",
+        "associatedstudytitles",
+        "enrollmentstartyear",
+        "enrollmentendyear",
+        "studyfactors",
+      ]
+    infer_schema: false
+    comment_prefix: "#"
+    schema_overrides: # TODO: Change schema_overrides to schema if possible
+      "exposurestressorname": "${pl:String}"
+      "exposurestressorid": "${pl:String}"
+      "stressorsourcecategory": "${pl:String}"
+      "stressorsourcedetails": "${pl:String}"
+      "numberofstressorsamples": "${pl:String}"
+      "stressornotes": "${pl:String}"
+      "numberofreceptors": "${pl:String}"
+      "receptors": "${pl:String}"
+      "receptornotes": "${pl:String}"
+      "smokingstatus": "${pl:String}"
+      "age": "${pl:String}"
+      "ageunitsofmeasurement": "${pl:String}"
+      "agequalifier": "${pl:String}"
+      "sex": "${pl:String}"
+      "race": "${pl:String}"
+      "methods": "${pl:String}"
+      "detectionlimit": "${pl:Utf8}"
+      "detectionlimituom": "${pl:String}"
+      "detectionfrequency": "${pl:Utf8}"
+      "medium": "${pl:String}"
+      "exposuremarker": "${pl:String}"
+      "exposuremarkerid": "${pl:String}"
+      "markerlevel": "${pl:String}"
+      "markerunitsofmeasurement": "${pl:String}"
+      "markermeasurementstatistic": "${pl:String}"
+      "assaynotes": "${pl:String}"
+      "studycountries": "${pl:String}"
+      "stateorprovince": "${pl:String}"
+      "citytownregionarea": "${pl:String}"
+      "exposureeventnotes": "${pl:String}"
+      "outcomerelationship": "${pl:String}"
+      "diseasename": "${pl:String}"
+      "diseaseid": "${pl:String}"
+      "phenotypename": "${pl:String}"
+      "phenotypeid": "${pl:String}"
+      "phenotypeactiondegreetype": "${pl:String}"
+      "anatomy": "${pl:String}"
+      "exposureoutcomenotes": "${pl:String}"
+      "reference": "${pl:String}"
+      "associatedstudytitles": "${pl:String}"
+      "enrollmentstartyear": "${pl:String}"
+      "enrollmentendyear": "${pl:String}"
+      "studyfactors": "${pl:String}"

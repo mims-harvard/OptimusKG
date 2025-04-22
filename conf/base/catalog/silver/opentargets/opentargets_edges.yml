@@ -1,0 +1,3 @@
+silver.opentargets.opentargets_edges:
+  type: polars.CSVDataset
+  filepath: "data/silver/opentargets/opentargets_edges.csv"

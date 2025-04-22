@@ -1,0 +1,6 @@
+landing.ontology.mondo:
+  type: optimuskg.datasets.OWLDataset
+  filepath: "data/landing/ontology/mondo.owl"
+  metadata:
+    title: "Mondo Ontology"
+    description: "The Mondo Disease Ontology (Mondo) aims to harmonize disease definitions across the world. The name Mondo comes from the Latin word 'mundus' and means 'for the world.'"

@@ -1,0 +1,13 @@
+landing.drugbank.vocabulary:
+  type: polars.CSVDataset
+  filepath: "data/landing/drugbank/drugbank_vocabulary.csv"
+  load_args:
+    infer_schema: false
+    schema:
+      "DrugBank ID": "${pl:String}"
+      "Accession Numbers": "${pl:String}"
+      "Common name": "${pl:String}"
+      "CAS": "${pl:String}"
+      "UNII": "${pl:String}"
+      "Synonyms": "${pl:String}"
+      "Standard InChI Key": "${pl:String}"

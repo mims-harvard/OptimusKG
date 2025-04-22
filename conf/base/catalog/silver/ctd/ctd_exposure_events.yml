@@ -1,0 +1,3 @@
+silver.ctd.ctd_exposure_events:
+  type: polars.CSVDataset
+  filepath: "data/silver/ctd/ctd_exposure_events.csv"

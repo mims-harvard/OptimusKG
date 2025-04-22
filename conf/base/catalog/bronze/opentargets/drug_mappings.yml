@@ -1,0 +1,3 @@
+bronze.opentargets.drug_mappings:
+  type: polars.CSVDataset
+  filepath: "data/bronze/opentargets/drug_mappings.csv"

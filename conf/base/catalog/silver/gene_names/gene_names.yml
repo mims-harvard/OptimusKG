@@ -1,0 +1,3 @@
+silver.gene_names.gene_names:
+  type: polars.CSVDataset
+  filepath: "data/silver/gene_names/gene_names.csv"
