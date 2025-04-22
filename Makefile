@@ -1,0 +1,76 @@
+.DEFAULT_GOAL := help
+
+.PHONY: help
+help:  ## Display this help screen
+	@echo "\033[1mAvailable commands:\033[0m"
+	@grep -E '^[a-z.A-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-22s\033[0m %s\n", $$1, $$2}' | sort
+
+
+.PHONY: .uv
+.uv: ## Check that uv is installed
+	@uv --version || echo 'Please install uv: https://docs.astral.sh/uv/getting-started/installation/'
+
+.PHONY: .pre-commit
+.pre-commit: ## Setup pre-commit hooks for the project
+	@uv run pre-commit -V || (echo 'Please install pre-commit: https://pre-commit.com/' && exit 1)
+	@uv run pre-commit install
+
+
+.PHONY: format
+format: ## Format code
+	uv run ruff check --fix --exit-non-zero-on-fix python
+	uv run ruff format python
+
+.PHONY: lint
+lint: ## Lint code
+	uv run ruff check python
+	uv run ruff format --check python
+
+.PHONY: mypy
+mypy: ## Run mypy
+	uv run mypy --install-types --config-file pyproject.toml --non-interactive --package optimuskg
+	uv run mypy --config-file pyproject.toml tests
+
+.PHONY: pytest
+pytest: ## Run tests
+	uv run pytest -W ignore --no-cov-on-fail --log-cli-level=INFO
+
+.PHONY: bandit
+bandit: ## Run bandit
+	uv tool run bandit -v -c pyproject.toml -r optimuskg/* tests/*
+
+.PHONY: interrogate
+interrogate: ## Run interrogate
+	uv tool run interrogate --config pyproject.toml
+
+.PHONY: clean
+clean: ## Clean up the project
+	rm -rf `find . -name __pycache__`
+	rm -f `find . -type f -name '*.py[co]'`
+	rm -f `find . -type f -name '*~'`
+	rm -f `find . -type f -name '.*~'`
+	rm -f `find . -type f -name '*.log'`
+	rm -rf `find . -type d -name '.ipynb_checkpoints'`
+	rm -rf `find . -type d -name '*.egg-info'`
+	rm -rf .cache
+	rm -rf dist
+	rm -rf .mypy_cache
+	rm -rf .venv
+	rm -rf .pytest_cache
+	rm -rf .ruff_cache
+	rm -rf htmlcov
+	rm -f .coverage*
+	rm -rf target
+
+.PHONY: rm-data
+rm-data: ## Remove the data directory
+	find data/ -type f -not -name ".gitkeep" -delete
+	find data/ -type d -empty -not -name ".gitkeep" -delete
+
+.PHONY: download-data
+download-data: ## Download the data needed from the landing layer
+	@uv run cli landing
+
+.PHONY: neo4j
+neo4j: ## Run the Neo4j container
+	docker compose up -d

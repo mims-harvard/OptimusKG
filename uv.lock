@@ -1,5 +1,4 @@
 version = 1
-revision = 1
 requires-python = ">=3.12"
 
 [[package]]
@@ -1700,7 +1699,7 @@ wheels = [
 
 [[package]]
 name = "optimuskg"
-version = "0.8.0"
+version = "0.9.0"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },
@@ -1768,7 +1767,6 @@ requires-dist = [
     { name = "typer", marker = "extra == 'dev'", specifier = ">=0.15.1" },
     { name = "types-openpyxl", specifier = ">=3.1.5.20241225" },
 ]
-provides-extras = ["dev"]
 
 [[package]]
 name = "overrides"
