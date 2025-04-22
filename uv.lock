@@ -1,4 +1,5 @@
 version = 1
+revision = 1
 requires-python = ">=3.12"
 
 [[package]]
@@ -1722,50 +1723,58 @@ dependencies = [
     { name = "types-openpyxl" },
 ]
 
-[package.optional-dependencies]
+[package.dev-dependencies]
 dev = [
     { name = "bandit" },
     { name = "interrogate" },
     { name = "mypy" },
     { name = "pre-commit" },
     { name = "pydantic" },
+    { name = "ruff" },
+    { name = "typer" },
+]
+tests = [
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "pytest-mock" },
-    { name = "ruff" },
-    { name = "typer" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "aiohttp", specifier = ">=3.11.11" },
-    { name = "bandit", extras = ["toml"], marker = "extra == 'dev'", specifier = ">=1.8.2" },
     { name = "biocypher", specifier = ">=0.6.1" },
     { name = "goatools", specifier = ">=1.4.12" },
-    { name = "interrogate", marker = "extra == 'dev'", specifier = ">=1.7.0" },
     { name = "ipython", specifier = ">=8.10" },
     { name = "jupyterlab", specifier = ">=3.0" },
     { name = "kedro", extras = ["jupyter"], specifier = "~=0.19.10" },
     { name = "kedro-datasets", extras = ["pandas-csvdataset", "pandas-jsondataset", "polars-csvdataset"], specifier = ">=3.0" },
     { name = "lxml", specifier = ">=5.3.0" },
     { name = "lxml-stubs", specifier = ">=0.5.1" },
-    { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.14.1" },
     { name = "notebook" },
     { name = "pandas-stubs", specifier = ">=2.2.3.241126" },
     { name = "polars", specifier = ">=1.19.0" },
-    { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.0.1" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
     { name = "pyarrow", specifier = ">=19.0.0" },
-    { name = "pydantic", marker = "extra == 'dev'", specifier = ">=2.10.6" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = "~=7.2" },
-    { name = "pytest-cov", marker = "extra == 'dev'", specifier = "~=3.0" },
-    { name = "pytest-mock", marker = "extra == 'dev'", specifier = ">=1.7.1,<2.0" },
     { name = "requests", specifier = ">=2.32.3" },
-    { name = "ruff", marker = "extra == 'dev'", specifier = "~=0.1.8" },
     { name = "sqlalchemy", specifier = ">=2.0.37" },
     { name = "typedframe", specifier = ">=0.11.0" },
-    { name = "typer", marker = "extra == 'dev'", specifier = ">=0.15.1" },
     { name = "types-openpyxl", specifier = ">=3.1.5.20241225" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "bandit", extras = ["toml"], specifier = ">=1.8.2" },
+    { name = "interrogate", specifier = ">=1.7.0" },
+    { name = "mypy", specifier = ">=1.14.1" },
+    { name = "pre-commit", specifier = ">=4.0.1" },
+    { name = "pydantic", specifier = ">=2.10.6" },
+    { name = "ruff", specifier = "~=0.1.8" },
+    { name = "typer", specifier = ">=0.15.1" },
+]
+tests = [
+    { name = "pytest", specifier = "~=7.2" },
+    { name = "pytest-cov", specifier = "~=3.0" },
+    { name = "pytest-mock", specifier = ">=1.7.1,<2.0" },
 ]
 
 [[package]]

@@ -28,11 +28,13 @@ dependencies = [
   "sqlalchemy>=2.0.37",
 ]
 
-[project.optional-dependencies]
-dev = [
+[dependency-groups]
+tests = [
   "pytest-cov~=3.0",
   "pytest-mock>=1.7.1, <2.0",
   "pytest~=7.2",
+]
+dev = [
   "ruff~=0.1.8",
   "pre-commit>=4.0.1",
   "mypy>=1.14.1",
@@ -51,15 +53,6 @@ packages = ["optimuskg"]
 
 [tool.hatch.envs.default]
 path = ".venv"
-
-[tool.hatch.envs.default.scripts]
-list = ["hatch env show --json | jq --raw-output '.default.scripts | keys[]'"]
-mypy = 'uv tool run mypy --install-types --config-file pyproject.toml --non-interactive --python-executable=$(uv run python -c "import sys; print(sys.executable)") -p optimuskg -p tests'
-bandit = 'uv tool run bandit[toml] -v -c pyproject.toml -r optimuskg/* tests/*'
-interrogate = 'uv tool run interrogate --config pyproject.toml'
-clean = 'uv run bash scripts/clean.sh'
-neo4j = 'docker compose up -d'
-pytest = 'uv run pytest -W ignore --no-cov-on-fail --log-cli-level=INFO'
 
 [tool.uv]
 required-version = ">=0.5.18"

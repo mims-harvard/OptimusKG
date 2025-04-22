@@ -13,7 +13,7 @@ Prerequisites for this project are:
 Install dependencies with:
 
 ```console
-$ uv sync --all-extras
+$ uv sync --all-groups
 
 Resolved 218 packages in 3ms
 Audited 215 packages in 0.28ms
