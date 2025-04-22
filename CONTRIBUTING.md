@@ -9,7 +9,7 @@ We use [`uv`](https://github.com/astral-sh/uv) and [`docker`](https://www.docker
 3. Run the following command to install all dependencies and set up the development environment:
 
     ```console
-    $ uv sync --all-extras
+    $ uv sync --all-groups
 
     Resolved 218 packages in 3ms
     Audited 215 packages in 0.28ms

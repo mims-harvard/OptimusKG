@@ -34,16 +34,16 @@ jobs:
         run: echo "Installed uv version is ${{ steps.setup-uv.outputs.uv-version }}"
 
       - name: Install the project dependencies
-        run: uv sync --all-extras
+        run: uv sync --all-groups
 
       - name: Run mypy
-        run: uv tool run hatch run mypy
+        run: make mypy
 
       - name: Run bandit
-        run: uv tool run hatch run bandit
+        run: make bandit
 
       - name: Run interrogate
-        run: uv tool run hatch run interrogate
+        run: make interrogate
 
   formatting:
     runs-on: ubuntu-latest
@@ -131,7 +131,7 @@ jobs:
             **/uv.lock
 
       - name: Install the project dependencies
-        run: uv sync --all-extras
+        run: uv sync --all-groups
 
       - name: Run pytest
-        run: uv tool run hatch run pytest
+        run: make pytest

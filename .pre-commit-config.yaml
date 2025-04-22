@@ -23,18 +23,18 @@ repos:
       - id: bandit
         name: bandit
         language: system
-        entry: uv tool run hatch run bandit
+        entry: make bandit
         types: [python]
         
       - id: mypy
         name: mypy
         language: system
-        entry: uv tool run hatch run mypy
+        entry: make mypy
         types: [python]
         pass_filenames: false
 
       - id: interrogate
         name: interrogate
         language: system
-        entry: uv tool run hatch run interrogate
+        entry: make interrogate
         pass_filenames: false
