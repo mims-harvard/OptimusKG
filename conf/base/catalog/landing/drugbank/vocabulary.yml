@@ -11,3 +11,5 @@ landing.drugbank.vocabulary:
       "UNII": "${pl:String}"
       "Synonyms": "${pl:String}"
       "Standard InChI Key": "${pl:String}"
+  metadata:
+    checksum: "4697d45f21ade4aaf99e231bd4ed77fc"

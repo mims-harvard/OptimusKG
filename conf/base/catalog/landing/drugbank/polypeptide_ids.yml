@@ -18,6 +18,8 @@ landing.drugbank.carrier:
       "HGNC ID": "${pl:String}"
       "Species": "${pl:String}"
       "Drug IDs": "${pl:String}"
+  metadata:
+    checksum: "f74557e3b02ad41887acdf687fc5d7ae"
 
 landing.drugbank.enzyme:
   type: polars.CSVDataset
@@ -25,6 +27,8 @@ landing.drugbank.enzyme:
   load_args:
     infer_schema: false
     schema: *drugbank_schema
+  metadata:
+    checksum: "32fbfbc8f12e14a837064377a746c733"
 
 landing.drugbank.target:
   type: polars.CSVDataset
@@ -32,6 +36,8 @@ landing.drugbank.target:
   load_args:
     infer_schema: false
     schema: *drugbank_schema
+  metadata:
+    checksum: "b00c3eb9dfde92015e825931823f2762"
 
 landing.drugbank.transporter:
   type: polars.CSVDataset
@@ -39,3 +45,5 @@ landing.drugbank.transporter:
   load_args:
     infer_schema: false
     schema: *drugbank_schema
+  metadata:
+    checksum: "3981d9efae2b819cd9028bb1221ba58d"

@@ -49,3 +49,5 @@ landing.drugcentral.psql_dump:
         WHERE relationship_name IN ('indication', 'contraindication', 'off-label use')
     ) AS drug_disease ON structures.id = drug_disease.struct_id
   db_name: "drugcentral"
+  metadata:
+    checksum: "4fd9df6a9e1d2bce130d933ac2984f2d"

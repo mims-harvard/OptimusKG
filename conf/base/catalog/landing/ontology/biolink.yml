@@ -2,5 +2,6 @@ landing.ontology.biolink:
   type: optimuskg.datasets.OWLDataset
   filepath: "data/landing/ontology/biolink.owl"
   metadata:
+    checksum: "3dd4590c1cb2ee8d5fd3fbc1c41dd538"
     title: "Biolink Ontology"
     description: "The Biolink Model is a high-level, open-source data model designed to standardize types and relationships in biological knowledge graphs, covering entities like genes, diseases, chemical substances, organisms, genomics, phenotypes, and more."

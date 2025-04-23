@@ -13,3 +13,5 @@ landing.gene_names.gene_names:
       "NCBI Gene ID(supplied by NCBI)": "${pl:String}"
       "UniProt ID(supplied by UniProt)": "${pl:String}"
       "OMIM ID(supplied by OMIM)": "${pl:String}"
+  metadata:
+    checksum: "1761eb5f524feb84531f174f2baf0f80"
