@@ -1,0 +1,14 @@
+landing.reactome.reactome_pathways:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/landing/reactome/ReactomePathways.txt"
+  load_args:
+    separator: "\t"
+    has_header: false
+    infer_schema: false
+    new_columns: ["reactome_id", "reactome_name", "species"]
+    schema_overrides:
+      "reactome_id": "${pl:String}"
+      "reactome_name": "${pl:String}"
+      "species": "${pl:String}"
+  metadata:
+    checksum: "a0ebc60d31ca562b4a3034a10ab31eb6"

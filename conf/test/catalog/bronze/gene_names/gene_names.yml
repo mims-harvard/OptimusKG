@@ -1,0 +1,7 @@
+bronze.gene_names.gene_names:
+  type: polars.CSVDataset
+  filepath: "tests/stub_data/bronze/gene_names/gene_names.csv"
+  load_args:
+    infer_schema: false
+  metadata:
+    checksum: "5bea3c0b24e6ed1fb20966db78dca429"
