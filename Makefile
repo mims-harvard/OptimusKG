@@ -37,7 +37,7 @@ pytest: ## Run tests
 
 .PHONY: bandit
 bandit: ## Run bandit
-	uv tool run bandit[toml] -v -c pyproject.toml -r optimuskg/* tests/*
+	uv tool run bandit -v -c pyproject.toml -r optimuskg/* tests/*
 
 .PHONY: interrogate
 interrogate: ## Run interrogate

@@ -7,3 +7,5 @@ landing.opentargets.molecule:
       lines: true
       dtype: false
   filename_suffix: ".json"
+  metadata:
+    checksum: "e30ffa3c6d4c8eeffe8e301b85bd2b08"

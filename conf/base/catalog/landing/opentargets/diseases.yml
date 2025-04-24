@@ -7,3 +7,5 @@ landing.opentargets.diseases:
       lines: true
       dtype: false
   filename_suffix: ".json"
+  metadata:
+    checksum: "0df1d2ae54ce02f98b6c3986542a79f9"

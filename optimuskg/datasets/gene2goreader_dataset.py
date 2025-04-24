@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import contextlib
 import logging
+import os
 from copy import deepcopy
 from pathlib import PurePosixPath
 from typing import Any, override
@@ -110,11 +112,19 @@ class Gene2GoReaderDataset(AbstractVersionedDataset[Gene2GoReader, Gene2GoReader
         load_path = get_filepath_str(self._get_load_path(), self._protocol)
 
         if self._protocol == "file":
-            return Gene2GoReader(filename=load_path, **self._load_args)
+            with open(os.devnull, "w") as devnull:
+                with contextlib.redirect_stdout(
+                    devnull
+                ):  # Suppress Gene2GoReader stdout
+                    return Gene2GoReader(filename=load_path, **self._load_args)
 
         # For remote files, we need to download to a temporary file first
         with self._fs.open(load_path, **self._fs_open_args_load) as fs_file:
-            return Gene2GoReader(filename=fs_file.name, **self._load_args)
+            with open(os.devnull, "w") as devnull:
+                with contextlib.redirect_stdout(
+                    devnull
+                ):  # Suppress Gene2GoReader stdout
+                    return Gene2GoReader(filename=fs_file.name, **self._load_args)
 
     @override
     def save(self, data: Gene2GoReader) -> None:

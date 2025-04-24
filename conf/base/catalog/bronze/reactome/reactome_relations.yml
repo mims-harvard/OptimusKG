@@ -1,3 +1,5 @@
 bronze.reactome.reactome_relations:
   type: polars.CSVDataset
   filepath: "data/bronze/reactome/reactome_relations.csv"
+  metadata:
+    checksum: "ab35cd8a04c2a075e3e137d3fe85df5d"

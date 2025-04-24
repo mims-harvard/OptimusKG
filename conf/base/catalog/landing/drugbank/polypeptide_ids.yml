@@ -1,10 +1,9 @@
-# NOTE: Maybe we should use dataset factories here: https://docs.kedro.org/en/stable/data/kedro_dataset_factories.html
-landing.drugbank.carrier:
+landing.drugbank.carrier: &landing_drugbank_args
   type: polars.CSVDataset
   filepath: "data/landing/drugbank/drugbank_all_carrier_polypeptide_ids.csv"
   load_args:
     infer_schema: false
-    schema: &drugbank_schema
+    schema:
       "ID": "${pl:String}"
       "Name": "${pl:String}"
       "Gene Name": "${pl:String}"
@@ -22,28 +21,19 @@ landing.drugbank.carrier:
     checksum: "f74557e3b02ad41887acdf687fc5d7ae"
 
 landing.drugbank.enzyme:
-  type: polars.CSVDataset
+  <<: *landing_drugbank_args
   filepath: "data/landing/drugbank/drugbank_all_enzyme_polypeptide_ids.csv"
-  load_args:
-    infer_schema: false
-    schema: *drugbank_schema
   metadata:
     checksum: "32fbfbc8f12e14a837064377a746c733"
 
 landing.drugbank.target:
-  type: polars.CSVDataset
+  <<: *landing_drugbank_args
   filepath: "data/landing/drugbank/drugbank_all_target_polypeptide_ids.csv"
-  load_args:
-    infer_schema: false
-    schema: *drugbank_schema
   metadata:
     checksum: "b00c3eb9dfde92015e825931823f2762"
 
 landing.drugbank.transporter:
-  type: polars.CSVDataset
+  <<: *landing_drugbank_args
   filepath: "data/landing/drugbank/drugbank_all_transporter_polypeptide_ids.csv"
-  load_args:
-    infer_schema: false
-    schema: *drugbank_schema
   metadata:
     checksum: "3981d9efae2b819cd9028bb1221ba58d"

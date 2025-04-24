@@ -1,8 +1,10 @@
 bronze.opentargets.disease_to_phenotype:
   type: pandas.JSONDataset
-  filepath: "data/bronze/opentargets/disease_to_phenotype.json"
+  filepath: "data/bronze/opentargets/disease_to_phenotype.jsonl"
   save_args:
     lines: true
     orient: records
   load_args:
     lines: true
+  metadata:
+    checksum: "8a34dec28b6fc39f2e6fb52f7b75b952"

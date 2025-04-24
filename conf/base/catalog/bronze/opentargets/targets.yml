@@ -1,8 +1,10 @@
 bronze.opentargets.targets:
   type: pandas.JSONDataset
-  filepath: "data/bronze/opentargets/targets.json"
+  filepath: "data/bronze/opentargets/targets.jsonl"
   save_args:
     lines: true
     orient: records
   load_args:
     lines: true
+  metadata:
+    checksum: "0f5239bee89849026e55432d7512d5d5"

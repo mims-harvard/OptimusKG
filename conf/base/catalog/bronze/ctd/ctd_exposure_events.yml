@@ -3,3 +3,5 @@ bronze.ctd.ctd_exposure_events:
   filepath: "data/bronze/ctd/ctd_exposure_events.csv"
   load_args:
     infer_schema: false
+  metadata:
+    checksum: "d1b49f787a7050a9a7a70c7a1398b180"

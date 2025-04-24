@@ -18,3 +18,5 @@ landing.opentargets.drug_mappings:
       "bindingDB_id": "${pl:String}"
       "UMLS_cuis": "${pl:String}"
       "stitch_id": "${pl:String}"
+  metadata:
+    checksum: "42ab1adc3018bd2dd5144e9e5fea7e68"

@@ -7,3 +7,5 @@ landing.opentargets.targets:
       lines: true
       dtype: false
   filename_suffix: ".json"
+  metadata:
+    checksum: "c1cbe45378a6293cab1f508313691c7a"

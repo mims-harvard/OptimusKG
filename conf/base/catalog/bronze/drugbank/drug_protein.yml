@@ -1,3 +1,5 @@
 bronze.drugbank.drug_protein:
   type: polars.CSVDataset
   filepath: "data/bronze/drugbank/drug_protein.csv"
+  metadata:
+    checksum: "5c138c3450286d38a113fbf2530e0a18"

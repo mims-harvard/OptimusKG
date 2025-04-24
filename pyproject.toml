@@ -134,6 +134,7 @@ module = [
     "typedframe.*",
     "pytest.*",
     "pydantic.*",
+    "kedro_datasets.partitions.partitioned_dataset.*",
 ]
 
 [[tool.mypy.overrides]]

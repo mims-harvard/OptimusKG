@@ -34,10 +34,10 @@ handlers:
 
 loggers:
   kedro:
-    level: INFO
+    level: ERROR # TODO: Change back to INFO
 
   optimuskg:
-    level: INFO
+    level: ERROR # TODO: Change back to INFO
 
   cli:
     level: INFO

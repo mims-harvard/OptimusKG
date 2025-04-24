@@ -1,3 +1,5 @@
 bronze.opentargets.diseases:
   type: polars.CSVDataset
   filepath: "data/bronze/opentargets/diseases.csv"
+  metadata:
+    checksum: "faa582ef5bc1001d3f50fe31a5b14550"

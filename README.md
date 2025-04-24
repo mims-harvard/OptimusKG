@@ -70,7 +70,7 @@ $ sudo chmod -R 777 data/gold/neo4j && sudo chown -R $(id -u):$(id -g) data/gold
 ### Run the project
 
 ```console
-$ uv run kedro run
+$ uv run kedro run --async
 ```
 
 ### How to run your Kedro pipeline
