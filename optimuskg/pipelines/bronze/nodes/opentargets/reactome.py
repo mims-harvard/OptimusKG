@@ -15,6 +15,7 @@ def process_reactome(
 ) -> pd.DataFrame:
     concated_df = concat_partitions(reactome)
     df = TargetDiseaseEvidenceSchema.convert(concated_df).df
+    df = df.sort("id")
     return df.to_pandas()  # type: ignore[no-any-return]
 
 

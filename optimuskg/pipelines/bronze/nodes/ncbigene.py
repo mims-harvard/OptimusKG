@@ -38,6 +38,8 @@ def process_gene2go(
         .alias("go_term_id")
     )
 
+    df = df.sort(by=["ncbi_gene_id", "go_term_id"])
+
     return df
 
 

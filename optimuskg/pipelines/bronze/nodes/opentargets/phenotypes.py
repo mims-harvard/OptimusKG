@@ -19,7 +19,7 @@ def process_phenotypes(
     # Reorder columns with id first
     all_cols = ["id"] + [col for col in pheno_df.columns if col != "id"]
     pheno_df = pheno_df.select(all_cols)
-
+    pheno_df = pheno_df.sort("id")
     return pheno_df
 
 

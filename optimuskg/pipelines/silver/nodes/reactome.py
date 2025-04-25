@@ -7,6 +7,9 @@ def process_reactome(
     reactome_relations: pl.DataFrame,
     reactome_terms: pl.DataFrame,
 ) -> tuple[pl.DataFrame, pl.DataFrame, pl.DataFrame]:
+    reactome_ncbi = reactome_ncbi.sort(by=["ncbi_id", "reactome_id"])
+    reactome_relations = reactome_relations.sort(by=["reactome_id_1", "reactome_id_2"])
+    reactome_terms = reactome_terms.sort(by=["reactome_id"])
     return reactome_ncbi, reactome_relations, reactome_terms
 
 

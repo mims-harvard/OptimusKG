@@ -31,7 +31,7 @@ bronze.opentargets.evidence.crispr_screen:
   <<: *bronze_opentargets_evidence_args
   filepath: "data/bronze/opentargets/evidence/crispr_screen.jsonl"
   metadata:
-    checksum: "1c847745ea0d9ad932fcd1df1cc754a0"
+    checksum: "fcb19b99f44fbd46a60e9a8e562d608d"
 
 bronze.opentargets.evidence.expression_atlas:
   <<: *bronze_opentargets_evidence_args

@@ -2,4 +2,4 @@ bronze.opentargets.drug_mappings:
   type: polars.CSVDataset
   filepath: "data/bronze/opentargets/drug_mappings.csv"
   metadata:
-    checksum: "b23e57f62ddf7e18b0b0d6bf657be511"
+    checksum: "27a0f2b0f09bde7a97e363afc4b864ab"

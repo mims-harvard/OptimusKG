@@ -14,7 +14,8 @@ def process_disease_to_phenotype(
     disease_to_phenotype: dict[str, Callable[[], Any]],
 ) -> pd.DataFrame:
     concated_df = concat_json_partitions(disease_to_phenotype)
-    return concated_df.to_pandas()
+    df = concated_df.sort(by=["disease", "phenotype"])
+    return df.to_pandas()
 
 
 disease_to_phenotype_node = node(

@@ -10,6 +10,7 @@ def process_disease_phenotype_ids(
     phenotypes: pl.DataFrame, diseases: pl.DataFrame
 ) -> pl.DataFrame:
     df = pl.concat([diseases.select("id"), phenotypes.select("id")])
+    df = df.sort("id")
     return df
 
 
