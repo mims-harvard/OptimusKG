@@ -1,4 +1,6 @@
+import hashlib
 import re
+from pathlib import Path
 
 import polars as pl
 
@@ -111,3 +113,57 @@ def convert_columns_to_snake_case(df: pl.DataFrame) -> pl.DataFrame:
         pl.DataFrame: A new DataFrame with all column names converted to snake_case
     """
     return df.rename({col: _to_snake_case(col) for col in df.columns})
+
+
+def calculate_checksum(
+    path: Path,
+    chunk_size: int = 8192,
+    digest_size: int = 16,
+    process_directory: bool = False,
+) -> str:
+    """Calculate the checksum of a file or directory.
+
+    Args:
+        path: The path to the file or directory.
+        chunk_size: The size of chunks to read from files.
+        digest_size: The size of the digest for the hash.
+        process_directory: If True and path is a directory, calculate a combined checksum
+                           for all files within it.
+
+    Returns:
+        The calculated checksum as a hexadecimal string.
+
+    Raises:
+        FileNotFoundError: If the path does not exist.
+        IsADirectoryError: If path is a directory and process_directory is False.
+        NotADirectoryError: If path is not a directory and process_directory is True.
+    """
+    if not path.exists():
+        raise FileNotFoundError(f"Path does not exist: {path}")
+
+    if process_directory:
+        if not path.is_dir():
+            raise NotADirectoryError(f"Path is not a directory: {path}")
+
+        combined_hash = hashlib.blake2b(digest_size=digest_size)
+        files = sorted(path.glob("**/*"))
+        for file_path in files:
+            if file_path.is_file():
+                with open(file_path, "rb") as f:
+                    while chunk := f.read(chunk_size):
+                        combined_hash.update(chunk)
+                # Include file path relative to the base directory in the hash
+                relative_path = file_path.relative_to(path)
+                combined_hash.update(str(relative_path).encode())
+        return combined_hash.hexdigest()
+    else:
+        if path.is_dir():
+            raise IsADirectoryError(
+                f"Path is a directory, use process_directory=True: {path}"
+            )
+
+        with open(path, "rb") as f:
+            file_hash = hashlib.blake2b(digest_size=digest_size)
+            while chunk := f.read(chunk_size):
+                file_hash.update(chunk)
+        return file_hash.hexdigest()

@@ -1,3 +1,5 @@
 silver.drugbank.drug_protein:
   type: polars.CSVDataset
   filepath: "data/silver/drugbank/drug_protein.csv"
+  metadata:
+    checksum: "fc6f8f0840062bb16766088f82da0984"

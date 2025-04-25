@@ -11,3 +11,5 @@ bronze.bgee.gene_expressions_in_anatomy:
       "expression": "${pl:String}"
       "call_quality": "${pl:String}"
       "expression_rank": "${pl:String}"
+  metadata:
+    checksum: "8040fa149fa71730ed1c97f00d6db18b"

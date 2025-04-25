@@ -1,3 +1,5 @@
 bronze.opentargets.phenotypes:
   type: polars.CSVDataset
   filepath: "data/bronze/opentargets/phenotypes.csv"
+  metadata:
+    checksum: "f9ed19eeb850663df363475d646250a6"

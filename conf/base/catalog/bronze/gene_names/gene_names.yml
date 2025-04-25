@@ -3,3 +3,5 @@ bronze.gene_names.gene_names:
   filepath: "data/bronze/gene_names/gene_names.csv"
   load_args:
     infer_schema: false
+  metadata:
+    checksum: "39abf11ca16dd6f819eb47631477b29b"

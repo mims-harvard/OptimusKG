@@ -20,6 +20,7 @@ def process_mondo_efo_mappings(
     )
 
     df = df.select(["mondo_id", "efo_id"])
+    df = df.sort("mondo_id")
     return df
 
 

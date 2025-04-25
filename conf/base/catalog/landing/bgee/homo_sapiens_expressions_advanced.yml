@@ -36,3 +36,5 @@ landing.bgee.homo_sapiens_expressions_advanced:
       "RNA-Seq  experiment count showing absence of expression of this gene in this condition or valid parent conditions with a high quality": "${pl:Int64}"
       "RNA-Seq  experiment count showing absence of expression of this gene in this condition or valid parent conditions with a low quality": "${pl:Int64}"
       "Including RNA-Seq observed data": "${pl:Utf8}"
+  metadata:
+    checksum: "9829bdf40c482f3c0ab1651e059d2771"

@@ -1,3 +1,5 @@
 bronze.opentargets.mondo_efo_mappings:
   type: polars.CSVDataset
   filepath: "data/bronze/opentargets/mondo_efo_mappings.csv"
+  metadata:
+    checksum: "8f2275dcd7b9e9e9a82a4501ac354540"

@@ -3,3 +3,5 @@ landing.ncbigene.gene2go:
   filepath: "data/landing/ncbigene/gene2go"
   load_args:
     taxids: [9606] # Parse gene2go for human (taxid=9606)
+  metadata:
+    checksum: "9f1f605aaf4b8e811aea52741138e430"

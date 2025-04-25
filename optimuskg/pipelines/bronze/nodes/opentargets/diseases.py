@@ -91,6 +91,7 @@ def process_diseases(
         on="node_id",
         how="inner",
     )
+    df = df.sort(by=sorted(df.columns))
     return df  # type: ignore[no-any-return]
 
 

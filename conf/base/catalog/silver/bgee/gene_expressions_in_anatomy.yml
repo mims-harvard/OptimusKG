@@ -1,3 +1,5 @@
 silver.bgee.gene_expressions_in_anatomy:
   type: polars.CSVDataset
   filepath: "data/silver/bgee/gene_expressions_in_anatomy.csv"
+  metadata:
+    checksum: "8040fa149fa71730ed1c97f00d6db18b"

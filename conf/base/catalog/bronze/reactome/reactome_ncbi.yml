@@ -9,3 +9,5 @@ bronze.reactome.reactome_ncbi:
       "url": "${pl:String}"
       "reactome_name": "${pl:String}"
       "evidence_code": "${pl:String}"
+  metadata:
+    checksum: "55c501c89a1515c5748131f501c41d58"

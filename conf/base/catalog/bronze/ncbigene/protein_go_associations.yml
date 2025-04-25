@@ -1,3 +1,5 @@
 bronze.ncbigene.protein_go_associations:
   type: polars.CSVDataset
   filepath: "data/bronze/ncbigene/protein_go_associations.csv"
+  metadata:
+    checksum: "fd6bf99e55d8ddd9ec782e170760b77b"

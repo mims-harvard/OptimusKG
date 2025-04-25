@@ -95,3 +95,5 @@ landing.ctd.ctd_exposure_events:
       "enrollmentstartyear": "${pl:String}"
       "enrollmentendyear": "${pl:String}"
       "studyfactors": "${pl:String}"
+  metadata:
+    checksum: "cad374e7d233ce48e8bbcf296d72cff8"

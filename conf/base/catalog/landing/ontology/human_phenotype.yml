@@ -2,5 +2,6 @@ landing.ontology.human_phenotype:
   type: optimuskg.datasets.OWLDataset
   filepath: "data/landing/ontology/human_phenotype.owl"
   metadata:
+    checksum: "8f713ce3d940895c6b2cdd7916301e96"
     title: "Human Phenotype Ontology"
     description: "The Human Phenotype Ontology (HPO) provides a standardized vocabulary of phenotypic abnormalities encountered in human disease."

@@ -10,3 +10,5 @@ landing.reactome.reactome_pathways:
       "reactome_id": "${pl:String}"
       "reactome_name": "${pl:String}"
       "species": "${pl:String}"
+  metadata:
+    checksum: "a0ebc60d31ca562b4a3034a10ab31eb6"

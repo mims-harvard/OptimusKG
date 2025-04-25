@@ -8,3 +8,5 @@ landing.opentargets.primekg_edges:
       "display_relation": "${pl:String}"
       "x_index": "${pl:String}"
       "y_index": "${pl:String}"
+  metadata:
+    checksum: "5298f2869a25173fdf1f3a5fe21ebe6f"

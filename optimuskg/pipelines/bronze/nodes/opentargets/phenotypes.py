@@ -18,9 +18,9 @@ def process_phenotypes(
 
     # Reorder columns with id first
     all_cols = ["id"] + [col for col in pheno_df.columns if col != "id"]
-    pheno_df = pheno_df.select(all_cols)
-
-    return pheno_df
+    df = pheno_df.select(all_cols)
+    df = df.sort(by=sorted(df.columns))
+    return df
 
 
 phenotypes_node = node(

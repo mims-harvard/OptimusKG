@@ -1,3 +1,0 @@
-gold.biocypher_graph:
-  type: polars.CSVDataset
-  filepath: "data/gold/biocypher_graph.csv"

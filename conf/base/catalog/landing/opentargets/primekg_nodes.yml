@@ -9,3 +9,5 @@ landing.opentargets.primekg_nodes:
       "node_type": "${pl:String}"
       "node_name": "${pl:String}"
       "node_source": "${pl:String}"
+  metadata:
+    checksum: "affe8964e04ec4d97be95c7fd174c6bb"

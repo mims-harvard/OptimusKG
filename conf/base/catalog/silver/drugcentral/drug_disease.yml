@@ -1,3 +1,5 @@
 silver.drugcentral.drug_disease:
   type: polars.CSVDataset
   filepath: "data/silver/drugcentral/drug_disease.csv"
+  metadata:
+    checksum: "03b249e597ce160dc8d3ec3ac41c91bf"

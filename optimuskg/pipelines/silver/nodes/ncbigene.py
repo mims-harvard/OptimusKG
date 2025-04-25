@@ -5,7 +5,8 @@ from kedro.pipeline import node
 def process_ncbigene(
     ncbigene_protein_go_associations: pl.DataFrame,
 ) -> pl.DataFrame:
-    return ncbigene_protein_go_associations
+    df = ncbigene_protein_go_associations.sort(by=["ncbi_gene_id", "go_term_id"])
+    return df
 
 
 ncbigene_node = node(

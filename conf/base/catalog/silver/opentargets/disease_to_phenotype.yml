@@ -1,3 +1,5 @@
 silver.opentargets.disease_to_phenotype:
   type: polars.CSVDataset
   filepath: "data/silver/opentargets/disease_to_phenotype.csv"
+  metadata:
+    checksum: "9d55dd9fe6fa480d1bff6997cf676517"

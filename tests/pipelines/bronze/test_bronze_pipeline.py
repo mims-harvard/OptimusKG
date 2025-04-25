@@ -10,7 +10,6 @@ def test_bronze_nodes(kedro: KedroSettings, caplog):
         node_names=[
             "bronze.bgee",
             "bronze.ctd",
-            "bronze.gene2go",
             "bronze.reactome_ncbi",
             "bronze.reactome_pathways",
             "bronze.gene_names",

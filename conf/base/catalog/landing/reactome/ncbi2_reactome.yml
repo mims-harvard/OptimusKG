@@ -21,3 +21,5 @@ landing.reactome.ncbi2_reactome:
       "reactome_name": "${pl:String}"
       "evidence_code": "${pl:String}"
       "species": "${pl:String}"
+  metadata:
+    checksum: "ba321beaf021a4ee6b43ac42b67cc632"

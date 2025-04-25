@@ -9,10 +9,12 @@ log = logging.getLogger(__name__)
 def process_reactome_ncbi(
     ncbi2_reactome_df: pl.DataFrame,
 ) -> pl.DataFrame:
-    df = ncbi2_reactome_df.filter(pl.col("species") == "Homo sapiens")
-    df = df.drop(["species"])
-    df = df.unique()
-
+    df = (
+        ncbi2_reactome_df.filter(pl.col("species") == "Homo sapiens")
+        .drop("species")
+        .unique()
+    )
+    df = df.sort(by=sorted(df.columns))
     return df
 
 

@@ -1,8 +1,100 @@
-"landing.opentargets.evidence.{source_id}":
+landing.opentargets.evidence.cancer_gene_census: &landing_opentargets_evidence_args
   type: partitions.PartitionedDataset
-  path: "data/landing/opentargets/evidence/{source_id}"
+  path: "data/landing/opentargets/evidence/cancer_gene_census"
   dataset:
     type: pandas.ParquetDataset
     load_args:
       engine: pyarrow
   filename_suffix: ".parquet"
+  metadata:
+    checksum: "3bd8ca4b2db8159493ed2a29e68fab3b"
+
+landing.opentargets.evidence.chembl:
+  <<: *landing_opentargets_evidence_args
+  path: "data/landing/opentargets/evidence/chembl"
+  metadata:
+    checksum: "cafda8d32f114812713e57613386a343"
+
+landing.opentargets.evidence.clingen:
+  <<: *landing_opentargets_evidence_args
+  path: "data/landing/opentargets/evidence/clingen"
+  metadata:
+    checksum: "d9b5159f519bacb1a4dcbb123b9d4df7"
+
+landing.opentargets.evidence.crispr:
+  <<: *landing_opentargets_evidence_args
+  path: "data/landing/opentargets/evidence/crispr"
+  metadata:
+    checksum: "ab06359adfdbceaf76e5c324075f3b73"
+
+landing.opentargets.evidence.crispr_screen:
+  <<: *landing_opentargets_evidence_args
+  path: "data/landing/opentargets/evidence/crispr_screen"
+  metadata:
+    checksum: "f8539d290e44e076c2cb046830498098"
+
+landing.opentargets.evidence.expression_atlas:
+  <<: *landing_opentargets_evidence_args
+  path: "data/landing/opentargets/evidence/expression_atlas"
+  metadata:
+    checksum: "f221d466a59eca36e4ac586187a23c31"
+
+landing.opentargets.evidence.gene_burden:
+  <<: *landing_opentargets_evidence_args
+  path: "data/landing/opentargets/evidence/gene_burden"
+  metadata:
+    checksum: "0dc00d77ff5e42a35ba51c33dd4b78ea"
+
+landing.opentargets.evidence.gene2phenotype:
+  <<: *landing_opentargets_evidence_args
+  path: "data/landing/opentargets/evidence/gene2phenotype"
+  metadata:
+    checksum: "2b8cf5b75cb925e751ff97af1132ddc1"
+
+landing.opentargets.evidence.genomics_england:
+  <<: *landing_opentargets_evidence_args
+  path: "data/landing/opentargets/evidence/genomics_england"
+  metadata:
+    checksum: "e4eff0f1c4ccbdede91b28e2b63efccd"
+
+landing.opentargets.evidence.intogen:
+  <<: *landing_opentargets_evidence_args
+  path: "data/landing/opentargets/evidence/intogen"
+  metadata:
+    checksum: "ae0c979e805a989a747299a2674bf3ee"
+
+landing.opentargets.evidence.orphanet:
+  <<: *landing_opentargets_evidence_args
+  path: "data/landing/opentargets/evidence/orphanet"
+  metadata:
+    checksum: "b986655e6c0a574b23c56724665dce20"
+
+landing.opentargets.evidence.progeny:
+  <<: *landing_opentargets_evidence_args
+  path: "data/landing/opentargets/evidence/progeny"
+  metadata:
+    checksum: "5a22c5f5211475511882b360a6854615"
+
+landing.opentargets.evidence.reactome:
+  <<: *landing_opentargets_evidence_args
+  path: "data/landing/opentargets/evidence/reactome"
+  metadata:
+    checksum: "3a18e6910daa2c10024439d6d5f425d3"
+
+landing.opentargets.evidence.slapenrich:
+  <<: *landing_opentargets_evidence_args
+  path: "data/landing/opentargets/evidence/slapenrich"
+  metadata:
+    checksum: "7352091ab86cffc081c943ead91b3d41"
+
+landing.opentargets.evidence.sysbio:
+  <<: *landing_opentargets_evidence_args
+  path: "data/landing/opentargets/evidence/sysbio"
+  metadata:
+    checksum: "89a3894f8643ce12c3ff36c54af2e48c"
+
+landing.opentargets.evidence.uniprot_literature:
+  <<: *landing_opentargets_evidence_args
+  path: "data/landing/opentargets/evidence/uniprot_literature"
+  metadata:
+    checksum: "27317f71af086325e2a45721910d39b6"

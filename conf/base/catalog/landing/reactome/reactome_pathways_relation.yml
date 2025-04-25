@@ -9,3 +9,5 @@ landing.reactome.reactome_pathways_relation:
     schema_overrides:
       "reactome_id_1": "${pl:String}"
       "reactome_id_2": "${pl:String}"
+  metadata:
+    checksum: "97605cbcd3cdbaeee6905b4b7137b38f"

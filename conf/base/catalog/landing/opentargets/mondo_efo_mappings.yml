@@ -17,3 +17,5 @@ landing.opentargets.mondo_efo_mappings:
       "efo_id": "${pl:String}"
       "mondo_name": "${pl:String}"
       "efo_name": "${pl:String}"
+  metadata:
+    checksum: "9fbd4e93657db1361794472ab13ac981"
