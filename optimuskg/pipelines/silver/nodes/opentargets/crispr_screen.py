@@ -22,29 +22,28 @@ def process_crispr_screen(  # noqa: PLR0913
     drug_mappings: pl.DataFrame,
 ) -> pl.DataFrame:
     df = pl.from_pandas(crispr_screen)
-
-    df = df.select(
-        "id",
-        "targetId",
-        "diseaseId",
-        "targetFromSourceId",
-        "diseaseFromSource",
-        "score",
-        "log2FoldChangeValue",
-        "cellType",
-        "crisprScreenLibrary",
-    )
-    df = df.filter(pl.col("targetId").is_in(targets["id"]))
-    df = df.filter(pl.col("diseaseId").is_in(diseases["id"]))
-    df = df.select(["score", "log2FoldChangeValue", "targetId", "diseaseId"])
-    df = df.group_by(["targetId", "diseaseId"]).agg(
-        [pl.col("score").mean(), pl.col("log2FoldChangeValue").mean()]
-    )
-
-    df = df.filter(pl.col("score") > SCORE_THRESHOLD)
-    df = df.filter(pl.col("log2FoldChangeValue") != 0)
-    df = df.with_columns(
-        [
+    df = (
+        df.select(
+            [
+                "id",
+                "targetId",
+                "diseaseId",
+                "targetFromSourceId",
+                "diseaseFromSource",
+                "score",
+                "log2FoldChangeValue",
+                "cellType",
+                "crisprScreenLibrary",
+            ]
+        )
+        .filter(pl.col("targetId").is_in(targets["id"]))
+        .filter(pl.col("diseaseId").is_in(diseases["id"]))
+        .select(["score", "log2FoldChangeValue", "targetId", "diseaseId"])
+        .group_by(["targetId", "diseaseId"])
+        .agg(pl.col("score").mean(), pl.col("log2FoldChangeValue").mean())
+        .filter(pl.col("score") > SCORE_THRESHOLD)
+        .filter(pl.col("log2FoldChangeValue") != 0)
+        .with_columns(
             pl.when(pl.col("log2FoldChangeValue") < 0)
             .then(pl.lit("disease_protein_negative"))
             .otherwise(pl.lit("disease_protein_positive"))
@@ -53,21 +52,21 @@ def process_crispr_screen(  # noqa: PLR0913
             .then(pl.lit("expression downregulated"))
             .otherwise(pl.lit("expression upregulated"))
             .alias("display_relation"),
-        ]
+        )
+        .pipe(
+            construct_edges,
+            targets_df=pl.DataFrame(targets),
+            phenotypes_df=pl.DataFrame(phenotypes),
+            diseases_df=diseases,
+            drug_mappings_df=drug_mappings,
+            type_x="gene",
+            type_y="disease",
+            relation_label=None,
+            display_relation_label=None,
+        )
     )
 
-    df = construct_edges(
-        evidence_df=df,
-        targets_df=pl.DataFrame(targets),
-        phenotypes_df=pl.DataFrame(phenotypes),
-        diseases_df=diseases,
-        drug_mappings_df=drug_mappings,
-        type_x="gene",
-        type_y="disease",
-        relation_label=None,
-        display_relation_label=None,
-    )
-
+    df = df.sort(by=sorted(df.columns))
     return df
 
 

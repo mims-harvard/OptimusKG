@@ -2,4 +2,4 @@ bronze.opentargets.disease_phenotype_ids:
   type: polars.CSVDataset
   filepath: "data/bronze/opentargets/disease_phenotype_ids.csv"
   metadata:
-    checksum: "a591e524162ac07f203be32f0da02ea6"
+    checksum: "2bf45a6e224750566acf604a43b32cad"

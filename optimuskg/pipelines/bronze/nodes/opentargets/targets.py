@@ -27,7 +27,7 @@ def process_targets(
         right_on="node_name",
         how="inner",
     )
-    df = df.sort("id")
+    df = df.sort(by=sorted(df.columns))
     return df.to_pandas()
 
 

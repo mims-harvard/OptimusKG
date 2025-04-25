@@ -15,7 +15,6 @@ def process_intogen(
 ) -> pd.DataFrame:
     concated_df = concat_partitions(intogen)
     df = TargetDiseaseEvidenceSchema.convert(concated_df).df
-    df = df.sort("id")
     return df.to_pandas()  # type: ignore[no-any-return]
 
 

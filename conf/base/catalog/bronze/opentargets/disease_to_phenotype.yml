@@ -7,4 +7,4 @@ bronze.opentargets.disease_to_phenotype:
   load_args:
     lines: true
   metadata:
-    checksum: "8a34dec28b6fc39f2e6fb52f7b75b952"
+    checksum: "b565ef721ac03d6d4511ccd3de47d5a6"

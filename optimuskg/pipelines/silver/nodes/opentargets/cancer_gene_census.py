@@ -23,24 +23,27 @@ def process_cancer_gene_census(  # noqa: PLR0913
     disease_phenotype_ids: pl.DataFrame,
 ) -> pl.DataFrame:
     df = pl.from_pandas(cancer_gene_census)
-    df = df.select("id", "targetId", "diseaseId", "studyId", "score")
-    df = df.filter(
-        (pl.col("targetId").cast(str).is_in(targets["id"]))
-        & (pl.col("diseaseId").cast(str).is_in(disease_phenotype_ids["id"]))
-        & (pl.col("score") > SCORE_THRESHOLD)
+    log.info(f"================================= {type(df)}")
+    df = (
+        df.select(["id", "targetId", "diseaseId", "studyId", "score"])
+        .filter(
+            (pl.col("targetId").cast(str).is_in(targets["id"]))
+            & (pl.col("diseaseId").cast(str).is_in(disease_phenotype_ids["id"]))
+            & (pl.col("score") > SCORE_THRESHOLD)
+        )
+        .pipe(
+            construct_edges,
+            targets_df=pl.DataFrame(targets),
+            phenotypes_df=pl.DataFrame(phenotypes),
+            diseases_df=diseases,
+            drug_mappings_df=drug_mappings,
+            type_x="gene",
+            type_y="disease",
+            relation_label="disease_protein",
+            display_relation_label="associated with",
+        )
     )
-
-    df = construct_edges(
-        evidence_df=df,
-        targets_df=pl.DataFrame(targets),
-        phenotypes_df=pl.DataFrame(phenotypes),
-        diseases_df=diseases,
-        drug_mappings_df=drug_mappings,
-        type_x="gene",
-        type_y="disease",
-        relation_label="disease_protein",
-        display_relation_label="associated with",
-    )
+    df = df.sort(by=sorted(df.columns))
     return df
 
 

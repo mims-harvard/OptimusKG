@@ -15,7 +15,6 @@ def process_sysbio(
 ) -> pd.DataFrame:
     concated_df = concat_partitions(sysbio)
     df = TargetDiseaseEvidenceSchema.convert(concated_df).df
-    df = df.sort("id")
     return df.to_pandas()  # type: ignore[no-any-return]
 
 

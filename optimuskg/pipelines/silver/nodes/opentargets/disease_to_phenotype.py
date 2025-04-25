@@ -11,27 +11,34 @@ def process_disease_to_phenotype(
     disease_to_phenotype: pd.DataFrame, phenotypes: pl.DataFrame, diseases: pl.DataFrame
 ) -> pl.DataFrame:
     df = pl.from_pandas(disease_to_phenotype)
-    df = df.select("disease", "phenotype")
-    df = df.filter(pl.col("disease").is_in(diseases["id"]))
-    df = df.filter(pl.col("phenotype").is_in(phenotypes["id"]))
-    df = df.join(
-        diseases.select(["id", "node_index"]),
-        left_on="disease",
-        right_on="id",
-        how="left",
-    )
-    df = df.join(
-        phenotypes.select(["id", "node_index"]),
-        left_on="phenotype",
-        right_on="id",
-        how="left",
-    )
-    df = df.rename(
-        {"node_index": "disease_index", "node_index_right": "phenotype_index"}
-    )
-
-    open_targets_associations = (
-        df.with_columns(
+    df = (
+        df.select(
+            [
+                "disease",
+                "phenotype",
+            ]
+        )
+        .filter(pl.col("disease").is_in(diseases["id"]))
+        .filter(pl.col("phenotype").is_in(phenotypes["id"]))
+        .join(
+            diseases.select(["id", "node_index"]),
+            left_on="disease",
+            right_on="id",
+            how="left",
+        )
+        .join(
+            phenotypes.select(["id", "node_index"]),
+            left_on="phenotype",
+            right_on="id",
+            how="left",
+        )
+        .rename(
+            {
+                "node_index": "disease_index",
+                "node_index_right": "phenotype_index",
+            }
+        )
+        .with_columns(
             pl.concat_str(
                 [
                     pl.col("disease_index").cast(pl.Utf8),
@@ -43,8 +50,8 @@ def process_disease_to_phenotype(
         .select("association")
         .unique()
     )
-
-    return open_targets_associations
+    df = df.sort(by=sorted(df.columns))
+    return df
 
 
 disease_to_phenotype_node = node(
