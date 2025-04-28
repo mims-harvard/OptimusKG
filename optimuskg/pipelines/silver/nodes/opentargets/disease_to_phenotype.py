@@ -1,10 +1,6 @@
-import logging
-
 import pandas as pd
 import polars as pl
 from kedro.pipeline import node
-
-log = logging.getLogger(__name__)
 
 
 def process_disease_to_phenotype(

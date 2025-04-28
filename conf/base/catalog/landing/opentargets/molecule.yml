@@ -9,3 +9,8 @@ landing.opentargets.molecule:
   filename_suffix: ".json"
   metadata:
     checksum: "e30ffa3c6d4c8eeffe8e301b85bd2b08"
+    origin:
+      provider: "opentargets"
+      version: "24.09"
+      file_extension: "json"
+      source_id: "molecule"

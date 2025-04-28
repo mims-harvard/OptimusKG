@@ -1,4 +1,3 @@
-import logging
 from collections.abc import Callable
 from typing import Any
 
@@ -6,8 +5,6 @@ import polars as pl
 from kedro.pipeline import node
 
 from .utils import concat_json_partitions
-
-log = logging.getLogger(__name__)
 
 
 def process_drug_mappings(

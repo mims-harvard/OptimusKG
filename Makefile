@@ -18,13 +18,13 @@ help:  ## Display this help screen
 
 .PHONY: format
 format: ## Format code
-	uv run ruff check --fix --exit-non-zero-on-fix python
-	uv run ruff format python
+	uv run ruff check --fix --exit-non-zero-on-fix optimuskg
+	uv run ruff format optimuskg
 
 .PHONY: lint
 lint: ## Lint code
-	uv run ruff check python
-	uv run ruff format --check python
+	uv run ruff check optimuskg
+	uv run ruff format --check optimuskg
 
 .PHONY: mypy
 mypy: ## Run mypy

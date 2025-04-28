@@ -1,4 +1,3 @@
-import logging
 from collections.abc import Callable
 from typing import Any, Final, final
 
@@ -7,8 +6,6 @@ from kedro.pipeline import node
 from typedframe import PolarsTypedFrame
 
 from .utils import concat_json_partitions
-
-log = logging.getLogger(__name__)
 
 
 @final

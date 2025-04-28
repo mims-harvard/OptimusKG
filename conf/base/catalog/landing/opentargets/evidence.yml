@@ -1,5 +1,19 @@
-landing.opentargets.evidence.cancer_gene_census: &landing_opentargets_evidence_args
+_common_landing_opentargets_evidence_args: &common_landing_opentargets_evidence_args
   type: partitions.PartitionedDataset
+  dataset:
+    type: pandas.ParquetDataset
+    load_args:
+      engine: pyarrow
+  filename_suffix: ".parquet"
+
+_common_opentargets_origin: &common_opentargets_origin
+  provider: "opentargets"
+  version: "24.09"
+  file_extension: "parquet"
+  is_evidence: true
+
+landing.opentargets.evidence.cancer_gene_census:
+  <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/cancer_gene_census"
   dataset:
     type: pandas.ParquetDataset
@@ -8,93 +22,141 @@ landing.opentargets.evidence.cancer_gene_census: &landing_opentargets_evidence_a
   filename_suffix: ".parquet"
   metadata:
     checksum: "3bd8ca4b2db8159493ed2a29e68fab3b"
+    origin:
+      <<: *common_opentargets_origin
+      source_id: "cancer_gene_census"
 
 landing.opentargets.evidence.chembl:
-  <<: *landing_opentargets_evidence_args
+  <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/chembl"
   metadata:
     checksum: "cafda8d32f114812713e57613386a343"
+    origin:
+      <<: *common_opentargets_origin
+      source_id: "chembl"
 
 landing.opentargets.evidence.clingen:
-  <<: *landing_opentargets_evidence_args
+  <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/clingen"
   metadata:
     checksum: "d9b5159f519bacb1a4dcbb123b9d4df7"
+    origin:
+      <<: *common_opentargets_origin
+      source_id: "clingen"
 
 landing.opentargets.evidence.crispr:
-  <<: *landing_opentargets_evidence_args
+  <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/crispr"
   metadata:
     checksum: "ab06359adfdbceaf76e5c324075f3b73"
+    origin:
+      <<: *common_opentargets_origin
+      source_id: "crispr"
 
 landing.opentargets.evidence.crispr_screen:
-  <<: *landing_opentargets_evidence_args
+  <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/crispr_screen"
   metadata:
     checksum: "f8539d290e44e076c2cb046830498098"
+    origin:
+      <<: *common_opentargets_origin
+      source_id: "crispr_screen"
 
 landing.opentargets.evidence.expression_atlas:
-  <<: *landing_opentargets_evidence_args
+  <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/expression_atlas"
   metadata:
     checksum: "f221d466a59eca36e4ac586187a23c31"
+    origin:
+      <<: *common_opentargets_origin
+      source_id: "expression_atlas"
 
 landing.opentargets.evidence.gene_burden:
-  <<: *landing_opentargets_evidence_args
+  <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/gene_burden"
   metadata:
     checksum: "0dc00d77ff5e42a35ba51c33dd4b78ea"
+    origin:
+      <<: *common_opentargets_origin
+      source_id: "gene_burden"
 
 landing.opentargets.evidence.gene2phenotype:
-  <<: *landing_opentargets_evidence_args
+  <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/gene2phenotype"
   metadata:
     checksum: "2b8cf5b75cb925e751ff97af1132ddc1"
+    origin:
+      <<: *common_opentargets_origin
+      source_id: "gene2phenotype"
 
 landing.opentargets.evidence.genomics_england:
-  <<: *landing_opentargets_evidence_args
+  <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/genomics_england"
   metadata:
     checksum: "e4eff0f1c4ccbdede91b28e2b63efccd"
+    origin:
+      <<: *common_opentargets_origin
+      source_id: "genomics_england"
 
 landing.opentargets.evidence.intogen:
-  <<: *landing_opentargets_evidence_args
+  <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/intogen"
   metadata:
     checksum: "ae0c979e805a989a747299a2674bf3ee"
+    origin:
+      <<: *common_opentargets_origin
+      source_id: "intogen"
 
 landing.opentargets.evidence.orphanet:
-  <<: *landing_opentargets_evidence_args
+  <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/orphanet"
   metadata:
     checksum: "b986655e6c0a574b23c56724665dce20"
+    origin:
+      <<: *common_opentargets_origin
+      source_id: "orphanet"
 
 landing.opentargets.evidence.progeny:
-  <<: *landing_opentargets_evidence_args
+  <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/progeny"
   metadata:
     checksum: "5a22c5f5211475511882b360a6854615"
+    origin:
+      <<: *common_opentargets_origin
+      source_id: "progeny"
 
 landing.opentargets.evidence.reactome:
-  <<: *landing_opentargets_evidence_args
+  <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/reactome"
   metadata:
     checksum: "3a18e6910daa2c10024439d6d5f425d3"
+    origin:
+      <<: *common_opentargets_origin
+      source_id: "reactome"
 
 landing.opentargets.evidence.slapenrich:
-  <<: *landing_opentargets_evidence_args
+  <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/slapenrich"
   metadata:
     checksum: "7352091ab86cffc081c943ead91b3d41"
+    origin:
+      <<: *common_opentargets_origin
+      source_id: "slapenrich"
 
 landing.opentargets.evidence.sysbio:
-  <<: *landing_opentargets_evidence_args
+  <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/sysbio"
   metadata:
     checksum: "89a3894f8643ce12c3ff36c54af2e48c"
+    origin:
+      <<: *common_opentargets_origin
+      source_id: "sysbio"
 
 landing.opentargets.evidence.uniprot_literature:
-  <<: *landing_opentargets_evidence_args
+  <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/uniprot_literature"
   metadata:
     checksum: "27317f71af086325e2a45721910d39b6"
+    origin:
+      <<: *common_opentargets_origin
+      source_id: "uniprot_literature"

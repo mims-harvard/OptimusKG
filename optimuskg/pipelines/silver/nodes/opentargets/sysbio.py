@@ -1,12 +1,8 @@
-import logging
-
 import pandas as pd
 import polars as pl
 from kedro.pipeline import node
 
 from .utils import construct_edges
-
-log = logging.getLogger(__name__)
 
 
 def process_sysbio(  # noqa: PLR0913

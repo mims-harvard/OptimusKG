@@ -1,10 +1,6 @@
-import logging
-
 import polars as pl
 from kedro.pipeline import node
 from lxml import etree
-
-log = logging.getLogger(__name__)
 
 
 def process_drug_drug(full_database: etree._ElementTree) -> pl.DataFrame:

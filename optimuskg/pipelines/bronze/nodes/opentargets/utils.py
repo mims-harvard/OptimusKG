@@ -1,12 +1,9 @@
-import logging
 from collections.abc import Callable
 from typing import Any, Final, final
 
 import pandas as pd
 import polars as pl
 from typedframe import PolarsTypedFrame
-
-log = logging.getLogger(__name__)
 
 
 @final

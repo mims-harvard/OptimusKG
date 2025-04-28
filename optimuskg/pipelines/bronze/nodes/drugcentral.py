@@ -1,9 +1,5 @@
-import logging
-
 import polars as pl
 from kedro.pipeline import node
-
-log = logging.getLogger(__name__)
 
 
 def process_drug_disease(drugcentral: pl.DataFrame) -> pl.DataFrame:

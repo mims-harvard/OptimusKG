@@ -20,3 +20,6 @@ landing.opentargets.drug_mappings:
       "stitch_id": "${pl:String}"
   metadata:
     checksum: "42ab1adc3018bd2dd5144e9e5fea7e68"
+    origin:
+      provider: "http"
+      url: "https://raw.githubusercontent.com/iit-Demokritos/drug_id_mapping/refs/heads/main/drug-mappings.tsv"
