@@ -143,6 +143,7 @@ def download_ontologies(  # noqa: PLR0913
     doid_version: str = "656",
     go_plus_version: str = "701",
     uberon_version: str = "348",
+    ordo_version: str = "30",
     chunk_size: int = 8192,
 ) -> None:
     """Download all ontology files to the landing zone."""
@@ -176,7 +177,7 @@ def download_ontologies(  # noqa: PLR0913
             "output_path": paths.DATA_LANDING_ONTOLOGY_DIR / "mondo.owl",
         },
         "Orphanet": {
-            "url": "http://purl.obolibrary.org/obo/ordo.owl",
+            "url": f"https://data.bioontology.org/ontologies/ORDO/submissions/{ordo_version}/download?apikey={bioontology_api_key}",
             "output_path": paths.DATA_LANDING_ONTOLOGY_DIR / "orphanet.owl",
         },
     }
