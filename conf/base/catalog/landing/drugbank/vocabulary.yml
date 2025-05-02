@@ -1,15 +1,22 @@
 landing.drugbank.vocabulary:
-  type: polars.CSVDataset
-  filepath: "data/landing/drugbank/drugbank_vocabulary.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "DrugBank ID": "${pl:String}"
-      "Accession Numbers": "${pl:String}"
-      "Common name": "${pl:String}"
-      "CAS": "${pl:String}"
-      "UNII": "${pl:String}"
-      "Synonyms": "${pl:String}"
-      "Standard InChI Key": "${pl:String}"
+  type: optimuskg.datasets.ZipDataset
+  zipped_filename: "drugbank vocabulary.csv"
+  filepath: "data/landing/drugbank/all_drugbank_vocabulary.csv.zip" # NOTE: polars can handle zip files
+  dataset: 
+    type: polars.CSVDataset
+    load_args:
+      infer_schema: false
+      schema:
+        "DrugBank ID": "${pl:String}"
+        "Accession Numbers": "${pl:String}"
+        "Common name": "${pl:String}"
+        "CAS": "${pl:String}"
+        "UNII": "${pl:String}"
+        "Synonyms": "${pl:String}"
+        "Standard InChI Key": "${pl:String}"
   metadata:
-    checksum: "4697d45f21ade4aaf99e231bd4ed77fc"
+    checksum: "a3a0cd6ffa71c4069f02f2de967aa67a"
+    origin:
+      provider: drugbank
+      version: "5-1-13"
+      dataset: "all-drugbank-vocabulary"

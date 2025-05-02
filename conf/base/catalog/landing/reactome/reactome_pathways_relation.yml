@@ -11,3 +11,6 @@ landing.reactome.reactome_pathways_relation:
       "reactome_id_2": "${pl:String}"
   metadata:
     checksum: "97605cbcd3cdbaeee6905b4b7137b38f"
+    origin:
+      provider: http
+      url: "https://reactome.org/download/current/ReactomePathwaysRelation.txt"

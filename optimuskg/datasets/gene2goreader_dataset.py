@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import gzip
 import logging
 import os
 from copy import deepcopy
@@ -104,27 +105,86 @@ class Gene2GoReaderDataset(AbstractVersionedDataset[Gene2GoReader, Gene2GoReader
 
     @override
     def load(self) -> Gene2GoReader:
-        """Loads the Gene2GoReader.
+        """Loads the Gene2GoReader, handling potential gzip compression.
+
+        If a `.gz` file is specified, it checks if a decompressed version exists
+        at the same path without the extension. If not, it decompresses the file
+        and saves it there before loading.
 
         Returns:
             Gene2GoReader object initialized with the GAF file.
+
+        Raises:
+            DatasetError: If the file cannot be loaded or decompressed.
+            IOError: If writing the decompressed file fails due to permissions or other issues.
         """
         load_path = get_filepath_str(self._get_load_path(), self._protocol)
+        is_compressed = load_path.endswith(".gz")
+        target_path = load_path  # Path to be used by Gene2GoReader
 
-        if self._protocol == "file":
-            with open(os.devnull, "w") as devnull:
-                with contextlib.redirect_stdout(
-                    devnull
-                ):  # Suppress Gene2GoReader stdout
-                    return Gene2GoReader(filename=load_path, **self._load_args)
+        if is_compressed:
+            decompressed_path = load_path[:-3]  # Remove .gz extension
+            if self._fs.exists(decompressed_path):
+                logger.info(f"Using existing decompressed file: '{decompressed_path}'")
+                target_path = decompressed_path
+            else:
+                logger.warning(
+                    f"Decompressing '{load_path}' to '{decompressed_path}'. "
+                    f"This requires write permissions and modifies the source directory."
+                )
+                try:
+                    # Open compressed source, open target for writing
+                    with self._fs.open(
+                        load_path, mode="rb", **self._fs_open_args_load
+                    ) as compressed_file_obj:
+                        # Use fsspec's open for writing to handle different protocols
+                        with self._fs.open(
+                            decompressed_path, mode="wt", encoding="utf-8"
+                        ) as outfile:
+                            # Decompress and write
+                            with gzip.open(
+                                compressed_file_obj, "rt", encoding="utf-8"
+                            ) as infile:
+                                outfile.write(infile.read())
 
-        # For remote files, we need to download to a temporary file first
-        with self._fs.open(load_path, **self._fs_open_args_load) as fs_file:
-            with open(os.devnull, "w") as devnull:
-                with contextlib.redirect_stdout(
-                    devnull
-                ):  # Suppress Gene2GoReader stdout
-                    return Gene2GoReader(filename=fs_file.name, **self._load_args)
+                    logger.info(f"Successfully decompressed to '{decompressed_path}'")
+                    target_path = decompressed_path
+                except Exception as e:
+                    # Catch potential IOErrors during write or other exceptions
+                    raise DatasetError(
+                        f"Failed to decompress '{load_path}' to '{decompressed_path}': {e}"
+                    ) from e
+
+        # Now load using the target_path (original or decompressed)
+        # Suppress Gene2GoReader stdout during initialization
+        with open(os.devnull, "w") as devnull, contextlib.redirect_stdout(devnull):
+            if self._protocol == "file":
+                # Use target_path which is either original or the decompressed path
+                try:
+                    return Gene2GoReader(filename=target_path, **self._load_args)
+                except Exception as e:
+                    raise DatasetError(
+                        f"Failed to load local file {target_path}: {e}"
+                    ) from e
+            else:
+                # For remote files, fsspec needs to handle caching/downloading.
+                # If we decompressed, target_path now points to the (potentially remote)
+                # decompressed file which fsspec should handle like any other remote file.
+                # If not compressed, target_path is the original remote path.
+                try:
+                    # Use fsspec's open which returns a file-like object with a '.name' attribute
+                    # pointing to a local cache/temp file if necessary.
+                    with self._fs.open(
+                        target_path,
+                        mode="rt",
+                        encoding="utf-8",
+                        **self._fs_open_args_load,
+                    ) as fs_file:
+                        return Gene2GoReader(filename=fs_file.name, **self._load_args)
+                except Exception as e:
+                    raise DatasetError(
+                        f"Failed to load remote file {target_path}: {e}"
+                    ) from e
 
     @override
     def save(self, data: Gene2GoReader) -> None:

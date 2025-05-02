@@ -209,33 +209,33 @@ def get_dataset_display_name(ds_name: str) -> str:
 
 def get_dataset_path(ds_name: str) -> Path:
     ds: AbstractDataset = get_dataset_by_name(ds_name)
-    display_name = get_dataset_display_name(ds_name)
 
     path_attr = "_path" if isinstance(ds, PartitionedDataset) else "_filepath"
     path_str = getattr(ds, path_attr, None)
 
     if path_str is None:
-        raise ValueError(f"Could not determine path for {display_name}")
+        raise ValueError(f"Could not determine path for {ds_name}")
 
     path = Path(path_str)
+    return path  # TODO: remove below code
 
     if isinstance(ds, PartitionedDataset):
         if not path.exists():
             raise FileNotFoundError(
-                f"Expected directory path for {display_name} does not exist: {path}"
+                f"Expected directory path for {ds_name} does not exist: {path}"
             )
         if not path.is_dir():
             raise NotADirectoryError(
-                f"Expected directory for {display_name} but found non-directory path {path}"
+                f"Expected directory for {ds_name} but found non-directory path {path}"
             )
     else:
         if not path.exists():
             raise FileNotFoundError(
-                f"Expected file path for {display_name} does not exist: {path}"
+                f"Expected file path for {ds_name} does not exist: {path}"
             )
         if not path.is_file():
             raise IsADirectoryError(
-                f"Expected file for {display_name} but found directory path {path}"
+                f"Expected file for {ds_name} but found directory path {path}"
             )
 
     return path

@@ -1,8 +1,7 @@
 import logging
-from typing import Any
 
 from kedro.framework.hooks import hook_impl
-from kedro.pipeline.node import Node
+from kedro.io.core import DatasetError
 from kedro_datasets.partitions.partitioned_dataset import PartitionedDataset
 
 from optimuskg.utils import (
@@ -18,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 class ChecksumHooks:
     @hook_impl
-    def after_dataset_loaded(self, dataset_name: str, data: Any, node: Node) -> None:
+    def before_dataset_loaded(self, dataset_name: str) -> None:
         valid_prefixes = ("landing.", "bronze.", "silver.")
         if any(dataset_name.startswith(prefix) for prefix in valid_prefixes):
             self._validate_checksum(dataset_name)
@@ -49,6 +48,7 @@ class ChecksumHooks:
                     f"Expected: {self._checksum_display_str(expected_checksum)}, Got: {self._checksum_display_str(actual_checksum)}",
                     extra={"markup": True},
                 )
+                raise DatasetError(f"Checksum mismatch for {ds_name}")
             else:
                 logger.debug(
                     f"Checksum validated successfully for {get_dataset_display_name(ds_name)}",
@@ -60,18 +60,22 @@ class ChecksumHooks:
                 f"Path not found during checksum calculation for {get_dataset_display_name(ds_name)}: {path}",
                 extra={"markup": True},
             )
+            raise
         except IsADirectoryError:
             logger.exception(
                 f"Expected a file but found a directory for {get_dataset_display_name(ds_name)}: {path}",
                 extra={"markup": True},
             )
+            raise
         except NotADirectoryError:
             logger.exception(
                 f"Expected a directory but found a file for {get_dataset_display_name(ds_name)}: {path}",
                 extra={"markup": True},
             )
+            raise
         except Exception:
             logger.exception(
                 f"Error calculating checksum for {get_dataset_display_name(ds_name)}",
                 extra={"markup": True},
             )
+            raise

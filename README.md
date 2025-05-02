@@ -35,14 +35,6 @@ There are some files that are not downloaded automatically, so you need to downl
 optimuskg/
 └── data/
     └── landing/
-        ├── bgee/
-        │   └── Homo_sapiens_expr_advanced.tsv
-        ├── ctd/
-        │   └── CTD_exposure_events.csv
-        ├── reactome/
-        │   └── NCBI2Reactome.txt
-        │   └── ReactomePathways.txt
-        │   └── ReactomePathwaysRelation.txt
         ├── ncbigene/
         │   └── gene2go
         ├── drugbank/
@@ -51,9 +43,6 @@ optimuskg/
         │   └── drugbank_all_enzyme_polypeptide_ids.csv
         │   └── drugbank_all_target_polypeptide_ids.csv
         │   └── drugbank_all_transporter_polypeptide_ids.csv
-        │   └── drugbank_vocabulary.csv
-        ├── drugcentral/
-        │   └── drugcentral-pgdump_20200918.sql
         └── opentargets/
             └── primekg_nodes.csv
             └── primekg_edges.csv

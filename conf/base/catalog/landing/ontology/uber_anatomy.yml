@@ -5,3 +5,7 @@ landing.ontology.uber_anatomy:
     checksum: "a4a89b03d4e62b54495bb138a6fd7108"
     title: "Uber Anatomy Ontology"
     description: "Uberon is an integrated cross-species anatomy ontology representing a variety of entities classified according to traditional anatomical criteria such as structure, function and developmental lineage."
+    origin:
+      provider: bioontology
+      acronym: UBERON
+      version: "348"

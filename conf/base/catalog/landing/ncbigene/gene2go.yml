@@ -1,7 +1,10 @@
 landing.ncbigene.gene2go:
   type: optimuskg.datasets.Gene2GoReaderDataset
-  filepath: "data/landing/ncbigene/gene2go"
+  filepath: "data/landing/ncbigene/gene2go.gaf"
   load_args:
     taxids: [9606] # Parse gene2go for human (taxid=9606)
   metadata:
     checksum: "9f1f605aaf4b8e811aea52741138e430"
+    origin:
+      provider: http
+      url: "https://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2go.gz" # Gene2GoReaderDataset now handles gzip files

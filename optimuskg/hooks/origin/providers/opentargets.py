@@ -2,7 +2,7 @@ import logging
 import os
 import re
 from pathlib import Path
-from typing import ClassVar, Literal
+from typing import ClassVar, Literal, override
 
 import requests
 from pydantic import Field
@@ -27,6 +27,7 @@ class OpenTargetsProvider(BaseProvider):
     )
     provider: Literal["opentargets"]
 
+    @override
     def download(self, output_path: Path) -> None:
         url = self._build_evidence_url()
 
