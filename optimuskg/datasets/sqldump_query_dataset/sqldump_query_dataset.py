@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import shutil
 import subprocess  # nosec B404
+import time
 from copy import deepcopy
 from pathlib import Path, PurePosixPath
 from typing import Any, override
@@ -129,8 +130,29 @@ class SQLDumpQueryDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
         if not compose_path.is_file():
             raise DatasetError(f"Docker compose file not found: {compose_path}")
 
-        self._run_subprocess(["docker", "compose", "-f", str(compose_path), "up", "-d"])
-        logger.info("PostgreSQL database initialized.")
+        # 1) Start the container
+        self._run_subprocess(
+            [
+                "docker",
+                "compose",
+                "-f",
+                str(compose_path),
+                "up",
+                "-d",
+            ]
+        )
+
+        # 2) Wait until Postgres is ready
+        self._wait_for_postgres(
+            container="drugcentral_postgres",
+            user="optimuskg",
+            db=self._db_name,
+            timeout=60.0,
+            base_interval=1.0,
+            max_interval=8.0,
+        )
+
+        logger.info("PostgreSQL database initialized and healthy.")
 
     def _restore_database(self) -> None:
         dump_path_str = get_filepath_str(self._filepath, self._protocol)
@@ -176,6 +198,51 @@ class SQLDumpQueryDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
         except Exception as e:
             logger.error(f"Failed to stop the PostgreSQL database: {e}")
         logger.info("PostgreSQL database shutdown.")
+
+    def _wait_for_postgres(  # noqa: PLR0913
+        self,
+        container: str,
+        user: str,
+        db: str,
+        *,
+        timeout: float = 60.0,
+        base_interval: float = 1.0,
+        max_interval: float = 8.0,
+    ) -> None:
+        """
+        Poll `pg_isready` inside the given Docker container until it returns zero (ready),
+        using exponential backoff up to `max_interval`, for up to `timeout` seconds.
+        Raises DatasetError if the timeout is exceeded.
+        """
+        start = time.monotonic()
+        attempt = 0
+        docker_cmd = shutil.which("docker") or "docker"
+
+        while True:
+            try:
+                self._run_subprocess(
+                    [
+                        docker_cmd,
+                        "exec",
+                        container,
+                        "pg_isready",
+                        "-U",
+                        user,
+                        "-d",
+                        db,
+                    ]
+                )
+                return
+            except subprocess.CalledProcessError:
+                elapsed = time.monotonic() - start
+                if elapsed >= timeout:
+                    raise DatasetError(
+                        f"Postgres ({container}) did not become ready after {timeout:.1f}s"
+                    )
+                wait = min(base_interval * 2**attempt, max_interval)
+                logger.debug(f"Postgres not ready yet, retrying in {wait:.1f}s...")
+                time.sleep(wait)
+                attempt += 1
 
     @override
     def save(self, data: pl.DataFrame) -> None:
