@@ -1,5 +1,6 @@
 from collections.abc import Generator
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 from kedro.framework.context import KedroContext
@@ -22,4 +23,7 @@ def kedro() -> Generator[KedroSettings, None, None]:
     with KedroSession.create(
         project_path=Path.cwd(), env="test", conf_source="tests/conf"
     ) as session:
-        yield KedroSettings(session=session, context=session.load_context())
+        with patch("optimuskg.utils.KedroSession") as MockKedroSession:
+            # Mock the KedroSession.create method to return the test session instead of the default one
+            MockKedroSession.create.return_value.__enter__.return_value = session
+            yield KedroSettings(session=session, context=session.load_context())
