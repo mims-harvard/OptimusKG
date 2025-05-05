@@ -3,7 +3,6 @@ import subprocess
 from pathlib import Path
 
 import typer
-from kedro.framework.project import LOGGING  # noqa: F401
 
 from cli.utils import (
     download_drugbank_files,

@@ -1,8 +1,19 @@
 import hashlib
+import logging
 import re
+from functools import lru_cache
 from pathlib import Path
 
 import polars as pl
+from kedro.framework.session import KedroSession
+from kedro.io.core import AbstractDataset, CatalogProtocol, DatasetNotFoundError
+from kedro.logging import _format_rich
+from kedro.utils import _has_rich_handler
+from kedro_datasets.partitions.partitioned_dataset import (
+    PartitionedDataset,
+)
+
+logger = logging.getLogger(__name__)
 
 
 def _to_snake_case(text: str) -> str:
@@ -167,3 +178,43 @@ def calculate_checksum(
             while chunk := f.read(chunk_size):
                 file_hash.update(chunk)
         return file_hash.hexdigest()
+
+
+def format_rich(value: str, markup: str) -> str:
+    if _has_rich_handler():
+        return _format_rich(value, markup)
+    return value
+
+
+@lru_cache
+def get_dataset_by_name(ds_name: str) -> AbstractDataset:
+    with KedroSession.create() as session:
+        catalog: CatalogProtocol = session.load_context().catalog
+        try:
+            dataset: AbstractDataset = catalog._get_dataset(ds_name)
+        except DatasetNotFoundError:
+            logger.exception(
+                f"Dataset {format_rich(ds_name, 'dark_red')} not found in catalog",
+                extra={"markup": True},
+            )
+        return dataset
+
+
+def get_dataset_display_name(ds_name: str) -> str:
+    display_name = format_rich(ds_name, "dark_orange")
+    ds: AbstractDataset = get_dataset_by_name(ds_name)
+    ds_type = type(ds).__name__
+    return f"{display_name} ({ds_type})"
+
+
+def get_dataset_path(ds_name: str) -> Path:
+    ds: AbstractDataset = get_dataset_by_name(ds_name)
+
+    path_attr = "_path" if isinstance(ds, PartitionedDataset) else "_filepath"
+    path_str = getattr(ds, path_attr, None)
+
+    if path_str is None:
+        raise ValueError(f"Could not determine path for {ds_name}")
+
+    path = Path(path_str)
+    return path

@@ -2,7 +2,7 @@ import logging
 
 import polars as pl
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def type_switch(
@@ -32,13 +32,15 @@ def construct_edges(  # noqa: PLR0913
     relation_label: str | None = "disease_protein",
     display_relation_label: str | None = "associated with",
 ):
-    log.info(f"Constructing {type_x}-{type_y} edges with {evidence_df.shape[0]} rows")
+    logger.debug(
+        f"Constructing {type_x}-{type_y} edges with {evidence_df.shape[0]} rows"
+    )
 
     if (type_x == "gene" and type_y == "disease") and relation_label is not None:
         pheno_count = evidence_df.filter(pl.col("diseaseId").str.contains("HP")).height
 
         if pheno_count > 0:
-            log.info(
+            logger.debug(
                 f"Identified {pheno_count} HPO phenotypes, analyzing separately from diseases"
             )
 
@@ -86,7 +88,7 @@ def construct_edges(  # noqa: PLR0913
             edge_types = '", "'.join(
                 edge_df.select("relation").unique().to_series().to_list()
             )
-            log.info(f'Constructed {edge_df.height} edges of types "{edge_types}"')
+            logger.debug(f'Constructed {edge_df.height} edges of types "{edge_types}"')
             return edge_df
 
     # Add relation label if needed
@@ -97,11 +99,11 @@ def construct_edges(  # noqa: PLR0913
                 pl.lit(display_relation_label).alias("display_relation"),
             ]
         )
-        log.info(
+        logger.debug(
             f"Adding edge type information: {relation_label} ({display_relation_label})"
         )
     else:
-        log.info('Using existing edge type information in column "relation"')
+        logger.debug('Using existing edge type information in column "relation"')
 
     # Convert arguments to mapping tables
     type_switch_x = type_switch(
@@ -120,7 +122,7 @@ def construct_edges(  # noqa: PLR0913
         drug_mappings_df=drug_mappings_df,
     )
     key_y, table_y = type_switch_y
-    log.info(f'Mapping {type_x} to "{key_x}" and {type_y} to "{key_y}"')
+    logger.debug(f'Mapping {type_x} to "{key_x}" and {type_y} to "{key_y}"')
 
     # Construct x and y labels
     x_label = f"x_{type_x}"
@@ -152,13 +154,13 @@ def construct_edges(  # noqa: PLR0913
         .unique()
     )
 
-    # Print concluding message
+    # Log concluding message
     if relation_label is not None:
-        log.info(f'Constructed {edge_df.height} edges of type "{relation_label}"')
+        logger.debug(f'Constructed {edge_df.height} edges of type "{relation_label}"')
     else:
         edge_types = '", "'.join(
             edge_df.select("relation").unique().to_series().to_list()
         )
-        log.info(f'Constructed {edge_df.height} edges of types "{edge_types}"')
+        logger.debug(f'Constructed {edge_df.height} edges of types "{edge_types}"')
 
     return edge_df

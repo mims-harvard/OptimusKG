@@ -9,3 +9,6 @@ landing.drugbank.gene_map:
       "UniProt ID(supplied by UniProt)": "${pl:Utf8}"
   metadata:
     checksum: "67d986208170af964690b2779f742ed2"
+    origin:
+      provider: "http"
+      url: "https://www.genenames.org/cgi-bin/download/custom?col=md_eg_id&col=md_prot_id&status=Approved&hgnc_dbtag=on&order_by=gd_app_sym_sort&format=text&submit=submit"

@@ -1,82 +1,81 @@
 import logging
-from pathlib import Path
-from typing import Any
 
 from kedro.framework.hooks import hook_impl
-from kedro.io import KedroDataCatalog
-from kedro.pipeline.node import Node
+from kedro.io.core import DatasetError
 from kedro_datasets.partitions.partitioned_dataset import PartitionedDataset
 
-from optimuskg.utils import calculate_checksum
+from optimuskg.utils import (
+    calculate_checksum,
+    format_rich,
+    get_dataset_by_name,
+    get_dataset_display_name,
+    get_dataset_path,
+)
 
 logger = logging.getLogger(__name__)
 
 
 class ChecksumHooks:
     @hook_impl
-    def after_catalog_created(self, catalog: KedroDataCatalog) -> None:
-        self.catalog = catalog
-
-    @hook_impl
-    def after_dataset_loaded(self, dataset_name: str, data: Any, node: Node) -> None:
+    def before_dataset_loaded(self, dataset_name: str) -> None:
         valid_prefixes = ("landing.", "bronze.", "silver.")
         if any(dataset_name.startswith(prefix) for prefix in valid_prefixes):
-            self._validate_checksum(dataset_name, self.catalog)
+            self._validate_checksum(dataset_name)
 
-    def _validate_checksum(self, ds_name: str, catalog: KedroDataCatalog) -> None:
-        """Validate the checksum of a dataset against its expected value in metadata.
+    def _checksum_display_str(self, checksum: str) -> str:
+        return format_rich(checksum, "bright_blue")
 
-        Args:
-            ds_name: The name of the dataset in the catalog
-            catalog: The Kedro data catalog containing the dataset
-        """
-        ds = catalog.get(ds_name)
+    def _validate_checksum(self, ds_name: str) -> None:
+        ds = get_dataset_by_name(ds_name)
         expected_checksum = getattr(ds, "metadata", {}).get("checksum")
         if not expected_checksum:
-            logger.warning(f"No checksum found in metadata for dataset: '{ds_name}'")
-            return
-
-        is_partitioned = isinstance(ds, PartitionedDataset)
-        path_str = (
-            getattr(ds, "_path", None)
-            if is_partitioned
-            else getattr(ds, "_filepath", None)
-        )
-        if path_str is None:
-            logger.error(f"Could not determine path for dataset '{ds_name}'")
-            return
-        path = Path(path_str)
-        if is_partitioned and not path.is_dir():
-            logger.error(
-                f"Expected directory for PartitionedDataset '{ds_name}' but found path: {path}"
+            logger.warning(
+                f"No checksum found in metadata for dataset: {get_dataset_display_name(ds_name)}",
+                extra={"markup": True},
             )
             return
-        elif not is_partitioned and not path.is_file():
-            logger.error(f"File not found for dataset '{ds_name}' at path: {path}")
-            return
+
+        path = get_dataset_path(ds_name)
 
         try:
-            actual_checksum = calculate_checksum(path, process_directory=is_partitioned)
+            actual_checksum = calculate_checksum(
+                path, process_directory=isinstance(ds, PartitionedDataset)
+            )
 
             if expected_checksum != actual_checksum:
                 logger.error(
-                    f"Checksum mismatch for '{ds_name}'. "
-                    f"Expected: {expected_checksum}, Got: {actual_checksum}"
+                    f"Checksum mismatch for {get_dataset_display_name(ds_name)}. "
+                    f"Expected: {self._checksum_display_str(expected_checksum)}, Got: {self._checksum_display_str(actual_checksum)}",
+                    extra={"markup": True},
                 )
+                raise DatasetError(f"Checksum mismatch for {ds_name}")
             else:
-                logger.debug(f"Checksum validated successfully for '{ds_name}'")
+                logger.debug(
+                    f"Checksum validated successfully for {get_dataset_display_name(ds_name)}",
+                    extra={"markup": True},
+                )
 
         except FileNotFoundError:
-            logger.error(
-                f"Path not found during checksum calculation for '{ds_name}': {path}"
+            logger.exception(
+                f"Path not found during checksum calculation for {get_dataset_display_name(ds_name)}: {path}",
+                extra={"markup": True},
             )
+            raise
         except IsADirectoryError:
-            logger.error(
-                f"Expected a file but found a directory for '{ds_name}': {path}"
+            logger.exception(
+                f"Expected a file but found a directory for {get_dataset_display_name(ds_name)}: {path}",
+                extra={"markup": True},
             )
+            raise
         except NotADirectoryError:
-            logger.error(
-                f"Expected a directory but found a file for '{ds_name}': {path}"
+            logger.exception(
+                f"Expected a directory but found a file for {get_dataset_display_name(ds_name)}: {path}",
+                extra={"markup": True},
             )
-        except Exception as e:
-            logger.error(f"Error calculating checksum for '{ds_name}': {e}")
+            raise
+        except Exception:
+            logger.exception(
+                f"Error calculating checksum for {get_dataset_display_name(ds_name)}",
+                extra={"markup": True},
+            )
+            raise

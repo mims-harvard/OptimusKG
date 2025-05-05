@@ -12,3 +12,6 @@ landing.reactome.reactome_pathways:
       "species": "${pl:String}"
   metadata:
     checksum: "a0ebc60d31ca562b4a3034a10ab31eb6"
+    origin:
+      provider: http
+      url: "https://reactome.org/download/current/ReactomePathways.txt"

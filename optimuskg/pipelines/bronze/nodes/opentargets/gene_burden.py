@@ -1,4 +1,3 @@
-import logging
 from collections.abc import Callable
 from typing import Any
 
@@ -6,8 +5,6 @@ import pandas as pd
 from kedro.pipeline import node
 
 from .utils import TargetDiseaseEvidenceSchema, concat_partitions
-
-log = logging.getLogger(__name__)
 
 
 def process_gene_burden(

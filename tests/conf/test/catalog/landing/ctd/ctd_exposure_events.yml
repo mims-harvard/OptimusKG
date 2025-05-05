@@ -1,6 +1,6 @@
 landing.ctd.ctd_exposure_events:
   type: polars.CSVDataset
-  filepath: "tests/stub_data/landing/ctd/CTD_exposure_events.csv"
+  filepath: "tests/stub_data/landing/ctd/CTD_exposure_events.csv.gz"
   load_args:
     has_header: false
     new_columns:
@@ -96,4 +96,8 @@ landing.ctd.ctd_exposure_events:
       "enrollmentendyear": "${pl:String}"
       "studyfactors": "${pl:String}"
   metadata:
-    checksum: "642ed5f57bf1a033c15ab0d7321bd3e3"
+    checksum: "c243274bf67dd2482a1b53b5f48a6c61"
+    origin:
+      provider: http
+      url: "https://ctdbase.org/reports/CTD_exposure_events.csv.gz" # NOTE: polars can handle gzip files
+

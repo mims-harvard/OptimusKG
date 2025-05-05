@@ -4,7 +4,7 @@ from typing import Final
 import polars as pl
 from kedro.pipeline import node
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 # TODO: This constant should be a parameter in the pipeline.
 EXPRESSION_RANK_THRESHOLD: Final[int] = 25000
@@ -43,7 +43,7 @@ def process_bgee(
         )  # NOTE: New versions of the dataset include measurements with an intersection of tissues. We want to remove this measurements.
     )
 
-    log.info(f"Wrote {len(df)} anatomy-gene pairs")
+    logger.debug(f"Wrote {len(df)} anatomy-gene pairs")
 
     return df
 

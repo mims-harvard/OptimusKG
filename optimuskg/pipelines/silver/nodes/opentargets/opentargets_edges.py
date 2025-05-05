@@ -3,7 +3,7 @@ import logging
 import polars as pl
 from kedro.pipeline import node
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def _handle_duplicate_edges(df: pl.DataFrame) -> pl.DataFrame:
@@ -115,8 +115,8 @@ def process_opentargets_edges(  # noqa: PLR0913
     new_kg_edges = _handle_duplicate_edges(new_kg_edges)
 
     # Log statistics
-    log.info(f"PrimeKG nodes: {primekg_nodes.height}")
-    log.info(f"Final KG edges: {new_kg_edges.height}")
+    logger.debug(f"PrimeKG nodes: {primekg_nodes.height}")
+    logger.debug(f"Final KG edges: {new_kg_edges.height}")
 
     return new_kg_edges
 

@@ -9,3 +9,8 @@ landing.opentargets.targets:
   filename_suffix: ".json"
   metadata:
     checksum: "c1cbe45378a6293cab1f508313691c7a"
+    origin:
+      provider: "opentargets"
+      version: "24.09"
+      file_extension: "json"
+      source_id: "targets"

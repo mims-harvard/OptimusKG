@@ -170,8 +170,8 @@ class SQLDumpQueryDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
                         "exec",
                         "-i",
                         "drugcentral_postgres",
-                        "psql",
-                        self._conn_string,
+                        "psql",  # TODO: Investigate using pg_restore with --jobs=number-of-jobs flag to speed up the restore process, also use --single-transaction flag to stop on error
+                        self._conn_string,  # TODO: If using pg_restore, use the --dbname flag to specify the connection string (ref. https://stackoverflow.com/a/28359470)
                     ],
                     stdin=dump_file,
                 )

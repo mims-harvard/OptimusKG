@@ -1,4 +1,3 @@
-import logging
 from typing import Final
 
 import pandas as pd
@@ -6,9 +5,6 @@ import polars as pl
 from kedro.pipeline import node
 
 from .utils import construct_edges
-
-log = logging.getLogger(__name__)
-
 
 # TODO: This constant should be a parameter in the pipeline.
 RELATION_SCORE_THRESHOLD: Final[float] = 0.5

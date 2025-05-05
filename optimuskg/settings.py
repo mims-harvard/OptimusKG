@@ -1,10 +1,10 @@
 import polars as pl
 from kedro.io import KedroDataCatalog
 
-from optimuskg.hooks import ChecksumHooks, SilverHooks
+from optimuskg.hooks import ChecksumHooks, OriginHooks, SilverHooks
 
 # Hooks are executed in a Last-In-First-Out (LIFO) order.
-HOOKS = (SilverHooks(), ChecksumHooks())
+HOOKS = (SilverHooks(), ChecksumHooks(), OriginHooks())
 
 # Installed plugins for which to disable hook auto-registration.
 # DISABLE_HOOKS_FOR_PLUGINS = ("kedro-viz",)
@@ -18,7 +18,7 @@ HOOKS = (SilverHooks(), ChecksumHooks())
 # }
 
 # Directory that holds configuration.
-# CONF_SOURCE = "conf"
+CONF_SOURCE = "conf"
 
 # Class that manages how configuration is loaded.
 from kedro.config import OmegaConfigLoader  # noqa: E402
@@ -33,7 +33,6 @@ CONFIG_LOADER_ARGS = {
     "merge_strategy": {
         "base": "soft",
         "local": "soft",
-        "test": "soft",
     },
 }
 

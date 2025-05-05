@@ -1,6 +1,5 @@
-landing.drugbank.carrier: &landing_drugbank_args
+_landing_drugbank_args: &landing_drugbank_args
   type: polars.CSVDataset
-  filepath: "data/landing/drugbank/drugbank_all_carrier_polypeptide_ids.csv"
   load_args:
     infer_schema: false
     schema:
@@ -17,6 +16,11 @@ landing.drugbank.carrier: &landing_drugbank_args
       "HGNC ID": "${pl:String}"
       "Species": "${pl:String}"
       "Drug IDs": "${pl:String}"
+
+
+landing.drugbank.carrier:
+  <<: *landing_drugbank_args
+  filepath: "data/landing/drugbank/drugbank_all_carrier_polypeptide_ids.csv"
   metadata:
     checksum: "f74557e3b02ad41887acdf687fc5d7ae"
 

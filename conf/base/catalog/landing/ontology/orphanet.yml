@@ -5,3 +5,6 @@ landing.ontology.orphanet:
     checksum: "12d7ca04c1f359475a83118c1b19ffd8"
     title: "Orphanet Ontology"
     description: "The Orphanet Rare Disease ontology (ORDO) is jointly developed by Orphanet and the EBI to provide a structured vocabulary for rare diseases capturing relationships between diseases, genes and other relevant features which will form a useful resource for the computational analysis of rare diseases."
+    origin:
+      provider: http
+      url: "http://purl.obolibrary.org/obo/ordo.owl"

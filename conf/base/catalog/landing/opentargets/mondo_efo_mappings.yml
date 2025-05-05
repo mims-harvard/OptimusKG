@@ -19,3 +19,6 @@ landing.opentargets.mondo_efo_mappings:
       "efo_name": "${pl:String}"
   metadata:
     checksum: "9fbd4e93657db1361794472ab13ac981"
+    origin:
+      provider: "http"
+      url: "https://raw.githubusercontent.com/EBISPOT/efo/refs/heads/master/src/ontology/components/mondo_efo_mappings.tsv"

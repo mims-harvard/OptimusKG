@@ -1,4 +1,3 @@
-import logging
 from typing import Final
 
 import pandas as pd
@@ -6,9 +5,6 @@ import polars as pl
 from kedro.pipeline import node
 
 from .utils import construct_edges
-
-log = logging.getLogger(__name__)
-
 
 # TODO: This constant should be a parameter in the pipeline.
 SCORE_THRESHOLD: Final[float] = 0.5
@@ -23,7 +19,6 @@ def process_cancer_gene_census(  # noqa: PLR0913
     disease_phenotype_ids: pl.DataFrame,
 ) -> pl.DataFrame:
     df = pl.from_pandas(cancer_gene_census)
-    log.info(f"================================= {type(df)}")
     df = (
         df.select(["id", "targetId", "diseaseId", "studyId", "score"])
         .filter(
