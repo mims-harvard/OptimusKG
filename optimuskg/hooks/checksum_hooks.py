@@ -20,6 +20,15 @@ class ChecksumHooks:
     def before_dataset_loaded(self, dataset_name: str) -> None:
         valid_prefixes = ("landing.", "bronze.", "silver.")
         if any(dataset_name.startswith(prefix) for prefix in valid_prefixes):
+            try:
+                ds = get_dataset_by_name(dataset_name)
+                logger.debug(
+                    f"Checksum Hook: Validating '{dataset_name}' with filepath: '{getattr(ds, '_filepath', 'N/A')}'"
+                )
+            except Exception:
+                logger.warning(
+                    f"Checksum Hook: Could not get dataset '{dataset_name}' for filepath logging."
+                )
             self._validate_checksum(dataset_name)
 
     def _checksum_display_str(self, checksum: str) -> str:
