@@ -35,8 +35,6 @@ There are some files that are not downloaded automatically, so you need to downl
 optimuskg/
 └── data/
     └── landing/
-        ├── ncbigene/
-        │   └── gene2go
         ├── drugbank/
         │   └── full database.xml
         │   └── drugbank_all_carrier_polypeptide_ids.csv
