@@ -37,7 +37,7 @@ loggers:
     level: INFO
 
   optimuskg:
-    level: DEBUG
+    level: INFO
 
   cli:
     level: INFO

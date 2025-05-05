@@ -23,13 +23,9 @@ Audited 215 packages in 0.28ms
 
 ### Download landing files
 
-In order to run the project, you need to download the landing files. You can do this with the following command:
+Most landing files are downloaded automatically. The catalog entries have an optional `origin` key in their metadata that specifies where to download the file from.
 
-```console
-uv run cli landing
-```
-
-There are some files that are not downloaded automatically, so you need to download them manually. Ask the team for the files and put them in the `data/landing` folder as follows:
+However, there are some files that are not downloaded automatically, so you need to download them manually. Ask the team for the files and put them in the `data/landing` folder as follows:
 
 ```console
 optimuskg/
