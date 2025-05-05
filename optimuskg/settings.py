@@ -33,7 +33,6 @@ CONFIG_LOADER_ARGS = {
     "merge_strategy": {
         "base": "soft",
         "local": "soft",
-        "test": "merge",
     },
 }
 
