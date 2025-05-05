@@ -1742,7 +1742,7 @@ wheels = [
 
 [[package]]
 name = "optimuskg"
-version = "0.11.0"
+version = "0.12.0"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },
@@ -1775,6 +1775,7 @@ dev = [
     { name = "pydantic" },
     { name = "ruff" },
     { name = "typer" },
+    { name = "types-cachetools" },
 ]
 tests = [
     { name = "pytest" },
@@ -1814,6 +1815,7 @@ dev = [
     { name = "pydantic", specifier = ">=2.10.6" },
     { name = "ruff", specifier = "~=0.1.8" },
     { name = "typer", specifier = ">=0.15.1" },
+    { name = "types-cachetools", specifier = ">=5.5.0.20240820" },
 ]
 tests = [
     { name = "pytest", specifier = "~=7.2" },
@@ -3003,6 +3005,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/8b/6f/3991f0f1c7fcb2df31aef28e0594d8d54b05393a0e4e34c65e475c2a5d41/typer-0.15.2.tar.gz", hash = "sha256:ab2fab47533a813c49fe1f16b1a370fd5819099c00b119e0633df65f22144ba5", size = 100711 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/7f/fc/5b29fea8cee020515ca82cc68e3b8e1e34bb19a3535ad854cac9257b414c/typer-0.15.2-py3-none-any.whl", hash = "sha256:46a499c6107d645a9c13f7ee46c5d5096cae6f5fc57dd11eccbbb9ae3e44ddfc", size = 45061 },
+]
+
+[[package]]
+name = "types-cachetools"
+version = "5.5.0.20240820"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/c2/7e/ad6ba4a56b2a994e0f0a04a61a50466b60ee88a13d10a18c83ac14a66c61/types-cachetools-5.5.0.20240820.tar.gz", hash = "sha256:b888ab5c1a48116f7799cd5004b18474cd82b5463acb5ffb2db2fc9c7b053bc0", size = 4198 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/27/4d/fd7cc050e2d236d5570c4d92531c0396573a1e14b31735870e849351c717/types_cachetools-5.5.0.20240820-py3-none-any.whl", hash = "sha256:efb2ed8bf27a4b9d3ed70d33849f536362603a90b8090a328acf0cd42fda82e2", size = 4149 },
 ]
 
 [[package]]

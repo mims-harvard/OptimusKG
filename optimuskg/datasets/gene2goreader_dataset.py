@@ -120,12 +120,12 @@ class Gene2GoReaderDataset(AbstractVersionedDataset[Gene2GoReader, Gene2GoReader
         """
         load_path = get_filepath_str(self._get_load_path(), self._protocol)
         is_compressed = load_path.endswith(".gz")
-        target_path = load_path  # Path to be used by Gene2GoReader
+        target_path = load_path
 
         if is_compressed:
-            decompressed_path = load_path[:-3]  # Remove .gz extension
+            decompressed_path = load_path.removesuffix(".gz") + ".gaf"
             if self._fs.exists(decompressed_path):
-                logger.info(f"Using existing decompressed file: '{decompressed_path}'")
+                logger.debug(f"Using existing decompressed file: '{decompressed_path}'")
                 target_path = decompressed_path
             else:
                 logger.warning(
@@ -138,19 +138,14 @@ class Gene2GoReaderDataset(AbstractVersionedDataset[Gene2GoReader, Gene2GoReader
                         load_path, mode="rb", **self._fs_open_args_load
                     ) as compressed_file_obj:
                         # Use fsspec's open for writing to handle different protocols
-                        with self._fs.open(
-                            decompressed_path, mode="wt", encoding="utf-8"
-                        ) as outfile:
+                        with self._fs.open(decompressed_path, mode="wb") as outfile:
                             # Decompress and write
-                            with gzip.open(
-                                compressed_file_obj, "rt", encoding="utf-8"
-                            ) as infile:
+                            with gzip.open(compressed_file_obj, "rb") as infile:
                                 outfile.write(infile.read())
 
-                    logger.info(f"Successfully decompressed to '{decompressed_path}'")
+                    logger.debug(f"Successfully decompressed to '{decompressed_path}'")
                     target_path = decompressed_path
                 except Exception as e:
-                    # Catch potential IOErrors during write or other exceptions
                     raise DatasetError(
                         f"Failed to decompress '{load_path}' to '{decompressed_path}': {e}"
                     ) from e

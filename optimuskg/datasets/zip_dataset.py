@@ -106,7 +106,7 @@ class ZipDataset(AbstractDataset[zipfile.ZipFile, pl.DataFrame]):
             name.endswith(suffix) for suffix in self._ignored_suffixes
         )
 
-    def _load(self) -> pl.DataFrame:
+    def _load(self) -> Any:
         with zipfile.ZipFile(self._filepath) as zipped:
             namelist = zipped.namelist()
             namelist = [name for name in namelist if not self._is_ignored(name)]
@@ -122,7 +122,9 @@ class ZipDataset(AbstractDataset[zipfile.ZipFile, pl.DataFrame]):
 
             with zipped.open(target_filename) as zipped_file:
                 with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                    temp_file.write(zipped_file.read())
+                    temp_file.write(
+                        zipped_file.read()
+                    )  # TODO: Maybe this is too slow for large files?
                     temp_filepath = temp_file.name
 
                 try:
