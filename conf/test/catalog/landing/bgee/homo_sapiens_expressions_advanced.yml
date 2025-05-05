@@ -1,9 +1,10 @@
 landing.bgee.homo_sapiens_expressions_advanced:
   type: polars.CSVDataset
-  filepath: "tests/stub_data/landing/bgee/Homo_sapiens_expr_advanced.tsv"
+  filepath: "tests/stub_data/landing/bgee/Homo_sapiens_expr_advanced.tsv.gz"
   load_args:
     separator: "\t"
     infer_schema: false
+    null_values: ["NA"]
     schema:
       # Note: The raw data has some column names with extra spaces. We keep them as is.
       "Gene ID": "${pl:String}"

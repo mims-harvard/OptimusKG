@@ -1,6 +1,6 @@
 landing.ctd.ctd_exposure_events:
   type: polars.CSVDataset
-  filepath: "tests/stub_data/landing/ctd/CTD_exposure_events.csv"
+  filepath: "tests/stub_data/landing/ctd/CTD_exposure_events.csv.gz"
   load_args:
     has_header: false
     new_columns:

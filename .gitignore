@@ -156,5 +156,5 @@ venv.bak/
 .volumes/
 
 # stub data
-tests/stub_data/
-!tests/stub_data/landing/
+!tests/stub_data/
+tests/stub_data/bronze/**
