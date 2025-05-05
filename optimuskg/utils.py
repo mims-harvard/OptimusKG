@@ -217,25 +217,4 @@ def get_dataset_path(ds_name: str) -> Path:
         raise ValueError(f"Could not determine path for {ds_name}")
 
     path = Path(path_str)
-    return path  # TODO: remove below code
-
-    if isinstance(ds, PartitionedDataset):
-        if not path.exists():
-            raise FileNotFoundError(
-                f"Expected directory path for {ds_name} does not exist: {path}"
-            )
-        if not path.is_dir():
-            raise NotADirectoryError(
-                f"Expected directory for {ds_name} but found non-directory path {path}"
-            )
-    else:
-        if not path.exists():
-            raise FileNotFoundError(
-                f"Expected file path for {ds_name} does not exist: {path}"
-            )
-        if not path.is_file():
-            raise IsADirectoryError(
-                f"Expected file for {ds_name} but found directory path {path}"
-            )
-
     return path

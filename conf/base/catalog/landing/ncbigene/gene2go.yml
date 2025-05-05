@@ -7,4 +7,4 @@ landing.ncbigene.gene2go:
     checksum: "4212c257b8535c917b9d2338825c7dfe"
     origin:
       provider: http
-      url: "https://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2go.gz" # Gene2GoReaderDataset handles gzip files
+      url: "https://ftp.ncbi.nlm.nih.gov/gene/DATA/gene2go.gz" # NOTE: Gene2GoReaderDataset handles gzip files

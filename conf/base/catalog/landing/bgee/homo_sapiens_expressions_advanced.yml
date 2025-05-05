@@ -6,7 +6,8 @@ landing.bgee.homo_sapiens_expressions_advanced:
     infer_schema: false
     null_values: ["NA"]
     schema:
-      # Note: Updated schema based on newer Bgee format. Types inferred.
+      # Note: The raw data has some column names with extra spaces. We keep them as is.
+      # TODO: Check types of columns
       "Gene ID": "${pl:String}"
       "Gene name": "${pl:String}"
       "Anatomical entity ID": "${pl:String}"
