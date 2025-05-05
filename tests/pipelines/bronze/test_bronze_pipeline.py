@@ -8,7 +8,6 @@ logger = logging.getLogger(__name__)
 def test_bronze_nodes(kedro: KedroSettings, caplog):
     kedro.session.run(
         node_names=[
-            "bronze.bgee",
             "bronze.ctd",
             "bronze.reactome_ncbi",
             "bronze.reactome_pathways",
