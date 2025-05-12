@@ -56,4 +56,5 @@ sysbio_node = node(
     },
     outputs="opentargets.evidence.sysbio",
     name="sysbio",
+    tags=["silver"],
 )

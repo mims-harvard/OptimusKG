@@ -107,4 +107,5 @@ drug_protein_node = node(
     },
     outputs="drugbank.drug_protein",
     name="drug_protein",
+    tags=["bronze"],
 )

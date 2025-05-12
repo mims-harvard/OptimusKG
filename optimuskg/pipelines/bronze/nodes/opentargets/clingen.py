@@ -20,4 +20,5 @@ clingen_node = node(
     inputs={"clingen": "landing.opentargets.evidence.clingen"},
     outputs="opentargets.evidence.clingen",
     name="clingen",
+    tags=["bronze"],
 )

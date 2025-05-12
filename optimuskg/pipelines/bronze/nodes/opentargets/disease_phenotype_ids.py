@@ -18,4 +18,5 @@ disease_phenotype_ids_node = node(
     },
     outputs="opentargets.disease_phenotype_ids",
     name="disease_phenotype_ids",
+    tags=["bronze"],
 )

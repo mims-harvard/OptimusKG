@@ -83,3 +83,7 @@ neo4j: ##@ Run the Neo4j container
 .PHONY: jupyterlab
 jupyterlab: ##@ Run jupyterlab
 	@uv run kedro jupyter lab
+
+.PHONY: kedro-viz
+kedro-viz: ##@ Run kedro viz
+	@uv run kedro viz --include-hooks

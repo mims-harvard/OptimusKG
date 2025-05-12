@@ -20,4 +20,5 @@ expression_atlas_node = node(
     inputs={"expression_atlas": "landing.opentargets.evidence.expression_atlas"},
     outputs="opentargets.evidence.expression_atlas",
     name="expression_atlas",
+    tags=["bronze"],
 )

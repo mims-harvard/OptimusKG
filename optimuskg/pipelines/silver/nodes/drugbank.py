@@ -20,4 +20,5 @@ drugbank_node = node(
         "drugbank.drug_protein",
     ],
     name="drugbank",
+    tags=["silver"],
 )

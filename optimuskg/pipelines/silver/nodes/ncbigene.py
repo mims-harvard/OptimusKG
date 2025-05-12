@@ -16,4 +16,5 @@ ncbigene_node = node(
     },
     outputs="ncbigene.protein_go_associations",
     name="ncbigene",
+    tags=["silver"],
 )

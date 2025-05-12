@@ -55,4 +55,5 @@ intogen_node = node(
     },
     outputs="opentargets.evidence.intogen",
     name="intogen",
+    tags=["silver"],
 )

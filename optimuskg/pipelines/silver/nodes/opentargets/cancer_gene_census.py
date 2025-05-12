@@ -54,4 +54,5 @@ cancer_gene_census_node = node(
     },
     outputs="opentargets.evidence.cancer_gene_census",
     name="cancer_gene_census",
+    tags=["silver"],
 )

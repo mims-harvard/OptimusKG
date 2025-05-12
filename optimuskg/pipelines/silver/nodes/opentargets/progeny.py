@@ -54,4 +54,5 @@ progeny_node = node(
     },
     outputs="opentargets.evidence.progeny",
     name="progeny",
+    tags=["silver"],
 )

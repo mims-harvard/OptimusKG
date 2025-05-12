@@ -56,4 +56,5 @@ gene_burden_node = node(
     },
     outputs="opentargets.evidence.gene_burden",
     name="gene_burden",
+    tags=["silver"],
 )

@@ -77,4 +77,5 @@ crispr_screen_node = node(
     },
     outputs="opentargets.evidence.crispr_screen",
     name="crispr_screen",
+    tags=["silver"],
 )

@@ -13,4 +13,5 @@ drugcentral_node = node(
     },
     outputs="drugcentral.drug_disease",
     name="drugcentral",
+    tags=["bronze"],
 )

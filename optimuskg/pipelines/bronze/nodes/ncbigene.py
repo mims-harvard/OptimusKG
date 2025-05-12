@@ -6,7 +6,7 @@ from kedro.pipeline import node
 def process_gene2go(
     gene2go: Gene2GoReader,
 ) -> pl.DataFrame:
-    ns2assc_has1 = gene2go.get_ns2assc()  # {'BP': ..., 'CC': ..., 'MF': ...}
+    ns2assc_has1 = gene2go.get_ns2assc()
 
     # Collect associations into a list of (gene, go_id, type) where go_term_type is one of: 'molecular_function', 'biological_process', 'cellular_component'
     namespace_mapping = {
@@ -44,4 +44,5 @@ gene2go_node = node(
     inputs={"gene2go": "landing.ncbigene.gene2go"},
     outputs="ncbigene.protein_go_associations",
     name="gene2go",
+    tags=["bronze"],
 )

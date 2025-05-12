@@ -61,4 +61,5 @@ genomics_england_node = node(
     },
     outputs="opentargets.evidence.genomics_england",
     name="genomics_england",
+    tags=["silver"],
 )

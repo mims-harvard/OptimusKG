@@ -13,4 +13,5 @@ gene_names_node = node(
     inputs={"gene_names": "landing.gene_names.gene_names"},
     outputs="gene_names.gene_names",
     name="gene_names",
+    tags=["bronze"],
 )

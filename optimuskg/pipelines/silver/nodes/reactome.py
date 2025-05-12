@@ -26,4 +26,5 @@ reactome_node = node(
         "reactome.reactome_terms",
     ],
     name="reactome",
+    tags=["silver"],
 )

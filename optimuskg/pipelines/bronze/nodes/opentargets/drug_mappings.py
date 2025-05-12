@@ -62,4 +62,5 @@ drug_mappings_node = node(
     },
     outputs="opentargets.drug_mappings",
     name="drug_mappings",
+    tags=["bronze"],
 )

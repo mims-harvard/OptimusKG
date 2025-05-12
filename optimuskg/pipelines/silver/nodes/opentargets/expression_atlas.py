@@ -69,4 +69,5 @@ expression_atlas_node = node(
     },
     outputs="opentargets.evidence.expression_atlas",
     name="expression_atlas",
+    tags=["silver"],
 )

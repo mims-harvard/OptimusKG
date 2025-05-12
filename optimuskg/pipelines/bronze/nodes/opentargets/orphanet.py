@@ -20,4 +20,5 @@ orphanet_node = node(
     inputs={"orphanet": "landing.opentargets.evidence.orphanet"},
     outputs="opentargets.evidence.orphanet",
     name="orphanet",
+    tags=["bronze"],
 )

@@ -13,4 +13,5 @@ bgee_node = node(
     inputs={"gene_expressions_in_anatomy": "bronze.bgee.gene_expressions_in_anatomy"},
     outputs="bgee.gene_expressions_in_anatomy",
     name="bgee",
+    tags=["silver"],
 )

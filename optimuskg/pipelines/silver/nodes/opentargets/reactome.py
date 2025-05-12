@@ -59,4 +59,5 @@ ot__reactome_node = node(
     },
     outputs="opentargets.evidence.reactome",
     name="ot__reactome",  # TODO: add "ot__" prefix to all opentargets nodes (in bronze and silver) to avoid clashing with other names
+    tags=["silver"],
 )

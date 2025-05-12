@@ -20,4 +20,5 @@ crispr_screen_node = node(
     inputs={"crispr_screen": "landing.opentargets.evidence.crispr_screen"},
     outputs="opentargets.evidence.crispr_screen",
     name="crispr_screen",
+    tags=["bronze"],
 )

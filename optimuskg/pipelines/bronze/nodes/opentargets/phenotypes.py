@@ -26,4 +26,5 @@ phenotypes_node = node(
     },
     outputs="opentargets.phenotypes",
     name="phenotypes",
+    tags=["bronze"],
 )

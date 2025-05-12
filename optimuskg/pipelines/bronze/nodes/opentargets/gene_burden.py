@@ -20,4 +20,5 @@ gene_burden_node = node(
     inputs={"gene_burden": "landing.opentargets.evidence.gene_burden"},
     outputs="opentargets.evidence.gene_burden",
     name="gene_burden",
+    tags=["bronze"],
 )

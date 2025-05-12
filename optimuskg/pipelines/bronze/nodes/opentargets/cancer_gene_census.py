@@ -20,4 +20,5 @@ cancer_gene_census_node = node(
     inputs={"cancer_gene_census": "landing.opentargets.evidence.cancer_gene_census"},
     outputs="opentargets.evidence.cancer_gene_census",
     name="cancer_gene_census",
+    tags=["bronze"],
 )

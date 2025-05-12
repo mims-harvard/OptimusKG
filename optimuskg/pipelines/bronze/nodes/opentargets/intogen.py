@@ -20,4 +20,5 @@ intogen_node = node(
     inputs={"intogen": "landing.opentargets.evidence.intogen"},
     outputs="opentargets.evidence.intogen",
     name="intogen",
+    tags=["bronze"],
 )

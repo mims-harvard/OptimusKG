@@ -59,4 +59,5 @@ disease_to_phenotype_node = node(
     },
     outputs="opentargets.disease_to_phenotype",
     name="disease_to_phenotype",
+    tags=["silver"],
 )

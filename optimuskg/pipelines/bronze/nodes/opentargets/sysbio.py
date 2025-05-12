@@ -20,4 +20,5 @@ sysbio_node = node(
     inputs={"sysbio": "landing.opentargets.evidence.sysbio"},
     outputs="opentargets.evidence.sysbio",
     name="sysbio",
+    tags=["bronze"],
 )

@@ -13,4 +13,5 @@ drugcentral_node = node(
     inputs={"drug_disease": "bronze.drugcentral.drug_disease"},
     outputs="drugcentral.drug_disease",
     name="drugcentral",
+    tags=["silver"],
 )

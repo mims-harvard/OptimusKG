@@ -13,4 +13,5 @@ ctd_node = node(
     inputs={"ctd_exposure_events": "landing.ctd.ctd_exposure_events"},
     outputs="ctd.ctd_exposure_events",
     name="ctd",
+    tags=["bronze"],
 )

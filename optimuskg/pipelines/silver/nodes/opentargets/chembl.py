@@ -114,4 +114,5 @@ chembl_node = node(
         "opentargets.evidence.chembl_drug_gene",
     ],
     name="chembl",
+    tags=["silver"],
 )

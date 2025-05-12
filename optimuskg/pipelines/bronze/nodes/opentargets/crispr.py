@@ -20,4 +20,5 @@ crispr_node = node(
     inputs={"crispr": "landing.opentargets.evidence.crispr"},
     outputs="opentargets.evidence.crispr",
     name="crispr",
+    tags=["bronze"],
 )

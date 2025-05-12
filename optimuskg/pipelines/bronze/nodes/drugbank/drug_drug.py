@@ -43,4 +43,5 @@ drug_drug_node = node(
     },
     outputs="drugbank.drug_drug",
     name="drug_drug",
+    tags=["bronze"],
 )
