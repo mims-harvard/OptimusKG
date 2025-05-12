@@ -5,8 +5,9 @@ services:
         ports:
             - 5432:5432
         restart: unless-stopped
-        volumes:
-            - .volumes/:/var/lib/postgresql/data
+        # NOTE: A priori, we don't need to persist the database in disk.
+        # volumes:
+        #     - .volumes/:/var/lib/postgresql/data
         environment:
             POSTGRES_USER: optimuskg
             POSTGRES_PASSWORD: optimuskg

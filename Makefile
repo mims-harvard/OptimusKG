@@ -17,13 +17,12 @@ help: ##@ (Default) List available commands with their descriptions
 
 .PHONY: .uv
 .uv: ##@ Check that uv is installed
-	uv --version || echo 'Please install uv: https://docs.astral.sh/uv/getting-started/installation/'
+	@uv --version || echo 'Please install uv: https://docs.astral.sh/uv/getting-started/installation/'
 
 .PHONY: .pre-commit
 .pre-commit: ##@ Setup pre-commit hooks for the project
-	uv run pre-commit -V || (echo 'Please install pre-commit: https://pre-commit.com/' && exit 1)
-	uv run pre-commit install
-
+	@uv run pre-commit -V || (echo 'Please install pre-commit: https://pre-commit.com/' && exit 1)
+	@uv run pre-commit install
 
 .PHONY: format
 format: ##@ Format code
