@@ -50,7 +50,7 @@ landing.drugcentral.psql_dump:
     ) AS drug_disease ON structures.id = drug_disease.struct_id
   db_name: "drugcentral"
   metadata:
-    checksum: "4fd9df6a9e1d2bce130d933ac2984f2d"
+    checksum: "67f34af47af1857433c9bea21ba8b761"
     origin:
       provider: http
       url: "https://unmtid-dbs.net/download/drugcentral.dump.11012023.sql.gz" # TODO: Make the SQLDumpQueryDataset handle gzip files

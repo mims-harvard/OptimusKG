@@ -96,7 +96,7 @@ landing.ctd.ctd_exposure_events:
       "enrollmentendyear": "${pl:String}"
       "studyfactors": "${pl:String}"
   metadata:
-    checksum: "94eef74cdd972f9c2811d5aac829226c"
+    checksum: "2db0ed29739ee5bd554a2e050204a794"
     origin:
       provider: http
       url: "https://ctdbase.org/reports/CTD_exposure_events.csv.gz" # NOTE: polars can handle gzip files
