@@ -26,6 +26,8 @@ dependencies = [
   "psycopg2-binary>=2.9.10",
   "pyarrow>=19.0.0",
   "sqlalchemy>=2.0.37",
+  "kedro-viz>=11.0.1",
+  "owlready2>=0.47",
 ]
 
 [dependency-groups]
@@ -53,9 +55,6 @@ packages = ["optimuskg"]
 
 [tool.hatch.envs.default]
 path = ".venv"
-
-[tool.uv]
-required-version = ">=0.5.18"
 
 [tool.kedro]
 package_name = "optimuskg"

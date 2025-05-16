@@ -4,7 +4,7 @@ from . import nodes
 
 
 def create_pipeline(**kwargs):
-    return None  # TODO: This is for ignoring the golden pipeline in the execution
+    # return None  # TODO: This is for ignoring the golden pipeline in the execution
     return pipeline(
         [getattr(nodes, name) for name in nodes.__all__],
         namespace="gold",
