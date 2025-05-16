@@ -1,5 +1,13 @@
 bronze.ncbigene.protein_go_associations:
   type: polars.CSVDataset
   filepath: "data/bronze/ncbigene/protein_go_associations.csv"
+  load_args:
+    infer_schema: false
+    schema:
+      "ncbi_gene_id": "${pl:Utf8}"
+      "go_term_id": "${pl:Utf8}"
+      "go_term_type": "${pl:Utf8}"
   metadata:
     checksum: "16b1e4b1572b2d174219493a44ffbefc"
+    kedro-viz:
+      layer: bronze

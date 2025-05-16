@@ -20,3 +20,5 @@ landing.drugbank.vocabulary:
       provider: drugbank
       version: "5-1-13"
       dataset: "all-drugbank-vocabulary"
+    kedro-viz:
+      layer: landing

@@ -1,6 +1,6 @@
-bronze.gene_names.gene_names:
+bronze.gene_names.protein_names:
   type: polars.CSVDataset
-  filepath: "tests/stub_data/bronze/gene_names/gene_names.csv"
+  filepath: "tests/stub_data/bronze/gene_names/protein_names.csv"
   load_args:
     infer_schema: false
   metadata:

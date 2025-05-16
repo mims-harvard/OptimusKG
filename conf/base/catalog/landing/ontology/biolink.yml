@@ -9,3 +9,5 @@ landing.ontology.biolink:
       provider: bioontology
       acronym: "BIOLINK"
       version: "68"
+    kedro-viz:
+      layer: landing

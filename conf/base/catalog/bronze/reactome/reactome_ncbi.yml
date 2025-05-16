@@ -11,3 +11,5 @@ bronze.reactome.reactome_ncbi:
       "evidence_code": "${pl:String}"
   metadata:
     checksum: "55c501c89a1515c5748131f501c41d58"
+    kedro-viz:
+      layer: bronze

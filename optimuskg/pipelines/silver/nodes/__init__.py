@@ -1,9 +1,19 @@
 from .bgee import bgee_node
-from .ctd import ctd_node
-from .drugbank import drugbank_node
+from .ctd import (
+    ctd_exposure_exposure_interactions_node,
+    ctd_exposure_protein_interactions_node,
+)
+from .drugbank import (
+    drugbank_drug_drug_interactions_node,
+    drugbank_drug_protein_interactions_node,
+)
 from .drugcentral import drugcentral_node
 from .gene_names import gene_names_node
-from .ncbigene import ncbigene_node
+from .ncbigene import (
+    protein_biological_process_interactions_node,
+    protein_cellular_component_interactions_node,
+    protein_molecular_function_interactions_node,
+)
 from .opentargets import (
     cancer_gene_census_node,
     chembl_node,
@@ -24,7 +34,10 @@ from .opentargets import (
     sysbio_node,
     uniprot_literature_node,
 )
-from .reactome import reactome_node
+from .reactome import (
+    pathway_pathway_interactions_node,
+    pathway_protein_interactions_node,
+)
 
 __all__ = [
     "bgee_node",
@@ -46,10 +59,15 @@ __all__ = [
     "sysbio_node",
     "uniprot_literature_node",
     "opentargets_edges_node",
-    "ctd_node",
+    "ctd_exposure_exposure_interactions_node",
+    "ctd_exposure_protein_interactions_node",
     "drugcentral_node",
     "gene_names_node",
-    "ncbigene_node",
-    "reactome_node",
-    "drugbank_node",
+    "protein_biological_process_interactions_node",
+    "protein_cellular_component_interactions_node",
+    "protein_molecular_function_interactions_node",
+    "pathway_pathway_interactions_node",
+    "pathway_protein_interactions_node",
+    "drugbank_drug_drug_interactions_node",
+    "drugbank_drug_protein_interactions_node",
 ]

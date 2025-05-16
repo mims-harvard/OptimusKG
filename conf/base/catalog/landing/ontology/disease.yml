@@ -9,3 +9,5 @@ landing.ontology.disease:
       provider: bioontology
       acronym: DOID
       version: "656"
+    kedro-viz:
+      layer: landing

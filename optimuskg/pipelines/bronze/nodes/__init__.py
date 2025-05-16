@@ -4,6 +4,7 @@ from .drugbank import drug_drug_node, drug_protein_node
 from .drugcentral import drugcentral_node
 from .gene_names import gene_names_node
 from .ncbigene import gene2go_node
+from .ontology import go_plus_node
 from .opentargets import (
     cancer_gene_census_node,
     chembl_node,
@@ -64,4 +65,5 @@ __all__ = [
     "disease_phenotype_ids_node",
     "disease_to_phenotype_node",
     "orphanet_node",
+    "go_plus_node",
 ]

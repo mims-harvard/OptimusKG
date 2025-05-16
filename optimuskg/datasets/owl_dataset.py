@@ -160,7 +160,7 @@ class OWLDataset(AbstractVersionedDataset[pd.DataFrame, LoadedOWLDataset]):
             # so we don't join that back to the filepath;
             # storage_options also don't work with local paths
             return LoadedOWLDataset(
-                # pd.read_xml(load_path_str, **self._load_args), # FIX: Old code
+                # pd.read_xml(load_path_str, **self._load_args), # TODO: fix old code
                 "",
                 load_path_str,
             )
@@ -169,7 +169,7 @@ class OWLDataset(AbstractVersionedDataset[pd.DataFrame, LoadedOWLDataset]):
         return LoadedOWLDataset(
             # pd.read_xml(
             #     load_path_str, storage_options=self._storage_options, **self._load_args
-            # ), # FIX: Old code
+            # ), # TODO: fix old code
             "",
             load_path_str,
         )

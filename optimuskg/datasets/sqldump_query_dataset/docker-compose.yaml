@@ -6,8 +6,8 @@ services:
             - 5432:5432
         restart: unless-stopped
         # NOTE: We don't need to persist the database because we only query it once.
-        # volumes:
-        #     - .volumes/:/var/lib/postgresql/data
+        volumes:
+            - .volumes/:/var/lib/postgresql/data
         environment:
             POSTGRES_USER: optimuskg
             POSTGRES_PASSWORD: optimuskg

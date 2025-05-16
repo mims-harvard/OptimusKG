@@ -14,7 +14,9 @@ landing.gene_names.gene_names:
       "UniProt ID(supplied by UniProt)": "${pl:String}"
       "OMIM ID(supplied by OMIM)": "${pl:String}"
   metadata:
-    checksum: "1761eb5f524feb84531f174f2baf0f80"
+    checksum: "c5bd286973e75cd763ff289543ad00f5"
     origin:
       provider: "http"
       url: "https://www.genenames.org/cgi-bin/download/custom?col=gd_app_sym&col=gd_app_name&col=gd_pub_acc_ids&col=gd_pub_refseq_ids&col=gd_pub_eg_id&col=md_eg_id&col=md_prot_id&col=md_mim_id&status=Approved&hgnc_dbtag=on&order_by=gd_app_sym_sort&format=text&submit=submit"
+    kedro-viz:
+      layer: landing

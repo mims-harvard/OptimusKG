@@ -1,6 +1,10 @@
+import logging
+
 import polars as pl
 from goatools.anno.genetogo_reader import Gene2GoReader
 from kedro.pipeline import node
+
+logger = logging.getLogger(__name__)
 
 
 def process_gene2go(

@@ -9,3 +9,5 @@ landing.ontology.uber_anatomy:
       provider: bioontology
       acronym: UBERON
       version: "348"
+    kedro-viz:
+      layer: landing

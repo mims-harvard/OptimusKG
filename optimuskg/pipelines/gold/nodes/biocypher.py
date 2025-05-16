@@ -5,11 +5,13 @@ from biocypher import BioCypher
 from kedro.pipeline import node
 
 from optimuskg.datasets.owl_dataset import LoadedOWLDataset
+from optimuskg.pipelines.gold.adapter import adapter_factory
 
 logger = logging.getLogger(__name__)
 
 
 def process_biocypher(  # noqa: PLR0913
+    # Ontologies
     biolink_ontology: LoadedOWLDataset,
     disease_ontology: LoadedOWLDataset,
     gene_ontology: LoadedOWLDataset,
@@ -17,6 +19,17 @@ def process_biocypher(  # noqa: PLR0913
     mondo_ontology: LoadedOWLDataset,
     orphanet_ontology: LoadedOWLDataset,
     uberon_ontology: LoadedOWLDataset,
+    # Data
+    gene_expressions_in_anatomy: pl.DataFrame,
+    ctd_exposure_protein_interactions: pl.DataFrame,
+    ctd_exposure_exposure_interactions: pl.DataFrame,
+    drug_drug_interactions: pl.DataFrame,
+    drug_protein_interactions: pl.DataFrame,
+    protein_biological_process_interactions: pl.DataFrame,
+    protein_cellular_component_interactions: pl.DataFrame,
+    protein_molecular_function_interactions: pl.DataFrame,
+    pathway_pathway_interactions: pl.DataFrame,
+    pathway_protein_interactions: pl.DataFrame,
 ) -> pl.DataFrame:
     bc = BioCypher(
         head_ontology={
@@ -43,12 +56,12 @@ def process_biocypher(  # noqa: PLR0913
             #     "tail_join_node": "human disease",
             #     "merge_nodes": False,
             # },
-            "mondo": {
-                "url": mondo_ontology.filepath,
-                "head_join_node": "disease",
-                "tail_join_node": "human disease",
-                "merge_nodes": False,
-            },
+            # "mondo": { # NOTE: Mondo is mapping OK
+            #     "url": mondo_ontology.filepath,
+            #     "head_join_node": "disease",
+            #     "tail_join_node": "human disease",
+            #     "merge_nodes": False,
+            # },
             # "ordo": {
             #     "url": orphanet_ontology.filepath,
             #     "head_join_node": "disease",
@@ -64,14 +77,46 @@ def process_biocypher(  # noqa: PLR0913
             # },
         },
     )
+
+    bgee_adapter = adapter_factory(gene_expressions_in_anatomy)
+    ctd_adapters = [
+        adapter_factory(ctd_exposure_protein_interactions),
+        adapter_factory(ctd_exposure_exposure_interactions),
+    ]
+    drugbank_adapters = [
+        adapter_factory(drug_drug_interactions),
+        adapter_factory(drug_protein_interactions),
+    ]
+    ncbigene_adapters = [
+        adapter_factory(protein_biological_process_interactions),
+        adapter_factory(protein_cellular_component_interactions),
+        adapter_factory(protein_molecular_function_interactions),
+    ]
+    reactome_adapters = [
+        adapter_factory(pathway_pathway_interactions),
+        adapter_factory(pathway_protein_interactions),
+    ]
+
+    # TODO: Add adapters for other datasets (DrugCental, Opentargets)
+
+    adapters = [
+        bgee_adapter,
+        *ctd_adapters,
+        *drugbank_adapters,
+        *ncbigene_adapters,
+        *reactome_adapters,
+    ]
+
+    for adapter in adapters:
+        bc.add_nodes(adapter.nodes())
+        bc.add_edges(adapter.edges())
+
     try:
-        bc.show_ontology_structure(
-            full=True,
-            to_disk="data/gold/neo4j",
-        )
+        kg = bc.to_df()
+        logger.info(f"KG: {kg}")
+        # kg.to_csv("data/gold/neo4j/kg.csv", index=False)
     except Exception as e:
-        # TODO: Remove this once we have a way to handle this error
-        logger.exception(f"Error showing ontology structure... skipping: {e}")
+        logger.exception(f"Error writing graph data to disk: {e}")
         raise
     return pl.DataFrame()
 
@@ -79,6 +124,7 @@ def process_biocypher(  # noqa: PLR0913
 biocypher_node = node(
     process_biocypher,
     inputs={
+        # Ontologies
         "biolink_ontology": "landing.ontology.biolink",
         "disease_ontology": "landing.ontology.disease",
         "gene_ontology": "landing.ontology.gene",
@@ -86,6 +132,17 @@ biocypher_node = node(
         "mondo_ontology": "landing.ontology.mondo",
         "orphanet_ontology": "landing.ontology.orphanet",
         "uberon_ontology": "landing.ontology.uber_anatomy",
+        # Adapters
+        "gene_expressions_in_anatomy": "silver.bgee.gene_expressions_in_anatomy",
+        "ctd_exposure_protein_interactions": "silver.ctd.ctd_exposure_protein_interactions",
+        "ctd_exposure_exposure_interactions": "silver.ctd.ctd_exposure_exposure_interactions",
+        "drug_drug_interactions": "silver.drugbank.drug_drug",
+        "drug_protein_interactions": "silver.drugbank.drug_protein",
+        "protein_biological_process_interactions": "silver.ncbigene.protein_biological_process_interactions",
+        "protein_cellular_component_interactions": "silver.ncbigene.protein_cellular_component_interactions",
+        "protein_molecular_function_interactions": "silver.ncbigene.protein_molecular_function_interactions",
+        "pathway_pathway_interactions": "silver.reactome.pathway_pathway_interactions",
+        "pathway_protein_interactions": "silver.reactome.pathway_protein_interactions",
     },
     outputs="biocypher_graph",
     name="biocypher",

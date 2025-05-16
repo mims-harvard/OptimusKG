@@ -8,3 +8,5 @@ bronze.opentargets.disease_to_phenotype:
     lines: true
   metadata:
     checksum: "b565ef721ac03d6d4511ccd3de47d5a6"
+    kedro-viz:
+      layer: bronze
