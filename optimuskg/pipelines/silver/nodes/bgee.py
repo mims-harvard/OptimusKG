@@ -20,7 +20,7 @@ def process_bgee(
             .otherwise(pl.lit("expression absent"))
             .alias("display_relation"),
             pl.col("gene_id").alias("x_id"),
-            pl.lit("gene/protein").alias("x_type"),
+            pl.lit("gene").alias("x_type"),
             pl.col("gene_name").alias("x_name"),
             pl.lit("BGEE").alias("x_source"),
             pl.col("anatomy_id").alias("y_id"),

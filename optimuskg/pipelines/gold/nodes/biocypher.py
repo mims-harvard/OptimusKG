@@ -33,21 +33,16 @@ def process_biocypher(  # noqa: PLR0913
 ) -> pl.DataFrame:
     bc = BioCypher(
         head_ontology={
-            "url": biolink_ontology.filepath,
+            "url": "https://github.com/biolink/biolink-model/raw/v3.2.1/biolink-model.owl.ttl",
             "root_node": "entity",
             "format": "ttl",
         },
+        biocypher_config_path="conf/base/biocypher/biocypher_config.yaml",
         tail_ontologies={
             # "doid": {
             #     "url": disease_ontology.filepath,
             #     "head_join_node": "disease",
             #     "tail_join_node": "disease",
-            #     "merge_nodes": False,
-            # },
-            # "go": {
-            #     "url": gene_ontology.filepath,
-            #     "head_join_node": "disease",
-            #     "tail_join_node": "human disease",
             #     "merge_nodes": False,
             # },
             # "hpo": {
@@ -67,13 +62,6 @@ def process_biocypher(  # noqa: PLR0913
             #     "head_join_node": "disease",
             #     "tail_join_node": "human disease",
             #     "merge_nodes": False,
-            # },
-            # "uberon": {
-            #     "url": uberon_ontology.filepath,
-            #     "head_join_node": "disease",
-            #     "tail_join_node": "human disease",
-            #     "merge_nodes": False,
-            #     "format": "owl",
             # },
         },
     )
@@ -101,23 +89,21 @@ def process_biocypher(  # noqa: PLR0913
 
     adapters = [
         bgee_adapter,
-        *ctd_adapters,
-        *drugbank_adapters,
-        *ncbigene_adapters,
-        *reactome_adapters,
+        # *ctd_adapters,
+        # *drugbank_adapters,
+        # *ncbigene_adapters,
+        # *reactome_adapters,
     ]
 
-    for adapter in adapters:
-        bc.add_nodes(adapter.nodes())
-        bc.add_edges(adapter.edges())
-
     try:
-        kg = bc.to_df()
-        logger.info(f"KG: {kg}")
-        # kg.to_csv("data/gold/neo4j/kg.csv", index=False)
+        for adapter in adapters:
+            bc.write_nodes(adapter.nodes())
+            bc.write_edges(adapter.edges())
+        bc.write_import_call()
     except Exception as e:
         logger.exception(f"Error writing graph data to disk: {e}")
         raise
+
     return pl.DataFrame()
 
 
@@ -145,5 +131,6 @@ biocypher_node = node(
         "pathway_protein_interactions": "silver.reactome.pathway_protein_interactions",
     },
     outputs="biocypher_graph",
+    tags=["gold"],
     name="biocypher",
 )

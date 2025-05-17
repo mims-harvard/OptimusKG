@@ -8,7 +8,7 @@ landing.ontology.gene:
     origin:
       provider: bioontology
       acronym: GO-PLUS
-      version: "701"
+      version: "703"
     kedro-viz:
       layer: landing
 

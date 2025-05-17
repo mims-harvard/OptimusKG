@@ -78,6 +78,7 @@ rm-data: ##@ Remove the data directory
 
 .PHONY: neo4j
 neo4j: ##@ Run the Neo4j container
+	# TODO: raplace cli entry for this
 	@docker compose up -d
 
 .PHONY: jupyterlab

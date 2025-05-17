@@ -2098,6 +2098,7 @@ dependencies = [
     { name = "lxml" },
     { name = "lxml-stubs" },
     { name = "notebook" },
+    { name = "owlready2" },
     { name = "pandas-stubs" },
     { name = "polars" },
     { name = "psycopg2-binary" },
@@ -2140,6 +2141,7 @@ requires-dist = [
     { name = "lxml", specifier = ">=5.3.0" },
     { name = "lxml-stubs", specifier = ">=0.5.1" },
     { name = "notebook" },
+    { name = "owlready2", specifier = ">=0.47" },
     { name = "pandas-stubs", specifier = ">=2.2.3.241126" },
     { name = "polars", specifier = ">=1.19.0" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
@@ -2215,6 +2217,12 @@ sdist = { url = "https://files.pythonhosted.org/packages/36/86/b585f53236dec60ab
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2c/ab/fc8290c6a4c722e5514d80f62b2dc4c4df1a68a41d1364e625c35990fcf3/overrides-7.7.0-py3-none-any.whl", hash = "sha256:c7ed9d062f78b8e4c1a7b70bd8796b35ead4d9f510227ef9c5dc7626c60d7e49", size = 17832 },
 ]
+
+[[package]]
+name = "owlready2"
+version = "0.47"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/6a/8b/6f0534ff7285e8d97e36a3838f88ffc8deb7cd0bc7b34f9f97d8bfdaae90/owlready2-0.47.tar.gz", hash = "sha256:af7e1d2205c0b5886d2e34397ab8c10ca29ff68c3dc3702d43393966ac7f6eb0", size = 27271190 }
 
 [[package]]
 name = "packaging"

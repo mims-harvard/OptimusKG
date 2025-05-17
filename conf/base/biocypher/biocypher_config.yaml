@@ -1,0 +1,31 @@
+biocypher:
+  # Required
+  dbms: neo4j
+  schema_config_path: conf/base/biocypher/schema_config.yaml
+  # offline: true
+  strict_mode: false
+  # Optional
+  debug: true
+  log_directory: biocypher-log
+  cache_directory: .biocypher_cache
+  output_directory: data/gold/
+  
+  tail_ontologies:
+    go:
+      url: "http://purl.obolibrary.org/obo/go.owl"
+      head_join_node: biological process # Biolink’s BiologicalProcess class is the umbrella for any process-oriented concept (e.g. signaling, metabolism, gene expression) 
+      tail_join_node: biological_process # GO’s biological_process node (GO:0008150) is the single root of all process terms in GO
+      merge_nodes: false
+
+    uberon:
+      url: "http://purl.obolibrary.org/obo/uberon.owl"
+      head_join_node: anatomical entity # Biolink’s AnatomicalEntity class is the umbrella for any anatomical concept (e.g. organ, tissue, cell)
+      tail_join_node: anatomical entity # UBERON’s anatomical entity node (UBERON:0001062) is the single root of all anatomical terms in UBERON
+      merge_nodes: false
+      
+neo4j:
+  database_name: neo4j
+  delimiter: '\t'
+  quote_character: '@'
+  array_delimiter: '|'
+  skip_bad_relationships: true

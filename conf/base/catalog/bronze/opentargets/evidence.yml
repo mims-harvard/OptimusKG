@@ -1,11 +1,14 @@
-bronze.opentargets.evidence.cancer_gene_census: &bronze_opentargets_evidence_args
+_bronze_opentargets_evidence_args: &bronze_opentargets_evidence_args
   type: pandas.JSONDataset
-  filepath: "data/bronze/opentargets/evidence/cancer_gene_census.jsonl"
   save_args:
     lines: true
     orient: records
   load_args:
     lines: true
+
+bronze.opentargets.evidence.cancer_gene_census:
+  <<: *bronze_opentargets_evidence_args
+  filepath: "data/bronze/opentargets/evidence/cancer_gene_census.jsonl"
   metadata:
     checksum: "d85377227fafa1dfbfe1f8b5e78e4e46"
 
