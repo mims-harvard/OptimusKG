@@ -1,6 +1,6 @@
 landing.drugcentral.psql_dump:
   type: optimuskg.datasets.SQLDumpQueryDataset
-  filepath: "data/landing/drugcentral/drugcentral-pgdump_20200918.sql"
+  filepath: "data/landing/drugcentral/drugcentral_dump.sql.gz"
   query: >
     SELECT DISTINCT
         structures.id AS structure_id,
@@ -53,4 +53,6 @@ landing.drugcentral.psql_dump:
     checksum: "67f34af47af1857433c9bea21ba8b761"
     origin:
       provider: http
-      url: "https://unmtid-dbs.net/download/drugcentral.dump.11012023.sql.gz" # TODO: Make the SQLDumpQueryDataset handle gzip files
+      url: "https://unmtid-dbs.net/download/drugcentral.dump.11012023.sql.gz"
+    kedro-viz:
+      layer: landing

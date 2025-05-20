@@ -25,6 +25,8 @@ landing.opentargets.evidence.cancer_gene_census:
     origin:
       <<: *common_opentargets_origin
       source_id: "cancer_gene_census"
+    kedro-viz:
+      layer: landing
 
 landing.opentargets.evidence.chembl:
   <<: *common_landing_opentargets_evidence_args
@@ -34,6 +36,8 @@ landing.opentargets.evidence.chembl:
     origin:
       <<: *common_opentargets_origin
       source_id: "chembl"
+    kedro-viz:
+      layer: landing
 
 landing.opentargets.evidence.clingen:
   <<: *common_landing_opentargets_evidence_args
@@ -43,6 +47,8 @@ landing.opentargets.evidence.clingen:
     origin:
       <<: *common_opentargets_origin
       source_id: "clingen"
+    kedro-viz:
+      layer: landing
 
 landing.opentargets.evidence.crispr:
   <<: *common_landing_opentargets_evidence_args
@@ -52,6 +58,8 @@ landing.opentargets.evidence.crispr:
     origin:
       <<: *common_opentargets_origin
       source_id: "crispr"
+    kedro-viz:
+      layer: landing
 
 landing.opentargets.evidence.crispr_screen:
   <<: *common_landing_opentargets_evidence_args
@@ -61,6 +69,8 @@ landing.opentargets.evidence.crispr_screen:
     origin:
       <<: *common_opentargets_origin
       source_id: "crispr_screen"
+    kedro-viz:
+      layer: landing
 
 landing.opentargets.evidence.expression_atlas:
   <<: *common_landing_opentargets_evidence_args
@@ -70,6 +80,8 @@ landing.opentargets.evidence.expression_atlas:
     origin:
       <<: *common_opentargets_origin
       source_id: "expression_atlas"
+    kedro-viz:
+      layer: landing
 
 landing.opentargets.evidence.gene_burden:
   <<: *common_landing_opentargets_evidence_args
@@ -79,6 +91,8 @@ landing.opentargets.evidence.gene_burden:
     origin:
       <<: *common_opentargets_origin
       source_id: "gene_burden"
+    kedro-viz:
+      layer: landing
 
 landing.opentargets.evidence.gene2phenotype:
   <<: *common_landing_opentargets_evidence_args
@@ -88,6 +102,8 @@ landing.opentargets.evidence.gene2phenotype:
     origin:
       <<: *common_opentargets_origin
       source_id: "gene2phenotype"
+    kedro-viz:
+      layer: landing
 
 landing.opentargets.evidence.genomics_england:
   <<: *common_landing_opentargets_evidence_args
@@ -97,6 +113,8 @@ landing.opentargets.evidence.genomics_england:
     origin:
       <<: *common_opentargets_origin
       source_id: "genomics_england"
+    kedro-viz:
+      layer: landing
 
 landing.opentargets.evidence.intogen:
   <<: *common_landing_opentargets_evidence_args
@@ -106,6 +124,8 @@ landing.opentargets.evidence.intogen:
     origin:
       <<: *common_opentargets_origin
       source_id: "intogen"
+    kedro-viz:
+      layer: landing
 
 landing.opentargets.evidence.orphanet:
   <<: *common_landing_opentargets_evidence_args
@@ -115,6 +135,8 @@ landing.opentargets.evidence.orphanet:
     origin:
       <<: *common_opentargets_origin
       source_id: "orphanet"
+    kedro-viz:
+      layer: landing
 
 landing.opentargets.evidence.progeny:
   <<: *common_landing_opentargets_evidence_args
@@ -124,6 +146,8 @@ landing.opentargets.evidence.progeny:
     origin:
       <<: *common_opentargets_origin
       source_id: "progeny"
+    kedro-viz:
+      layer: landing
 
 landing.opentargets.evidence.reactome:
   <<: *common_landing_opentargets_evidence_args
@@ -133,6 +157,8 @@ landing.opentargets.evidence.reactome:
     origin:
       <<: *common_opentargets_origin
       source_id: "reactome"
+    kedro-viz:
+      layer: landing
 
 landing.opentargets.evidence.slapenrich:
   <<: *common_landing_opentargets_evidence_args
@@ -142,6 +168,8 @@ landing.opentargets.evidence.slapenrich:
     origin:
       <<: *common_opentargets_origin
       source_id: "slapenrich"
+    kedro-viz:
+      layer: landing
 
 landing.opentargets.evidence.sysbio:
   <<: *common_landing_opentargets_evidence_args
@@ -151,6 +179,8 @@ landing.opentargets.evidence.sysbio:
     origin:
       <<: *common_opentargets_origin
       source_id: "sysbio"
+    kedro-viz:
+      layer: landing    
 
 landing.opentargets.evidence.uniprot_literature:
   <<: *common_landing_opentargets_evidence_args
@@ -160,3 +190,5 @@ landing.opentargets.evidence.uniprot_literature:
     origin:
       <<: *common_opentargets_origin
       source_id: "uniprot_literature"
+    kedro-viz:
+      layer: landing

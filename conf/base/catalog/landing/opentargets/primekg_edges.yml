@@ -10,3 +10,5 @@ landing.opentargets.primekg_edges:
       "y_index": "${pl:String}"
   metadata:
     checksum: "5298f2869a25173fdf1f3a5fe21ebe6f"
+    kedro-viz:
+      layer: landing

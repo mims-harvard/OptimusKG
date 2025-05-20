@@ -14,3 +14,5 @@ landing.reactome.reactome_pathways_relation:
     origin:
       provider: http
       url: "https://reactome.org/download/current/ReactomePathwaysRelation.txt"
+    kedro-viz:
+      layer: landing

@@ -1,3 +1,0 @@
-silver.reactome.reactome_relations:
-  type: polars.CSVDataset
-  filepath: "data/silver/reactome/reactome_relations.csv"

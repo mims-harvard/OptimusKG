@@ -27,3 +27,5 @@ landing.reactome.ncbi2_reactome:
       provider: http
       # TODO: Reactome versions are stored in https://zenodo.org/records/15126939, however you can't point to specific files, but rather _all_ the database files, which is ~5GB zipped vs ~29MG for this plain file.
       url: "https://reactome.org/download/current/NCBI2Reactome.txt"
+    kedro-viz:
+      layer: landing

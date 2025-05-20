@@ -1,13 +1,12 @@
 services:
    postgres:
         image: postgres:16.1
-        container_name: drugcentral_postgres
+        container_name: drugcentral_postgres # TODO: Replace drugcentral to generic postgres dataset name
         ports:
             - 5432:5432
         restart: unless-stopped
-        # NOTE: A priori, we don't need to persist the database in disk.
-        # volumes:
-        #     - .volumes/:/var/lib/postgresql/data
+        volumes:
+            - .volumes/:/var/lib/postgresql/data
         environment:
             POSTGRES_USER: optimuskg
             POSTGRES_PASSWORD: optimuskg

@@ -8,3 +8,5 @@ landing.ontology.mondo:
     origin:
       provider: http
       url: "http://purl.obolibrary.org/obo/mondo.owl"
+    kedro-viz:
+      layer: landing

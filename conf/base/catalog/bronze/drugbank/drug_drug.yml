@@ -3,3 +3,5 @@ bronze.drugbank.drug_drug:
   filepath: "data/bronze/drugbank/drug_drug.csv"
   metadata:
     checksum: "88e346e8462b167494dbcdc40fcb4a1e"
+    kedro-viz:
+      layer: bronze

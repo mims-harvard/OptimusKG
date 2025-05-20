@@ -1,3 +1,7 @@
 gold.biocypher_graph:
   type: polars.CSVDataset
   filepath: "data/gold/biocypher_graph.csv"
+  metadata:
+    checksum: "8076de699b6a489937178a6378c8ab8e"
+    kedro-viz:
+      layer: gold

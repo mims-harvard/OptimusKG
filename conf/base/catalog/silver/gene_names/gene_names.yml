@@ -1,5 +1,0 @@
-silver.gene_names.gene_names:
-  type: polars.CSVDataset
-  filepath: "data/silver/gene_names/gene_names.csv"
-  metadata:
-    checksum: "514f1a99dccfb0bb57802c302a3da4c5"

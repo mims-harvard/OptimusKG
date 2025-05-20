@@ -1,5 +1,20 @@
 silver.drugcentral.drug_disease:
   type: polars.CSVDataset
   filepath: "data/silver/drugcentral/drug_disease.csv"
+  load_args:
+    infer_schema: false
+    schema:
+      "relation": "${pl:String}"
+      "display_relation": "${pl:String}"
+      "x_id": "${pl:String}"
+      "x_type": "${pl:String}"
+      "x_name": "${pl:String}"
+      "x_source": "${pl:String}"
+      "y_id": "${pl:String}"
+      "y_type": "${pl:String}"
+      "y_name": "${pl:String}"
+      "y_source": "${pl:String}"
   metadata:
     checksum: "03b249e597ce160dc8d3ec3ac41c91bf"
+    kedro-viz:
+      layer: silver

@@ -92,6 +92,17 @@ def process_drug_protein(  # noqa: PLR0913
         df_prot_drug, dbid2name, source_col="DrugBank", new_col="DrugBankName"
     )
 
+    df_prot_drug = df_prot_drug.rename(
+        {
+            "DrugBank": "drug_bank",
+            "relation": "relation",
+            "NCBIGeneID": "ncbi_gene_id",
+            "UniProtName": "uniprot_name",
+            "UniProtID": "uniprot_id",
+            "DrugBankName": "drug_bank_name",
+        }
+    )
+
     return df_prot_drug
 
 

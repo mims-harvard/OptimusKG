@@ -18,8 +18,26 @@ done
 
 # Import the graphml file
 # TODO: Parameterize the graphml file
-echo "Neo4j is up - executing import"
-until cypher-shell -u neo4j "CALL apoc.import.graphml('/var/lib/neo4j/import/ontology_structure.graphml', {readLabels: true, readRelationshipTypes: true})"
+# echo "Neo4j is up - executing import"
+# until cypher-shell -u neo4j "CALL apoc.import.graphml('/var/lib/neo4j/import/ontology_structure.graphml', {readLabels: true, readRelationshipTypes: true})"
+# do
+#     echo "Import failed - retrying"
+#     sleep 10
+# done
+# echo "Import completed"
+
+# Import the data using neo4j-admin
+echo "Neo4j is up - executing import from admin tool"
+until neo4j-admin database import full test \
+    --delimiter="\t" \
+    --array-delimiter="|" \
+    --quote='@' \
+    --overwrite-destination=true \
+    --skip-bad-relationships=true \
+    --nodes="/var/lib/neo4j/import/Gene-header.csv,/var/lib/neo4j/import/Gene-part.*" \
+    --nodes="/var/lib/neo4j/import/AnatomicalEntity-header.csv,/var/lib/neo4j/import/AnatomicalEntity-part.*" \
+    --relationships="/var/lib/neo4j/import/Anatomy_protein_present-header.csv,/var/lib/neo4j/import/Anatomy_protein_present-part.*" \
+    --relationships="/var/lib/neo4j/import/Anatomy_protein_absent-header.csv,/var/lib/neo4j/import/Anatomy_protein_absent-part.*"
 do
     echo "Import failed - retrying"
     sleep 10

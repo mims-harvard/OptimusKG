@@ -3,3 +3,5 @@ landing.drugbank.full_database:
   filepath: data/landing/drugbank/full database.xml
   metadata:
     checksum: "25a3520e40581d1cc285122da622a127"
+    kedro-viz:
+      layer: landing

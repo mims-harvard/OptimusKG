@@ -1,5 +1,16 @@
 bronze.drugbank.drug_protein:
   type: polars.CSVDataset
   filepath: "data/bronze/drugbank/drug_protein.csv"
+  load_args:
+    infer_schema: false
+    schema:
+      "drug_bank": "${pl:Utf8}"
+      "relation": "${pl:Utf8}"
+      "ncbi_gene_id": "${pl:Utf8}"
+      "uniprot_name": "${pl:Utf8}"
+      "uniprot_id": "${pl:Utf8}"
+      "drug_bank_name": "${pl:Utf8}"
   metadata:
     checksum: "5c138c3450286d38a113fbf2530e0a18"
+    kedro-viz:
+      layer: bronze
