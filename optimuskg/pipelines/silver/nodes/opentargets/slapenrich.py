@@ -56,4 +56,5 @@ slapenrich_node = node(
     },
     outputs="opentargets.evidence.slapenrich",
     name="slapenrich",
+    tags=["silver"],
 )

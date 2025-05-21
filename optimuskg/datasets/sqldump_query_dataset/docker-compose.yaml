@@ -1,10 +1,11 @@
 services:
    postgres:
         image: postgres:16.1
-        container_name: drugcentral_postgres
+        container_name: drugcentral_postgres # TODO: Replace drugcentral to generic postgres dataset name
         ports:
             - 5432:5432
         restart: unless-stopped
+        # NOTE: We don't need to persist the database because we only query it once.
         volumes:
             - .volumes/:/var/lib/postgresql/data
         environment:

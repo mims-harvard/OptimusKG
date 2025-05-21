@@ -38,7 +38,6 @@ def construct_edges(  # noqa: PLR0913
 
     if (type_x == "gene" and type_y == "disease") and relation_label is not None:
         pheno_count = evidence_df.filter(pl.col("diseaseId").str.contains("HP")).height
-
         if pheno_count > 0:
             logger.debug(
                 f"Identified {pheno_count} HPO phenotypes, analyzing separately from diseases"

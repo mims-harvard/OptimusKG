@@ -20,4 +20,5 @@ chembl_node = node(
     inputs={"chembl": "landing.opentargets.evidence.chembl"},
     outputs="opentargets.evidence.chembl",
     name="chembl",
+    tags=["bronze"],
 )

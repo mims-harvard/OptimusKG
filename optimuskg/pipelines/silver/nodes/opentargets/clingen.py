@@ -63,4 +63,5 @@ clingen_node = node(
     },
     outputs="opentargets.evidence.clingen",
     name="clingen",
+    tags=["silver"],
 )

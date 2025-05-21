@@ -20,4 +20,5 @@ uniprot_literature_node = node(
     inputs={"uniprot_literature": "landing.opentargets.evidence.uniprot_literature"},
     outputs="opentargets.evidence.uniprot_literature",
     name="uniprot_literature",
+    tags=["bronze"],
 )

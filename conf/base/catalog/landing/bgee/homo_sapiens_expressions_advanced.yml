@@ -70,3 +70,5 @@ landing.bgee.homo_sapiens_expressions_advanced:
     origin:
       provider: http
       url: "https://www.bgee.org/ftp/current/download/calls/expr_calls/Homo_sapiens_expr_advanced.tsv.gz" # NOTE: polars can handle gzip files
+    kedro-viz:
+      layer: landing

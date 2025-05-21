@@ -14,3 +14,5 @@ landing.opentargets.molecule:
       version: "24.09"
       file_extension: "json"
       source_id: "molecule"
+    kedro-viz:
+      layer: landing

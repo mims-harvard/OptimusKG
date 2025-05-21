@@ -1,5 +1,0 @@
-silver.ctd.ctd_exposure_events:
-  type: polars.CSVDataset
-  filepath: "data/silver/ctd/ctd_exposure_events.csv"
-  metadata:
-    checksum: "d1b49f787a7050a9a7a70c7a1398b180"

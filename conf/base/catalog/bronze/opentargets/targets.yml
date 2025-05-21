@@ -8,3 +8,5 @@ bronze.opentargets.targets:
     lines: true
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
+    kedro-viz:
+      layer: bronze

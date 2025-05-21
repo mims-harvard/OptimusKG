@@ -146,4 +146,5 @@ opentargets_edges_node = node(
     },
     outputs="opentargets.opentargets_edges",
     name="opentargets_edges",
+    tags=["silver"],
 )

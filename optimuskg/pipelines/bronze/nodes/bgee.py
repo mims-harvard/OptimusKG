@@ -13,12 +13,10 @@ EXPRESSION_RANK_THRESHOLD: Final[int] = 25000
 def process_bgee(
     homo_sapiens_expressions_advanced: pl.DataFrame,
 ) -> pl.DataFrame:
-    # Filter rows where 'Anatomical entity ID' starts with 'UBERON'
     df = homo_sapiens_expressions_advanced.filter(
         pl.col("Anatomical entity ID").str.starts_with("UBERON")
     )
 
-    # Select and rename relevant columns
     df = df.select(
         [
             pl.col("Gene ID").alias("gene_id"),
@@ -55,4 +53,5 @@ bgee_node = node(
     },
     outputs="bgee.gene_expressions_in_anatomy",
     name="bgee",
+    tags=["bronze"],
 )

@@ -8,3 +8,5 @@ landing.ontology.human_phenotype:
     origin:
       provider: http
       url: "http://purl.obolibrary.org/obo/hp.owl"
+    kedro-viz:
+      layer: landing

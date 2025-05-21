@@ -63,4 +63,5 @@ uniprot_literature_node = node(
     },
     outputs="opentargets.evidence.uniprot_literature",
     name="uniprot_literature",
+    tags=["silver"],
 )

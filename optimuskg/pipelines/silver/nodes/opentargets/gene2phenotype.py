@@ -60,4 +60,5 @@ gene2phenotype_node = node(
     },
     outputs="opentargets.evidence.gene2phenotype",
     name="gene2phenotype",
+    tags=["silver"],
 )

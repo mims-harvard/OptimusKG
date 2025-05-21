@@ -23,3 +23,5 @@ landing.opentargets.drug_mappings:
     origin:
       provider: "http"
       url: "https://raw.githubusercontent.com/iit-Demokritos/drug_id_mapping/refs/heads/main/drug-mappings.tsv"
+    kedro-viz:
+      layer: landing

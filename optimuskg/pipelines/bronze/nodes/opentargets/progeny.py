@@ -20,4 +20,5 @@ progeny_node = node(
     inputs={"progeny": "landing.opentargets.evidence.progeny"},
     outputs="opentargets.evidence.progeny",
     name="progeny",
+    tags=["bronze"],
 )

@@ -54,4 +54,5 @@ crispr_node = node(
     },
     outputs="opentargets.evidence.crispr",
     name="crispr",
+    tags=["silver"],
 )

@@ -63,4 +63,5 @@ orphanet_node = node(
     },
     outputs="opentargets.evidence.orphanet",
     name="orphanet",
+    tags=["silver"],
 )

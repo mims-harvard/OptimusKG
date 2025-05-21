@@ -1,11 +1,13 @@
+import logging
 from typing import Final
-
+import logging
 import pandas as pd
 import polars as pl
 from kedro.pipeline import node
 
 from .utils import construct_edges
 
+logger = logging.getLogger(__name__)
 # TODO: This constant should be a parameter in the pipeline.
 SCORE_THRESHOLD: Final[float] = 0.5
 
@@ -54,4 +56,5 @@ cancer_gene_census_node = node(
     },
     outputs="opentargets.evidence.cancer_gene_census",
     name="cancer_gene_census",
+    tags=["silver"],
 )

@@ -25,4 +25,5 @@ mondo_efo_mappings_node = node(
     inputs={"mondo_efo_mappings_df": "landing.opentargets.mondo_efo_mappings"},
     outputs="opentargets.mondo_efo_mappings",
     name="mondo_efo_mappings",
+    tags=["bronze"],
 )

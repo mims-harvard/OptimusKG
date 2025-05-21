@@ -20,4 +20,5 @@ slapenrich_node = node(
     inputs={"slapenrich": "landing.opentargets.evidence.slapenrich"},
     outputs="opentargets.evidence.slapenrich",
     name="slapenrich",
+    tags=["bronze"],
 )

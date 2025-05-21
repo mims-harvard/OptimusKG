@@ -22,3 +22,5 @@ landing.opentargets.mondo_efo_mappings:
     origin:
       provider: "http"
       url: "https://raw.githubusercontent.com/EBISPOT/efo/refs/heads/master/src/ontology/components/mondo_efo_mappings.tsv"
+    kedro-viz:
+      layer: landing

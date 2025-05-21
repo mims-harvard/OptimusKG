@@ -101,4 +101,5 @@ diseases_node = node(
     },
     outputs="opentargets.diseases",
     name="diseases",
+    tags=["bronze"],
 )

@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 requires-python = ">=3.12"
 name = "optimuskg"
 readme = "README.md"
-version = "0.12.0"
+version = "0.13.0"
 dependencies = [
   "ipython>=8.10",
   "jupyterlab>=3.0",
@@ -27,6 +27,9 @@ dependencies = [
   "pyarrow>=19.0.0",
   "sqlalchemy>=2.0.37",
   "types-requests>=2.32.0.20250328",
+  "kedro-viz>=11.0.1",
+  "ydata-profiling>=4.16.1",
+  "owlready2>=0.47",
 ]
 
 [dependency-groups]
@@ -144,4 +147,4 @@ module = ["optimuskg.datasets.*"]
 disable_error_code = ["attr-defined"]
 
 [tool.typos.files]
-extend-exclude = ["tests/stub_data/*"]
+extend-exclude = ["tests/stub_data/*", "Makefile", "notebooks/*"]

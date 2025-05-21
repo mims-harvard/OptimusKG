@@ -1,0 +1,77 @@
+import logging
+
+import polars as pl
+from kedro.pipeline import node
+
+logger = logging.getLogger(__name__)
+
+
+def process_go_plus(  # noqa: PLR0913
+    go_plus: pl.DataFrame,
+) -> tuple[pl.DataFrame, pl.DataFrame]:
+    go_terms = (
+        (
+            go_plus.explode("graphs")
+            .select(pl.col("graphs").struct.field("nodes"))
+            .explode("nodes")
+        )
+        .select(
+            [
+                pl.col("nodes")
+                .struct.field("id")
+                .str.replace("http://purl.obolibrary.org/obo/", "")
+                .alias("id"),
+                pl.col("nodes").struct.field("lbl").alias("name"),
+                pl.col("nodes").struct.field("type").alias("type"),
+            ]
+        )
+        .filter(pl.col("id").str.contains("GO_"))
+        .with_columns(
+            [
+                pl.col("id").str.replace("GO_", "").alias("id"),
+            ]
+        )
+        .unique()
+    )
+
+    go_relations = (
+        go_plus.explode("graphs")
+        .select(pl.col("graphs").struct.field("edges"))
+        .explode("edges")
+        .select(
+            [
+                pl.col("edges")
+                .struct.field("sub")
+                .str.replace("http://purl.obolibrary.org/obo/", "")
+                .alias("tail"),
+                pl.col("edges")
+                .struct.field("pred")
+                .str.replace("http://purl.obolibrary.org/obo/", "")
+                .alias("edge_type"),
+                pl.col("edges")
+                .struct.field("obj")
+                .str.replace("http://purl.obolibrary.org/obo/", "")
+                .alias("head"),
+            ]
+        )
+        .filter(pl.col("tail").str.contains("GO_") & pl.col("head").str.contains("GO_"))
+        .with_columns(
+            [
+                pl.col("tail").str.replace("GO_", "").alias("tail"),
+                pl.col("head").str.replace("GO_", "").alias("head"),
+            ]
+        )
+    )
+
+    return go_terms, go_relations
+
+
+go_plus_node = node(
+    process_go_plus,
+    inputs={
+        "go_plus": "landing.ontology.go_plus",
+    },
+    outputs=["ontology.go_terms", "ontology.go_relations"],
+    name="go_plus",
+    tags=["bronze"],
+)

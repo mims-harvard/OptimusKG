@@ -4,29 +4,11 @@ from pathlib import Path
 
 import typer
 
-from cli.utils import (
-    download_drugbank_files,
-    download_gene_names_files,
-    download_ontologies,
-    download_opentargets,
-)
 from optimuskg.utils import calculate_checksum
 
 app = typer.Typer(help="Main entry point for the CLI.")
 
 logger = logging.getLogger("cli")
-
-
-@app.command(help="Download all landing zone files.")
-def landing():
-    logger.info("Downloading landing files...")
-
-    download_opentargets()
-    download_ontologies()
-    download_drugbank_files()
-    download_gene_names_files()
-
-    logger.info("All landing files downloaded successfully")
 
 
 @app.command(help="Spin up the Neo4j service.")

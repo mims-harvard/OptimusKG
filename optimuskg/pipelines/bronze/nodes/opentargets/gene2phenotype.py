@@ -20,4 +20,5 @@ gene2phenotype_node = node(
     inputs={"gene2phenotype": "landing.opentargets.evidence.gene2phenotype"},
     outputs="opentargets.evidence.gene2phenotype",
     name="gene2phenotype",
+    tags=["bronze"],
 )

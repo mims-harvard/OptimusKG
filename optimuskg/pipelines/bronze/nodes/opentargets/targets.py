@@ -36,4 +36,5 @@ targets_node = node(
     },
     outputs="opentargets.targets",
     name="targets",
+    tags=["bronze"],
 )

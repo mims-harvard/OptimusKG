@@ -20,4 +20,5 @@ genomics_england_node = node(
     inputs={"genomics_england": "landing.opentargets.evidence.genomics_england"},
     outputs="opentargets.evidence.genomics_england",
     name="genomics_england",
+    tags=["bronze"],
 )

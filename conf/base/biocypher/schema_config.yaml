@@ -1,0 +1,37 @@
+# ---
+# "Named Things"
+# ---
+
+gene: # A region (or regions) that includes all of the sequence elements necessary to encode a functional transcript. (https://biolink.github.io/biolink-model/Gene/)                   
+  represented_as: node
+  input_label: gene
+  properties:
+    x_name: str
+    x_source: str
+
+
+anatomical entity: # Biological entity that is either an individual member of a biological species or constitutes the structural organization of an individual member of a biological species. (http://purl.obolibrary.org/obo/UBERON_0001062)
+  represented_as: node
+  input_label: anatomy
+  properties:
+    x_name: str
+    x_source: str
+  
+  
+# ---
+# Associations
+# ---
+
+anatomy_protein_present:
+  is_a: expressed in # holds between a gene or gene product and an anatomical entity in which it is expressed (https://biolink.github.io/biolink-model/expressed_in/)
+  represented_as: edge
+  input_label: anatomy_protein_present
+  properties:
+    display_relation: str
+
+anatomy_protein_absent:
+  is_a: expressed in # holds between a gene or gene product and an anatomical entity in which it is expressed (https://biolink.github.io/biolink-model/expressed_in/)
+  represented_as: edge
+  input_label: anatomy_protein_absent
+  properties:
+    display_relation: str

@@ -20,4 +20,5 @@ reactome_node = node(
     inputs={"reactome": "landing.opentargets.evidence.reactome"},
     outputs="opentargets.evidence.reactome",
     name="reactome",
+    tags=["bronze"],
 )

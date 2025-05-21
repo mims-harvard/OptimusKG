@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import gzip
 import logging
 import shutil
 import subprocess  # nosec B404
@@ -94,18 +95,20 @@ class SQLDumpQueryDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
 
     def _run_subprocess(
         self, cmd: list[str], **kwargs: Any
-    ) -> subprocess.CompletedProcess:
+    ) -> subprocess.CompletedProcess[bytes] | None:
         """Safely execute a subprocess command."""
         try:
             # Use absolute paths for executables
             cmd[0] = shutil.which(cmd[0]) or cmd[0]
             return subprocess.run(  # nosec B603
-                cmd, check=True, capture_output=True, text=True, **kwargs
+                cmd, check=True, capture_output=True, **kwargs
             )
         except subprocess.CalledProcessError as e:
-            raise DatasetError(f"Subprocess command failed: {e.stderr}")
+            logger.exception(f"Subprocess command failed: {e}")
+            return None
         except Exception as e:
-            raise DatasetError(f"Failed to execute command: {str(e)}")
+            logger.exception(f"Failed to execute command: {e}")
+            return None
 
     @override
     def _describe(self) -> dict[str, Any]:
@@ -139,7 +142,8 @@ class SQLDumpQueryDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
                 str(compose_path),
                 "up",
                 "-d",
-            ]
+            ],
+            text=True,
         )
 
         # 2) Wait until Postgres is ready
@@ -162,6 +166,17 @@ class SQLDumpQueryDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
             dump_path = Path(dump_path_str).resolve()
             if not dump_path.is_file():
                 raise DatasetError(f"Dump file not found: {dump_path}")
+
+            # Check if the dump file is gzipped and extract it if needed
+            if dump_path.suffix == ".gz":
+                extracted_path = dump_path.with_suffix("")  # Remove .gz extension
+                if not extracted_path.exists():
+                    logger.debug("Detected gzipped SQL dump file. Extracting...")
+                    with gzip.open(dump_path, "rb") as f_in:
+                        with open(extracted_path, "wb") as f_out:
+                            shutil.copyfileobj(f_in, f_out)
+                    logger.debug(f"Extracted to: {extracted_path}")
+                dump_path = extracted_path
 
             with open(dump_path, "rb") as dump_file:
                 self._run_subprocess(
@@ -194,7 +209,9 @@ class SQLDumpQueryDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
         logger.info("Shutting down PostgreSQL database...")
         try:
             compose_path = self.DOCKER_COMPOSE_PATH.resolve()
-            self._run_subprocess(["docker", "compose", "-f", str(compose_path), "down"])
+            self._run_subprocess(
+                ["docker", "compose", "-f", str(compose_path), "restart"], text=True
+            )
         except Exception as e:
             logger.error(f"Failed to stop the PostgreSQL database: {e}")
         logger.info("PostgreSQL database shutdown.")
@@ -230,7 +247,8 @@ class SQLDumpQueryDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
                         user,
                         "-d",
                         db,
-                    ]
+                    ],
+                    text=True,
                 )
                 return
             except subprocess.CalledProcessError:
@@ -240,7 +258,7 @@ class SQLDumpQueryDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
                         f"Postgres ({container}) did not become ready after {timeout:.1f}s"
                     )
                 wait = min(base_interval * 2**attempt, max_interval)
-                logger.debug(f"Postgres not ready yet, retrying in {wait:.1f}s...")
+                logger.info(f"Postgres not ready yet, retrying in {wait:.1f}s...")
                 time.sleep(wait)
                 attempt += 1
 

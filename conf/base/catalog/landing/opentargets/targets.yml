@@ -14,3 +14,5 @@ landing.opentargets.targets:
       version: "24.09"
       file_extension: "json"
       source_id: "targets"
+    kedro-viz:
+      layer: landing

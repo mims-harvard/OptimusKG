@@ -8,6 +8,7 @@ def create_pipeline(**kwargs):
         [getattr(nodes, name) for name in nodes.__all__],
         namespace="bronze",
         inputs={
+            "landing.ontology.go_plus",
             "landing.bgee.homo_sapiens_expressions_advanced",
             "landing.ctd.ctd_exposure_events",
             "landing.reactome.ncbi2_reactome",

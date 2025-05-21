@@ -3,3 +3,5 @@ bronze.reactome.reactome_relations:
   filepath: "data/bronze/reactome/reactome_relations.csv"
   metadata:
     checksum: "06f230141d65d7a62e8b9ea5bf2d6d92"
+    kedro-viz:
+      layer: bronze

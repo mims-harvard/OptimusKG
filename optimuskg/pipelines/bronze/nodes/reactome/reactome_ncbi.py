@@ -19,4 +19,5 @@ reactome_ncbi_node = node(
     inputs={"ncbi2_reactome_df": "landing.reactome.ncbi2_reactome"},
     outputs="reactome.reactome_ncbi",
     name="reactome_ncbi",
+    tags=["bronze"],
 )

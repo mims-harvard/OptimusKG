@@ -33,4 +33,5 @@ reactome_pathways_node = node(
         "reactome.reactome_terms",
     ],
     name="reactome_pathways",
+    tags=["bronze"],
 )
