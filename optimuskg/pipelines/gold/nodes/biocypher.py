@@ -67,23 +67,23 @@ def process_biocypher(  # noqa: PLR0913
     )
 
     bgee_adapter = adapter_factory(gene_expressions_in_anatomy)
-    ctd_adapters = [
-        adapter_factory(ctd_exposure_protein_interactions),
-        adapter_factory(ctd_exposure_exposure_interactions),
-    ]
-    drugbank_adapters = [
-        adapter_factory(drug_drug_interactions),
-        adapter_factory(drug_protein_interactions),
-    ]
-    ncbigene_adapters = [
-        adapter_factory(protein_biological_process_interactions),
-        adapter_factory(protein_cellular_component_interactions),
-        adapter_factory(protein_molecular_function_interactions),
-    ]
-    reactome_adapters = [
-        adapter_factory(pathway_pathway_interactions),
-        adapter_factory(pathway_protein_interactions),
-    ]
+    # ctd_adapters = [
+    #     adapter_factory(ctd_exposure_protein_interactions),
+    #     adapter_factory(ctd_exposure_exposure_interactions),
+    # ]
+    # drugbank_adapters = [
+    #     adapter_factory(drug_drug_interactions),
+    #     adapter_factory(drug_protein_interactions),
+    # ]
+    # ncbigene_adapters = [
+    #     adapter_factory(protein_biological_process_interactions),
+    #     adapter_factory(protein_cellular_component_interactions),
+    #     adapter_factory(protein_molecular_function_interactions),
+    # ]
+    # reactome_adapters = [
+    #     adapter_factory(pathway_pathway_interactions),
+    #     adapter_factory(pathway_protein_interactions),
+    # ]
 
     # TODO: Add adapters for other datasets (DrugCental, Opentargets)
 
