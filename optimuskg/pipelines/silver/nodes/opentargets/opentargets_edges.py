@@ -2,6 +2,7 @@ import logging
 
 import polars as pl
 from kedro.pipeline import node
+from itertools import combinations
 
 logger = logging.getLogger(__name__)
 
@@ -11,9 +12,9 @@ def _handle_duplicate_edges(df: pl.DataFrame) -> pl.DataFrame:
         df.with_columns(
             pl.concat_str(
                 [
-                    pl.col("x_index").cast(pl.Utf8),
+                    pl.col("x_id").cast(pl.Utf8),
                     pl.lit("_"),
-                    pl.col("y_index").cast(pl.Utf8),
+                    pl.col("y_id").cast(pl.Utf8),
                 ]
             ).alias("edge_id")
         )
@@ -28,7 +29,7 @@ def _handle_duplicate_edges(df: pl.DataFrame) -> pl.DataFrame:
                 default="unknown",
             ),
         )
-        .sort(["x_index", "y_index", "relation_order"])
+        .sort(["x_id", "y_id", "relation_order"])
         .filter(
             ~pl.col("is_duplicate")
             | (pl.col("edge_id") == pl.col("edge_id").first().over("edge_id"))
@@ -55,8 +56,6 @@ def process_opentargets_edges(  # noqa: PLR0913
     sysbio: pl.DataFrame,
     uniprot_literature: pl.DataFrame,
     orphanet: pl.DataFrame,
-    primekg_nodes: pl.DataFrame,
-    primekg_edges: pl.DataFrame,
 ) -> pl.DataFrame:
     df = pl.concat(
         [
@@ -80,38 +79,60 @@ def process_opentargets_edges(  # noqa: PLR0913
         ],
         how="diagonal",
     )
-    df = df.with_columns(pl.col("x_index").cast(pl.Utf8), pl.col("y_index").cast(pl.Utf8))
-    df = df.join(primekg_nodes, left_on="x_index", right_on="node_index", how="left")
-    df = df.rename(
-        {
-            "node_id": "x_id",
-            "node_type": "x_type",
-            "node_name": "x_name",
-            "node_source": "x_source",
-        }
-    )
-    df = df.select(primekg_edges.columns).unique().pipe(_handle_duplicate_edges)
+
+    df = df.select([
+        "target_id",
+        "phenotype_id",
+        "disease_id",
+        "drug_id",
+        "relation",
+        "display_relation",
+    ])
+
+    # all possible tuples of columns that end with "_id"
+    id_columns = [col for col in df.columns if col.endswith("_id")]
+    edge_types = list(combinations(id_columns, 2))
+    
+    dfs = []
+    for x_col, y_col in edge_types:
+        # Filter rows where both columns are not null
+        filtered = df.filter(
+            ~pl.col(x_col).is_null() & ~pl.col(y_col).is_null()
+        )
+        
+        # Create edge dataframe with standardized format
+        edge_df = filtered.select([
+            pl.col(x_col).alias("x_id"),
+            pl.col(y_col).alias("y_id"),
+            "relation",
+            "display_relation"
+        ])
+        dfs.append(edge_df)
+    
+    # Combine all edge dataframes
+    df = pl.concat(dfs)
+
+    df = df.select(['x_id', 'y_id', 'relation', 'display_relation']).unique().pipe(_handle_duplicate_edges)
 
     # Create reverse edges
     rev_edges = (
         df.clone()
         .rename(
             {
-                "x_index": "y_index",
-                "y_index": "x_index",
+                "x_id": "y_id",
+                "y_id": "x_id",
             }
         )
-        .select(primekg_edges.columns)
+        .select(['x_id', 'y_id', 'relation', 'display_relation'])
     )
 
-    # Merge with PrimeKG
-    new_kg_edges = pl.concat([primekg_edges, df, rev_edges])
+
+    new_kg_edges = pl.concat([df, rev_edges])
 
     # Final deduplication
     new_kg_edges = _handle_duplicate_edges(new_kg_edges)
 
     # Log statistics
-    logger.debug(f"PrimeKG nodes: {primekg_nodes.height}")
     logger.debug(f"Final KG edges: {new_kg_edges.height}")
 
     return new_kg_edges
@@ -137,8 +158,6 @@ opentargets_edges_node = node(
         "sysbio": "opentargets.evidence.sysbio",
         "uniprot_literature": "opentargets.evidence.uniprot_literature",
         "orphanet": "opentargets.evidence.orphanet",
-        "primekg_nodes": "landing.opentargets.primekg_nodes",
-        "primekg_edges": "landing.opentargets.primekg_edges",
     },
     outputs="opentargets.opentargets_edges",
     name="opentargets_edges",
