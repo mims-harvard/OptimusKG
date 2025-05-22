@@ -27,19 +27,19 @@ def process_drug_mappings(
         "CHEMBL1650559",
     ]
 
-    # Split into separate lines for debugging purposes
-    df = drug_mappings_df.select(["drugbankId", "chembl_id"])
-    df = df.drop_nulls(subset=["drugbankId", "chembl_id"])
-    df = df.unique(subset=["drugbankId", "chembl_id"])
-    df = df.filter(~pl.col("chembl_id").is_in(chembl_to_drop))
-    df = df.rename({"chembl_id": "id"})
-    df = df.join(
-        ot_drugs_df,
-        on="id",
-        how="inner",
+    df = (
+        drug_mappings_df.select(["drugbankId", "chembl_id"])
+        .drop_nulls(subset=["drugbankId", "chembl_id"])
+        .unique(subset=["drugbankId", "chembl_id"])
+        .filter(~pl.col("chembl_id").is_in(chembl_to_drop))
+        .rename({"chembl_id": "id"})
+        .join(
+            ot_drugs_df,
+            on="id",
+            how="inner",
+        )
+        .sort(by=sorted(df.columns))
     )
-
-    df = df.sort(by=sorted(df.columns))
     return df
 
 
