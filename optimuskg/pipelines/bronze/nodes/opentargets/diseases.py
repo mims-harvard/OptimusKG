@@ -45,7 +45,6 @@ class DiseaseSchema(PolarsTypedFrame):
 def process_diseases(
     diseases: dict[str, Callable[[], Any]],
     mondo_efo_mappings_df: pl.DataFrame,
-    primekg_nodes_df: pl.DataFrame,
 ) -> pl.DataFrame:
     concated_df = concat_json_partitions(diseases)
     df = DiseaseSchema.convert(concated_df).df
@@ -83,11 +82,6 @@ def process_diseases(
         ]
     )
 
-    df = df.join(
-        primekg_nodes_df.filter(pl.col("node_type") == "disease"),
-        on="node_id",
-        how="inner",
-    )
     df = df.sort(by=sorted(df.columns))
     return df  # type: ignore[no-any-return]
 
@@ -97,7 +91,6 @@ diseases_node = node(
     inputs={
         "diseases": "landing.opentargets.diseases",
         "mondo_efo_mappings_df": "opentargets.mondo_efo_mappings",
-        "primekg_nodes_df": "landing.opentargets.primekg_nodes",
     },
     outputs="opentargets.diseases",
     name="diseases",
