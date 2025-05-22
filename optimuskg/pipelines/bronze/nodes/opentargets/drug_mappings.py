@@ -38,7 +38,6 @@ def process_drug_mappings(
             on="id",
             how="inner",
         )
-        .sort(by=sorted(df.columns))
     )
     return df
 
