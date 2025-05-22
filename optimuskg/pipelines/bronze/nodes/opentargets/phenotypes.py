@@ -16,6 +16,7 @@ def process_phenotypes(
     all_cols = ["id"] + [col for col in pheno_df.columns if col != "id"]
     df = pheno_df.select(all_cols)
     df = df.sort(by=sorted(df.columns))
+    df = df.drop(["node_index", "node_id", "node_type", "node_source"])
     return df
 
 
