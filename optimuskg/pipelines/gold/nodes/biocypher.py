@@ -14,7 +14,7 @@ def process_biocypher(  # noqa: PLR0913
     # Ontologies
     biolink_ontology: LoadedOWLDataset,
     disease_ontology: LoadedOWLDataset,
-    gene_ontology: LoadedOWLDataset,
+    # gene_ontology: LoadedOWLDataset,
     human_phenotype_ontology: LoadedOWLDataset,
     mondo_ontology: LoadedOWLDataset,
     orphanet_ontology: LoadedOWLDataset,
@@ -113,7 +113,7 @@ biocypher_node = node(
         # Ontologies
         "biolink_ontology": "landing.ontology.biolink",
         "disease_ontology": "landing.ontology.disease",
-        "gene_ontology": "landing.ontology.gene",
+        # "gene_ontology": "landing.ontology.gene",
         "human_phenotype_ontology": "landing.ontology.human_phenotype",
         "mondo_ontology": "landing.ontology.mondo",
         "orphanet_ontology": "landing.ontology.orphanet",

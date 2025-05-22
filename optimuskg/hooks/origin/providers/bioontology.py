@@ -9,8 +9,8 @@ from optimuskg.hooks.origin.providers.base import BaseProvider
 class BioOntologyProvider(BaseProvider):
     BASE_URL: ClassVar[str] = "https://data.bioontology.org/ontologies"
     PUBLIC_API_KEY: ClassVar[str] = (
-        "8b5b7825-538d-40e0-9e9e-5ab9274a9aeb"
-        # "168d52c1-bd36-4866-aa99-0aa8eb06f295"  # NOTE: is safe to use this key as default value (it's public)
+        # "8b5b7825-538d-40e0-9e9e-5ab9274a9aeb"
+        "168d52c1-bd36-4866-aa99-0aa8eb06f295"  # NOTE: is safe to use this key as default value (it's public)
     )
 
     acronym: str = Field(..., min_length=1, description="Ontology acronym")

@@ -12,7 +12,7 @@ def create_pipeline(**kwargs):
             # Ontologies
             "landing.ontology.biolink",
             "landing.ontology.disease",
-            "landing.ontology.gene",
+            # "landing.ontology.gene",
             "landing.ontology.human_phenotype",
             "landing.ontology.mondo",
             "landing.ontology.orphanet",
