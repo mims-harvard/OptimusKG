@@ -58,43 +58,39 @@ def process_opentargets_edges(  # noqa: PLR0913
     primekg_nodes: pl.DataFrame,
     primekg_edges: pl.DataFrame,
 ) -> pl.DataFrame:
-    df = (
-        pl.concat(
-            [
-                cancer_gene_census,
-                chembl_drug_disease,
-                chembl_drug_gene,
-                clingen,
-                crispr,
-                crispr_screen,
-                expression_atlas,
-                gene_burden,
-                gene2phenotype,
-                genomics_england,
-                intogen,
-                orphanet,
-                progeny,
-                reactome,
-                slapenrich,
-                sysbio,
-                uniprot_literature,
-            ],
-            how="diagonal",
-        )
-        .with_columns(pl.col("x_index").cast(pl.Utf8), pl.col("y_index").cast(pl.Utf8))
-        .join(primekg_nodes, left_on="x_index", right_on="node_index", how="left")
-        .rename(
-            {
-                "node_id": "x_id",
-                "node_type": "x_type",
-                "node_name": "x_name",
-                "node_source": "x_source",
-            }
-        )
-        .select(primekg_edges.columns)
-        .unique()
-        .pipe(_handle_duplicate_edges)
+    df = pl.concat(
+        [
+            cancer_gene_census,
+            chembl_drug_disease,
+            chembl_drug_gene,
+            clingen,
+            crispr,
+            crispr_screen,
+            expression_atlas,
+            gene_burden,
+            gene2phenotype,
+            genomics_england,
+            intogen,
+            orphanet,
+            progeny,
+            reactome,
+            slapenrich,
+            sysbio,
+            uniprot_literature,
+        ],
+        how="diagonal",
     )
+    df = df.with_columns(pl.col("x_index").cast(pl.Utf8), pl.col("y_index").cast(pl.Utf8))
+    df = df.join(primekg_nodes, left_on="x_index", right_on="node_index", how="left")
+    df = df.rename(
+        {
+            "node_id": "x_id",
+            "node_type": "x_type",
+            "node_name": "x_name",
+            "node_source": "x_source",
+        }
+    )
+    df = df.select(primekg_edges.columns).unique().pipe(_handle_duplicate_edges)
 
     # Create reverse edges
     rev_edges = (
