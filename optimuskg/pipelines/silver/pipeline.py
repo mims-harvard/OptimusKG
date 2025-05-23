@@ -9,8 +9,6 @@ def create_pipeline(**kwargs):
         namespace="silver",
         inputs={
             # Landing
-            "landing.opentargets.primekg_nodes",
-            "landing.opentargets.primekg_edges",
             "landing.drugbank.vocabulary",
             # Bronze
             "bronze.opentargets.evidence.cancer_gene_census",

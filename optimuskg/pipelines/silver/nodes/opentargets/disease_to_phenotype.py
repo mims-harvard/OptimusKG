@@ -16,30 +16,12 @@ def process_disease_to_phenotype(
         )
         .filter(pl.col("disease").is_in(diseases["id"]))
         .filter(pl.col("phenotype").is_in(phenotypes["id"]))
-        .join(
-            diseases.select(["id", "node_index"]),
-            left_on="disease",
-            right_on="id",
-            how="left",
-        )
-        .join(
-            phenotypes.select(["id", "node_index"]),
-            left_on="phenotype",
-            right_on="id",
-            how="left",
-        )
-        .rename(
-            {
-                "node_index": "disease_index",
-                "node_index_right": "phenotype_index",
-            }
-        )
         .with_columns(
             pl.concat_str(
                 [
-                    pl.col("disease_index").cast(pl.Utf8),
+                    pl.col("disease"),
                     pl.lit("_"),
-                    pl.col("phenotype_index").cast(pl.Utf8),
+                    pl.col("phenotype"),
                 ]
             ).alias("association")
         )

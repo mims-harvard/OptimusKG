@@ -1,35 +1,27 @@
 _schema_gene_phenotype_disease: &schema_gene_phenotype_disease
-  "x_gene": "${pl:String}"
-  "y_phenotype": "${pl:String}"
+  "target_id": "${pl:String}"
+  "phenotype_id": "${pl:String}"
   "relation": "${pl:String}"
   "display_relation": "${pl:String}"
-  "x_index": "${pl:Int64}"
-  "y_index": "${pl:Int64}"
-  "y_disease": "${pl:String}"
+  "disease_id": "${pl:String}"
 
 _schema_gene_disease: &schema_gene_disease
-  "x_gene": "${pl:String}"
-  "y_disease": "${pl:String}"
+  "target_id": "${pl:String}"
+  "disease_id": "${pl:String}"
   "relation": "${pl:String}"
   "display_relation": "${pl:String}"
-  "x_index": "${pl:Int64}"
-  "y_index": "${pl:Int64}"
 
 _schema_drug_disease: &schema_drug_disease
-  "x_drug": "${pl:String}"
-  "y_disease": "${pl:String}"
+  "drug_id": "${pl:String}"
+  "disease_id": "${pl:String}"
   "relation": "${pl:String}"
   "display_relation": "${pl:String}"
-  "x_index": "${pl:Int64}"
-  "y_index": "${pl:Int64}"
 
 _schema_drug_gene: &schema_drug_gene
-  "x_drug": "${pl:String}"
-  "y_gene": "${pl:String}"
+  "drug_id": "${pl:String}"
+  "target_id": "${pl:String}"
   "relation": "${pl:String}"
   "display_relation": "${pl:String}"
-  "x_index": "${pl:Int64}"
-  "y_index": "${pl:Int64}"
 
 _silver_opentargets_evidence_args: &silver_opentargets_evidence_args
   type: polars.CSVDataset
