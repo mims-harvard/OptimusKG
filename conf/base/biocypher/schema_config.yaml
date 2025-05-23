@@ -31,6 +31,7 @@ disease: # A disease or phenotypic feature (https://biolink.github.io/biolink-mo
     x_source: str
 
 phenotype: # A phenotypic feature (https://biolink.github.io/biolink-model/PhenotypicFeature/)
+  is_a: phenotypic feature
   represented_as: node
   input_label: phenotype
   properties:
