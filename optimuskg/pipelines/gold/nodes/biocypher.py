@@ -100,11 +100,9 @@ def process_biocypher(  # noqa: PLR0913
 
     try:
         for i, adapter in enumerate(adapters):
-            logger.debug(f"Writing {adapter.name} nodes")
             bc.write_nodes(adapter.nodes())
-            logger.debug(f"Writing {adapter.name} edges")
             bc.write_edges(adapter.edges())
-            logger.debug(f"Finished writing {adapter.name}")
+            logger.info(f"Finished writing {i+1} of {len(adapters)} adapters")
         bc.write_import_call()
     except Exception as e:
         logger.exception(f"Error writing graph data to disk: {e}")
