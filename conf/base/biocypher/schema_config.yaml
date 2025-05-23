@@ -9,7 +9,6 @@ gene: # A region (or regions) that includes all of the sequence elements necessa
     x_name: str
     x_source: str
 
-
 anatomical entity: # Biological entity that is either an individual member of a biological species or constitutes the structural organization of an individual member of a biological species. (http://purl.obolibrary.org/obo/UBERON_0001062)
   represented_as: node
   input_label: anatomy
@@ -17,7 +16,27 @@ anatomical entity: # Biological entity that is either an individual member of a 
     x_name: str
     x_source: str
   
-  
+drug: # A substance that is used to treat, prevent, or diagnose a disease or condition (https://biolink.github.io/biolink-model/Drug/)
+  represented_as: node
+  input_label: drug
+  properties:
+    x_name: str
+    x_source: str
+
+disease: # A disease or phenotypic feature (https://biolink.github.io/biolink-model/Disease/)
+  represented_as: node
+  input_label: disease
+  properties:
+    x_name: str
+    x_source: str
+
+phenotype: # A phenotypic feature (https://biolink.github.io/biolink-model/PhenotypicFeature/)
+  represented_as: node
+  input_label: phenotype
+  properties:
+    x_name: str
+    x_source: str
+
 # ---
 # Associations
 # ---
