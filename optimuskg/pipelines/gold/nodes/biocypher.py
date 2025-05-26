@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 def process_biocypher(  # noqa: PLR0913
     gene_expressions_in_anatomy: pl.DataFrame,
+    opentargets_edges: pl.DataFrame,
     ctd_exposure_protein_interactions: pl.DataFrame,
     ctd_exposure_exposure_interactions: pl.DataFrame,
     # drug_drug_interactions: pl.DataFrame,
@@ -40,22 +41,14 @@ def process_biocypher(  # noqa: PLR0913
             ctd_exposure_exposure_interactions, name="ctd_exposure_exposure"
         ),
     ]
+    opentargets_adapter = adapter_factory(opentargets_edges, name="opentargets")
 
-    # If other data sources are uncommented in the function signature and inputs,
-    # define their adapter instances here. For example:
-    # drug_drug_adapter_instance = adapter_factory(drug_drug_interactions) # drug_drug_interactions is a parameter
-    # drug_protein_adapter_instance = adapter_factory(drug_protein_interactions) # drug_protein_interactions is a parameter
-    # protein_biological_process_adapter_instance = adapter_factory(protein_biological_process_interactions)
-    # protein_cellular_component_adapter_instance = adapter_factory(protein_cellular_component_interactions)
-    # protein_molecular_function_adapter_instance = adapter_factory(protein_molecular_function_interactions)
-    # pathway_pathway_adapter_instance = adapter_factory(pathway_pathway_interactions)
-    # pathway_protein_adapter_instance = adapter_factory(pathway_protein_interactions)
-
-    # TODO: Add adapters for other datasets (DrugCental, Opentargets)
+    # TODO: Add adapters for other datasets
 
     adapters = [
         bgee_adapter,
         *ctd_adapters,
+        opentargets_adapter,
     ]
 
     try:
@@ -96,6 +89,7 @@ biocypher_node = node(
     process_biocypher,
     inputs={
         "gene_expressions_in_anatomy": "silver.bgee.gene_expressions_in_anatomy",
+        "opentargets_edges": "silver.opentargets.opentargets_edges",
         "ctd_exposure_protein_interactions": "silver.ctd.ctd_exposure_protein_interactions",
         "ctd_exposure_exposure_interactions": "silver.ctd.ctd_exposure_exposure_interactions",
         # "drug_drug_interactions": "silver.drugbank.drug_drug",

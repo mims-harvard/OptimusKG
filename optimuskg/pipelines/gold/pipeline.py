@@ -11,6 +11,7 @@ def create_pipeline(**kwargs):
         inputs={
             # Data
             "silver.bgee.gene_expressions_in_anatomy",
+            "silver.opentargets.opentargets_edges",
             "silver.ctd.ctd_exposure_protein_interactions",
             "silver.ctd.ctd_exposure_exposure_interactions",
             # "silver.drugbank.drug_drug",

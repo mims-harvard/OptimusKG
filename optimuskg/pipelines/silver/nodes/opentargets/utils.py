@@ -123,33 +123,19 @@ def construct_edges(  # noqa: PLR0913
     key_y, table_y = type_switch_y
     logger.debug(f'Mapping {type_x} to "{key_x}" and {type_y} to "{key_y}"')
 
-    # Construct x and y labels
-    x_label = f"x_{type_x}"
-    y_label = f"y_{type_y}"
-
     # Construct KG edges
     edge_df = (
-        evidence_df.select([key_x, key_y, "relation", "display_relation"])
-        .join(
-            table_x.select(["id", "node_index"]),
-            left_on=key_x,
-            right_on="id",
-            how="left",
-        )
-        .join(
-            table_y.select(["id", "node_index"]),
-            left_on=key_y,
-            right_on="id",
-            how="left",
-        )
-        .rename(
-            {
-                key_x: x_label,
-                "node_index": "x_index",
-                key_y: y_label,
-                "node_index_right": "y_index",
-            }
-        )
+        evidence_df
+        .select([
+            pl.col(key_x).alias("x_id"),
+            pl.col(key_y).alias("y_id"),
+            pl.col("relation"),
+            pl.col("display_relation"),
+        ])
+        .with_columns([
+            pl.lit(type_x).alias("x_type"),
+            pl.lit(type_y).alias("y_type"),
+        ])
         .unique()
     )
 
