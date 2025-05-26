@@ -26,11 +26,6 @@ def process_go_plus(  # noqa: PLR0913
             ]
         )
         .filter(pl.col("id").str.contains("GO_"))
-        .with_columns(
-            [
-                pl.col("id").str.replace("GO_", "").alias("id"),
-            ]
-        )
         .unique()
     )
 
@@ -55,12 +50,6 @@ def process_go_plus(  # noqa: PLR0913
             ]
         )
         .filter(pl.col("tail").str.contains("GO_") & pl.col("head").str.contains("GO_"))
-        .with_columns(
-            [
-                pl.col("tail").str.replace("GO_", "").alias("tail"),
-                pl.col("head").str.replace("GO_", "").alias("head"),
-            ]
-        )
     )
 
     return go_terms, go_relations

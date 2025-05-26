@@ -5,15 +5,23 @@ from kedro.pipeline import node
 def process_gene_names(
     gene_names: pl.DataFrame,
 ) -> pl.DataFrame:
-    # Rename columns to standardized names
-    df_protein_names = gene_names.rename(
-        {
+    return (
+        gene_names
+        .rename({
             "NCBI Gene ID(supplied by NCBI)": "ncbi_id",
-            "Approved symbol": "symbol",
-        }
+            "Approved symbol": "symbol"
+        })
+        .with_columns(
+            pl.col("ncbi_id")
+            .cast(pl.Utf8)
+            .map_elements(lambda x: f"NCBIGene:{x}")  # Add "NCBIGene:" prefix to ncbi_id column to match biolink schema
+            .alias("ncbi_id")
+        )
+        .select(["ncbi_id", "symbol"])
+        .drop_nulls()
+        .unique()  # Remove any duplicate mappings
+        .sort("ncbi_id")
     )
-    df_protein_names = df_protein_names.select(["ncbi_id", "symbol"]).drop_nulls()
-    return df_protein_names
 
 
 gene_names_node = node(

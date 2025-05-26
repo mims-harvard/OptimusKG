@@ -46,7 +46,7 @@ def process_ctd_exposure_protein_interactions(
         [
             pl.lit("exposure").alias("x_type"),
             pl.lit("CTD").alias("x_source"),
-            pl.lit("gene/protein").alias("y_type"),
+            pl.lit("gene").alias("y_type"),
             pl.lit("NCBI").alias("y_source"),
             pl.lit("exposure_protein").alias("relation"),
             pl.lit("interacts with").alias("display_relation"),

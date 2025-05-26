@@ -32,7 +32,7 @@ def process_protein_molecular_function_interactions(
     # Add constant columns
     df_prot_path = df_prot_path.with_columns(
         [
-            pl.lit("gene/protein").alias("x_type"),
+            pl.lit("gene").alias("x_type"),
             pl.lit("NCBI").alias("x_source"),
             pl.lit("GO").alias("y_source"),
         ]
@@ -48,7 +48,7 @@ def process_protein_molecular_function_interactions(
         pl.col("y_type") == "molecular_function"
     ).with_columns(
         [
-            pl.lit("molfunc_protein").alias("relation"),
+            pl.lit("molecular_function_protein").alias("relation"),
             pl.lit("interacts with").alias("display_relation"),
         ]
     )
