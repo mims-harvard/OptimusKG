@@ -31,11 +31,18 @@ def process_gene2go(
         orient="row",
     )
 
-    # Extract numeric part from 'GO:#######'
+    # Replace 'GO:#######' with 'GO_#######'
     df = df.with_columns(
         pl.col("go_term_id")
-        .map_elements(lambda x: str(int(x.split(":")[1])), return_dtype=pl.Utf8)
+        .map_elements(lambda x: x.replace("GO:", "GO_"), return_dtype=pl.Utf8)
         .alias("go_term_id")
+    )
+
+    # Add "NCBIGene:" prefix to ncbi_gene_id column to match biolink schema
+    df = df.with_columns(
+        pl.col("ncbi_gene_id")
+        .map_elements(lambda x: f"NCBIGene:{x}")
+        .alias("ncbi_gene_id")
     )
 
     df = df.sort(by=["ncbi_gene_id", "go_term_id"])

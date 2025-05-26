@@ -35,7 +35,7 @@ def process_protein_biological_process_interactions(
     # Add constant columns
     df_prot_path = df_prot_path.with_columns(
         [
-            pl.lit("gene/protein").alias("x_type"),
+            pl.lit("gene").alias("x_type"),
             pl.lit("NCBI").alias("x_source"),
             pl.lit("GO").alias("y_source"),
         ]
@@ -51,7 +51,7 @@ def process_protein_biological_process_interactions(
         pl.col("y_type") == "biological_process"
     ).with_columns(
         [
-            pl.lit("bioprocess_protein").alias("relation"),
+            pl.lit("biological_process_protein").alias("relation"),
             pl.lit("interacts with").alias("display_relation"),
         ]
     )

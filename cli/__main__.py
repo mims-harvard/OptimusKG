@@ -1,5 +1,4 @@
 import logging
-import subprocess
 from pathlib import Path
 
 import typer
@@ -9,20 +8,6 @@ from optimuskg.utils import calculate_checksum
 app = typer.Typer(help="Main entry point for the CLI.")
 
 logger = logging.getLogger("cli")
-
-
-@app.command(help="Spin up the Neo4j service.")
-def neo4j():
-    logger.info("Spinning up Neo4j service...")
-
-    compose_file = Path(__file__).parent / "neo4j" / "docker-compose.yaml"
-    subprocess.run(
-        ["docker", "compose", "-f", str(compose_file), "up", "-d"], check=True
-    )
-
-    logger.info("Neo4j service started successfully.")
-    logger.info("Web interface (HTTP): http://localhost:7474")
-    logger.info("Web interface (HTTPS): https://localhost:7473")
 
 
 @app.command(help="Log the checksum of a file or directory.")

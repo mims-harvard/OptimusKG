@@ -15,10 +15,12 @@ class BiocypherAdapter:
         df: pl.DataFrame,
         node_configs: Sequence[NodeMappingConfig] | None = None,
         edge_configs: Sequence[EdgeMappingConfig] | None = None,
+        name: str = "biocypher_adapter",
     ):
         self.df = df
         self.node_configs = node_configs
         self.edge_configs = edge_configs
+        self.name = name
 
     def nodes(self) -> Iterable[NodeInfo]:
         if self.node_configs is None:
@@ -80,9 +82,11 @@ class BiocypherAdapter:
 
 def adapter_factory(
     df: pl.DataFrame,
+    name: str,
 ) -> BiocypherAdapter:
     adapter = BiocypherAdapter(
         df=df,
+        name=name,
         node_configs=[
             NodeMappingConfig(
                 id_field="x_id",

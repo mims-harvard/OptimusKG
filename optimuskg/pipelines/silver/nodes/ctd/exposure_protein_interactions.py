@@ -23,7 +23,14 @@ def process_ctd_exposure_protein_interactions(
 
     # Filter for numeric values in exposure_marker_id
     df_exp_prot = df_exp_prot.filter(
-        pl.col("exposure_marker_id").str.contains(r"^\d+$")
+        pl.col("exposure_marker_id").str.contains(r"^MESH:\d+$")
+    )
+
+    # Replace "MESH:" with "NCBIGene:" prefix to join with protein names,
+    # this can be done since exposure_marker_id is a MeSH or a NCBI Gene identifier (when the ID is only a number).
+    # see: https://ctdbase.org/downloads/#exposureevents
+    df_exp_prot = df_exp_prot.with_columns(
+        pl.col("exposure_marker_id").str.replace("MESH:", "NCBIGene:")
     )
 
     # Merge with protein names
@@ -46,7 +53,7 @@ def process_ctd_exposure_protein_interactions(
         [
             pl.lit("exposure").alias("x_type"),
             pl.lit("CTD").alias("x_source"),
-            pl.lit("gene/protein").alias("y_type"),
+            pl.lit("gene").alias("y_type"),
             pl.lit("NCBI").alias("y_source"),
             pl.lit("exposure_protein").alias("relation"),
             pl.lit("interacts with").alias("display_relation"),

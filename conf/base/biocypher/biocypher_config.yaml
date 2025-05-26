@@ -2,19 +2,32 @@ biocypher:
   # Required
   dbms: neo4j
   schema_config_path: conf/base/biocypher/schema_config.yaml
-  # offline: true
+  offline: true
   strict_mode: false
   # Optional
   debug: true
-  log_directory: biocypher-log
-  cache_directory: .biocypher_cache
-  output_directory: data/gold/
+  log_to_disk: true
+  log_directory: .biocypher/biocypher-log
+  cache_directory: .biocypher/biocypher_cache
+  output_directory: data/neo4j/import/
   
   tail_ontologies:
-    go:
+    go_biological_process:
       url: "http://purl.obolibrary.org/obo/go.owl"
       head_join_node: biological process # Biolink’s BiologicalProcess class is the umbrella for any process-oriented concept (e.g. signaling, metabolism, gene expression) 
       tail_join_node: biological_process # GO’s biological_process node (GO:0008150) is the single root of all process terms in GO
+      merge_nodes: false
+
+    go_cellular_component:
+      url: "http://purl.obolibrary.org/obo/go.owl"
+      head_join_node: cellular component # Biolink’s CellularComponent class is the umbrella for any component-oriented concept (e.g. organelle, membrane, cytoskeleton)
+      tail_join_node: cellular_component # GO’s cellular_component node (GO:0005575) is the single root of all component terms in GO
+      merge_nodes: false
+
+    go_molecular_function:
+      url: "http://purl.obolibrary.org/obo/go.owl"
+      head_join_node: molecular activity # Biolink’s MolecularActivity class (https://w3id.org/biolink/vocab/MolecularActivity)
+      tail_join_node: molecular_function # GO’s molecular functions represent molecular-level activities performed by gene products, such as “catalysis” or “transcription regulator activity”. (https://geneontology.org/docs/ontology-documentation/)
       merge_nodes: false
 
     uberon:
@@ -25,7 +38,15 @@ biocypher:
       
 neo4j:
   database_name: neo4j
+  wipe: true
+
+  uri: bolt://localhost:7687
+  user: ""
+  password: ""
+
   delimiter: '\t'
   quote_character: '@'
   array_delimiter: '|'
-  skip_bad_relationships: true
+
+  skip_duplicate_nodes: false
+  skip_bad_relationships: false

@@ -16,6 +16,14 @@ anatomical entity: # Biological entity that is either an individual member of a 
     x_name: str
     x_source: str
   
+environmental exposure: # A environmental exposure is a factor relating to abiotic processes in the environment including sunlight (UV-B), atmospheric (heat, cold, general pollution) and water-born contaminants. (https://biolink.github.io/biolink-model/EnvironmentalExposure/)
+  represented_as: node
+  input_label: exposure
+  properties:
+    x_name: str
+    x_source: str
+  
+  
 drug: # A substance that is used to treat, prevent, or diagnose a disease or condition (https://biolink.github.io/biolink-model/Drug/)
   represented_as: node
   input_label: drug
@@ -53,6 +61,20 @@ anatomy_protein_absent:
   is_a: expressed in # holds between a gene or gene product and an anatomical entity in which it is expressed (https://biolink.github.io/biolink-model/expressed_in/)
   represented_as: edge
   input_label: anatomy_protein_absent
+  properties:
+    display_relation: str
+
+exposure_exposure:
+  is_a: has_part # holds between a part and its whole (https://biolink.github.io/biolink-model/has_part/)
+  represented_as: edge
+  input_label: exposure_exposure
+  properties:
+    display_relation: str
+
+exposure_protein:
+  is_a: interacts_with # holds between a gene or gene product and an environmental exposure (https://biolink.github.io/biolink-model/interacts_with/)
+  represented_as: edge
+  input_label: exposure_protein
   properties:
     display_relation: str
 
