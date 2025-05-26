@@ -5,7 +5,7 @@ from kedro.pipeline import node
 def process_ctd(
     ctd_exposure_events: pl.DataFrame,
 ) -> pl.DataFrame:
-    return ctd_exposure_events.select(
+    ctd_exposure_events = ctd_exposure_events.select(
         [
             pl.col("exposurestressorname").alias("exposure_stressor_name"),
             pl.col("exposurestressorid").alias("exposure_stressor_id"),
@@ -52,6 +52,22 @@ def process_ctd(
             pl.col("studyfactors").alias("study_factors"),
         ]
     )
+
+    # Add "MESH:" prefix to id column to match biolink schema
+    ctd_exposure_events = ctd_exposure_events.with_columns(
+        [
+            pl.col("exposure_marker_id").map_elements(
+                lambda x: f"MESH:{x}",
+                return_dtype=pl.Utf8,
+            ),
+            pl.col("exposure_stressor_id").map_elements(
+                lambda x: f"MESH:{x}",
+                return_dtype=pl.Utf8,
+            ),
+        ]
+    )
+
+    return ctd_exposure_events
 
 
 ctd_node = node(

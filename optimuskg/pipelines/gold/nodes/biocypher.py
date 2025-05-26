@@ -6,6 +6,7 @@ from kedro.pipeline import node
 from more_itertools import peekable
 
 from optimuskg.pipelines.gold.adapter import adapter_factory
+from optimuskg.utils import format_rich
 
 logger = logging.getLogger(__name__)
 
@@ -31,58 +32,59 @@ def process_biocypher(  # noqa: PLR0913
         biocypher_config_path="conf/base/biocypher/biocypher_config.yaml",
     )
 
-    bgee_adapter = adapter_factory(gene_expressions_in_anatomy)
+    # Define individual adapter instances
+    bgee_adapter = adapter_factory(gene_expressions_in_anatomy, name="bgee")
     ctd_adapters = [
-        adapter_factory(ctd_exposure_protein_interactions),
-        adapter_factory(ctd_exposure_exposure_interactions),
+        adapter_factory(ctd_exposure_protein_interactions, name="ctd_exposure_protein"),
+        adapter_factory(
+            ctd_exposure_exposure_interactions, name="ctd_exposure_exposure"
+        ),
     ]
-    # drugbank_adapters = [
-    #     adapter_factory(drug_drug_interactions),
-    #     adapter_factory(drug_protein_interactions),
-    # ]
-    # ncbigene_adapters = [
-    #     adapter_factory(protein_biological_process_interactions),
-    #     adapter_factory(protein_cellular_component_interactions),
-    #     adapter_factory(protein_molecular_function_interactions),
-    # ]
-    # reactome_adapters = [
-    #     adapter_factory(pathway_pathway_interactions),
-    #     adapter_factory(pathway_protein_interactions),
-    # ]
+
+    # If other data sources are uncommented in the function signature and inputs,
+    # define their adapter instances here. For example:
+    # drug_drug_adapter_instance = adapter_factory(drug_drug_interactions) # drug_drug_interactions is a parameter
+    # drug_protein_adapter_instance = adapter_factory(drug_protein_interactions) # drug_protein_interactions is a parameter
+    # protein_biological_process_adapter_instance = adapter_factory(protein_biological_process_interactions)
+    # protein_cellular_component_adapter_instance = adapter_factory(protein_cellular_component_interactions)
+    # protein_molecular_function_adapter_instance = adapter_factory(protein_molecular_function_interactions)
+    # pathway_pathway_adapter_instance = adapter_factory(pathway_pathway_interactions)
+    # pathway_protein_adapter_instance = adapter_factory(pathway_protein_interactions)
 
     # TODO: Add adapters for other datasets (DrugCental, Opentargets)
 
     adapters = [
         bgee_adapter,
         *ctd_adapters,
-        # *drugbank_adapters,
-        # *ncbigene_adapters,
-        # *reactome_adapters,
     ]
 
     try:
-        for i, adapter in enumerate(adapters):
-            logger.info(f"Processing {i + 1}/{len(adapters)}")
+        if not adapters:
+            logger.warning("No adapters configured for processing.")
+        else:
+            for i, adapter in enumerate(adapters):
+                logger.info(
+                    f"Processing {format_rich(str(i + 1), 'dark_orange')} out of {format_rich(str(len(adapters)), 'dark_orange')} adapters"
+                )
+                if (nodes_p := peekable(adapter.nodes())).peek(None) is not None:
+                    logger.info(
+                        f"Writing nodes for {format_rich(adapter.name, 'dark_orange')}..."
+                    )
+                    bc.write_nodes(nodes_p)
+                else:
+                    logger.warning(
+                        f"No nodes to write for {format_rich(adapter.name, 'dark_orange')}."
+                    )
 
-            # Process nodes
-            nodes_iterable = adapter.nodes()
-            _peekable_nodes = peekable(nodes_iterable)
-            if _peekable_nodes.peek(None) is not None:
-                logger.info(f"Adapter (index {i + 1}): Writing nodes...")
-                bc.write_nodes(_peekable_nodes)  # Pass the peekable itself
-            else:
-                logger.info(f"Adapter (index {i + 1}): No nodes to write.")
-
-            # Process edges
-            edges_iterable = adapter.edges()
-            _peekable_edges = peekable(edges_iterable)
-            if _peekable_edges.peek(None) is not None:
-                logger.info(f"Adapter (index {i + 1}): Writing edges...")
-                bc.write_edges(_peekable_edges)  # Pass the peekable itself
-            else:
-                logger.info(f"Adapter (index {i + 1}): No edges to write.")
-
-        # bc.write_import_call()
+                if (edges_p := peekable(adapter.edges())).peek(None) is not None:
+                    logger.info(
+                        f"Writing edges for {format_rich(adapter.name, 'dark_orange')}..."
+                    )
+                    bc.write_edges(edges_p)
+                else:
+                    logger.warning(
+                        f"No edges to write for {format_rich(adapter.name, 'dark_orange')}."
+                    )
     except Exception as e:
         logger.exception(f"Error writing graph data to disk: {e}")
         raise
