@@ -9,7 +9,6 @@ gene: # A region (or regions) that includes all of the sequence elements necessa
     x_name: str
     x_source: str
 
-
 anatomical entity: # Biological entity that is either an individual member of a biological species or constitutes the structural organization of an individual member of a biological species. (http://purl.obolibrary.org/obo/UBERON_0001062)
   represented_as: node
   input_label: anatomy
@@ -17,7 +16,28 @@ anatomical entity: # Biological entity that is either an individual member of a 
     x_name: str
     x_source: str
   
-  
+drug: # A substance that is used to treat, prevent, or diagnose a disease or condition (https://biolink.github.io/biolink-model/Drug/)
+  represented_as: node
+  input_label: drug
+  properties:
+    x_name: str
+    x_source: str
+
+disease: # A disease or phenotypic feature (https://biolink.github.io/biolink-model/Disease/)
+  represented_as: node
+  input_label: disease
+  properties:
+    x_name: str
+    x_source: str
+
+phenotype: # A phenotypic feature (https://biolink.github.io/biolink-model/PhenotypicFeature/)
+  is_a: phenotypic feature
+  represented_as: node
+  input_label: phenotype
+  properties:
+    x_name: str
+    x_source: str
+
 # ---
 # Associations
 # ---
@@ -33,5 +53,61 @@ anatomy_protein_absent:
   is_a: expressed in # holds between a gene or gene product and an anatomical entity in which it is expressed (https://biolink.github.io/biolink-model/expressed_in/)
   represented_as: edge
   input_label: anatomy_protein_absent
+  properties:
+    display_relation: str
+
+indication:
+  is_a: treats # holds between a therapeutic procedure or chemical entity and a disease or phenotypic feature that it is used to treat (https://biolink.github.io/biolink-model/treats/)
+  represented_as: edge
+  input_label: indication
+  properties:
+    display_relation: str
+
+disease_protein:
+  is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
+  represented_as: edge
+  input_label: disease_protein
+  properties:
+    display_relation: str
+
+strong_clinical_evidence:
+  is_a: treats # holds between a therapeutic procedure or chemical entity and a disease or phenotypic feature that it is used to treat (https://biolink.github.io/biolink-model/treats/)
+  represented_as: edge
+  input_label: strong_clinical_evidence
+  properties:
+    display_relation: str
+
+weak_clinical_evidence:
+  is_a: treats # holds between a therapeutic procedure or chemical entity and a disease or phenotypic feature that it is used to treat (https://biolink.github.io/biolink-model/treats/)
+  represented_as: edge
+  input_label: weak_clinical_evidence
+  properties:
+    display_relation: str
+
+phenotype_protein:
+  is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
+  represented_as: edge
+  input_label: phenotype_protein
+  properties:
+    display_relation: str
+
+drug_protein:
+  is_a: physically interacts with # holds between two entities that make physical contact as part of some interaction (https://biolink.github.io/biolink-model/physically_interacts_with/)
+  represented_as: edge
+  input_label: drug_protein
+  properties:
+    display_relation: str
+
+disease_protein_positive:
+  is_a: positively correlated with # A relationship that holds between two concepts represented by variables for which a statistical correlation is demonstrated, wherein the regression line has a positive slope (https://biolink.github.io/biolink-model/positively_correlated_with/)
+  represented_as: edge
+  input_label: disease_protein_positive
+  properties:
+    display_relation: str
+
+disease_protein_negative:
+  is_a: negatively correlated with # A relationship that holds between two concepts represented by variables for which a statistical correlation is demonstrated, wherein the regression line has a negative slope (https://biolink.github.io/biolink-model/negatively_correlated_with/)
+  represented_as: edge
+  input_label: disease_protein_negative
   properties:
     display_relation: str

@@ -21,6 +21,7 @@ def process_biocypher(  # noqa: PLR0913
     uberon_ontology: LoadedOWLDataset,
     # Data
     gene_expressions_in_anatomy: pl.DataFrame,
+    opentargets_edges: pl.DataFrame,
     ctd_exposure_protein_interactions: pl.DataFrame,
     ctd_exposure_exposure_interactions: pl.DataFrame,
     drug_drug_interactions: pl.DataFrame,
@@ -67,6 +68,7 @@ def process_biocypher(  # noqa: PLR0913
     )
 
     bgee_adapter = adapter_factory(gene_expressions_in_anatomy)
+    opentargets_adapter = adapter_factory(opentargets_edges)
     # ctd_adapters = [
     #     adapter_factory(ctd_exposure_protein_interactions),
     #     adapter_factory(ctd_exposure_exposure_interactions),
@@ -89,6 +91,7 @@ def process_biocypher(  # noqa: PLR0913
 
     adapters = [
         bgee_adapter,
+        opentargets_adapter,
         # *ctd_adapters,
         # *drugbank_adapters,
         # *ncbigene_adapters,
@@ -96,9 +99,10 @@ def process_biocypher(  # noqa: PLR0913
     ]
 
     try:
-        for adapter in adapters:
+        for i, adapter in enumerate(adapters):
             bc.write_nodes(adapter.nodes())
             bc.write_edges(adapter.edges())
+            logger.info(f"Finished writing {i+1} of {len(adapters)} adapters")
         bc.write_import_call()
     except Exception as e:
         logger.exception(f"Error writing graph data to disk: {e}")
@@ -120,6 +124,7 @@ biocypher_node = node(
         "uberon_ontology": "landing.ontology.uber_anatomy",
         # Adapters
         "gene_expressions_in_anatomy": "silver.bgee.gene_expressions_in_anatomy",
+        "opentargets_edges": "silver.opentargets.opentargets_edges",
         "ctd_exposure_protein_interactions": "silver.ctd.ctd_exposure_protein_interactions",
         "ctd_exposure_exposure_interactions": "silver.ctd.ctd_exposure_exposure_interactions",
         "drug_drug_interactions": "silver.drugbank.drug_drug",

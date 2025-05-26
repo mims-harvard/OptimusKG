@@ -80,39 +80,7 @@ def process_opentargets_edges(  # noqa: PLR0913
         how="diagonal",
     )
 
-    df = df.select([
-        "target_id",
-        "phenotype_id",
-        "disease_id",
-        "drug_id",
-        "relation",
-        "display_relation",
-    ])
-
-    # all possible tuples of columns that end with "_id"
-    id_columns = [col for col in df.columns if col.endswith("_id")]
-    edge_types = list(combinations(id_columns, 2))
-    
-    dfs = []
-    for x_col, y_col in edge_types:
-        # Filter rows where both columns are not null
-        filtered = df.filter(
-            ~pl.col(x_col).is_null() & ~pl.col(y_col).is_null()
-        )
-        
-        # Create edge dataframe with standardized format
-        edge_df = filtered.select([
-            pl.col(x_col).alias("x_id"),
-            pl.col(y_col).alias("y_id"),
-            "relation",
-            "display_relation"
-        ])
-        dfs.append(edge_df)
-    
-    # Combine all edge dataframes
-    df = pl.concat(dfs)
-
-    df = df.select(['x_id', 'y_id', 'relation', 'display_relation']).unique().pipe(_handle_duplicate_edges)
+    df = df.unique().pipe(_handle_duplicate_edges)
 
     # Create reverse edges
     rev_edges = (
@@ -120,10 +88,12 @@ def process_opentargets_edges(  # noqa: PLR0913
         .rename(
             {
                 "x_id": "y_id",
+                "x_type": "y_type",
                 "y_id": "x_id",
+                "y_type": "x_type",
             }
         )
-        .select(['x_id', 'y_id', 'relation', 'display_relation'])
+        .select(['x_id', 'y_id', 'relation', 'display_relation', 'x_type', 'y_type'])
     )
 
 
@@ -134,6 +104,16 @@ def process_opentargets_edges(  # noqa: PLR0913
 
     # Log statistics
     logger.debug(f"Final KG edges: {new_kg_edges.height}")
+
+    # Add blank columns for x_type, x_name, x_source, y_type, y_name, y_source all at once
+    new_kg_edges = new_kg_edges.with_columns(
+        [
+            pl.lit("___").alias("x_name"),
+            pl.lit("___").alias("x_source"),
+            pl.lit("___").alias("y_name"),
+            pl.lit("___").alias("y_source"),
+        ]
+    )
 
     return new_kg_edges
 
