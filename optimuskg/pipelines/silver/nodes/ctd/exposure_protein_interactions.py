@@ -12,9 +12,9 @@ def process_ctd_exposure_protein_interactions(
     df_exp_prot = ctd_exposure_events.select(
         [
             "exposure_stressor_name",
-            "exposure_stressor_id",
+            "exposure_stressor_id",  # MESH ID (https://github.com/biolink/biolink-model/blob/56bb3a024d8c88c0ce75267cc7d0b8a1baf7f88e/project/prefixmap/biolink_model_prefix_map.json#L109)
             "exposure_marker",
-            "exposure_marker_id",
+            "exposure_marker_id",  # MESH or NCBI ID
         ]
     )
 
@@ -24,6 +24,13 @@ def process_ctd_exposure_protein_interactions(
     # Filter for numeric values in exposure_marker_id
     df_exp_prot = df_exp_prot.filter(
         pl.col("exposure_marker_id").str.contains(r"^\d+$")
+    )
+
+    df_exp_prot = df_exp_prot.with_columns(
+        pl.col("exposure_marker_id").map_elements(
+            lambda x: f"NCBIGene:{x}",
+            return_dtype=pl.Utf8,
+        )  # Add "NCBIGene:" prefix to ncbi_id column to match biolink schema
     )
 
     # Merge with protein names

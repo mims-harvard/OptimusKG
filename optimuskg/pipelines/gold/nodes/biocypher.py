@@ -3,6 +3,7 @@ import logging
 import polars as pl
 from biocypher import BioCypher
 from kedro.pipeline import node
+from more_itertools import peekable
 
 from optimuskg.pipelines.gold.adapter import adapter_factory
 
@@ -60,9 +61,27 @@ def process_biocypher(  # noqa: PLR0913
     ]
 
     try:
-        for adapter in adapters:
-            bc.write_nodes(adapter.nodes())
-            bc.write_edges(adapter.edges())
+        for i, adapter in enumerate(adapters):
+            logger.info(f"Processing {i + 1}/{len(adapters)}")
+
+            # Process nodes
+            nodes_iterable = adapter.nodes()
+            _peekable_nodes = peekable(nodes_iterable)
+            if _peekable_nodes.peek(None) is not None:
+                logger.info(f"Adapter (index {i + 1}): Writing nodes...")
+                bc.write_nodes(_peekable_nodes)  # Pass the peekable itself
+            else:
+                logger.info(f"Adapter (index {i + 1}): No nodes to write.")
+
+            # Process edges
+            edges_iterable = adapter.edges()
+            _peekable_edges = peekable(edges_iterable)
+            if _peekable_edges.peek(None) is not None:
+                logger.info(f"Adapter (index {i + 1}): Writing edges...")
+                bc.write_edges(_peekable_edges)  # Pass the peekable itself
+            else:
+                logger.info(f"Adapter (index {i + 1}): No edges to write.")
+
         # bc.write_import_call()
     except Exception as e:
         logger.exception(f"Error writing graph data to disk: {e}")

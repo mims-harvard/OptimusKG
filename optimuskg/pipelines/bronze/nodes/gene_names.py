@@ -13,7 +13,8 @@ def process_gene_names(
             pl.col("ncbi_id")
             .cast(pl.Utf8)
             .map_elements(
-                lambda x: f"NCBIGene:{x}"
+                lambda x: f"NCBIGene:{x}",
+                return_dtype=pl.Utf8,
             )  # Add "NCBIGene:" prefix to ncbi_id column to match biolink schema
             .alias("ncbi_id")
         )
