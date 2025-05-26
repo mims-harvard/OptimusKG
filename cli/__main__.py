@@ -9,6 +9,7 @@ app = typer.Typer(help="Main entry point for the CLI.")
 
 logger = logging.getLogger("cli")
 
+
 @app.command(help="Log the checksum of a file or directory.")
 def checksum(  # noqa: PLR0913
     path: Path,

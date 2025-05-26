@@ -4,7 +4,6 @@ import polars as pl
 from biocypher import BioCypher
 from kedro.pipeline import node
 
-from optimuskg.datasets.owl_dataset import LoadedOWLDataset
 from optimuskg.pipelines.gold.adapter import adapter_factory
 
 logger = logging.getLogger(__name__)
