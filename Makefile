@@ -93,13 +93,23 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--array-delimiter="|" \
 		--quote='@' \
 		--overwrite-destination=true \
+		--nodes="/import/Disease-header.csv,/import/Disease-part.*" \
+		--nodes="/import/Phenotype-header.csv,/import/Phenotype-part.*" \
+		--nodes="/import/Drug-header.csv,/import/Drug-part.*" \
         --nodes="/import/Gene-header.csv,/import/Gene-part.*" \
         --nodes="/import/AnatomicalEntity-header.csv,/import/AnatomicalEntity-part.*" \
 		--nodes="/import/EnvironmentalExposure-header.csv,/import/EnvironmentalExposure-part.*" \
         --relationships="/import/Anatomy_protein_absent-header.csv,/import/Anatomy_protein_absent-part.*" \
         --relationships="/import/Anatomy_protein_present-header.csv,/import/Anatomy_protein_present-part.*" \
         --relationships="/import/Exposure_exposure-header.csv,/import/Exposure_exposure-part.*" \
-        --relationships="/import/Exposure_protein-header.csv,/import/Exposure_protein-part.*"
+        --relationships="/import/Exposure_protein-header.csv,/import/Exposure_protein-part.*" \
+		--relationships="/import/Disease_protein_positive-header.csv,/import/Disease_protein_positive-part.*" \
+		--relationships="/import/Disease_protein_negative-header.csv,/import/Disease_protein_negative-part.*" \
+		--relationships="/import/Drug_protein-header.csv,/import/Drug_protein-part.*" \
+		--relationships="/import/Indication-header.csv,/import/Indication-part.*" \
+		--relationships="/import/Phenotype_protein-header.csv,/import/Phenotype_protein-part.*" \
+		--relationships="/import/Strong_clinical_evidence-header.csv,/import/Strong_clinical_evidence-part.*" \
+		--relationships="/import/Weak_clinical_evidence-header.csv,/import/Weak_clinical_evidence-part.*" \
 
 
 .PHONY: jupyterlab
