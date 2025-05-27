@@ -106,10 +106,12 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--relationships="/import/Disease_protein_positive-header.csv,/import/Disease_protein_positive-part.*" \
 		--relationships="/import/Disease_protein_negative-header.csv,/import/Disease_protein_negative-part.*" \
 		--relationships="/import/Drug_protein-header.csv,/import/Drug_protein-part.*" \
+		--relationships="/import/Drug_drug-header.csv,/import/Drug_drug-part.*" \
 		--relationships="/import/Indication-header.csv,/import/Indication-part.*" \
 		--relationships="/import/Phenotype_protein-header.csv,/import/Phenotype_protein-part.*" \
 		--relationships="/import/Strong_clinical_evidence-header.csv,/import/Strong_clinical_evidence-part.*" \
 		--relationships="/import/Weak_clinical_evidence-header.csv,/import/Weak_clinical_evidence-part.*" \
+
 
 
 .PHONY: jupyterlab

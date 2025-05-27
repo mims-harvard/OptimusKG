@@ -1,0 +1,17 @@
+bronze.drugbank.vocabulary:
+  type: polars.CSVDataset
+  filepath: "data/bronze/drugbank/vocabulary.csv"
+  load_args:
+    infer_schema: false
+    schema:
+      "drugbank_id": "${pl:Utf8}"
+      "accession_numbers": "${pl:Utf8}"
+      "common_name": "${pl:Utf8}"
+      "cas": "${pl:Utf8}"
+      "unii": "${pl:Utf8}"
+      "synonyms": "${pl:Utf8}"
+      "standard_inchi_key": "${pl:Utf8}"
+  metadata:
+    checksum: "88e346e8462b167494dbcdc40fcb4a1e"
+    kedro-viz:
+      layer: bronze

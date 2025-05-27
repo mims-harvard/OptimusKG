@@ -125,17 +125,20 @@ def construct_edges(  # noqa: PLR0913
 
     # Construct KG edges
     edge_df = (
-        evidence_df
-        .select([
-            pl.col(key_x).alias("x_id"),
-            pl.col(key_y).alias("y_id"),
-            pl.col("relation"),
-            pl.col("display_relation"),
-        ])
-        .with_columns([
-            pl.lit(type_x).alias("x_type"),
-            pl.lit(type_y).alias("y_type"),
-        ])
+        evidence_df.select(
+            [
+                pl.col(key_x).alias("x_id"),
+                pl.col(key_y).alias("y_id"),
+                pl.col("relation"),
+                pl.col("display_relation"),
+            ]
+        )
+        .with_columns(
+            [
+                pl.lit(type_x).alias("x_type"),
+                pl.lit(type_y).alias("y_type"),
+            ]
+        )
         .unique()
     )
 

@@ -2,7 +2,6 @@ import logging
 
 import polars as pl
 from kedro.pipeline import node
-from itertools import combinations
 
 logger = logging.getLogger(__name__)
 
@@ -93,9 +92,8 @@ def process_opentargets_edges(  # noqa: PLR0913
                 "y_type": "x_type",
             }
         )
-        .select(['x_id', 'y_id', 'relation', 'display_relation', 'x_type', 'y_type'])
+        .select(["x_id", "y_id", "relation", "display_relation", "x_type", "y_type"])
     )
-
 
     new_kg_edges = pl.concat([df, rev_edges])
 
