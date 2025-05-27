@@ -10,6 +10,7 @@ def create_pipeline(**kwargs):
         inputs={
             # landing
             "landing.ontology.go_plus",
+            "landing.ontology.human_phenotype",
             "landing.bgee.homo_sapiens_expressions_advanced",
             "landing.ctd.ctd_exposure_events",
             "landing.reactome.ncbi2_reactome",
