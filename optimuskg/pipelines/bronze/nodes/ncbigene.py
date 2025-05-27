@@ -41,7 +41,7 @@ def process_gene2go(
     # Add "NCBIGene:" prefix to ncbi_gene_id column to match biolink schema
     df = df.with_columns(
         pl.col("ncbi_gene_id")
-        .map_elements(lambda x: f"NCBIGene:{x}")
+        .map_elements(lambda x: f"NCBIGene:{x}", return_dtype=pl.Utf8)
         .alias("ncbi_gene_id")
     )
 

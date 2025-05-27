@@ -1,6 +1,6 @@
 import logging
 from typing import Final
-import logging
+
 import pandas as pd
 import polars as pl
 from kedro.pipeline import node

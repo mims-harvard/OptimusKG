@@ -8,8 +8,6 @@ def create_pipeline(**kwargs):
         [getattr(nodes, name) for name in nodes.__all__],
         namespace="silver",
         inputs={
-            # Landing
-            "landing.drugbank.vocabulary",
             # Bronze
             "bronze.opentargets.evidence.cancer_gene_census",
             "bronze.opentargets.evidence.chembl",
@@ -44,5 +42,6 @@ def create_pipeline(**kwargs):
             "bronze.reactome.reactome_terms",
             "bronze.drugbank.drug_drug",
             "bronze.drugbank.drug_protein",
+            "bronze.drugbank.vocabulary",
         },
     )

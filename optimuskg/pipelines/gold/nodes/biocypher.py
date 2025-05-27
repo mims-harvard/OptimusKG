@@ -16,8 +16,8 @@ def process_biocypher(  # noqa: PLR0913
     opentargets_edges: pl.DataFrame,
     ctd_exposure_protein_interactions: pl.DataFrame,
     ctd_exposure_exposure_interactions: pl.DataFrame,
-    # drug_drug_interactions: pl.DataFrame,
-    # drug_protein_interactions: pl.DataFrame,
+    drug_protein_interactions: pl.DataFrame,
+    drug_drug_interactions: pl.DataFrame,
     # protein_biological_process_interactions: pl.DataFrame,
     # protein_cellular_component_interactions: pl.DataFrame,
     # protein_molecular_function_interactions: pl.DataFrame,
@@ -42,6 +42,10 @@ def process_biocypher(  # noqa: PLR0913
         ),
     ]
     opentargets_adapter = adapter_factory(opentargets_edges, name="opentargets")
+    drugbank_adapters = [
+        adapter_factory(drug_protein_interactions, name="drugbank_drug_protein"),
+        adapter_factory(drug_drug_interactions, name="drugbank_drug_drug"),
+    ]
 
     # TODO: Add adapters for other datasets
 
@@ -49,6 +53,7 @@ def process_biocypher(  # noqa: PLR0913
         bgee_adapter,
         *ctd_adapters,
         opentargets_adapter,
+        *drugbank_adapters,
     ]
 
     try:
@@ -92,8 +97,8 @@ biocypher_node = node(
         "opentargets_edges": "silver.opentargets.opentargets_edges",
         "ctd_exposure_protein_interactions": "silver.ctd.ctd_exposure_protein_interactions",
         "ctd_exposure_exposure_interactions": "silver.ctd.ctd_exposure_exposure_interactions",
-        # "drug_drug_interactions": "silver.drugbank.drug_drug",
-        # "drug_protein_interactions": "silver.drugbank.drug_protein",
+        "drug_protein_interactions": "silver.drugbank.drug_protein",
+        "drug_drug_interactions": "silver.drugbank.drug_drug",
         # "protein_biological_process_interactions": "silver.ncbigene.protein_biological_process_interactions",
         # "protein_cellular_component_interactions": "silver.ncbigene.protein_cellular_component_interactions",
         # "protein_molecular_function_interactions": "silver.ncbigene.protein_molecular_function_interactions",

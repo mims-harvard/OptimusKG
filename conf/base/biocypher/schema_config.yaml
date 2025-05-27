@@ -120,6 +120,13 @@ drug_protein:
   properties:
     display_relation: str
 
+drug_drug:
+  is_a: physically interacts with # holds between two entities that make physical contact as part of some interaction (https://biolink.github.io/biolink-model/physically_interacts_with/)
+  represented_as: edge
+  input_label: drug_drug
+  properties:
+    display_relation: str
+
 disease_protein_positive:
   is_a: positively correlated with # A relationship that holds between two concepts represented by variables for which a statistical correlation is demonstrated, wherein the regression line has a positive slope (https://biolink.github.io/biolink-model/positively_correlated_with/)
   represented_as: edge
