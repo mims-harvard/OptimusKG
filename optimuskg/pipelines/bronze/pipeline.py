@@ -44,7 +44,6 @@ def create_pipeline(**kwargs):
             "landing.opentargets.evidence.orphanet",
             "landing.opentargets.disease_to_phenotype",
             "landing.opentargets.targets",
-            "landing.opentargets.primekg_nodes",
             "landing.opentargets.drug_mappings",
             "landing.opentargets.molecule",
             "landing.opentargets.mondo_efo_mappings",
