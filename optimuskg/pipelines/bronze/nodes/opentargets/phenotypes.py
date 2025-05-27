@@ -42,10 +42,7 @@ def process_phenotypes(
 
     # Create DataFrame
     df = pl.DataFrame(phenotypes)
-
-    # Sort by ID
-    if not df.is_empty():
-        df = df.sort("id")
+    df = df.sort("id")
 
     return df
 
