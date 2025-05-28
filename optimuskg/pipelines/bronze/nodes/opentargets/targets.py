@@ -12,8 +12,9 @@ def process_targets(targets: dict[str, Callable[[], Any]]) -> pd.DataFrame:
     concated_df = concat_json_partitions(targets)
     df = concated_df.select(
         pl.col("id").cast(pl.String),
-        pl.col("approvedName").cast(pl.String),
+        pl.col("approvedName").cast(pl.String).alias("name"),
         pl.col("approvedSymbol").cast(pl.String),
+        pl.lit("opentargets").alias("source"),
     )
     df = df.unique(subset=["approvedSymbol"])
     df = df.sort(by=sorted(df.columns))

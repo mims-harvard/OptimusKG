@@ -38,7 +38,9 @@ def process_drug_mappings(
             on="id",
             how="inner",
         )
+        .with_columns(pl.lit("opentargets").alias("source"))
     )
+    df = df.sort(by=sorted(df.columns))
     return df
 
 
