@@ -3,9 +3,7 @@ from kedro.pipeline import node
 from lxml import etree
 
 
-def process_phenotypes(
-    human_phenotype_ontology: pl.DataFrame,
-) -> pl.DataFrame:
+def process_phenotypes(human_phenotype_ontology: etree._ElementTree) -> pl.DataFrame:
     root = human_phenotype_ontology.getroot()
 
     namespaces = {
