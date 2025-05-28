@@ -32,7 +32,9 @@ def construct_edges(  # noqa: PLR0913
     relation_label: str | None = "disease_protein",
     display_relation_label: str | None = "associated with",
 ):
-    logger.debug(f"Constructing {type_x}-{type_y} edges with {evidence_df.shape[0]} rows")
+    logger.debug(
+        f"Constructing {type_x}-{type_y} edges with {evidence_df.shape[0]} rows"
+    )
 
     if (type_x == "gene" and type_y == "disease") and relation_label is not None:
         pheno_count = evidence_df.filter(pl.col("diseaseId").str.contains("HP")).height
@@ -78,9 +80,13 @@ def construct_edges(  # noqa: PLR0913
             )
 
             # Combine results
-            edge_df = pl.concat([evidence_pheno_df, evidence_disease_df], how="diagonal")
+            edge_df = pl.concat(
+                [evidence_pheno_df, evidence_disease_df], how="diagonal"
+            )
 
-            edge_types = '", "'.join(edge_df.select("relation").unique().to_series().to_list())
+            edge_types = '", "'.join(
+                edge_df.select("relation").unique().to_series().to_list()
+            )
             logger.debug(f'Constructed {edge_df.height} edges of types "{edge_types}"')
             return edge_df
 
@@ -92,7 +98,9 @@ def construct_edges(  # noqa: PLR0913
                 pl.lit(display_relation_label).alias("display_relation"),
             ]
         )
-        logger.debug(f"Adding edge type information: {relation_label} ({display_relation_label})")
+        logger.debug(
+            f"Adding edge type information: {relation_label} ({display_relation_label})"
+        )
     else:
         logger.debug('Using existing edge type information in column "relation"')
 
@@ -130,9 +138,19 @@ def construct_edges(  # noqa: PLR0913
             ]
         )
         .unique()
-        .join(x_df.select(["id", "name", "source"]), left_on="x_id", right_on="id", how="left")
+        .join(
+            x_df.select(["id", "name", "source"]),
+            left_on="x_id",
+            right_on="id",
+            how="left",
+        )
         .rename({"name": "x_name", "source": "x_source"})
-        .join(y_df.select(["id", "name", "source"]), left_on="y_id", right_on="id", how="left")
+        .join(
+            y_df.select(["id", "name", "source"]),
+            left_on="y_id",
+            right_on="id",
+            how="left",
+        )
         .rename({"name": "y_name", "source": "y_source"})
         .select(
             [
@@ -154,8 +172,9 @@ def construct_edges(  # noqa: PLR0913
     if relation_label is not None:
         logger.debug(f'Constructed {edge_df.height} edges of type "{relation_label}"')
     else:
-        edge_types = '", "'.join(edge_df.select("relation").unique().to_series().to_list())
+        edge_types = '", "'.join(
+            edge_df.select("relation").unique().to_series().to_list()
+        )
         logger.debug(f'Constructed {edge_df.height} edges of types "{edge_types}"')
 
     return edge_df
-
