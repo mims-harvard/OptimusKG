@@ -36,7 +36,7 @@ def process_phenotypes(
                     {
                         "id": hp_id,
                         "node_name": name,
-                        # 'node_source': 'HPO'
+                        "node_source": "HPO",
                     }
                 )
 
