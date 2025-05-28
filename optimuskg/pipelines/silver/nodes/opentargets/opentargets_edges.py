@@ -92,6 +92,8 @@ def process_opentargets_edges(  # noqa: PLR0913
                 "y_type": "x_type",
                 "x_name": "y_name",
                 "y_name": "x_name",
+                "x_source": "y_source",
+                "y_source": "x_source",
             }
         )
         .select(
@@ -104,6 +106,8 @@ def process_opentargets_edges(  # noqa: PLR0913
                 "y_type",
                 "x_name",
                 "y_name",
+                "x_source",
+                "y_source",
             ]
         )
     )
@@ -115,14 +119,6 @@ def process_opentargets_edges(  # noqa: PLR0913
 
     # Log statistics
     logger.debug(f"Final KG edges: {new_kg_edges.height}")
-
-    # Add blank columns for x_type, x_name, x_source, y_type, y_name, y_source all at once
-    new_kg_edges = new_kg_edges.with_columns(
-        [
-            pl.lit("___").alias("x_source"),
-            pl.lit("___").alias("y_source"),
-        ]
-    )
 
     return new_kg_edges
 

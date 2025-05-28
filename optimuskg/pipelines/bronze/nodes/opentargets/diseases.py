@@ -75,13 +75,9 @@ def process_diseases(
 
     df = df.with_columns(
         [
-            pl.col("mondo_id")
-            .str.replace("MONDO_", "")
-            .alias("node_id")
-            .str.strip_chars_start("0")
+            pl.lit("opentargets").alias("source"),
         ]
     )
-
     df = df.sort(by=sorted(df.columns))
     return df  # type: ignore[no-any-return]
 

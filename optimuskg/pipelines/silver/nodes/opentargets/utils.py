@@ -130,10 +130,24 @@ def construct_edges(  # noqa: PLR0913
             ]
         )
         .unique()
-        .join(x_df.select(["id", "name"]), left_on="x_id", right_on="id", how="left")
-        .rename({"name": "x_name"})
-        .join(y_df.select(["id", "name"]), left_on="y_id", right_on="id", how="left")
-        .rename({"name": "y_name"})
+        .join(x_df.select(["id", "name", "source"]), left_on="x_id", right_on="id", how="left")
+        .rename({"name": "x_name", "source": "x_source"})
+        .join(y_df.select(["id", "name", "source"]), left_on="y_id", right_on="id", how="left")
+        .rename({"name": "y_name", "source": "y_source"})
+        .select(
+            [
+                "x_id",
+                "y_id",
+                "relation",
+                "display_relation",
+                "x_type",
+                "y_type",
+                "x_name",
+                "y_name",
+                "x_source",
+                "y_source",
+            ]
+        )
     )
 
     # Log concluding message
@@ -144,3 +158,4 @@ def construct_edges(  # noqa: PLR0913
         logger.debug(f'Constructed {edge_df.height} edges of types "{edge_types}"')
 
     return edge_df
+
