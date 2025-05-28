@@ -8,7 +8,6 @@ def process_phenotypes(
 ) -> pl.DataFrame:
     root = human_phenotype_ontology.getroot()
 
-    # Define namespaces used in the OWL file
     namespaces = {
         "owl": "http://www.w3.org/2002/07/owl#",
         "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
@@ -23,14 +22,12 @@ def process_phenotypes(
         about_attr = class_elem.get("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about")
 
         if about_attr and "HP_" in about_attr:
-            # Extract HP ID from the about attribute
-            hp_id = about_attr.split("/")[-1]  # Gets the last part after the last '/'
+            hp_id = about_attr.split("/")[-1]
 
             # Find the label (name) for this term
             label_elem = class_elem.find(".//rdfs:label", namespaces=namespaces)
             name = label_elem.text if label_elem is not None else None
 
-            # Only include terms that have both ID and name
             if hp_id and name:
                 phenotypes.append(
                     {
@@ -40,7 +37,6 @@ def process_phenotypes(
                     }
                 )
 
-    # Create DataFrame
     df = pl.DataFrame(phenotypes)
     df = df.sort("id")
 
