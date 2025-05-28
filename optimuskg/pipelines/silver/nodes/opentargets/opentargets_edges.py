@@ -90,9 +90,22 @@ def process_opentargets_edges(  # noqa: PLR0913
                 "x_type": "y_type",
                 "y_id": "x_id",
                 "y_type": "x_type",
+                "x_name": "y_name",
+                "y_name": "x_name",
             }
         )
-        .select(["x_id", "y_id", "relation", "display_relation", "x_type", "y_type"])
+        .select(
+            [
+                "x_id",
+                "y_id",
+                "relation",
+                "display_relation",
+                "x_type",
+                "y_type",
+                "x_name",
+                "y_name",
+            ]
+        )
     )
 
     new_kg_edges = pl.concat([df, rev_edges])
@@ -106,9 +119,7 @@ def process_opentargets_edges(  # noqa: PLR0913
     # Add blank columns for x_type, x_name, x_source, y_type, y_name, y_source all at once
     new_kg_edges = new_kg_edges.with_columns(
         [
-            pl.lit("___").alias("x_name"),
             pl.lit("___").alias("x_source"),
-            pl.lit("___").alias("y_name"),
             pl.lit("___").alias("y_source"),
         ]
     )
