@@ -24,7 +24,8 @@ def process_phenotypes(
 
     xpath_results: etree._XPathObject = root.xpath("//owl:Class", namespaces=namespaces)
     if not isinstance(xpath_results, list):
-        raise ValueError("XPath results are not a list")
+        logger.error("XPath results are not a list, returning empty DataFrame")
+        return pl.DataFrame(schema=df_schema)
 
     for class_elem in xpath_results:
         if not isinstance(class_elem, etree._Element):
