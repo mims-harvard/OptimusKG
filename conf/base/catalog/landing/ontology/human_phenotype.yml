@@ -1,5 +1,5 @@
 landing.ontology.human_phenotype:
-  type: optimuskg.datasets.OWLDataset
+  type: optimuskg.datasets.LXMLDataset
   filepath: "data/landing/ontology/human_phenotype.owl"
   metadata:
     checksum: "8f713ce3d940895c6b2cdd7916301e96"

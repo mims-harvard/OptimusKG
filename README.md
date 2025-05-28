@@ -31,15 +31,12 @@ However, there are some files that are not downloaded automatically, so you need
 optimuskg/
 └── data/
     └── landing/
-        ├── drugbank/
-        │   └── full database.xml
-        │   └── drugbank_all_carrier_polypeptide_ids.csv
-        │   └── drugbank_all_enzyme_polypeptide_ids.csv
-        │   └── drugbank_all_target_polypeptide_ids.csv
-        │   └── drugbank_all_transporter_polypeptide_ids.csv
-        └── opentargets/
-            └── primekg_nodes.csv
-            └── primekg_edges.csv
+        └── drugbank/
+            └── full database.xml
+            └── drugbank_all_carrier_polypeptide_ids.csv
+            └── drugbank_all_enzyme_polypeptide_ids.csv
+            └── drugbank_all_target_polypeptide_ids.csv
+            └── drugbank_all_transporter_polypeptide_ids.csv
 ```
 
 ### Set up Neo4j volume permissions
@@ -89,21 +86,20 @@ Or a specific pipeline:
 
 ```console
 $ uv run kedro run --pipeline bronze
-
-[02/01/25 00:20:45] INFO     Using 'conf/logging.yml' as logging configuration. You can change this by setting the KEDRO_LOGGING_CONFIG environment variable accordingly.                     __init__.py:270
-                    INFO     Kedro project optimuskg                                                                                                                                           session.py:329
-[02/01/25 00:20:47] INFO     Using synchronous mode for loading and saving data. Use the --async flag for potential performance gains.                                                sequential_runner.py:74
-                             https://docs.kedro.org/en/stable/nodes_and_pipelines/run_a_pipeline.html#load-and-save-asynchronously
-                    INFO     Loading data from landing.opentargets.drug_mappings (CSVDataset)...                                                                                          data_catalog.py:390
-[02/01/25 00:20:50] INFO     Loading data from landing.opentargets.primekg_nodes (CSVDataset)...                                                                                          data_catalog.py:390
-[02/01/25 00:20:51] INFO     Loading data from landing.opentargets.molecule (PartitionedDataset)...                                                                                       data_catalog.py:390
-                    INFO     Running node: drug_mappings: process_drug_mappings([landing.opentargets.drug_mappings;landing.opentargets.primekg_nodes;landing.opentargets.molecule]) ->            node.py:367
-                             [bronze.opentargets.drug_mappings]
-[02/01/25 00:20:53] INFO     Saving data to bronze.opentargets.drug_mappings (CSVDataset)...                                                                                              data_catalog.py:432
-                    INFO     Loading data from landing.opentargets.evidence.chembl (PartitionedDataset)...                                                                                data_catalog.py:390
-                    INFO     Completed node: bronze.drug_mappings                                                                                                                               runner.py:250
-                    INFO     Completed 1 out of 32 tasks                                                                                                                                        runner.py:251
-                    INFO     Running node: chembl: process_chembl([landing.opentargets.evidence.chembl]) -> [bronze.opentargets.evidence.chembl]                                                  node.py:367
+[05/28/25 11:28:38] INFO     Using 'conf/logging.yml' as logging configuration. You can change this by setting the KEDRO_LOGGING_CONFIG __init__.py:270
+                             environment variable accordingly.                                                                                         
+                    INFO     Kedro project optimuskg                                                                                     session.py:329
+[05/28/25 11:28:39] INFO     Using synchronous mode for loading and saving data. Use the --async flag for potential performance sequential_runner.py:68
+                             gains.                                                                                                                    
+                             https://docs.kedro.org/en/stable/nodes_and_pipelines/run_a_pipeline.html#load-and-save-asynchronou                        
+                             sly                                                                                                                       
+                    INFO     Attempting download for landing.bgee.homo_sapiens_expressions_advanced (CSVDataset) using http          origin_hooks.py:63
+                             provider.                                                                                                                 
+[05/28/25 11:28:40] INFO     Loading data from landing.bgee.homo_sapiens_expressions_advanced (CSVDataset)...                 kedro_data_catalog.py:757
+[05/28/25 11:28:47] INFO     Running node: bgee: process_bgee() ->                                                                          node.py:367
+[05/28/25 11:28:49] INFO     Saving data to bronze.bgee.gene_expressions_in_anatomy (CSVDataset)...                           kedro_data_catalog.py:715
+[05/28/25 11:28:50] INFO     Completed node: bronze.bgee                                                                                  runner.py:244
+                    INFO     Completed 1 out of 34 tasks                                                                                  runner.py:245
 ```
 
 ## How to work with notebooks

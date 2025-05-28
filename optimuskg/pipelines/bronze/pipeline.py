@@ -10,6 +10,7 @@ def create_pipeline(**kwargs):
         inputs={
             # landing
             "landing.ontology.go_plus",
+            "landing.ontology.human_phenotype",
             "landing.bgee.homo_sapiens_expressions_advanced",
             "landing.ctd.ctd_exposure_events",
             "landing.reactome.ncbi2_reactome",
@@ -43,7 +44,6 @@ def create_pipeline(**kwargs):
             "landing.opentargets.evidence.orphanet",
             "landing.opentargets.disease_to_phenotype",
             "landing.opentargets.targets",
-            "landing.opentargets.primekg_nodes",
             "landing.opentargets.drug_mappings",
             "landing.opentargets.molecule",
             "landing.opentargets.mondo_efo_mappings",
