@@ -8,7 +8,6 @@ def process_phenotypes(
 ) -> pl.DataFrame:
     root = human_phenotype_ontology.getroot()
 
-    # Define namespaces used in the OWL file
     namespaces = {
         "owl": "http://www.w3.org/2002/07/owl#",
         "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
@@ -38,7 +37,6 @@ def process_phenotypes(
                     }
                 )
 
-    # Create DataFrame
     df = pl.DataFrame(phenotypes)
     df = df.sort("id")
 
