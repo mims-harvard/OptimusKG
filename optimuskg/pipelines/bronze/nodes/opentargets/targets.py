@@ -12,7 +12,7 @@ def process_targets(targets: dict[str, Callable[[], Any]]) -> pd.DataFrame:
     concated_df = concat_json_partitions(targets)
     df = concated_df.select(
         pl.col("id").cast(pl.String),
-        pl.col("approvedName").cast(pl.String),
+        pl.col("approvedName").cast(pl.String).alias("name"),
         pl.col("approvedSymbol").cast(pl.String),
     )
     df = df.unique(subset=["approvedSymbol"])

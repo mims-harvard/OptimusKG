@@ -32,9 +32,7 @@ def construct_edges(  # noqa: PLR0913
     relation_label: str | None = "disease_protein",
     display_relation_label: str | None = "associated with",
 ):
-    logger.debug(
-        f"Constructing {type_x}-{type_y} edges with {evidence_df.shape[0]} rows"
-    )
+    logger.debug(f"Constructing {type_x}-{type_y} edges with {evidence_df.shape[0]} rows")
 
     if (type_x == "gene" and type_y == "disease") and relation_label is not None:
         pheno_count = evidence_df.filter(pl.col("diseaseId").str.contains("HP")).height
@@ -80,13 +78,9 @@ def construct_edges(  # noqa: PLR0913
             )
 
             # Combine results
-            edge_df = pl.concat(
-                [evidence_pheno_df, evidence_disease_df], how="diagonal"
-            )
+            edge_df = pl.concat([evidence_pheno_df, evidence_disease_df], how="diagonal")
 
-            edge_types = '", "'.join(
-                edge_df.select("relation").unique().to_series().to_list()
-            )
+            edge_types = '", "'.join(edge_df.select("relation").unique().to_series().to_list())
             logger.debug(f'Constructed {edge_df.height} edges of types "{edge_types}"')
             return edge_df
 
@@ -98,37 +92,33 @@ def construct_edges(  # noqa: PLR0913
                 pl.lit(display_relation_label).alias("display_relation"),
             ]
         )
-        logger.debug(
-            f"Adding edge type information: {relation_label} ({display_relation_label})"
-        )
+        logger.debug(f"Adding edge type information: {relation_label} ({display_relation_label})")
     else:
         logger.debug('Using existing edge type information in column "relation"')
 
     # Convert arguments to mapping tables
-    type_switch_x = type_switch(
+    x_id, x_df = type_switch(
         type_x,
         targets_df=targets_df,
         phenotypes_df=phenotypes_df,
         diseases_df=diseases_df,
         drug_mappings_df=drug_mappings_df,
     )
-    key_x, table_x = type_switch_x
-    type_switch_y = type_switch(
+    y_id, y_df = type_switch(
         type_y,
         targets_df=targets_df,
         phenotypes_df=phenotypes_df,
         diseases_df=diseases_df,
         drug_mappings_df=drug_mappings_df,
     )
-    key_y, table_y = type_switch_y
-    logger.debug(f'Mapping {type_x} to "{key_x}" and {type_y} to "{key_y}"')
+    logger.debug(f'Mapping {type_x} to "{x_id}" and {type_y} to "{y_id}"')
 
     # Construct KG edges
     edge_df = (
         evidence_df.select(
             [
-                pl.col(key_x).alias("x_id"),
-                pl.col(key_y).alias("y_id"),
+                pl.col(x_id).alias("x_id"),
+                pl.col(y_id).alias("y_id"),
                 pl.col("relation"),
                 pl.col("display_relation"),
             ]
@@ -140,15 +130,17 @@ def construct_edges(  # noqa: PLR0913
             ]
         )
         .unique()
+        .join(x_df.select(["id", "name"]), left_on="x_id", right_on="id", how="left")
+        .rename({"name": "x_name"})
+        .join(y_df.select(["id", "name"]), left_on="y_id", right_on="id", how="left")
+        .rename({"name": "y_name"})
     )
 
     # Log concluding message
     if relation_label is not None:
         logger.debug(f'Constructed {edge_df.height} edges of type "{relation_label}"')
     else:
-        edge_types = '", "'.join(
-            edge_df.select("relation").unique().to_series().to_list()
-        )
+        edge_types = '", "'.join(edge_df.select("relation").unique().to_series().to_list())
         logger.debug(f'Constructed {edge_df.height} edges of types "{edge_types}"')
 
     return edge_df
