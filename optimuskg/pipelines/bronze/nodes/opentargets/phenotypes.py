@@ -1,9 +1,15 @@
+import logging
+
 import polars as pl
 from kedro.pipeline import node
 from lxml import etree
 
+logger = logging.getLogger(__name__)
 
-def process_phenotypes(human_phenotype_ontology: etree._ElementTree) -> pl.DataFrame:
+
+def process_phenotypes(
+    human_phenotype_ontology: etree._ElementTree,
+) -> pl.DataFrame:
     root = human_phenotype_ontology.getroot()
 
     namespaces = {
@@ -14,17 +20,31 @@ def process_phenotypes(human_phenotype_ontology: etree._ElementTree) -> pl.DataF
     }
 
     phenotypes = []
+    df_schema = {"id": pl.Utf8, "name": pl.Utf8, "source": pl.Utf8}
 
-    # Find all owl:Class elements that represent HP terms
-    for class_elem in root.xpath("//owl:Class", namespaces=namespaces):
-        about_attr = class_elem.get("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about")
+    xpath_results: etree._XPathObject = root.xpath("//owl:Class", namespaces=namespaces)
+    if not isinstance(xpath_results, list):
+        logger.error("XPath results are not a list, returning empty DataFrame")
+        return pl.DataFrame(schema=df_schema)
+
+    for class_elem in xpath_results:
+        if not isinstance(class_elem, etree._Element):
+            logger.debug(f"Skipping non-element: {class_elem!r}")
+            continue
+
+        about_attr = class_elem.get(
+            "{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about"
+        )
 
         if about_attr and "HP_" in about_attr:
             hp_id = about_attr.split("/")[-1]
 
-            # Find the label (name) for this term
-            label_elem = class_elem.find(".//rdfs:label", namespaces=namespaces)
-            name = label_elem.text if label_elem is not None else None
+            label_elem: etree._Element | None = class_elem.find(
+                ".//rdfs:label", namespaces=namespaces
+            )
+            name: str | None = None
+            if label_elem is not None:
+                name = label_elem.text
 
             if hp_id and name:
                 phenotypes.append(
@@ -35,7 +55,7 @@ def process_phenotypes(human_phenotype_ontology: etree._ElementTree) -> pl.DataF
                     }
                 )
 
-    df = pl.DataFrame(phenotypes)
+    df = pl.DataFrame(phenotypes, schema=df_schema)
     df = df.sort("id")
 
     return df
