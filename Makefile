@@ -112,7 +112,36 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--relationships="/import/Strong_clinical_evidence-header.csv,/import/Strong_clinical_evidence-part.*" \
 		--relationships="/import/Weak_clinical_evidence-header.csv,/import/Weak_clinical_evidence-part.*" \
 
+.PHONY: neo4j-export-pgjsonl
+neo4j-export-pgjsonl: ##@ Export Neo4j database to PG-JSONL format
+	@echo "Exporting Neo4j database to PG-JSONL format..."
+	@mkdir -p data/exports
+	@docker compose exec neo4j \
+		cypher-shell --non-interactive \
+		"CALL apoc.export.json.all('/var/lib/neo4j/import/optimuskg_export.jsonl', {jsonFormat: 'JSON_LINES', useTypes: true, stream: false})" || \
+	echo "Note: Make sure Neo4j container is running with 'make neo4j' and APOC plugin is installed"
+	@if [ -f ./data/neo4j/import/optimuskg_export.jsonl ]; then \
+		mv ./data/neo4j/import/optimuskg_export.jsonl ./data/exports/optimuskg.pgjsonl && \
+		echo "Database exported successfully to data/exports/optimuskg.pgjsonl"; \
+	else \
+		echo "Export failed. Check if Neo4j is running and APOC is available."; \
+	fi
 
+.PHONY: neo4j-export-query-pgjsonl
+neo4j-export-query-pgjsonl: ##@ Export specific Neo4j query results to PG-JSONL format
+	@echo "Exporting specific query results to PG-JSONL format..."
+	@mkdir -p data/exports
+	@read -p "Enter your Cypher query: " query; \
+	filename=$$(echo "$$query" | tr ' ' '_' | tr -cd '[:alnum:]_' | cut -c1-30); \
+	docker compose exec neo4j \
+		cypher-shell --non-interactive \
+		"CALL apoc.export.json.query(\"$$query\", '/var/lib/neo4j/import/$${filename}_export.jsonl', {jsonFormat: 'JSON_LINES', useTypes: true})" && \
+	if [ -f ./data/neo4j/import/$${filename}_export.jsonl ]; then \
+		mv ./data/neo4j/import/$${filename}_export.jsonl ./data/exports/$${filename}.pgjsonl && \
+		echo "Query results exported successfully to data/exports/$${filename}.pgjsonl"; \
+	else \
+		echo "Export failed. Check your query syntax and Neo4j connection."; \
+	fi
 
 .PHONY: jupyterlab
 jupyterlab: ##@ Run jupyterlab
