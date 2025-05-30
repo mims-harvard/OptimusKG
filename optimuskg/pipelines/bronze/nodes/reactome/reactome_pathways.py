@@ -17,8 +17,25 @@ def process_reactome_pathways(
         & (pl.col("reactome_id_2").is_in(valid_terms))
     )
     df_relations = df_relations.unique()
+
+    # Add Reactome prefix to match Biolink
+    df_relations = df_relations.with_columns(
+        pl.concat_str([pl.lit("REACT:"), pl.col("reactome_id_1")]).alias(
+            "reactome_id_1"
+        ),
+        pl.concat_str([pl.lit("REACT:"), pl.col("reactome_id_2")]).alias(
+            "reactome_id_2"
+        ),
+    )
+
     df_relations = df_relations.sort(by=["reactome_id_1", "reactome_id_2"])
     df_terms = df_terms.sort(by=["reactome_id"])
+
+    # Add Reactome prefix to match Biolink
+    df_terms = df_terms.with_columns(
+        pl.concat_str([pl.lit("REACT:"), pl.col("reactome_id")]).alias("reactome_id"),
+    )
+
     return df_relations, df_terms
 
 

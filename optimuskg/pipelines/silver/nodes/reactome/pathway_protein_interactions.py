@@ -26,7 +26,7 @@ def process_pathway_protein_interactions(
     df_path_prot = df_path_prot.with_columns(
         [
             pl.lit("NCBI").alias("x_source"),
-            pl.lit("gene/protein").alias("x_type"),
+            pl.lit("gene").alias("x_type"),
             pl.lit("REACTOME").alias("y_source"),
             pl.lit("pathway").alias("y_type"),
             pl.lit("pathway_protein").alias("relation"),

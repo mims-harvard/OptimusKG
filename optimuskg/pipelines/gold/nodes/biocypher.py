@@ -18,11 +18,11 @@ def process_biocypher(  # noqa: PLR0913
     ctd_exposure_exposure_interactions: pl.DataFrame,
     drug_protein_interactions: pl.DataFrame,
     drug_drug_interactions: pl.DataFrame,
-    # protein_biological_process_interactions: pl.DataFrame,
-    # protein_cellular_component_interactions: pl.DataFrame,
-    # protein_molecular_function_interactions: pl.DataFrame,
-    # pathway_pathway_interactions: pl.DataFrame,
-    # pathway_protein_interactions: pl.DataFrame,
+    protein_biological_process_interactions: pl.DataFrame,
+    protein_cellular_component_interactions: pl.DataFrame,
+    protein_molecular_function_interactions: pl.DataFrame,
+    pathway_pathway_interactions: pl.DataFrame,
+    pathway_protein_interactions: pl.DataFrame,
 ) -> pl.DataFrame:
     bc = BioCypher(
         head_ontology={
@@ -46,6 +46,24 @@ def process_biocypher(  # noqa: PLR0913
         adapter_factory(drug_protein_interactions, name="drugbank_drug_protein"),
         adapter_factory(drug_drug_interactions, name="drugbank_drug_drug"),
     ]
+    ncbigene_adapters = [
+        adapter_factory(
+            protein_biological_process_interactions,
+            name="ncbigene_protein_biological_process",
+        ),
+        adapter_factory(
+            protein_cellular_component_interactions,
+            name="ncbigene_protein_cellular_component",
+        ),
+        adapter_factory(
+            protein_molecular_function_interactions,
+            name="ncbigene_protein_molecular_function",
+        ),
+    ]
+    reactome_adapters = [
+        adapter_factory(pathway_pathway_interactions, name="reactome_pathway_pathway"),
+        adapter_factory(pathway_protein_interactions, name="reactome_pathway_protein"),
+    ]
 
     # TODO: Add adapters for other datasets
 
@@ -54,6 +72,8 @@ def process_biocypher(  # noqa: PLR0913
         *ctd_adapters,
         opentargets_adapter,
         *drugbank_adapters,
+        *ncbigene_adapters,
+        *reactome_adapters,
     ]
 
     try:
@@ -99,11 +119,11 @@ biocypher_node = node(
         "ctd_exposure_exposure_interactions": "silver.ctd.ctd_exposure_exposure_interactions",
         "drug_protein_interactions": "silver.drugbank.drug_protein",
         "drug_drug_interactions": "silver.drugbank.drug_drug",
-        # "protein_biological_process_interactions": "silver.ncbigene.protein_biological_process_interactions",
-        # "protein_cellular_component_interactions": "silver.ncbigene.protein_cellular_component_interactions",
-        # "protein_molecular_function_interactions": "silver.ncbigene.protein_molecular_function_interactions",
-        # "pathway_pathway_interactions": "silver.reactome.pathway_pathway_interactions",
-        # "pathway_protein_interactions": "silver.reactome.pathway_protein_interactions",
+        "protein_biological_process_interactions": "silver.ncbigene.protein_biological_process_interactions",
+        "protein_cellular_component_interactions": "silver.ncbigene.protein_cellular_component_interactions",
+        "protein_molecular_function_interactions": "silver.ncbigene.protein_molecular_function_interactions",
+        "pathway_pathway_interactions": "silver.reactome.pathway_pathway_interactions",
+        "pathway_protein_interactions": "silver.reactome.pathway_protein_interactions",
     },
     outputs="biocypher_graph",
     tags=["gold"],

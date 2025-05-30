@@ -15,15 +15,14 @@ anatomical entity: # Biological entity that is either an individual member of a 
   properties:
     x_name: str
     x_source: str
-  
+
 environmental exposure: # A environmental exposure is a factor relating to abiotic processes in the environment including sunlight (UV-B), atmospheric (heat, cold, general pollution) and water-born contaminants. (https://biolink.github.io/biolink-model/EnvironmentalExposure/)
   represented_as: node
   input_label: exposure
   properties:
     x_name: str
     x_source: str
-  
-  
+
 drug: # A substance that is used to treat, prevent, or diagnose a disease or condition (https://biolink.github.io/biolink-model/Drug/)
   represented_as: node
   input_label: drug
@@ -45,6 +44,34 @@ phenotype: # A phenotypic feature (https://biolink.github.io/biolink-model/Pheno
   properties:
     x_name: str
     x_source: str
+
+biological process:
+  represented_as: node
+  input_label: biological_process
+  properties:
+    y_name: str
+    y_source: str
+
+cellular component:
+  represented_as: node
+  input_label: cellular_component
+  properties:
+    y_name: str
+    y_source: str
+
+molecular function:
+  represented_as: node
+  input_label: molecular_function
+  properties:
+    y_name: str
+    y_source: str
+
+pathway:
+  represented_as: node
+  input_label: pathway # Biolink’s Pathway class (https://biolink.github.io/biolink-model/Pathway/)
+  properties:
+    y_name: str
+    y_source: str
 
 # ---
 # Associations
@@ -138,5 +165,40 @@ disease_protein_negative:
   is_a: negatively correlated with # A relationship that holds between two concepts represented by variables for which a statistical correlation is demonstrated, wherein the regression line has a negative slope (https://biolink.github.io/biolink-model/negatively_correlated_with/)
   represented_as: edge
   input_label: disease_protein_negative
+  properties:
+    display_relation: str
+
+biological_process_protein:
+  is_a: regulates # holds between a gene or gene product and a biological process (https://biolink.github.io/biolink-model/regulates/)
+  represented_as: edge
+  input_label: biological_process_protein
+  properties:
+    display_relation: str
+
+cellular_component_protein:
+  is_a: regulates # holds between a gene or gene product and a cellular component (https://biolink.github.io/biolink-model/regulates/)
+  represented_as: edge
+  input_label: cellular_component_protein
+  properties:
+    display_relation: str
+
+molecular_function_protein:
+  is_a: regulates # holds between a gene or gene product and a molecular function (https://biolink.github.io/biolink-model/regulates/)
+  represented_as: edge
+  input_label: molecular_function_protein
+  properties:
+    display_relation: str
+
+pathway_pathway:
+  is_a: has_part # holds between a part and its whole (https://biolink.github.io/biolink-model/has_part/)
+  represented_as: edge
+  input_label: pathway_pathway
+  properties:
+    display_relation: str
+
+pathway_protein:
+  is_a: has_part # holds between a part and its whole (https://biolink.github.io/biolink-model/has_part/)
+  represented_as: edge
+  input_label: pathway_protein
   properties:
     display_relation: str
