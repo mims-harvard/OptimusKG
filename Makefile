@@ -84,6 +84,7 @@ neo4j-import-data: ##@ Import data into Neo4j
 	@docker run --interactive --tty --rm --publish=7474:7474 --publish=7687:7687 \
 	    --volume=./data/neo4j/data:/data \
 		--volume=./data/neo4j/import:/import \
+		--volume=./data/export:/export \
 		neo4j:5.26.2-community-bullseye \
 		neo4j-admin database import full neo4j \
 		--skip-duplicate-nodes \
@@ -115,33 +116,24 @@ neo4j-import-data: ##@ Import data into Neo4j
 .PHONY: neo4j-export-pgjsonl
 neo4j-export-pgjsonl: ##@ Export Neo4j database to PG-JSONL format
 	@echo "Exporting Neo4j database to PG-JSONL format..."
-	@mkdir -p data/exports
+	@mkdir -p data/export
 	@docker compose exec neo4j \
 		cypher-shell --non-interactive \
-		"CALL apoc.export.json.all('/var/lib/neo4j/import/optimuskg_export.jsonl', {jsonFormat: 'JSON_LINES', useTypes: true, stream: false})" || \
-	echo "Note: Make sure Neo4j container is running with 'make neo4j' and APOC plugin is installed"
-	@if [ -f ./data/neo4j/import/optimuskg_export.jsonl ]; then \
-		mv ./data/neo4j/import/optimuskg_export.jsonl ./data/exports/optimuskg.pgjsonl && \
-		echo "Database exported successfully to data/exports/optimuskg.pgjsonl"; \
-	else \
-		echo "Export failed. Check if Neo4j is running and APOC is available."; \
-	fi
+		"CALL apoc.export.json.all('/var/lib/neo4j/export/optimuskg.pgjsonl', {jsonFormat: 'JSON_LINES', useTypes: true, stream: false})" && \
+		echo "Database exported successfully to data/export/optimuskg.pgjsonl" || \
+		echo "Export failed. Make sure Neo4j container is running with 'make neo4j' and APOC plugin is installed"
 
 .PHONY: neo4j-export-query-pgjsonl
 neo4j-export-query-pgjsonl: ##@ Export specific Neo4j query results to PG-JSONL format
 	@echo "Exporting specific query results to PG-JSONL format..."
-	@mkdir -p data/exports
+	@mkdir -p data/export
 	@read -p "Enter your Cypher query: " query; \
 	filename=$$(echo "$$query" | tr ' ' '_' | tr -cd '[:alnum:]_' | cut -c1-30); \
 	docker compose exec neo4j \
 		cypher-shell --non-interactive \
-		"CALL apoc.export.json.query(\"$$query\", '/var/lib/neo4j/import/$${filename}_export.jsonl', {jsonFormat: 'JSON_LINES', useTypes: true})" && \
-	if [ -f ./data/neo4j/import/$${filename}_export.jsonl ]; then \
-		mv ./data/neo4j/import/$${filename}_export.jsonl ./data/exports/$${filename}.pgjsonl && \
-		echo "Query results exported successfully to data/exports/$${filename}.pgjsonl"; \
-	else \
-		echo "Export failed. Check your query syntax and Neo4j connection."; \
-	fi
+		"CALL apoc.export.json.query(\"$$query\", '/var/lib/neo4j/export/$${filename}.pgjsonl', {jsonFormat: 'JSON_LINES', useTypes: true})" && \
+		echo "Query results exported successfully to data/export/$${filename}.pgjsonl" || \
+		echo "Export failed. Check your query syntax and Neo4j connection."
 
 .PHONY: jupyterlab
 jupyterlab: ##@ Run jupyterlab
