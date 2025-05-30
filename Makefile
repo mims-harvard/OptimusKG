@@ -119,8 +119,8 @@ neo4j-export-all: ##@ Export Neo4j database to JSONL format
 	@mkdir -p data/export
 	@docker compose exec neo4j \
 		cypher-shell --non-interactive \
-		"CALL apoc.export.json.all('/var/lib/neo4j/export/optimuskg.pgjsonl', {jsonFormat: 'JSON_LINES', useTypes: true, stream: true})" && \
-		echo "Database exported successfully to data/export/optimuskg.pgjsonl" || \
+		"CALL apoc.export.json.all('/var/lib/neo4j/export/optimuskg.jsonl', {jsonFormat: 'JSON_LINES', useTypes: true, stream: true})" && \
+		echo "Database exported successfully to data/export/optimuskg.jsonl" || \
 		echo "Export failed. Make sure Neo4j container is running with 'make neo4j' and APOC plugin is installed"
 
 .PHONY: neo4j-export-query
@@ -131,8 +131,8 @@ neo4j-export-query: ##@ Export specific Neo4j query results to JSONL format
 	export_filename=$$(echo "$$CYPHER_QUERY" | tr ' ' '_' | tr -cd '[:alnum:]_' | cut -c1-30); \
 	docker compose exec neo4j \
 		cypher-shell --non-interactive \
-		"CALL apoc.export.json.query(\"$$CYPHER_QUERY\", '/var/lib/neo4j/export/$${export_filename}.pgjsonl', {jsonFormat: 'JSON_LINES', useTypes: true, stream: true})" && \
-		echo "Query results exported successfully to data/export/$${export_filename}.pgjsonl" || \
+		"CALL apoc.export.json.query(\"$$CYPHER_QUERY\", '/var/lib/neo4j/export/$${export_filename}.jsonl', {jsonFormat: 'JSON_LINES', useTypes: true, stream: true})" && \
+		echo "Query results exported successfully to data/export/$${export_filename}.jsonl" || \
 		echo "Export failed. Check your query syntax and Neo4j connection."
 
 .PHONY: jupyterlab
