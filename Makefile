@@ -99,6 +99,10 @@ neo4j-import-data: ##@ Import data into Neo4j
         --nodes="/import/Gene-header.csv,/import/Gene-part.*" \
         --nodes="/import/AnatomicalEntity-header.csv,/import/AnatomicalEntity-part.*" \
 		--nodes="/import/EnvironmentalExposure-header.csv,/import/EnvironmentalExposure-part.*" \
+		--nodes="/import/BiologicalProcess-header.csv,/import/BiologicalProcess-part.*" \
+		--nodes="/import/CellularComponent-header.csv,/import/CellularComponent-part.*" \
+		--nodes="/import/MolecularFunction-header.csv,/import/MolecularFunction-part.*" \
+		--nodes="/import/Pathway-header.csv,/import/Pathway-part.*" \
         --relationships="/import/Anatomy_protein_absent-header.csv,/import/Anatomy_protein_absent-part.*" \
         --relationships="/import/Anatomy_protein_present-header.csv,/import/Anatomy_protein_present-part.*" \
         --relationships="/import/Exposure_exposure-header.csv,/import/Exposure_exposure-part.*" \
@@ -111,8 +115,11 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--relationships="/import/Phenotype_protein-header.csv,/import/Phenotype_protein-part.*" \
 		--relationships="/import/Strong_clinical_evidence-header.csv,/import/Strong_clinical_evidence-part.*" \
 		--relationships="/import/Weak_clinical_evidence-header.csv,/import/Weak_clinical_evidence-part.*" \
-
-
+		--relationships="/import/Biological_process_protein-header.csv,/import/Biological_process_protein-part.*" \
+		--relationships="/import/Cellular_component_protein-header.csv,/import/Cellular_component_protein-part.*" \
+		--relationships="/import/Molecular_function_protein-header.csv,/import/Molecular_function_protein-part.*" \
+		--relationships="/import/Pathway_pathway-header.csv,/import/Pathway_pathway-part.*" \
+		--relationships="/import/Pathway_protein-header.csv,/import/Pathway_protein-part.*"
 
 .PHONY: jupyterlab
 jupyterlab: ##@ Run jupyterlab
