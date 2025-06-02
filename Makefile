@@ -133,7 +133,7 @@ neo4j-export-all: ##@ Export Neo4j database to JSONL format
 		echo "Export failed. Make sure Neo4j container is running with 'make neo4j' and APOC plugin is installed"
 
 .PHONY: neo4j-export-query
-neo4j-export-query: ##@ Export specific Neo4j query results to JSONL format
+neo4j-export-query: ##@ Export specific Neo4j query results to JSONL format. Example: CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export-query
 	@echo "Exporting specific query results to JSONL format..."
 	@mkdir -p data/export
 	@if [ -z "$$CYPHER_QUERY" ]; then echo "Error: Please set CYPHER_QUERY environment variable"; exit 1; fi; \
