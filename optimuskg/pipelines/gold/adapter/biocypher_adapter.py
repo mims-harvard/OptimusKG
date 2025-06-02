@@ -83,29 +83,13 @@ class BiocypherAdapter:
 def adapter_factory(
     df: pl.DataFrame,
     name: str,
+    node_configs: Sequence[NodeMappingConfig] | None = None,
+    edge_configs: Sequence[EdgeMappingConfig] | None = None,
 ) -> BiocypherAdapter:
     adapter = BiocypherAdapter(
         df=df,
         name=name,
-        node_configs=[
-            NodeMappingConfig(
-                id_field="x_id",
-                label_field="x_type",
-                properties_fields=["x_name", "x_source"],
-            ),
-            NodeMappingConfig(
-                id_field="y_id",
-                label_field="y_type",
-                properties_fields=["y_name", "y_source"],
-            ),
-        ],
-        edge_configs=[
-            EdgeMappingConfig(
-                source_field="x_id",
-                target_field="y_id",
-                label_field="relation",
-                properties_fields=["display_relation"],
-            )
-        ],
+        node_configs=node_configs,
+        edge_configs=edge_configs,
     )
     return adapter
