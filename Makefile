@@ -84,6 +84,7 @@ neo4j-import-data: ##@ Import data into Neo4j
 	@docker run --interactive --tty --rm --publish=7474:7474 --publish=7687:7687 \
 	    --volume=./data/neo4j/data:/data \
 		--volume=./data/neo4j/import:/import \
+		--volume=./data/export:/export \
 		neo4j:5.26.2-community-bullseye \
 		neo4j-admin database import full neo4j \
 		--skip-duplicate-nodes \
@@ -120,6 +121,28 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--relationships="/import/Molecular_function_protein-header.csv,/import/Molecular_function_protein-part.*" \
 		--relationships="/import/Pathway_pathway-header.csv,/import/Pathway_pathway-part.*" \
 		--relationships="/import/Pathway_protein-header.csv,/import/Pathway_protein-part.*"
+
+.PHONY: neo4j-export-all
+neo4j-export-all: ##@ Export Neo4j database to JSONL format
+	@echo "Exporting Neo4j database to JSONL format..."
+	@mkdir -p data/export
+	@docker compose exec neo4j \
+		cypher-shell --non-interactive \
+		"CALL apoc.export.json.all('/var/lib/neo4j/export/optimuskg.jsonl', {jsonFormat: 'JSON_LINES', useTypes: true})" && \
+		echo "Database exported successfully to data/export/optimuskg.jsonl" || \
+		echo "Export failed. Make sure Neo4j container is running with 'make neo4j' and APOC plugin is installed"
+
+.PHONY: neo4j-export-query
+neo4j-export-query: ##@ Export specific Neo4j query results to JSONL format. Example: CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export-query
+	@echo "Exporting specific query results to JSONL format..."
+	@mkdir -p data/export
+	@if [ -z "$$CYPHER_QUERY" ]; then echo "Error: Please set CYPHER_QUERY environment variable"; exit 1; fi; \
+	export_filename=$$(echo "$$CYPHER_QUERY" | tr ' ' '_' | tr -cd '[:alnum:]_' | cut -c1-30); \
+	docker compose exec neo4j \
+		cypher-shell --non-interactive \
+		"CALL apoc.export.json.query(\"$$CYPHER_QUERY\", '/var/lib/neo4j/export/$${export_filename}.jsonl', {jsonFormat: 'JSON_LINES', useTypes: true})" && \
+		echo "Query results exported successfully to data/export/$${export_filename}.jsonl" || \
+		echo "Export failed. Check your query syntax and Neo4j connection."
 
 .PHONY: jupyterlab
 jupyterlab: ##@ Run jupyterlab
