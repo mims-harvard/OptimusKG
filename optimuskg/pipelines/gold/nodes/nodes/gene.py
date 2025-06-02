@@ -1,6 +1,14 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.gold.adapter.mapping import NodeMappingConfig
+
+GENE_NODE_MAPPING_CONFIG = NodeMappingConfig(
+    id_field="id",
+    label_field="type",
+    properties_fields=["name", "source"],
+)
+
 
 def process_gene_nodes(  # noqa: PLR0913
     gene_expressions_in_anatomy: pl.DataFrame,
@@ -12,114 +20,88 @@ def process_gene_nodes(  # noqa: PLR0913
     protein_molecular_function_interactions: pl.DataFrame,
     pathway_protein_interactions: pl.DataFrame,
 ) -> pl.DataFrame:
-    bgee_gene_nodes = (
-        gene_expressions_in_anatomy.filter(pl.col("x_type") == "gene")
-        .select(
-            pl.col("x_id").alias("id"),
-            pl.col("x_type").alias("type"),
-            pl.col("x_name").alias("name"),
-            pl.col("x_source").alias("source"),
-        )
-        .unique()
+    bgee_nodes = gene_expressions_in_anatomy.select(
+        pl.col("x_id").alias("id"),
+        pl.col("x_type").alias("type"),
+        pl.col("x_name").alias("name"),
+        pl.col("x_source").alias("source"),
     )
 
-    opentargets_gene_nodes_x = (
-        opentargets_edges.filter(pl.col("x_type") == "gene")
-        .select(
-            pl.col("x_id").alias("id"),
-            pl.col("x_type").alias("type"),
-            pl.col("x_name").alias("name"),
-            pl.col("x_source").alias("source"),
-        )
-        .unique()
-    )
-    opentargets_gene_nodes_y = (
-        opentargets_edges.filter(pl.col("y_type") == "gene")
-        .select(
-            pl.col("y_id").alias("id"),
-            pl.col("y_type").alias("type"),
-            pl.col("y_name").alias("name"),
-            pl.col("y_source").alias("source"),
-        )
-        .unique()
-    )
-    opentargets_gene_nodes = pl.concat(
-        [opentargets_gene_nodes_x, opentargets_gene_nodes_y]
-    ).unique()
-
-    ctd_exposure_protein_interactions = (
-        ctd_exposure_protein_interactions.filter(pl.col("y_type") == "gene")
-        .select(
-            pl.col("y_id").alias("id"),
-            pl.col("y_type").alias("type"),
-            pl.col("y_name").alias("name"),
-            pl.col("y_source").alias("source"),
-        )
-        .unique()
-    )
-    drug_protein = (
-        drug_protein.filter(pl.col("y_type") == "gene")
-        .select(
-            pl.col("y_id").alias("id"),
-            pl.col("y_type").alias("type"),
-            pl.col("y_name").alias("name"),
-            pl.col("y_source").alias("source"),
-        )
-        .unique()
-    )
-    protein_biological_process_interactions = (
-        protein_biological_process_interactions.filter(
-            pl.col("x_type") == "gene"
-        ).select(
-            pl.col("x_id").alias("id"),
-            pl.col("x_type").alias("type"),
-            pl.col("x_name").alias("name"),
-            pl.col("x_source").alias("source"),
-        )
-    ).unique()
-    protein_cellular_component_interactions = (
-        protein_cellular_component_interactions.filter(
-            pl.col("x_type") == "gene"
-        ).select(
-            pl.col("x_id").alias("id"),
-            pl.col("x_type").alias("type"),
-            pl.col("x_name").alias("name"),
-            pl.col("x_source").alias("source"),
-        )
-    ).unique()
-    protein_molecular_function_interactions = (
-        protein_molecular_function_interactions.filter(
-            pl.col("x_type") == "gene"
-        ).select(
-            pl.col("x_id").alias("id"),
-            pl.col("x_type").alias("type"),
-            pl.col("x_name").alias("name"),
-            pl.col("x_source").alias("source"),
-        )
-    ).unique()
-    pathway_protein_interactions = (
-        pathway_protein_interactions.filter(pl.col("x_type") == "gene")
-        .select(
-            pl.col("x_id").alias("id"),
-            pl.col("x_type").alias("type"),
-            pl.col("x_name").alias("name"),
-            pl.col("x_source").alias("source"),
-        )
-        .unique()
-    )
-
-    return pl.concat(
+    ot_nodes = pl.concat(
         [
-            bgee_gene_nodes,
-            opentargets_gene_nodes,
-            ctd_exposure_protein_interactions,
-            drug_protein,
-            protein_biological_process_interactions,
-            protein_cellular_component_interactions,
-            protein_molecular_function_interactions,
-            pathway_protein_interactions,
-        ]
-    ).unique()
+            opentargets_edges.select(
+                pl.col("x_id").alias("id"),
+                pl.col("x_type").alias("type"),
+                pl.col("x_name").alias("name"),
+                pl.col("x_source").alias("source"),
+            ),
+            opentargets_edges.select(
+                pl.col("y_id").alias("id"),
+                pl.col("y_type").alias("type"),
+                pl.col("y_name").alias("name"),
+                pl.col("y_source").alias("source"),
+            ),
+        ],
+        how="vertical",
+    )
+
+    ep_nodes = ctd_exposure_protein_interactions.select(
+        pl.col("y_id").alias("id"),
+        pl.col("y_type").alias("type"),
+        pl.col("y_name").alias("name"),
+        pl.col("y_source").alias("source"),
+    )
+
+    dp_nodes = drug_protein.select(
+        pl.col("y_id").alias("id"),
+        pl.col("y_type").alias("type"),
+        pl.col("y_name").alias("name"),
+        pl.col("y_source").alias("source"),
+    )
+
+    pbp_nodes = protein_biological_process_interactions.select(
+        pl.col("y_id").alias("id"),
+        pl.col("y_type").alias("type"),
+        pl.col("y_name").alias("name"),
+        pl.col("y_source").alias("source"),
+    )
+
+    pcc_nodes = protein_cellular_component_interactions.select(
+        pl.col("y_id").alias("id"),
+        pl.col("y_type").alias("type"),
+        pl.col("y_name").alias("name"),
+        pl.col("y_source").alias("source"),
+    )
+
+    pmf_nodes = protein_molecular_function_interactions.select(
+        pl.col("y_id").alias("id"),
+        pl.col("y_type").alias("type"),
+        pl.col("y_name").alias("name"),
+        pl.col("y_source").alias("source"),
+    )
+
+    pp_nodes = pathway_protein_interactions.select(
+        pl.col("x_id").alias("id"),
+        pl.col("x_type").alias("type"),
+        pl.col("x_name").alias("name"),
+        pl.col("x_source").alias("source"),
+    )
+
+    all_nodes = pl.concat(
+        [
+            bgee_nodes,
+            ot_nodes,
+            ep_nodes,
+            dp_nodes,
+            pbp_nodes,
+            pcc_nodes,
+            pmf_nodes,
+            pp_nodes,
+        ],
+        how="vertical",
+    )
+
+    return all_nodes.filter(pl.col("type") == "gene").unique()
 
 
 gene_node = node(

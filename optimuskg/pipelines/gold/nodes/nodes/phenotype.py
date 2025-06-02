@@ -3,14 +3,14 @@ from kedro.pipeline import node
 
 from optimuskg.pipelines.gold.adapter.mapping import NodeMappingConfig
 
-DISEASE_NODE_MAPPING_CONFIG = NodeMappingConfig(
+PHENOTYPE_NODE_MAPPING_CONFIG = NodeMappingConfig(
     id_field="id",
     label_field="type",
     properties_fields=["name", "source"],
 )
 
 
-def process_disease_nodes(
+def process_phenotype_nodes(
     opentargets_edges: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
@@ -31,17 +31,17 @@ def process_disease_nodes(
             ],
             how="vertical",
         )
-        .filter(pl.col("type") == "disease")
+        .filter(pl.col("type") == "phenotype")
         .unique()
     )
 
 
-disease_node = node(
-    process_disease_nodes,
+phenotype_node = node(
+    process_phenotype_nodes,
     inputs={
         "opentargets_edges": "silver.opentargets.opentargets_edges",
     },
-    outputs="nodes.disease",
-    name="disease",
+    outputs="nodes.phenotype",
+    name="phenotype",
     tags=["gold"],
 )

@@ -1,6 +1,14 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.gold.adapter.mapping import NodeMappingConfig
+
+MOLECULAR_FUNCTION_NODE_MAPPING_CONFIG = NodeMappingConfig(
+    id_field="id",
+    label_field="type",
+    properties_fields=["name", "source"],
+)
+
 
 def process_molecular_function_nodes(
     protein_molecular_function_interactions: pl.DataFrame,
@@ -17,7 +25,7 @@ def process_molecular_function_nodes(
     ).unique()
 
 
-biological_process_node = node(
+molecular_function_node = node(
     process_molecular_function_nodes,
     inputs={
         "protein_molecular_function_interactions": "silver.ncbigene.protein_molecular_function_interactions",

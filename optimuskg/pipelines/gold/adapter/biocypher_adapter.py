@@ -108,5 +108,4 @@ def adapter_factory(
             )
         ],
     )
-
     return adapter

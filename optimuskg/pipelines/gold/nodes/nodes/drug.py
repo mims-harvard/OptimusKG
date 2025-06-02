@@ -1,74 +1,73 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.gold.adapter.mapping import NodeMappingConfig
+
+DRUG_NODE_MAPPING_CONFIG = NodeMappingConfig(
+    id_field="id",
+    label_field="type",
+    properties_fields=["name", "source"],
+)
+
 
 def process_drug_nodes(
     opentargets_edges: pl.DataFrame,
     drug_drug: pl.DataFrame,
     drug_protein: pl.DataFrame,
 ) -> pl.DataFrame:
-    opentargets_gene_nodes_x = (
-        opentargets_edges.filter(pl.col("x_type") == "gene")
-        .select(
-            pl.col("x_id").alias("id"),
-            pl.col("x_type").alias("type"),
-            pl.col("x_name").alias("name"),
-            pl.col("x_source").alias("source"),
-        )
-        .unique()
-    )
-    opentargets_gene_nodes_y = (
-        opentargets_edges.filter(pl.col("y_type") == "drug")
-        .select(
-            pl.col("y_id").alias("id"),
-            pl.col("y_type").alias("type"),
-            pl.col("y_name").alias("name"),
-            pl.col("y_source").alias("source"),
-        )
-        .unique()
-    )
-
-    drug_drug_nodes_x = (
-        drug_drug.filter(pl.col("x_type") == "drug")
-        .select(
-            pl.col("x_id").alias("id"),
-            pl.col("x_type").alias("type"),
-            pl.col("x_name").alias("name"),
-            pl.col("x_source").alias("source"),
-        )
-        .unique()
-    )
-    drug_drug_nodes_y = (
-        drug_drug.filter(pl.col("y_type") == "drug")
-        .select(
-            pl.col("y_id").alias("id"),
-            pl.col("y_type").alias("type"),
-            pl.col("y_name").alias("name"),
-            pl.col("y_source").alias("source"),
-        )
-        .unique()
-    )
-
-    drug_protein = (
-        drug_protein.filter(pl.col("x_type") == "drug")
-        .select(
-            pl.col("x_id").alias("id"),
-            pl.col("x_type").alias("type"),
-            pl.col("x_name").alias("name"),
-            pl.col("x_source").alias("source"),
-        )
-        .unique()
-    )
-
-    return pl.concat(
+    ot_nodes = pl.concat(
         [
-            drug_drug_nodes_x,
-            drug_drug_nodes_y,
-            opentargets_gene_nodes_x,
-            opentargets_gene_nodes_y,
-            drug_protein,
-        ]
-    ).unique()
+            opentargets_edges.select(
+                pl.col("x_id").alias("id"),
+                pl.col("x_type").alias("type"),
+                pl.col("x_name").alias("name"),
+                pl.col("x_source").alias("source"),
+            ),
+            opentargets_edges.select(
+                pl.col("y_id").alias("id"),
+                pl.col("y_type").alias("type"),
+                pl.col("y_name").alias("name"),
+                pl.col("y_source").alias("source"),
+            ),
+        ],
+        how="vertical",
+    )
+
+    dd_nodes = pl.concat(
+        [
+            drug_drug.select(
+                pl.col("x_id").alias("id"),
+                pl.col("x_type").alias("type"),
+                pl.col("x_name").alias("name"),
+                pl.col("x_source").alias("source"),
+            ),
+            drug_drug.select(
+                pl.col("y_id").alias("id"),
+                pl.col("y_type").alias("type"),
+                pl.col("y_name").alias("name"),
+                pl.col("y_source").alias("source"),
+            ),
+        ],
+        how="vertical",
+    )
+
+    dp_nodes = drug_protein.select(
+        pl.col("x_id").alias("id"),
+        pl.col("x_type").alias("type"),
+        pl.col("x_name").alias("name"),
+        pl.col("x_source").alias("source"),
+    )
+
+    all_nodes = pl.concat(
+        [
+            ot_nodes,
+            dd_nodes,
+            dp_nodes,
+        ],
+        how="vertical",
+    )
+
+    return all_nodes.filter(pl.col("type") == "drug").unique()
 
 
 drug_node = node(
