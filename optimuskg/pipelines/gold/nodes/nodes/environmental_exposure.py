@@ -1,14 +1,6 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.gold.adapter.mapping import NodeMappingConfig
-
-ENVIRONMENTAL_EXPOSURE_NODE_MAPPING_CONFIG = NodeMappingConfig(
-    id_field="id",
-    label_field="type",
-    properties_fields=["name", "source"],
-)
-
 
 def process_environmental_exposure_nodes(  # noqa: PLR0913
     ctd_exposure_protein_interactions: pl.DataFrame,
@@ -33,10 +25,10 @@ def process_environmental_exposure_nodes(  # noqa: PLR0913
     )
 
     ep_nodes = ctd_exposure_protein_interactions.select(
-        pl.col("y_id").alias("id"),
-        pl.col("y_type").alias("type"),
-        pl.col("y_name").alias("name"),
-        pl.col("y_source").alias("source"),
+        pl.col("x_id").alias("id"),
+        pl.col("x_type").alias("type"),
+        pl.col("x_name").alias("name"),
+        pl.col("x_source").alias("source"),
     )
 
     all_nodes = pl.concat(

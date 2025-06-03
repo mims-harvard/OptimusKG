@@ -1,14 +1,6 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.gold.adapter.mapping import NodeMappingConfig
-
-GENE_NODE_MAPPING_CONFIG = NodeMappingConfig(
-    id_field="id",
-    label_field="type",
-    properties_fields=["name", "source"],
-)
-
 
 def process_gene_nodes(  # noqa: PLR0913
     gene_expressions_in_anatomy: pl.DataFrame,
@@ -60,24 +52,24 @@ def process_gene_nodes(  # noqa: PLR0913
     )
 
     pbp_nodes = protein_biological_process_interactions.select(
-        pl.col("y_id").alias("id"),
-        pl.col("y_type").alias("type"),
-        pl.col("y_name").alias("name"),
-        pl.col("y_source").alias("source"),
+        pl.col("x_id").alias("id"),
+        pl.col("x_type").alias("type"),
+        pl.col("x_name").alias("name"),
+        pl.col("x_source").alias("source"),
     )
 
     pcc_nodes = protein_cellular_component_interactions.select(
-        pl.col("y_id").alias("id"),
-        pl.col("y_type").alias("type"),
-        pl.col("y_name").alias("name"),
-        pl.col("y_source").alias("source"),
+        pl.col("x_id").alias("id"),
+        pl.col("x_type").alias("type"),
+        pl.col("x_name").alias("name"),
+        pl.col("x_source").alias("source"),
     )
 
     pmf_nodes = protein_molecular_function_interactions.select(
-        pl.col("y_id").alias("id"),
-        pl.col("y_type").alias("type"),
-        pl.col("y_name").alias("name"),
-        pl.col("y_source").alias("source"),
+        pl.col("x_id").alias("id"),
+        pl.col("x_type").alias("type"),
+        pl.col("x_name").alias("name"),
+        pl.col("x_source").alias("source"),
     )
 
     pp_nodes = pathway_protein_interactions.select(

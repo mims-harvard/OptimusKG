@@ -26,18 +26,19 @@ help: ##@ (Default) List available commands with their descriptions
 
 .PHONY: format
 format: ##@ Format code
-	@uv run ruff check --fix --exit-non-zero-on-fix optimuskg
-	@uv run ruff format optimuskg
+	@uv run ruff check --fix --exit-non-zero-on-fix optimuskg cli
+	@uv run ruff format optimuskg cli
 
 .PHONY: lint
 lint: ##@ Lint code
-	@uv run ruff check optimuskg
-	@uv run ruff format --check optimuskg
+	@uv run ruff check optimuskg cli
+	@uv run ruff format --check optimuskg cli
 
 .PHONY: mypy
 mypy: ##@ Run mypy
 	@uv run mypy --install-types --config-file pyproject.toml --non-interactive --package optimuskg
 	@uv run mypy --config-file pyproject.toml tests
+	@uv run mypy --config-file pyproject.toml cli
 
 .PHONY: pytest
 pytest: ##@ Run tests
@@ -87,12 +88,10 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--volume=./data/export:/export \
 		neo4j:5.26.2-community-bullseye \
 		neo4j-admin database import full neo4j \
-		--skip-duplicate-nodes \
-		--bad-tolerance=1000000 \
 		--verbose \
-		--delimiter='\t' \
+		--delimiter=";" \
 		--array-delimiter="|" \
-		--quote='@' \
+		--quote='"' \
 		--overwrite-destination=true \
 		--nodes="/import/Disease-header.csv,/import/Disease-part.*" \
 		--nodes="/import/Phenotype-header.csv,/import/Phenotype-part.*" \
@@ -104,23 +103,23 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--nodes="/import/CellularComponent-header.csv,/import/CellularComponent-part.*" \
 		--nodes="/import/MolecularFunction-header.csv,/import/MolecularFunction-part.*" \
 		--nodes="/import/Pathway-header.csv,/import/Pathway-part.*" \
-        --relationships="/import/Anatomy_protein_absent-header.csv,/import/Anatomy_protein_absent-part.*" \
-        --relationships="/import/Anatomy_protein_present-header.csv,/import/Anatomy_protein_present-part.*" \
-        --relationships="/import/Exposure_exposure-header.csv,/import/Exposure_exposure-part.*" \
-        --relationships="/import/Exposure_protein-header.csv,/import/Exposure_protein-part.*" \
-		--relationships="/import/Disease_protein_positive-header.csv,/import/Disease_protein_positive-part.*" \
-		--relationships="/import/Disease_protein_negative-header.csv,/import/Disease_protein_negative-part.*" \
-		--relationships="/import/Drug_protein-header.csv,/import/Drug_protein-part.*" \
-		--relationships="/import/Drug_drug-header.csv,/import/Drug_drug-part.*" \
+        --relationships="/import/AnatomyProteinAbsent-header.csv,/import/AnatomyProteinAbsent-part.*" \
+        --relationships="/import/AnatomyProteinPresent-header.csv,/import/AnatomyProteinPresent-part.*" \
+        --relationships="/import/ExposureExposure-header.csv,/import/ExposureExposure-part.*" \
+        --relationships="/import/ExposureProtein-header.csv,/import/ExposureProtein-part.*" \
+		--relationships="/import/DiseaseProteinPositive-header.csv,/import/DiseaseProteinPositive-part.*" \
+		--relationships="/import/DiseaseProteinNegative-header.csv,/import/DiseaseProteinNegative-part.*" \
+		--relationships="/import/DrugProtein-header.csv,/import/DrugProtein-part.*" \
+		--relationships="/import/DrugDrug-header.csv,/import/DrugDrug-part.*" \
 		--relationships="/import/Indication-header.csv,/import/Indication-part.*" \
-		--relationships="/import/Phenotype_protein-header.csv,/import/Phenotype_protein-part.*" \
-		--relationships="/import/Strong_clinical_evidence-header.csv,/import/Strong_clinical_evidence-part.*" \
-		--relationships="/import/Weak_clinical_evidence-header.csv,/import/Weak_clinical_evidence-part.*" \
-		--relationships="/import/Biological_process_protein-header.csv,/import/Biological_process_protein-part.*" \
-		--relationships="/import/Cellular_component_protein-header.csv,/import/Cellular_component_protein-part.*" \
-		--relationships="/import/Molecular_function_protein-header.csv,/import/Molecular_function_protein-part.*" \
-		--relationships="/import/Pathway_pathway-header.csv,/import/Pathway_pathway-part.*" \
-		--relationships="/import/Pathway_protein-header.csv,/import/Pathway_protein-part.*"
+		--relationships="/import/PhenotypeProtein-header.csv,/import/PhenotypeProtein-part.*" \
+		--relationships="/import/StrongClinicalEvidence-header.csv,/import/StrongClinicalEvidence-part.*" \
+		--relationships="/import/WeakClinicalEvidence-header.csv,/import/WeakClinicalEvidence-part.*" \
+		--relationships="/import/BiologicalProcessProtein-header.csv,/import/BiologicalProcessProtein-part.*" \
+		--relationships="/import/CellularComponentProtein-header.csv,/import/CellularComponentProtein-part.*" \
+		--relationships="/import/MolecularFunctionProtein-header.csv,/import/MolecularFunctionProtein-part.*" \
+		--relationships="/import/PathwayPathway-header.csv,/import/PathwayPathway-part.*" \
+		--relationships="/import/PathwayProtein-header.csv,/import/PathwayProtein-part.*"
 
 .PHONY: neo4j-export-all
 neo4j-export-all: ##@ Export Neo4j database to JSONL format

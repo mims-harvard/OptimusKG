@@ -1,14 +1,6 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.gold.adapter.mapping import NodeMappingConfig
-
-DRUG_NODE_MAPPING_CONFIG = NodeMappingConfig(
-    id_field="id",
-    label_field="type",
-    properties_fields=["name", "source"],
-)
-
 
 def process_drug_nodes(
     opentargets_edges: pl.DataFrame,

@@ -5,7 +5,7 @@ from biocypher import BioCypher
 from kedro.pipeline import node
 from more_itertools import peekable
 
-from optimuskg.pipelines.gold.adapter import adapter_factory
+from optimuskg.pipelines.gold.adapter import yield_edges, yield_nodes
 from optimuskg.pipelines.gold.adapter.mapping import (
     EdgeMappingConfig,
     NodeMappingConfig,
@@ -49,288 +49,186 @@ def process_biocypher(  # noqa: PLR0913
         biocypher_config_path="conf/base/biocypher/biocypher_config.yaml",
     )
 
+    node_config = NodeMappingConfig(
+        id_field="id",
+        label_field="type",
+        properties_fields=["name", "source"],
+    )
+
+    edge_config = EdgeMappingConfig(
+        source_field="x_id",
+        target_field="y_id",
+        label_field="relation",
+        properties_fields=["display_relation"],
+    )
+
     node_adapters = [
-        adapter_factory(
-            gene_nodes,
-            name="gene",
-            node_configs=[
-                NodeMappingConfig(
-                    id_field="id",
-                    label_field="type",
-                    properties_fields=["name", "source"],
-                ),
-            ],
+        yield_nodes(
+            df=gene_nodes,
+            mapping_config=node_config,
         ),
-        adapter_factory(
-            anatomical_entity_nodes,
-            name="anatomical_entity",
-            node_configs=[
-                NodeMappingConfig(
-                    id_field="id",
-                    label_field="type",
-                    properties_fields=["name", "source"],
-                ),
-            ],
+        yield_nodes(
+            df=anatomical_entity_nodes,
+            mapping_config=node_config,
         ),
-        adapter_factory(
-            environmental_exposure_nodes,
-            name="environmental_exposure",
-            node_configs=[
-                NodeMappingConfig(
-                    id_field="id",
-                    label_field="type",
-                    properties_fields=["name", "source"],
-                ),
-            ],
+        yield_nodes(
+            df=environmental_exposure_nodes,
+            mapping_config=node_config,
         ),
-        adapter_factory(
-            drug_nodes,
-            name="drug",
-            node_configs=[
-                NodeMappingConfig(
-                    id_field="id",
-                    label_field="type",
-                    properties_fields=["name", "source"],
-                ),
-            ],
+        yield_nodes(
+            df=drug_nodes,
+            mapping_config=node_config,
         ),
-        adapter_factory(
-            disease_nodes,
-            name="disease",
-            node_configs=[
-                NodeMappingConfig(
-                    id_field="id",
-                    label_field="type",
-                    properties_fields=["name", "source"],
-                ),
-            ],
+        yield_nodes(
+            df=disease_nodes,
+            mapping_config=node_config,
         ),
-        adapter_factory(
-            phenotype_nodes,
-            name="phenotype",
-            node_configs=[
-                NodeMappingConfig(
-                    id_field="id",
-                    label_field="type",
-                    properties_fields=["name", "source"],
-                ),
-            ],
+        yield_nodes(
+            df=phenotype_nodes,
+            mapping_config=node_config,
         ),
-        adapter_factory(
-            biological_process_nodes,
-            name="biological_process",
-            node_configs=[
-                NodeMappingConfig(
-                    id_field="id",
-                    label_field="type",
-                    properties_fields=["name", "source"],
-                ),
-            ],
+        yield_nodes(
+            df=biological_process_nodes,
+            mapping_config=node_config,
         ),
-        adapter_factory(
-            cellular_component_nodes,
-            name="cellular_component",
-            node_configs=[
-                NodeMappingConfig(
-                    id_field="id",
-                    label_field="type",
-                    properties_fields=["name", "source"],
-                ),
-            ],
+        yield_nodes(
+            df=cellular_component_nodes,
+            mapping_config=node_config,
         ),
-        adapter_factory(
-            molecular_function_nodes,
-            name="molecular_function",
-            node_configs=[
-                NodeMappingConfig(
-                    id_field="id",
-                    label_field="type",
-                    properties_fields=["name", "source"],
-                ),
-            ],
+        yield_nodes(
+            df=molecular_function_nodes,
+            mapping_config=node_config,
         ),
-        adapter_factory(
-            pathway_nodes,
-            name="pathway",
-            node_configs=[
-                NodeMappingConfig(
-                    id_field="id",
-                    label_field="type",
-                    properties_fields=["name", "source"],
-                ),
-            ],
+        yield_nodes(
+            df=pathway_nodes,
+            mapping_config=node_config,
         ),
     ]
 
     edge_adapters = [
-        adapter_factory(
-            gene_expressions_in_anatomy,
-            name="bgee",
-            edge_configs=[
-                EdgeMappingConfig(
-                    source_field="x_id",
-                    target_field="y_id",
-                    label_field="relation",
-                    properties_fields=["display_relation"],
-                )
-            ],
+        yield_edges(
+            df=gene_expressions_in_anatomy,
+            mapping_config=edge_config,
         ),
-        adapter_factory(
-            ctd_exposure_protein_interactions,
-            name="ctd_exposure_protein",
-            edge_configs=[
-                EdgeMappingConfig(
-                    source_field="x_id",
-                    target_field="y_id",
-                    label_field="relation",
-                    properties_fields=["display_relation"],
-                )
-            ],
+        yield_edges(
+            df=opentargets_edges,
+            mapping_config=edge_config,
         ),
-        adapter_factory(
-            ctd_exposure_exposure_interactions,
-            name="ctd_exposure_exposure",
-            edge_configs=[
-                EdgeMappingConfig(
-                    source_field="x_id",
-                    target_field="y_id",
-                    label_field="relation",
-                    properties_fields=["display_relation"],
-                )
-            ],
+        yield_edges(
+            df=ctd_exposure_protein_interactions,
+            mapping_config=edge_config,
         ),
-        adapter_factory(
-            drug_protein_interactions,
-            name="drug_protein",
-            edge_configs=[
-                EdgeMappingConfig(
-                    source_field="x_id",
-                    target_field="y_id",
-                    label_field="relation",
-                    properties_fields=["display_relation"],
-                )
-            ],
+        yield_edges(
+            df=ctd_exposure_exposure_interactions,
+            mapping_config=edge_config,
         ),
-        adapter_factory(
-            drug_drug_interactions,
-            name="drug_drug",
-            edge_configs=[
-                EdgeMappingConfig(
-                    source_field="x_id",
-                    target_field="y_id",
-                    label_field="relation",
-                    properties_fields=["display_relation"],
-                )
-            ],
+        yield_edges(
+            df=drug_protein_interactions,
+            mapping_config=edge_config,
         ),
-        adapter_factory(
-            opentargets_edges,
-            name="opentargets",
-            edge_configs=[
-                EdgeMappingConfig(
-                    source_field="x_id",
-                    target_field="y_id",
-                    label_field="relation",
-                    properties_fields=["display_relation"],
-                )
-            ],
+        yield_edges(
+            df=ctd_exposure_protein_interactions,
+            mapping_config=edge_config,
         ),
-        adapter_factory(
-            protein_biological_process_interactions,
-            name="ncbigene_protein_biological_process",
-            edge_configs=[
-                EdgeMappingConfig(
-                    source_field="x_id",
-                    target_field="y_id",
-                    label_field="relation",
-                    properties_fields=["display_relation"],
-                )
-            ],
+        yield_edges(
+            df=ctd_exposure_exposure_interactions,
+            mapping_config=edge_config,
         ),
-        adapter_factory(
-            protein_cellular_component_interactions,
-            name="ncbigene_protein_cellular_component",
-            edge_configs=[
-                EdgeMappingConfig(
-                    source_field="x_id",
-                    target_field="y_id",
-                    label_field="relation",
-                    properties_fields=["display_relation"],
-                )
-            ],
+        yield_edges(
+            df=drug_protein_interactions,
+            mapping_config=edge_config,
         ),
-        adapter_factory(
-            protein_molecular_function_interactions,
-            name="ncbigene_protein_molecular_function",
-            edge_configs=[
-                EdgeMappingConfig(
-                    source_field="x_id",
-                    target_field="y_id",
-                    label_field="relation",
-                    properties_fields=["display_relation"],
-                )
-            ],
+        yield_edges(
+            df=drug_drug_interactions,
+            mapping_config=edge_config,
         ),
-        adapter_factory(
-            pathway_pathway_interactions,
-            name="reactome_pathway_pathway",
-            edge_configs=[
-                EdgeMappingConfig(
-                    source_field="x_id",
-                    target_field="y_id",
-                    label_field="relation",
-                    properties_fields=["display_relation"],
-                )
-            ],
+        yield_edges(
+            df=drug_protein_interactions,
+            mapping_config=edge_config,
         ),
-        adapter_factory(
-            pathway_protein_interactions,
-            name="reactome_pathway_protein",
-            edge_configs=[
-                EdgeMappingConfig(
-                    source_field="x_id",
-                    target_field="y_id",
-                    label_field="relation",
-                    properties_fields=["display_relation"],
-                )
-            ],
+        yield_edges(
+            df=drug_drug_interactions,
+            mapping_config=edge_config,
         ),
-    ]
-
-    # TODO: Add adapters for other datasets
-
-    adapters = [
-        *node_adapters,
-        *edge_adapters,
+        yield_edges(
+            df=drug_drug_interactions,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
+            df=protein_biological_process_interactions,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
+            df=protein_cellular_component_interactions,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
+            df=protein_molecular_function_interactions,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
+            df=pathway_pathway_interactions,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
+            df=pathway_protein_interactions,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
+            df=protein_cellular_component_interactions,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
+            df=protein_molecular_function_interactions,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
+            df=pathway_pathway_interactions,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
+            df=pathway_protein_interactions,
+            mapping_config=edge_config,
+        ),
     ]
 
     try:
-        if not adapters:
-            logger.warning("No adapters configured for processing.")
+        if not node_adapters:
+            logger.error("There are no nodes to process.")
         else:
-            for i, adapter in enumerate(adapters):
+            logger.info(
+                f"Starting node processing using {format_rich(str(len(node_adapters)), 'dark_orange')} adapter(s)."
+            )
+            for i, nodes_iterable in enumerate(node_adapters):
                 logger.info(
-                    f"Processing {format_rich(str(i + 1), 'dark_orange')} out of {format_rich(str(len(adapters)), 'dark_orange')} adapters"
+                    f"Processing node adapter {format_rich(str(i + 1), 'dark_orange')}/{format_rich(str(len(node_adapters)), 'dark_orange')}."
                 )
-                if (nodes_p := peekable(adapter.nodes())).peek(None) is not None:
-                    logger.info(
-                        f"Writing nodes for {format_rich(adapter.name, 'dark_orange')}..."
-                    )
+
+                nodes_p = peekable(nodes_iterable)
+                if nodes_p.peek(None) is not None:
+                    logger.info("Writing nodes...")
                     bc.write_nodes(nodes_p)
                 else:
-                    logger.warning(
-                        f"No nodes to write for {format_rich(adapter.name, 'dark_orange')}."
-                    )
+                    logger.warning("No nodes found.")
 
-                if (edges_p := peekable(adapter.edges())).peek(None) is not None:
-                    logger.info(
-                        f"Writing edges for {format_rich(adapter.name, 'dark_orange')}..."
-                    )
+        # Process Edges
+        if not edge_adapters:
+            logger.warning("No edge adapters configured. Skipping edge processing.")
+        else:
+            logger.info(
+                f"Starting edge processing using {format_rich(str(len(edge_adapters)), 'dark_orange')} adapter(s)."
+            )
+            for i, edges_iterable in enumerate(edge_adapters):
+                logger.info(
+                    f"Processing edge adapter {format_rich(str(i + 1), 'dark_orange')}/{format_rich(str(len(edge_adapters)), 'dark_orange')}."
+                )
+
+                edges_p = peekable(edges_iterable)
+                if edges_p.peek(None) is not None:
+                    logger.info("Writing edges...")
                     bc.write_edges(edges_p)
                 else:
-                    logger.warning(
-                        f"No edges to write for {format_rich(adapter.name, 'dark_orange')}."
-                    )
+                    logger.warning("No edges found.")
     except Exception as e:
         logger.exception(f"Error writing graph data to disk: {e}")
         raise
