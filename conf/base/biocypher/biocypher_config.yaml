@@ -44,9 +44,11 @@ neo4j:
   user: ""
   password: ""
 
-  delimiter: '\t'
-  quote_character: '@'
-  array_delimiter: '|'
+  delimiter: ";"
+  array_delimiter: "|"
+  quote_character: '"'
 
   skip_duplicate_nodes: false
   skip_bad_relationships: false
+
+  labels_order: "Ascending" # Note: This is not being used by biocypher. Possible options: "Alphabetcal", "Ascending", "Descending", "Leaves". See https://github.com/biocypher/biocypher/blob/main/biocypher/output/write/_batch_writer.py#L289
