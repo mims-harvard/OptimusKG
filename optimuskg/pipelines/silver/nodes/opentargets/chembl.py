@@ -58,7 +58,7 @@ def process_chembl(  # noqa: PLR0913
             pl.when(pl.col("score") == DISPLAY_RELATION_SCORE)
             .then(pl.lit("indication"))
             .otherwise(pl.lit("clinical candidate"))
-            .alias("display_relation"),
+            .alias("relation_type"),
         )
         .pipe(
             construct_edges,
@@ -79,7 +79,7 @@ def process_chembl(  # noqa: PLR0913
         .unique()
         .with_columns(
             pl.lit("drug_protein").alias("relation"),
-            pl.lit("target").alias("display_relation"),
+            pl.lit("target").alias("relation_type"),
         )
         .pipe(
             construct_edges,

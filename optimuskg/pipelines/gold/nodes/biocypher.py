@@ -17,29 +17,36 @@ logger = logging.getLogger(__name__)
 
 def process_biocypher(  # noqa: PLR0913
     # Edges
-    gene_expressions_in_anatomy: pl.DataFrame,
-    opentargets_edges: pl.DataFrame,
-    ctd_exposure_protein_interactions: pl.DataFrame,
-    ctd_exposure_exposure_interactions: pl.DataFrame,
-    drug_protein_interactions: pl.DataFrame,
-    drug_drug_interactions: pl.DataFrame,
-    protein_biological_process_interactions: pl.DataFrame,
-    protein_cellular_component_interactions: pl.DataFrame,
-    protein_molecular_function_interactions: pl.DataFrame,
-    pathway_pathway_interactions: pl.DataFrame,
-    pathway_protein_interactions: pl.DataFrame,
+    anatomy_protein_absent: pl.DataFrame,
+    anatomy_protein_present: pl.DataFrame,
+    biological_process_protein: pl.DataFrame,
+    cellular_component_protein: pl.DataFrame,
+    disease_protein_negative: pl.DataFrame,
+    disease_protein_positive: pl.DataFrame,
+    disease_protein: pl.DataFrame,
+    drug_drug: pl.DataFrame,
+    drug_protein: pl.DataFrame,
+    exposure_exposure: pl.DataFrame,
+    exposure_protein: pl.DataFrame,
+    indication: pl.DataFrame,
+    molecular_function_protein: pl.DataFrame,
+    pathway_pathway: pl.DataFrame,
+    pathway_protein: pl.DataFrame,
+    phenotype_protein: pl.DataFrame,
+    strong_clinical_evidence: pl.DataFrame,
+    weak_clinical_evidence: pl.DataFrame,
     # Nodes
-    gene_nodes: pl.DataFrame,
-    anatomical_entity_nodes: pl.DataFrame,
-    environmental_exposure_nodes: pl.DataFrame,
-    drug_nodes: pl.DataFrame,
-    disease_nodes: pl.DataFrame,
-    phenotype_nodes: pl.DataFrame,
-    biological_process_nodes: pl.DataFrame,
-    cellular_component_nodes: pl.DataFrame,
-    molecular_function_nodes: pl.DataFrame,
-    pathway_nodes: pl.DataFrame,
-) -> pl.DataFrame:
+    gene: pl.DataFrame,
+    anatomical_entity: pl.DataFrame,
+    environmental_exposure: pl.DataFrame,
+    drug: pl.DataFrame,
+    disease: pl.DataFrame,
+    phenotype: pl.DataFrame,
+    biological_process: pl.DataFrame,
+    cellular_component: pl.DataFrame,
+    molecular_function: pl.DataFrame,
+    pathway: pl.DataFrame,
+) -> None:
     bc = BioCypher(
         head_ontology={
             "url": "https://github.com/biolink/biolink-model/raw/v3.2.1/biolink-model.owl.ttl",
@@ -59,135 +66,123 @@ def process_biocypher(  # noqa: PLR0913
         source_field="x_id",
         target_field="y_id",
         label_field="relation",
-        properties_fields=["display_relation"],
+        properties_fields=["relation_type", "undirected"],
     )
 
     node_adapters = [
         yield_nodes(
-            df=gene_nodes,
+            df=gene,
             mapping_config=node_config,
         ),
         yield_nodes(
-            df=anatomical_entity_nodes,
+            df=anatomical_entity,
             mapping_config=node_config,
         ),
         yield_nodes(
-            df=environmental_exposure_nodes,
+            df=environmental_exposure,
             mapping_config=node_config,
         ),
         yield_nodes(
-            df=drug_nodes,
+            df=drug,
             mapping_config=node_config,
         ),
         yield_nodes(
-            df=disease_nodes,
+            df=disease,
             mapping_config=node_config,
         ),
         yield_nodes(
-            df=phenotype_nodes,
+            df=phenotype,
             mapping_config=node_config,
         ),
         yield_nodes(
-            df=biological_process_nodes,
+            df=biological_process,
             mapping_config=node_config,
         ),
         yield_nodes(
-            df=cellular_component_nodes,
+            df=cellular_component,
             mapping_config=node_config,
         ),
         yield_nodes(
-            df=molecular_function_nodes,
+            df=molecular_function,
             mapping_config=node_config,
         ),
         yield_nodes(
-            df=pathway_nodes,
+            df=pathway,
             mapping_config=node_config,
         ),
     ]
 
     edge_adapters = [
         yield_edges(
-            df=gene_expressions_in_anatomy,
+            df=anatomy_protein_absent,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=opentargets_edges,
+            df=anatomy_protein_present,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=ctd_exposure_protein_interactions,
+            df=biological_process_protein,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=ctd_exposure_exposure_interactions,
+            df=cellular_component_protein,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=drug_protein_interactions,
+            df=disease_protein_negative,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=ctd_exposure_protein_interactions,
+            df=disease_protein_positive,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=ctd_exposure_exposure_interactions,
+            df=disease_protein,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=drug_protein_interactions,
+            df=drug_drug,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=drug_drug_interactions,
+            df=drug_protein,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=drug_protein_interactions,
+            df=exposure_exposure,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=drug_drug_interactions,
+            df=exposure_protein,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=drug_drug_interactions,
+            df=indication,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=protein_biological_process_interactions,
+            df=molecular_function_protein,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=protein_cellular_component_interactions,
+            df=pathway_pathway,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=protein_molecular_function_interactions,
+            df=pathway_protein,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=pathway_pathway_interactions,
+            df=phenotype_protein,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=pathway_protein_interactions,
+            df=strong_clinical_evidence,
             mapping_config=edge_config,
         ),
         yield_edges(
-            df=protein_cellular_component_interactions,
-            mapping_config=edge_config,
-        ),
-        yield_edges(
-            df=protein_molecular_function_interactions,
-            mapping_config=edge_config,
-        ),
-        yield_edges(
-            df=pathway_pathway_interactions,
-            mapping_config=edge_config,
-        ),
-        yield_edges(
-            df=pathway_protein_interactions,
+            df=weak_clinical_evidence,
             mapping_config=edge_config,
         ),
     ]
@@ -233,36 +228,42 @@ def process_biocypher(  # noqa: PLR0913
         logger.exception(f"Error writing graph data to disk: {e}")
         raise
 
-    return pl.DataFrame()
-
 
 biocypher_node = node(
     process_biocypher,
     inputs={
-        "gene_expressions_in_anatomy": "silver.bgee.gene_expressions_in_anatomy",
-        "opentargets_edges": "silver.opentargets.opentargets_edges",
-        "ctd_exposure_protein_interactions": "silver.ctd.ctd_exposure_protein_interactions",
-        "ctd_exposure_exposure_interactions": "silver.ctd.ctd_exposure_exposure_interactions",
-        "drug_protein_interactions": "silver.drugbank.drug_protein",
-        "drug_drug_interactions": "silver.drugbank.drug_drug",
-        "protein_biological_process_interactions": "silver.ncbigene.protein_biological_process_interactions",
-        "protein_cellular_component_interactions": "silver.ncbigene.protein_cellular_component_interactions",
-        "protein_molecular_function_interactions": "silver.ncbigene.protein_molecular_function_interactions",
-        "pathway_pathway_interactions": "silver.reactome.pathway_pathway_interactions",
-        "pathway_protein_interactions": "silver.reactome.pathway_protein_interactions",
+        # Edges
+        "anatomy_protein_absent": "gold.edges.anatomy_protein_absent",
+        "anatomy_protein_present": "gold.edges.anatomy_protein_present",
+        "biological_process_protein": "gold.edges.biological_process_protein",
+        "cellular_component_protein": "gold.edges.cellular_component_protein",
+        "disease_protein_negative": "gold.edges.disease_protein_negative",
+        "disease_protein_positive": "gold.edges.disease_protein_positive",
+        "disease_protein": "gold.edges.disease_protein",
+        "drug_drug": "gold.edges.drug_drug",
+        "drug_protein": "gold.edges.drug_protein",
+        "exposure_exposure": "gold.edges.exposure_exposure",
+        "exposure_protein": "gold.edges.exposure_protein",
+        "indication": "gold.edges.indication",
+        "molecular_function_protein": "gold.edges.molecular_function_protein",
+        "pathway_pathway": "gold.edges.pathway_pathway",
+        "pathway_protein": "gold.edges.pathway_protein",
+        "phenotype_protein": "gold.edges.phenotype_protein",
+        "strong_clinical_evidence": "gold.edges.strong_clinical_evidence",
+        "weak_clinical_evidence": "gold.edges.weak_clinical_evidence",
         # Nodes
-        "gene_nodes": "gold.nodes.gene",
-        "anatomical_entity_nodes": "gold.nodes.anatomical_entity",
-        "environmental_exposure_nodes": "gold.nodes.environmental_exposure",
-        "drug_nodes": "gold.nodes.drug",
-        "disease_nodes": "gold.nodes.disease",
-        "phenotype_nodes": "gold.nodes.phenotype",
-        "biological_process_nodes": "gold.nodes.biological_process",
-        "cellular_component_nodes": "gold.nodes.cellular_component",
-        "molecular_function_nodes": "gold.nodes.molecular_function",
-        "pathway_nodes": "gold.nodes.pathway",
+        "gene": "gold.nodes.gene",
+        "anatomical_entity": "gold.nodes.anatomical_entity",
+        "environmental_exposure": "gold.nodes.environmental_exposure",
+        "drug": "gold.nodes.drug",
+        "disease": "gold.nodes.disease",
+        "phenotype": "gold.nodes.phenotype",
+        "biological_process": "gold.nodes.biological_process",
+        "cellular_component": "gold.nodes.cellular_component",
+        "molecular_function": "gold.nodes.molecular_function",
+        "pathway": "gold.nodes.pathway",
     },
-    outputs="biocypher_graph",
+    outputs=None,
     tags=["gold"],
     name="biocypher",
 )

@@ -1,11 +1,5 @@
-import logging
-
 import polars as pl
 from kedro.pipeline import node
-
-from optimuskg.pipelines.silver.nodes.utils import clean_edges
-
-logger = logging.getLogger(__name__)
 
 
 def process_pathway_pathway_interactions(
@@ -40,12 +34,24 @@ def process_pathway_pathway_interactions(
             pl.lit("REACTOME").alias("y_source"),
             pl.lit("pathway").alias("y_type"),
             pl.lit("pathway_pathway").alias("relation"),
-            pl.lit("parent-child").alias("display_relation"),
+            pl.lit("parent-child").alias("relation_type"),
         ]
     )
 
-    # Clean edges
-    df_path_path = clean_edges(df_path_path)
+    df_path_path = df_path_path.select(
+        [
+            "relation",
+            "relation_type",
+            "x_id",
+            "x_type",
+            "x_name",
+            "x_source",
+            "y_id",
+            "y_type",
+            "y_name",
+            "y_source",
+        ]
+    )
 
     return df_path_path
 

@@ -1,11 +1,5 @@
-import logging
-
 import polars as pl
 from kedro.pipeline import node
-
-from optimuskg.pipelines.silver.nodes.utils import clean_edges
-
-logger = logging.getLogger(__name__)
 
 
 def process_protein_biological_process_interactions(
@@ -52,11 +46,24 @@ def process_protein_biological_process_interactions(
     ).with_columns(
         [
             pl.lit("biological_process_protein").alias("relation"),
-            pl.lit("interacts with").alias("display_relation"),
+            pl.lit("interacts with").alias("relation_type"),
         ]
     )
 
-    df_prot_bp = clean_edges(df_prot_bp)
+    df_prot_bp = df_prot_bp.select(
+        [
+            "relation",
+            "relation_type",
+            "x_id",
+            "x_type",
+            "x_name",
+            "x_source",
+            "y_id",
+            "y_type",
+            "y_name",
+            "y_source",
+        ]
+    )
 
     return df_prot_bp
 

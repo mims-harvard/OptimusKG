@@ -95,7 +95,7 @@ def construct_edges(  # noqa: PLR0913
         evidence_df = evidence_df.with_columns(
             [
                 pl.lit(relation_label).alias("relation"),
-                pl.lit(display_relation_label).alias("display_relation"),
+                pl.lit(display_relation_label).alias("relation_type"),
             ]
         )
         logger.debug(
@@ -128,7 +128,7 @@ def construct_edges(  # noqa: PLR0913
                 pl.col(x_id).alias("x_id"),
                 pl.col(y_id).alias("y_id"),
                 pl.col("relation"),
-                pl.col("display_relation"),
+                pl.col("relation_type"),
             ]
         )
         .with_columns(
@@ -157,7 +157,7 @@ def construct_edges(  # noqa: PLR0913
                 "x_id",
                 "y_id",
                 "relation",
-                "display_relation",
+                "relation_type",
                 "x_type",
                 "y_type",
                 "x_name",

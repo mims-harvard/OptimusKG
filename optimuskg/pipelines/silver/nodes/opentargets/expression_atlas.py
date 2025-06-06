@@ -40,7 +40,7 @@ def process_expression_atlas(  # noqa: PLR0913
             pl.when(pl.col("log2FoldChangeValue") < 0)
             .then(pl.lit("expression downregulated"))
             .otherwise(pl.lit("expression upregulated"))
-            .alias("display_relation"),
+            .alias("relation_type"),
         )
         .pipe(
             construct_edges,

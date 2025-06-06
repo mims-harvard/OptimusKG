@@ -1,4 +1,17 @@
 from .biocypher import biocypher_node
+from .edges import (
+    anatomy_protein_edges_node,
+    biological_process_protein_edges_node,
+    cellular_component_protein_edges_node,
+    drug_drug_edges_node,
+    drug_protein_edges_node,
+    exposure_exposure_edges_node,
+    exposure_protein_edges_node,
+    molecular_function_protein_edges_node,
+    opentargets_edges_node,
+    pathway_pathway_edges_node,
+    pathway_protein_edges_node,
+)
 from .nodes import (
     anatomical_entity_node,
     biological_process_node,
@@ -24,4 +37,15 @@ __all__ = [
     "molecular_function_node",
     "pathway_node",
     "phenotype_node",
+    "anatomy_protein_edges_node",
+    "biological_process_protein_edges_node",
+    "cellular_component_protein_edges_node",
+    "drug_drug_edges_node",
+    "drug_protein_edges_node",
+    "exposure_exposure_edges_node",
+    "exposure_protein_edges_node",
+    "molecular_function_protein_edges_node",
+    "pathway_pathway_edges_node",
+    "pathway_protein_edges_node",
+    "opentargets_edges_node",
 ]

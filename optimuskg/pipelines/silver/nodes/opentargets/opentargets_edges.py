@@ -101,7 +101,7 @@ def process_opentargets_edges(  # noqa: PLR0913
                 "x_id",
                 "y_id",
                 "relation",
-                "display_relation",
+                "relation_type",
                 "x_type",
                 "y_type",
                 "x_name",
@@ -119,6 +119,21 @@ def process_opentargets_edges(  # noqa: PLR0913
 
     # Log statistics
     logger.debug(f"Final KG edges: {new_kg_edges.height}")
+
+    new_kg_edges = new_kg_edges.select(
+        [
+            "relation",
+            "relation_type",
+            "x_id",
+            "x_type",
+            "x_name",
+            "x_source",
+            "y_id",
+            "y_type",
+            "y_name",
+            "y_source",
+        ]
+    )
 
     return new_kg_edges
 

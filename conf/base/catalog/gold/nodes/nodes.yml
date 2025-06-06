@@ -1,14 +1,6 @@
-gold.biocypher_graph:
-  type: polars.CSVDataset
-  filepath: "data/gold/biocypher_graph.csv"
-  metadata:
-    checksum: "8076de699b6a489937178a6378c8ab8e"
-    kedro-viz:
-      layer: gold
-
 gold.nodes.gene:
   type: polars.CSVDataset
-  filepath: "data/gold/gene_nodes.csv"
+  filepath: "data/gold/nodes/gene.csv"
   load_args:
     infer_schema: false
     schema:
@@ -23,7 +15,7 @@ gold.nodes.gene:
 
 gold.nodes.anatomical_entity:
   type: polars.CSVDataset
-  filepath: "data/gold/anatomical_entity_nodes.csv"
+  filepath: "data/gold/nodes/anatomical_entity.csv"
   load_args:
     infer_schema: false
     schema:
@@ -38,7 +30,7 @@ gold.nodes.anatomical_entity:
 
 gold.nodes.environmental_exposure:
   type: polars.CSVDataset
-  filepath: "data/gold/environmental_exposure_nodes.csv"
+  filepath: "data/gold/nodes/environmental_exposure.csv"
   load_args:
     infer_schema: false
     schema:
@@ -53,7 +45,7 @@ gold.nodes.environmental_exposure:
 
 gold.nodes.drug:
   type: polars.CSVDataset
-  filepath: "data/gold/drug_nodes.csv"
+  filepath: "data/gold/nodes/drug.csv"
   load_args:
     infer_schema: false
     schema:
@@ -68,7 +60,7 @@ gold.nodes.drug:
 
 gold.nodes.disease:
   type: polars.CSVDataset
-  filepath: "data/gold/disease_nodes.csv"
+  filepath: "data/gold/nodes/disease.csv"
   load_args:
     infer_schema: false
     schema:
@@ -83,7 +75,7 @@ gold.nodes.disease:
 
 gold.nodes.phenotype:
   type: polars.CSVDataset
-  filepath: "data/gold/phenotype_nodes.csv"
+  filepath: "data/gold/nodes/phenotype.csv"
   load_args:
     infer_schema: false
     schema:
@@ -98,7 +90,7 @@ gold.nodes.phenotype:
 
 gold.nodes.biological_process:
   type: polars.CSVDataset
-  filepath: "data/gold/biological_process_nodes.csv"
+  filepath: "data/gold/nodes/biological_process.csv"
   load_args:
     infer_schema: false
     schema:
@@ -113,7 +105,7 @@ gold.nodes.biological_process:
 
 gold.nodes.cellular_component:
   type: polars.CSVDataset
-  filepath: "data/gold/cellular_component_nodes.csv"
+  filepath: "data/gold/nodes/cellular_component.csv"
   load_args:
     infer_schema: false
     schema:
@@ -128,7 +120,7 @@ gold.nodes.cellular_component:
 
 gold.nodes.molecular_function:
   type: polars.CSVDataset
-  filepath: "data/gold/molecular_function_nodes.csv"
+  filepath: "data/gold/nodes/molecular_function.csv"
   load_args:
     infer_schema: false
     schema:
@@ -143,7 +135,7 @@ gold.nodes.molecular_function:
 
 gold.nodes.pathway:
   type: polars.CSVDataset
-  filepath: "data/gold/pathway_nodes.csv"
+  filepath: "data/gold/nodes/pathway.csv"
   load_args:
     infer_schema: false
     schema:

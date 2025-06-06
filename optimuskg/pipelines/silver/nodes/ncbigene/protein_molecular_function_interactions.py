@@ -1,8 +1,6 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.utils import clean_edges
-
 
 def process_protein_molecular_function_interactions(
     ncbigene_protein_go_associations: pl.DataFrame,
@@ -49,11 +47,24 @@ def process_protein_molecular_function_interactions(
     ).with_columns(
         [
             pl.lit("molecular_function_protein").alias("relation"),
-            pl.lit("interacts with").alias("display_relation"),
+            pl.lit("interacts with").alias("relation_type"),
         ]
     )
 
-    df_prot_mf = clean_edges(df_prot_mf)
+    df_prot_mf = df_prot_mf.select(
+        [
+            "relation",
+            "relation_type",
+            "x_id",
+            "x_type",
+            "x_name",
+            "x_source",
+            "y_id",
+            "y_type",
+            "y_name",
+            "y_source",
+        ]
+    )
 
     return df_prot_mf
 

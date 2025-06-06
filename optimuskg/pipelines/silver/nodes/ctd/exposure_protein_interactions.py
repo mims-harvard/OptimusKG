@@ -1,8 +1,6 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.utils import clean_edges
-
 
 def process_ctd_exposure_protein_interactions(
     ctd_exposure_events: pl.DataFrame,
@@ -56,11 +54,24 @@ def process_ctd_exposure_protein_interactions(
             pl.lit("gene").alias("y_type"),
             pl.lit("NCBI").alias("y_source"),
             pl.lit("exposure_protein").alias("relation"),
-            pl.lit("interacts with").alias("display_relation"),
+            pl.lit("interacts with").alias("relation_type"),
+        ]
+    ).drop(["exposure_marker"])
+
+    df_exp_prot = df_exp_prot.select(
+        [
+            "relation",
+            "relation_type",
+            "x_id",
+            "x_type",
+            "x_name",
+            "x_source",
+            "y_id",
+            "y_type",
+            "y_name",
+            "y_source",
         ]
     )
-
-    df_exp_prot = clean_edges(df_exp_prot)
 
     return df_exp_prot
 
