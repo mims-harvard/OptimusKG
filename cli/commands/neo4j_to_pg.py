@@ -24,7 +24,7 @@ def _transform_node(node: Neo4jNode) -> Node:
 
     return Node(
         type="node",
-        id=node.properties["id"],
+        id=node.properties.get("id"),
         labels=[first_matching_label],
         properties={
             k: [v] for k, v in node.properties.items() if k in ["name", "source"]

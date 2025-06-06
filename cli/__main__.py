@@ -3,10 +3,9 @@ from pathlib import Path
 
 import typer
 
+from cli.commands import neo4j_to_pg as neo4j_to_pg_command
+from cli.commands import write_metrics as write_metrics_command
 from optimuskg.utils import calculate_checksum
-
-from .commands import get_stats as get_stats_command
-from .commands import neo4j_to_pg as neo4j_to_pg_command
 
 app = typer.Typer(help="Main entry point for the CLI.")
 
@@ -73,7 +72,7 @@ def neo4j_to_pg(
 
 
 @app.command(help="Get statistics about a PG-JSONL knowledge graph.")
-def get_stats(
+def write_metrics(
     in_path: Path = typer.Option(
         "data/neo4j/export/optimuskg-pg.jsonl",
         "--in",
@@ -85,7 +84,7 @@ def get_stats(
         help="The path to write the output file to.",
     ),
 ):
-    get_stats_command(in_path, out_path)
+    write_metrics_command(in_path, out_path)
 
 
 if __name__ == "__main__":

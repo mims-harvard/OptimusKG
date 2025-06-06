@@ -223,39 +223,30 @@ def _calculate_edge_topology_metrics(all_edges: list[Edge]) -> EdgeTopologyMetri
             num_bidirectional_edges=0, num_self_loops=0, num_duplicated_edges=0
         )
 
-    # 1. Identify and count self-looping edges
-    non_self_loop_edges = [edge for edge in all_edges if edge.from_node != edge.to_node]
+    # 1. Count self-looping edges
+    num_self_loops = sum(1 for edge in all_edges if edge.from_node == edge.to_node)
 
-    # 2. Identify and count duplicated edges from non-self-loop edges
-    # An edge is duplicated if it's a non-self-loop edge with the same from_node, to_node, and labels as another.
-    # We count the 'extra' instances.
-    edge_key_to_first_edge: dict[str, Edge] = {}
-    unique_non_self_loop_edges: list[Edge] = []
+    # 2. Count duplicated edges
+    seen_edges = set()
+    num_duplicated_edges = 0
+    for edge in all_edges:
+        key = f"{edge.from_node}_{edge.to_node}_{_join_labels(edge.labels)}_{edge.properties.get('relation_type', '')}"
+        if key in seen_edges:
+            num_duplicated_edges += 1
+        seen_edges.add(key)
 
-    for edge in non_self_loop_edges:
-        edge_key = f"{edge.id}_{edge.from_node}_{edge.to_node}"
-        if edge_key not in edge_key_to_first_edge:
-            edge_key_to_first_edge[edge_key] = edge
-            unique_non_self_loop_edges.append(edge)
-
-    # 3. Calculate Bidirectional Edges (from unique_non_self_loop_edges)
-    # Create a map of edge pairs to find bidirectional edges
-    edge_pairs = {
-        f"{edge.from_node}_{edge.to_node}": edge.id
-        for edge in unique_non_self_loop_edges
-    }
-
-    bidirectional_edge_ids = set()
-    for edge in unique_non_self_loop_edges:
-        reverse_key = f"{edge.to_node}_{edge.from_node}"
-        if reverse_key in edge_pairs:
-            bidirectional_edge_ids.add(edge.id)
-            bidirectional_edge_ids.add(edge_pairs[reverse_key])
+    # 3. Count bidirectional edges
+    num_bidirectional_edges = 0
+    for edge_1 in all_edges:
+        reverse_key = f"{edge_1.to_node}_{edge_1.from_node}_{_join_labels(edge_1.labels)}_{edge_1.properties.get('relation_type', '')}"
+        if reverse_key == key:
+            num_bidirectional_edges += 1
+            break
 
     return EdgeTopologyMetrics(
-        num_bidirectional_edges=len(bidirectional_edge_ids),
-        num_self_loops=len(all_edges) - len(non_self_loop_edges),
-        num_duplicated_edges=len(non_self_loop_edges) - len(unique_non_self_loop_edges),
+        num_bidirectional_edges=num_bidirectional_edges,
+        num_self_loops=num_self_loops,
+        num_duplicated_edges=num_duplicated_edges,
     )
 
 
@@ -276,7 +267,7 @@ def _write_stats_to_file(
         raise
 
 
-def get_stats(in_path: Path, out_path: Path):
+def write_metrics(in_path: Path, out_path: Path):
     logger.info(
         f"Attempting to process statistics for {in_path}, output will be written to {out_path}"
     )
