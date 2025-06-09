@@ -82,14 +82,8 @@ def write_metrics(
         "--out",
         help="The path to write the output file to.",
     ),
-    plots_out_dir: Path = typer.Option(
-        "data/export/metrics/plots",
-        "--plots-out",
-        help="The directory to write the plots to.",
-    ),
 ):
     write_metrics_command(in_path, data_out_path)
-    # generate_plots_command(data_out_path, plots_out_dir)
 
 
 if __name__ == "__main__":
