@@ -1,8 +1,6 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.utils import clean_edges
-
 
 def process_drugbank_drug_protein_interactions(
     protein_names: pl.DataFrame,
@@ -26,13 +24,26 @@ def process_drugbank_drug_protein_interactions(
                 pl.lit("DrugBank").alias("x_source"),
                 pl.lit("gene").alias("y_type"),
                 pl.lit("NCBI").alias("y_source"),
-                pl.col("relation").alias("display_relation"),
+                pl.col("relation").alias("relation_type"),
                 pl.lit("drug_protein").alias("relation"),
             ]
         )
-    )
+    ).drop(["uniprot_id", "uniprot_name"])
 
-    df_protein_drug = clean_edges(df_protein_drug)
+    df_protein_drug = df_protein_drug.select(
+        [
+            "relation",
+            "relation_type",
+            "x_id",
+            "x_type",
+            "x_name",
+            "x_source",
+            "y_id",
+            "y_type",
+            "y_name",
+            "y_source",
+        ]
+    )
 
     return df_protein_drug
 

@@ -5,7 +5,7 @@ silver.ctd.ctd_exposure_protein_interactions:
     infer_schema: false
     schema:
       "relation": "${pl:String}"
-      "display_relation": "${pl:String}"
+      "relation_type": "${pl:String}"
       "x_id": "${pl:String}"
       "x_type": "${pl:String}"
       "x_name": "${pl:String}"

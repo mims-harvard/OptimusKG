@@ -1,8 +1,6 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.utils import clean_edges
-
 
 def process_drugbank_drug_drug_interactions(
     drug_drug: pl.DataFrame,
@@ -32,12 +30,45 @@ def process_drugbank_drug_drug_interactions(
             pl.lit("drug").alias("y_type"),
             pl.lit("DrugBank").alias("y_source"),
             pl.lit("drug_drug").alias("relation"),
-            pl.lit("synergistic interaction").alias("display_relation"),
+            pl.lit("synergistic interaction").alias("relation_type"),
+            pl.col("accession_numbers").alias("x_accession_numbers"),
+            pl.col("cas").alias("x_cas"),
+            pl.col("unii").alias("x_unii"),
+            pl.col("synonyms").alias("x_synonyms"),
+            pl.col("standard_inchi_key").alias("x_standard_inchi_key"),
+            pl.col("accession_numbers_right").alias("y_accession_numbers"),
+            pl.col("cas_right").alias("y_cas"),
+            pl.col("unii_right").alias("y_unii"),
+            pl.col("synonyms_right").alias("y_synonyms"),
+            pl.col("standard_inchi_key_right").alias("y_standard_inchi_key"),
         ]
     )
 
-    # Clean edges
-    df_drug_drug = clean_edges(df_drug_drug)
+    df_drug_drug = df_drug_drug.select(
+        [
+            "relation",
+            "relation_type",
+            "description",
+            "x_id",
+            "x_type",
+            "x_name",
+            "x_source",
+            "x_accession_numbers",
+            "x_cas",
+            "x_unii",
+            "x_synonyms",
+            "x_standard_inchi_key",
+            "y_id",
+            "y_type",
+            "y_name",
+            "y_source",
+            "y_accession_numbers",
+            "y_cas",
+            "y_unii",
+            "y_synonyms",
+            "y_standard_inchi_key",
+        ]
+    )
 
     return df_drug_drug
 

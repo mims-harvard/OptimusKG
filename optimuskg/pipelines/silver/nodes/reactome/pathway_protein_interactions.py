@@ -1,8 +1,6 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.utils import clean_edges
-
 
 def process_pathway_protein_interactions(
     reactome_ncbi: pl.DataFrame,
@@ -22,7 +20,7 @@ def process_pathway_protein_interactions(
         }
     )
 
-    # Add source, type, relation and display_relation columns
+    # Add source, type, relation and relation_type columns
     df_path_prot = df_path_prot.with_columns(
         [
             pl.lit("NCBI").alias("x_source"),
@@ -30,12 +28,24 @@ def process_pathway_protein_interactions(
             pl.lit("REACTOME").alias("y_source"),
             pl.lit("pathway").alias("y_type"),
             pl.lit("pathway_protein").alias("relation"),
-            pl.lit("interacts with").alias("display_relation"),
+            pl.lit("interacts with").alias("relation_type"),
         ]
     )
 
-    # Clean edges
-    df_path_prot = clean_edges(df_path_prot)
+    df_path_prot = df_path_prot.select(
+        [
+            "relation",
+            "relation_type",
+            "x_id",
+            "x_type",
+            "x_name",
+            "x_source",
+            "y_id",
+            "y_type",
+            "y_name",
+            "y_source",
+        ]
+    )
 
     return df_path_prot
 

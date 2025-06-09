@@ -95,7 +95,8 @@ anatomy protein present:
   input_label: anatomy_protein_present
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 anatomy protein absent:
   is_a: expressed in # holds between a gene or gene product and an anatomical entity in which it is expressed (https://biolink.github.io/biolink-model/expressed_in/)
@@ -103,7 +104,8 @@ anatomy protein absent:
   input_label: anatomy_protein_absent
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 exposure exposure:
   is_a: has_part # holds between a part and its whole (https://biolink.github.io/biolink-model/has_part/)
@@ -111,7 +113,8 @@ exposure exposure:
   input_label: exposure_exposure
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 exposure protein:
   is_a: interacts_with # holds between a gene or gene product and an environmental exposure (https://biolink.github.io/biolink-model/interacts_with/)
@@ -119,7 +122,8 @@ exposure protein:
   input_label: exposure_protein
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 indication:
   is_a: treats # holds between a therapeutic procedure or chemical entity and a disease or phenotypic feature that it is used to treat (https://biolink.github.io/biolink-model/treats/)
@@ -127,7 +131,8 @@ indication:
   input_label: indication
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 disease protein:
   is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
@@ -135,7 +140,8 @@ disease protein:
   input_label: disease_protein
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 strong clinical evidence:
   is_a: treats # holds between a therapeutic procedure or chemical entity and a disease or phenotypic feature that it is used to treat (https://biolink.github.io/biolink-model/treats/)
@@ -143,7 +149,8 @@ strong clinical evidence:
   input_label: strong_clinical_evidence
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 weak clinical evidence:
   is_a: treats # holds between a therapeutic procedure or chemical entity and a disease or phenotypic feature that it is used to treat (https://biolink.github.io/biolink-model/treats/)
@@ -151,7 +158,8 @@ weak clinical evidence:
   input_label: weak_clinical_evidence
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 phenotype protein:
   is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
@@ -159,7 +167,8 @@ phenotype protein:
   input_label: phenotype_protein
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 drug protein:
   is_a: physically interacts with # holds between two entities that make physical contact as part of some interaction (https://biolink.github.io/biolink-model/physically_interacts_with/)
@@ -167,7 +176,8 @@ drug protein:
   input_label: drug_protein
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 drug drug:
   is_a: physically interacts with # holds between two entities that make physical contact as part of some interaction (https://biolink.github.io/biolink-model/physically_interacts_with/)
@@ -175,7 +185,8 @@ drug drug:
   input_label: drug_drug
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 disease protein positive:
   is_a: positively correlated with # A relationship that holds between two concepts represented by variables for which a statistical correlation is demonstrated, wherein the regression line has a positive slope (https://biolink.github.io/biolink-model/positively_correlated_with/)
@@ -183,7 +194,8 @@ disease protein positive:
   input_label: disease_protein_positive
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 disease protein negative:
   is_a: negatively correlated with # A relationship that holds between two concepts represented by variables for which a statistical correlation is demonstrated, wherein the regression line has a negative slope (https://biolink.github.io/biolink-model/negatively_correlated_with/)
@@ -191,7 +203,8 @@ disease protein negative:
   input_label: disease_protein_negative
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 biological process protein:
   is_a: regulates # holds between a gene or gene product and a biological process (https://biolink.github.io/biolink-model/regulates/)
@@ -199,7 +212,8 @@ biological process protein:
   input_label: biological_process_protein
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 cellular component protein:
   is_a: regulates # holds between a gene or gene product and a cellular component (https://biolink.github.io/biolink-model/regulates/)
@@ -207,7 +221,8 @@ cellular component protein:
   input_label: cellular_component_protein
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 molecular function protein:
   is_a: regulates # holds between a gene or gene product and a molecular function (https://biolink.github.io/biolink-model/regulates/)
@@ -215,7 +230,8 @@ molecular function protein:
   input_label: molecular_function_protein
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 pathway pathway:
   is_a: has_part # holds between a part and its whole (https://biolink.github.io/biolink-model/has_part/)
@@ -223,7 +239,8 @@ pathway pathway:
   input_label: pathway_pathway
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str
 
 pathway protein:
   is_a: has_part # holds between a part and its whole (https://biolink.github.io/biolink-model/has_part/)
@@ -231,4 +248,5 @@ pathway protein:
   input_label: pathway_protein
   inherit_properties: false
   properties:
-    display_relation: str
+    relation_type: str
+    undirected: str

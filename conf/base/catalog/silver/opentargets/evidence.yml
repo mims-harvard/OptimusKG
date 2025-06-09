@@ -6,7 +6,7 @@ _silver_opentargets_evidence_args: &silver_opentargets_evidence_args
       "x_id": "${pl:String}"
       "y_id": "${pl:String}"
       "relation": "${pl:String}"
-      "display_relation": "${pl:String}"
+      "relation_type": "${pl:String}"
       "x_type": "${pl:String}"
       "y_type": "${pl:String}"
       "x_name": "${pl:String}"
