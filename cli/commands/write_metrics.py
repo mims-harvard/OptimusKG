@@ -16,13 +16,17 @@ class LabelMetricsEntry(BaseModel):
 
 
 class EdgeTopologyMetrics(BaseModel):
-    num_bidirectional_edges: int = Field(
+    directed: int = Field(description="Number of edges that have a direction (X->Y).")
+    undirected: int = Field(
+        description="Number of edges that do not have a direction (X-Y)."
+    )
+    bidirectional: int = Field(
         description="Number of edges part of a symmetric pair (X->Y and Y->X, where X!=Y). This counts all participating edges."
     )
-    num_self_loops: int = Field(
+    loops: int = Field(
         description="Number of edges where the source and target node are the same (X->X)."
     )
-    num_duplicated_edges: int = Field(
+    duplicated: int = Field(
         description="Number of 'extra' non-self-looping edge instances that share the same source, target, and labels as another edge."
     )
 
@@ -43,21 +47,18 @@ class EdgeMetrics(BaseModel):
     topology_metrics: EdgeTopologyMetrics = Field(
         description="Metrics related to the traversal of edges."
     )
-    label_metrics: list[LabelMetricsEntry] = Field(
+    label_type: list[LabelMetricsEntry] = Field(
         description="Count and percentage of edges by their label"
     )
 
 
 class NodeMetrics(BaseModel):
-    label_metrics: list[LabelMetricsEntry] = Field(
+    label_type: list[LabelMetricsEntry] = Field(
         description="List of node label combinations and their counts. The label combination is the sorted labels concatenated with '|'."
     )
 
 
 class Metrics(BaseModel):
-    connected: bool = Field(
-        description="Whether the graph is connected or not. An empty graph or a graph with a single node is considered connected."
-    )
     total_elements: int = Field(
         description="Total number of elements (nodes + edges) in the file."
     )
@@ -85,11 +86,11 @@ def _count_element_labels(labels_count: dict[str, int], element: Node | Edge) ->
 
 
 def _get_element_metrics(
-    element_label_metrics: dict[str, int], num_elements: int
+    element_label_type: dict[str, int], num_elements: int
 ) -> list[LabelMetricsEntry]:
     """Returns a list of LabelMetricsEntry objects sorted by label."""
     element_label_stats_list: list[LabelMetricsEntry] = []
-    for labels, count in sorted(element_label_metrics.items()):
+    for labels, count in sorted(element_label_type.items()):
         percentage = (count / num_elements) * 100
         element_label_stats_list.append(
             LabelMetricsEntry(
@@ -111,8 +112,8 @@ def _process_input_file(in_path: Path) -> Metrics:
     all_node_ids: set[str] = set()  # Collect unique node IDs
     malformed_lines = 0
     processed_lines = 0
-    node_label_metrics: dict[str, int] = {}
-    edge_label_metrics: dict[str, int] = {}
+    node_label_type: dict[str, int] = {}
+    edge_label_type: dict[str, int] = {}
 
     try:
         with open(in_path, encoding="utf-8") as infile:
@@ -125,12 +126,12 @@ def _process_input_file(in_path: Path) -> Metrics:
                     if object_type == "node":
                         node = Node(**data)
                         num_nodes += 1
-                        all_node_ids.add(node.id)  # Add node ID to the set
-                        _count_element_labels(node_label_metrics, node)
+                        all_node_ids.add(node.id)
+                        _count_element_labels(node_label_type, node)
                     elif object_type == "edge":
                         edge = Edge(**data)
                         num_edges += 1
-                        _count_element_labels(edge_label_metrics, edge)
+                        _count_element_labels(edge_label_type, edge)
                         all_edges.append(edge)
                     else:
                         logger.warning(
@@ -161,17 +162,7 @@ def _process_input_file(in_path: Path) -> Metrics:
         f"Finished processing {in_path}. Total lines: {processed_lines}. Nodes: {num_nodes}, Edges: {num_edges}. Malformed/Skipped: {malformed_lines}."
     )
 
-    node_label_metrics: list[LabelMetricsEntry] = _get_element_metrics(
-        node_label_metrics, num_nodes
-    )
-    edge_label_metrics: list[LabelMetricsEntry] = _get_element_metrics(
-        edge_label_metrics, num_edges
-    )
-
-    edge_topology_metrics: EdgeTopologyMetrics = _calculate_edge_topology_metrics(
-        all_edges
-    )
-    is_connected: bool = _is_graph_connected(all_node_ids, all_edges)
+    edge_topology_metrics: EdgeTopologyMetrics = _get_edge_topology_metrics(all_edges)
 
     return Metrics(
         total_elements=num_nodes + num_edges,
@@ -179,105 +170,69 @@ def _process_input_file(in_path: Path) -> Metrics:
         num_edges=num_edges,
         processed_lines=processed_lines,
         malformed_lines=malformed_lines,
-        node_metrics=NodeMetrics(label_metrics=node_label_metrics),
+        node_metrics=NodeMetrics(
+            label_type=_get_element_metrics(node_label_type, num_nodes)
+        ),
         edge_metrics=EdgeMetrics(
             topology_metrics=edge_topology_metrics,
-            label_metrics=edge_label_metrics,
+            label_type=_get_element_metrics(edge_label_type, num_edges),
         ),
-        connected=is_connected,
     )
 
 
-def _is_graph_connected(all_node_ids: set[str], all_edges: list[Edge]) -> bool:
-    """Checks if the graph is connected using DFS."""
-    if not all_node_ids:
-        return True  # An empty graph is considered connected
-    if len(all_node_ids) == 1:
-        return True  # A graph with a single node is considered connected
-
-    adj: dict[str, list[str]] = {node_id: [] for node_id in all_node_ids}
-    for edge in all_edges:
-        # Ensure both source and target nodes are in the graph's node set
-        if edge.from_node in all_node_ids and edge.to_node in all_node_ids:
-            adj[edge.from_node].append(edge.to_node)
-            adj[edge.to_node].append(edge.from_node)  # For undirected connectivity
-
-    start_node = next(iter(all_node_ids))  # Pick an arbitrary start node
-    visited: set[str] = set()
-    stack: list[str] = [start_node]
-    visited.add(start_node)
-
-    while stack:
-        current_node = stack.pop()
-        for neighbor in adj.get(current_node, []):
-            if neighbor not in visited:
-                visited.add(neighbor)
-                stack.append(neighbor)
-
-    return len(visited) == len(all_node_ids)
-
-
-def _calculate_edge_topology_metrics(all_edges: list[Edge]) -> EdgeTopologyMetrics:
+def _get_edge_topology_metrics(all_edges: list[Edge]) -> EdgeTopologyMetrics:
+    """Returns the topology metrics for the edges."""
     if not all_edges:
         return EdgeTopologyMetrics(
-            num_bidirectional_edges=0, num_self_loops=0, num_duplicated_edges=0
+            directed=0, undirected=0, bidirectional=0, loops=0, duplicated=0
         )
 
-    # 1. Count self-looping edges
-    num_self_loops = sum(1 for edge in all_edges if edge.from_node == edge.to_node)
-
-    # 2. Count duplicated edges
-    seen_edges = set()
-    num_duplicated_edges = 0
-    for edge in all_edges:
-        key = f"{edge.from_node}_{edge.to_node}_{_join_labels(edge.labels)}_{edge.properties.get('relation_type', '')}"
-        if key in seen_edges:
-            num_duplicated_edges += 1
-        seen_edges.add(key)
-
-    # 3. Count bidirectional edges
-    num_bidirectional_edges = 0
-    for edge_1 in all_edges:
-        reverse_key = f"{edge_1.to_node}_{edge_1.from_node}_{_join_labels(edge_1.labels)}_{edge_1.properties.get('relation_type', '')}"
-        if reverse_key == key:
-            num_bidirectional_edges += 1
-            break
-
-    return EdgeTopologyMetrics(
-        num_bidirectional_edges=num_bidirectional_edges,
-        num_self_loops=num_self_loops,
-        num_duplicated_edges=num_duplicated_edges,
+    edge_keys = set()
+    reverse_keys = set()
+    metrics = EdgeTopologyMetrics(
+        directed=0, undirected=0, bidirectional=0, loops=0, duplicated=0
     )
 
-
-def _write_stats_to_file(
-    out_path: Path,
-    metrics: Metrics,
-):
-    """Writes the statistics data (Pydantic model) to a JSON file."""
-    try:
-        with open(out_path, "w", encoding="utf-8") as outfile:
-            json.dump(metrics.model_dump(mode="json"), outfile, indent=4)
-        logger.info(f"Successfully wrote statistics to {out_path}")
-    except Exception as e:
-        logger.error(
-            f"Failed to write statistics to {out_path}: {type(e).__name__} - {e}",
-            exc_info=True,
+    for edge in all_edges:
+        key_suffix = (
+            f"_{_join_labels(edge.labels)}_{edge.properties.get('relation_type', '')}"
         )
-        raise
+        key = f"{edge.from_node}_{edge.to_node}{key_suffix}"
+        reverse_key = f"{edge.to_node}_{edge.from_node}{key_suffix}"
+
+        if edge.from_node == edge.to_node:
+            metrics.loops += 1
+        elif key in edge_keys:
+            metrics.duplicated += 1
+        elif edge.undirected:
+            metrics.undirected += 1
+        else:
+            metrics.directed += 1
+            if reverse_key in edge_keys:
+                metrics.bidirectional += 1
+
+        edge_keys.add(key)
+        reverse_keys.add(reverse_key)
+
+    return metrics
 
 
 def write_metrics(in_path: Path, out_path: Path):
+    """Processes input file and writes the statistics data (Pydantic model) to a JSON file."""
     logger.info(
         f"Attempting to process statistics for {in_path}, output will be written to {out_path}"
     )
 
     try:
         metrics: Metrics = _process_input_file(in_path)
-        _write_stats_to_file(out_path, metrics)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(out_path, "w", encoding="utf-8") as outfile:
+            json.dump(metrics.model_dump(mode="json"), outfile, indent=4)
+        logger.info(f"Successfully wrote statistics to {out_path}")
 
     except Exception as e:
         logger.error(
-            f"An unexpected error occurred during statistics generation for {in_path}: {type(e).__name__} - {e}",
+            f"An error occurred processing {in_path} or writing to {out_path}: {type(e).__name__} - {e}",
             exc_info=True,
         )
+        raise

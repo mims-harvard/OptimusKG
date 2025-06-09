@@ -1,4 +1,8 @@
+import logging
+
 import polars as pl
+
+logger = logging.getLogger(__name__)
 
 
 def normalize_edge_topology(df: pl.DataFrame) -> pl.DataFrame:
@@ -65,16 +69,19 @@ def _set_undirected_edges(df: pl.DataFrame) -> pl.DataFrame:
     )
 
     # Find edges that appear multiple times (with reversed source/target)
+    # NOTE: Using string type instead of boolean to avoid biocypher bug on exported boolean values
     duplicated = (
         df_with_pair_key.filter(pl.col("pair_key").is_duplicated())
         .unique(subset="pair_key", keep="first")
-        .with_columns(pl.lit(True).alias("undirected"))
+        .with_columns(pl.lit("true").alias("undirected"))
     )
+
+    logger.info(f"Added undirected property to {len(duplicated)} edges")
 
     # Keep edges that only appear once as directed
     not_duplicated = df_with_pair_key.filter(
         ~pl.col("pair_key").is_duplicated()
-    ).with_columns(pl.lit(False).alias("undirected"))
+    ).with_columns(pl.lit("false").alias("undirected"))
 
     # Combine directed and undirected edges and remove temporary key
     return pl.concat([duplicated, not_duplicated]).drop("pair_key")

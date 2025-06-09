@@ -3,8 +3,7 @@ from pathlib import Path
 
 import typer
 
-from cli.commands import neo4j_to_pg as neo4j_to_pg_command
-from cli.commands import write_metrics as write_metrics_command
+from cli.commands import neo4j_to_pg_command, write_metrics_command
 from optimuskg.utils import calculate_checksum
 
 app = typer.Typer(help="Main entry point for the CLI.")
@@ -63,7 +62,7 @@ def neo4j_to_pg(
         help="The path to read the input file from.",
     ),
     out_path: Path = typer.Option(
-        "data/neo4j/export/optimuskg-pg.jsonl",
+        "data/export/optimuskg.pg.jsonl",
         "--out",
         help="The path to write the output file to.",
     ),
@@ -74,17 +73,23 @@ def neo4j_to_pg(
 @app.command(help="Get statistics about a PG-JSONL knowledge graph.")
 def write_metrics(
     in_path: Path = typer.Option(
-        "data/neo4j/export/optimuskg-pg.jsonl",
+        "data/export/optimuskg.pg.jsonl",
         "--in",
         help="The path to read the input file from.",
     ),
-    out_path: Path = typer.Option(
-        "data/neo4j/export/optimuskg-pg.stats.json",
+    data_out_path: Path = typer.Option(
+        "data/export/metrics/metrics.json",
         "--out",
         help="The path to write the output file to.",
     ),
+    plots_out_dir: Path = typer.Option(
+        "data/export/metrics/plots",
+        "--plots-out",
+        help="The directory to write the plots to.",
+    ),
 ):
-    write_metrics_command(in_path, out_path)
+    write_metrics_command(in_path, data_out_path)
+    # generate_plots_command(data_out_path, plots_out_dir)
 
 
 if __name__ == "__main__":
