@@ -1,15 +1,8 @@
-from typing import Final
-
 import pandas as pd
 import polars as pl
 from kedro.pipeline import node
 
 from .utils import construct_edges
-
-# TODO: This constant should be a parameter in the pipeline.
-RELATION_SCORE_THRESHOLD: Final[float] = 0.5
-DISPLAY_RELATION_SCORE: Final[int] = 1
-CHEMBL_SCORE_THRESHOLD: Final[float] = 0.05
 
 
 def process_chembl(  # noqa: PLR0913
@@ -18,6 +11,9 @@ def process_chembl(  # noqa: PLR0913
     diseases: pl.DataFrame,
     targets: pl.DataFrame,
     drug_mappings: pl.DataFrame,
+    relation_score_threshold: float,
+    display_relation_score: int,
+    chembl_score_threshold: float,
 ) -> tuple[pl.DataFrame, pl.DataFrame]:
     df = pl.from_pandas(chembl)
     df = (
@@ -38,7 +34,7 @@ def process_chembl(  # noqa: PLR0913
             pl.col("drugId").is_in(drug_mappings["id"])
             & pl.col("targetId").is_in(targets["id"])
             & pl.col("diseaseId").is_in(diseases["id"])
-            & (pl.col("score") > CHEMBL_SCORE_THRESHOLD)
+            & (pl.col("score") > chembl_score_threshold)
         )
         .with_columns(pl.col("clinicalPhase").cast(pl.Int32))
     )
@@ -51,11 +47,11 @@ def process_chembl(  # noqa: PLR0913
         .with_columns(
             pl.when(pl.col("score") == 1)
             .then(pl.lit("indication"))
-            .when(pl.col("score") < RELATION_SCORE_THRESHOLD)
+            .when(pl.col("score") < relation_score_threshold)
             .then(pl.lit("weak_clinical_evidence"))
             .otherwise(pl.lit("strong_clinical_evidence"))
             .alias("relation"),
-            pl.when(pl.col("score") == DISPLAY_RELATION_SCORE)
+            pl.when(pl.col("score") == display_relation_score)
             .then(pl.lit("indication"))
             .otherwise(pl.lit("clinical candidate"))
             .alias("relation_type"),
@@ -108,6 +104,9 @@ chembl_node = node(
         "diseases": "bronze.opentargets.diseases",
         "targets": "bronze.opentargets.targets",
         "drug_mappings": "bronze.opentargets.drug_mappings",
+        "relation_score_threshold": "params:relation_score_threshold",
+        "display_relation_score": "params:display_relation_score",
+        "chembl_score_threshold": "params:chembl_score_threshold",
     },
     outputs=[
         "opentargets.evidence.chembl_drug_disease",

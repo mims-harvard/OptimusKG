@@ -1,0 +1,9 @@
+# Bronze parameters
+bronze.expression_rank_threshold: 25000
+bronze.call_quality: "gold quality"
+
+# Silver parameters
+silver.score_threshold: 0.5
+silver.relation_score_threshold: 0.5
+silver.display_relation_score: 1
+silver.chembl_score_threshold: 0.05

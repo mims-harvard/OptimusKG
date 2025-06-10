@@ -1,5 +1,4 @@
 import logging
-from typing import Final
 
 import pandas as pd
 import polars as pl
@@ -8,8 +7,6 @@ from kedro.pipeline import node
 from .utils import construct_edges
 
 logger = logging.getLogger(__name__)
-# TODO: This constant should be a parameter in the pipeline.
-SCORE_THRESHOLD: Final[float] = 0.5
 
 
 def process_cancer_gene_census(  # noqa: PLR0913
@@ -19,6 +16,7 @@ def process_cancer_gene_census(  # noqa: PLR0913
     targets: pl.DataFrame,
     drug_mappings: pl.DataFrame,
     disease_phenotype_ids: pl.DataFrame,
+    score_threshold: float,
 ) -> pl.DataFrame:
     df = pl.from_pandas(cancer_gene_census)
     df = (
@@ -26,7 +24,7 @@ def process_cancer_gene_census(  # noqa: PLR0913
         .filter(
             (pl.col("targetId").cast(str).is_in(targets["id"]))
             & (pl.col("diseaseId").cast(str).is_in(disease_phenotype_ids["id"]))
-            & (pl.col("score") > SCORE_THRESHOLD)
+            & (pl.col("score") > score_threshold)
         )
         .pipe(
             construct_edges,
@@ -53,6 +51,7 @@ cancer_gene_census_node = node(
         "targets": "bronze.opentargets.targets",
         "disease_phenotype_ids": "bronze.opentargets.disease_phenotype_ids",
         "drug_mappings": "bronze.opentargets.drug_mappings",
+        "score_threshold": "params:score_threshold",
     },
     outputs="opentargets.evidence.cancer_gene_census",
     name="cancer_gene_census",

@@ -1,17 +1,15 @@
 import logging
-from typing import Final
 
 import polars as pl
 from kedro.pipeline import node
 
 logger = logging.getLogger(__name__)
 
-# TODO: This constant should be a parameter in the pipeline.
-EXPRESSION_RANK_THRESHOLD: Final[int] = 25000
-
 
 def process_bgee(
     homo_sapiens_expressions_advanced: pl.DataFrame,
+    expression_rank_threshold: int,
+    call_quality: str,
 ) -> pl.DataFrame:
     df = homo_sapiens_expressions_advanced.filter(
         pl.col("Anatomical entity ID").str.starts_with("UBERON")
@@ -30,12 +28,8 @@ def process_bgee(
     )
 
     df = df.filter(
-        (
-            pl.col("call_quality") == "gold quality"
-        )  # We only take the highest quality datapoints
-        & (
-            pl.col("expression_rank") < EXPRESSION_RANK_THRESHOLD
-        )  # We take the most expressing genes within each tissue
+        (pl.col("call_quality") == call_quality)
+        & (pl.col("expression_rank") < expression_rank_threshold)
         & (
             ~pl.col("anatomy_id").str.contains("∩")
         )  # NOTE: New versions of the dataset include measurements with an intersection of tissues. We want to remove this measurements.
@@ -49,7 +43,9 @@ def process_bgee(
 bgee_node = node(
     process_bgee,
     inputs={
-        "homo_sapiens_expressions_advanced": "landing.bgee.homo_sapiens_expressions_advanced"
+        "homo_sapiens_expressions_advanced": "landing.bgee.homo_sapiens_expressions_advanced",
+        "expression_rank_threshold": "params:expression_rank_threshold",
+        "call_quality": "params:call_quality",
     },
     outputs="bgee.gene_expressions_in_anatomy",
     name="bgee",

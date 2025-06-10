@@ -144,16 +144,77 @@ $ uv run kedro jupyter lab
         http://127.0.0.1:8888/lab?token=3398bd1a7d0991e2079181a5c037e4d9cc757f37247eba27
 ```
 
-## Spin up Neo4j
+## Neo4j
+
+This project uses Neo4j as its graph database. You can manage the Neo4j instance using the `Makefile`.
+
+The typical workflow is:
+1. Run the Kedro pipeline to generate the graph data.
+2. Import the data into Neo4j.
+3. Start the Neo4j container.
+4. Interact with the database (e.g., export data).
+
+### Import Data
+
+After running the pipeline to generate the graph data, you can import it into Neo4j with:
 
 ```console
-$ uv run cli neo4j
-
-[02/26/25 02:37:40] INFO     Using 'conf/logging.yml' as logging configuration. You can change this by setting the KEDRO_LOGGING_CONFIG  __init__.py:270
-                             environment variable accordingly.                                                                                          
-                    INFO     Spinning up Neo4j service...                                                                                 __main__.py:28
-                    INFO     Neo4j service started successfully.                                                                          __main__.py:33
-                    INFO     Web interface (HTTP): http://localhost:7474                                                                  __main__.py:34
-                    INFO     Web interface (HTTPS): https://localhost:7473  
+$ make neo4j-import-data
 ```
+
+This command performs an offline import, creating the necessary database files. If a Neo4j container is already running, you may need to stop it before importing.
+
+### Start Neo4j
+
+To start the Neo4j container with the imported data, run:
+
+```console
+$ make neo4j
+```
+
+This will start a Neo4j container in the background. You can access the Neo4j Browser at `http://localhost:7474`.
+
+### Export Data
+
+You can export the entire database or the results of a specific query once the container is running.
+
+To export the entire database to a JSONL file, run:
+
+```console
+$ make neo4j-export-all
+```
+
+The data will be saved in `data/export/optimuskg.jsonl`.
+
+To export the results of a specific Cypher query, run:
+
+```console
+$ CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export-query
+```
+
+The results will be saved to a file in `data/export/` with a name derived from the query.
+
+## Post-processing
+
+After exporting the graph from Neo4j, you can perform additional processing steps.
+
+### Convert to PG-JSONL
+
+To convert the Neo4j JSONL export into a Property Graph (PG) compatible format, run:
+
+```console
+$ uv run cli neo4j-to-pg
+```
+
+This command reads the file from `data/neo4j/export/optimuskg.jsonl` and writes the PG-JSONL version to `data/export/optimuskg.pg.jsonl`. You can specify different input and output paths using the `--in` and `--out` options.
+
+### Knowledge Graph Metrics
+
+To calculate metrics about the PG-JSONL graph, run:
+
+```console
+$ uv run cli write-metrics
+```
+
+This command reads the PG-JSONL file from `data/export/optimuskg.pg.jsonl` and saves the metrics to `data/export/metrics/metrics.json`. You can specify different input and output paths using the `--in` and `--out` options.
 

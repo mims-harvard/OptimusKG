@@ -1,13 +1,8 @@
-from typing import Final
-
 import pandas as pd
 import polars as pl
 from kedro.pipeline import node
 
 from .utils import construct_edges
-
-# TODO: This constant should be a parameter in the pipeline.
-SCORE_THRESHOLD: Final[float] = 0.5
 
 
 def process_crispr_screen(  # noqa: PLR0913
@@ -16,6 +11,7 @@ def process_crispr_screen(  # noqa: PLR0913
     diseases: pl.DataFrame,
     targets: pl.DataFrame,
     drug_mappings: pl.DataFrame,
+    score_threshold: float,
 ) -> pl.DataFrame:
     df = pl.from_pandas(crispr_screen)
     df = (
@@ -37,7 +33,7 @@ def process_crispr_screen(  # noqa: PLR0913
         .select(["score", "log2FoldChangeValue", "targetId", "diseaseId"])
         .group_by(["targetId", "diseaseId"])
         .agg(pl.col("score").mean(), pl.col("log2FoldChangeValue").mean())
-        .filter(pl.col("score") > SCORE_THRESHOLD)
+        .filter(pl.col("score") > score_threshold)
         .filter(pl.col("log2FoldChangeValue") != 0)
         .with_columns(
             pl.when(pl.col("log2FoldChangeValue") < 0)
@@ -74,6 +70,7 @@ crispr_screen_node = node(
         "diseases": "bronze.opentargets.diseases",
         "targets": "bronze.opentargets.targets",
         "drug_mappings": "bronze.opentargets.drug_mappings",
+        "score_threshold": "params:score_threshold",
     },
     outputs="opentargets.evidence.crispr_screen",
     name="crispr_screen",
