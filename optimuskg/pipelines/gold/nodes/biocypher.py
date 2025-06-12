@@ -37,6 +37,9 @@ def process_biocypher(  # noqa: PLR0913
     phenotype_protein: pl.DataFrame,
     strong_clinical_evidence: pl.DataFrame,
     weak_clinical_evidence: pl.DataFrame,
+    exposure_biological_process: pl.DataFrame,
+    exposure_molecular_function: pl.DataFrame,
+    exposure_cellular_component: pl.DataFrame,
     # Nodes
     gene: pl.DataFrame,
     anatomical_entity: pl.DataFrame,
@@ -195,6 +198,18 @@ def process_biocypher(  # noqa: PLR0913
             df=weak_clinical_evidence,
             mapping_config=edge_config,
         ),
+        yield_edges(
+            df=exposure_biological_process,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
+            df=exposure_molecular_function,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
+            df=exposure_cellular_component,
+            mapping_config=edge_config,
+        ),
     ]
 
     try:
@@ -263,6 +278,9 @@ biocypher_node = node(
         "phenotype_protein": "gold.edges.phenotype_protein",
         "strong_clinical_evidence": "gold.edges.strong_clinical_evidence",
         "weak_clinical_evidence": "gold.edges.weak_clinical_evidence",
+        "exposure_biological_process": "gold.edges.exposure_biological_process",
+        "exposure_molecular_function": "gold.edges.exposure_molecular_function",
+        "exposure_cellular_component": "gold.edges.exposure_cellular_component",
         # Nodes
         "gene": "gold.nodes.gene",
         "anatomical_entity": "gold.nodes.anatomical_entity",

@@ -14,6 +14,9 @@ def create_pipeline(**kwargs):
             "silver.ctd.ctd_exposure_protein_interactions",
             "silver.ctd.ctd_exposure_exposure_interactions",
             "silver.ctd.ctd_exposure_disease_interactions",
+            "silver.ctd.ctd_exposure_biological_process_interactions",
+            "silver.ctd.ctd_exposure_molecular_function_interactions",
+            "silver.ctd.ctd_exposure_cellular_component_interactions",
             "silver.drugbank.drug_drug",
             "silver.drugbank.drug_protein",
             "silver.ncbigene.protein_biological_process_interactions",
@@ -54,5 +57,8 @@ def create_pipeline(**kwargs):
             "gold.edges.phenotype_protein",
             "gold.edges.strong_clinical_evidence",
             "gold.edges.weak_clinical_evidence",
+            "gold.edges.exposure_biological_process",
+            "gold.edges.exposure_molecular_function",
+            "gold.edges.exposure_cellular_component",
         },
     )

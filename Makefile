@@ -121,7 +121,10 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--relationships="/import/CellularComponentProtein-header.csv,/import/CellularComponentProtein-part.*" \
 		--relationships="/import/MolecularFunctionProtein-header.csv,/import/MolecularFunctionProtein-part.*" \
 		--relationships="/import/PathwayPathway-header.csv,/import/PathwayPathway-part.*" \
-		--relationships="/import/PathwayProtein-header.csv,/import/PathwayProtein-part.*"
+		--relationships="/import/PathwayProtein-header.csv,/import/PathwayProtein-part.*" \
+		--relationships="/import/ExposureBiologicalProcess-header.csv,/import/ExposureBiologicalProcess-part.*" \
+		--relationships="/import/ExposureMolecularFunction-header.csv,/import/ExposureMolecularFunction-part.*" \
+		--relationships="/import/ExposureCellularComponent-header.csv,/import/ExposureCellularComponent-part.*"
 
 .PHONY: neo4j-export-all
 neo4j-export-all: ##@ Export Neo4j database to JSONL format

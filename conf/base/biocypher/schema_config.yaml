@@ -268,3 +268,30 @@ pathway protein:
   properties:
     relation_type: str
     undirected: str
+
+exposure biological process:
+  is_a: related to
+  represented_as: edge
+  input_label: exposure_biological_process
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
+
+exposure molecular function:
+  is_a: related to
+  represented_as: edge
+  input_label: exposure_molecular_function
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
+    
+exposure cellular component:
+  is_a: related to
+  represented_as: edge
+  input_label: exposure_cellular_component
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
