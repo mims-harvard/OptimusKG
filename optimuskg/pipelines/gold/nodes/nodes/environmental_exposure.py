@@ -5,6 +5,7 @@ from kedro.pipeline import node
 def process_environmental_exposure_nodes(  # noqa: PLR0913
     ctd_exposure_protein_interactions: pl.DataFrame,
     ctd_exposure_exposure_interactions: pl.DataFrame,
+    ctd_exposure_disease_interactions: pl.DataFrame,
 ) -> pl.DataFrame:
     ee_nodes = pl.concat(
         [
@@ -19,6 +20,12 @@ def process_environmental_exposure_nodes(  # noqa: PLR0913
                 pl.col("y_type").alias("type"),
                 pl.col("y_name").alias("name"),
                 pl.col("y_source").alias("source"),
+            ),
+            ctd_exposure_disease_interactions.select(
+                pl.col("x_id").alias("id"),
+                pl.col("x_type").alias("type"),
+                pl.col("x_name").alias("name"),
+                pl.col("x_source").alias("source"),
             ),
         ],
         how="vertical",
@@ -47,6 +54,7 @@ environmental_exposure_node = node(
     inputs={
         "ctd_exposure_protein_interactions": "silver.ctd.ctd_exposure_protein_interactions",
         "ctd_exposure_exposure_interactions": "silver.ctd.ctd_exposure_exposure_interactions",
+        "ctd_exposure_disease_interactions": "silver.ctd.ctd_exposure_disease_interactions",
     },
     outputs="nodes.environmental_exposure",
     name="environmental_exposure",

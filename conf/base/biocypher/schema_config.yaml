@@ -107,6 +107,15 @@ anatomy protein absent:
     relation_type: str
     undirected: str
 
+exposure disease:
+  is_a: linked to # holds between a disease and an environmental exposure (https://biolink.github.io/biolink-model/linked_to/)
+  represented_as: edge
+  input_label: exposure_disease
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
+
 exposure exposure:
   is_a: has_part # holds between a part and its whole (https://biolink.github.io/biolink-model/has_part/)
   represented_as: edge
@@ -138,6 +147,15 @@ disease protein:
   is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
   represented_as: edge
   input_label: disease_protein
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
+
+disease disease:
+  is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
+  represented_as: edge
+  input_label: disease_disease
   inherit_properties: false
   properties:
     relation_type: str

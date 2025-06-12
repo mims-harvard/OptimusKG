@@ -86,5 +86,15 @@ def write_metrics(
     write_metrics_command(in_path, data_out_path)
 
 
+# @app.command(help="Get metadata via ID.")
+# def get_metadata(
+#     id: str = typer.Option(
+#         None,
+#         "--id",
+#         help="The ID to get the metadata for.",
+#     ),
+# ):
+#     get_metadata_command(id)
+
 if __name__ == "__main__":
     app()

@@ -24,10 +24,12 @@ def process_biocypher(  # noqa: PLR0913
     disease_protein_negative: pl.DataFrame,
     disease_protein_positive: pl.DataFrame,
     disease_protein: pl.DataFrame,
+    disease_disease: pl.DataFrame,
     drug_drug: pl.DataFrame,
     drug_protein: pl.DataFrame,
     exposure_exposure: pl.DataFrame,
     exposure_protein: pl.DataFrame,
+    exposure_disease: pl.DataFrame,
     indication: pl.DataFrame,
     molecular_function_protein: pl.DataFrame,
     pathway_pathway: pl.DataFrame,
@@ -142,6 +144,10 @@ def process_biocypher(  # noqa: PLR0913
             mapping_config=edge_config,
         ),
         yield_edges(
+            df=disease_disease,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
             df=drug_drug,
             mapping_config=edge_config,
         ),
@@ -155,6 +161,10 @@ def process_biocypher(  # noqa: PLR0913
         ),
         yield_edges(
             df=exposure_protein,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
+            df=exposure_disease,
             mapping_config=edge_config,
         ),
         yield_edges(
@@ -240,10 +250,12 @@ biocypher_node = node(
         "disease_protein_negative": "gold.edges.disease_protein_negative",
         "disease_protein_positive": "gold.edges.disease_protein_positive",
         "disease_protein": "gold.edges.disease_protein",
+        "disease_disease": "gold.edges.disease_disease",
         "drug_drug": "gold.edges.drug_drug",
         "drug_protein": "gold.edges.drug_protein",
         "exposure_exposure": "gold.edges.exposure_exposure",
         "exposure_protein": "gold.edges.exposure_protein",
+        "exposure_disease": "gold.edges.exposure_disease",
         "indication": "gold.edges.indication",
         "molecular_function_protein": "gold.edges.molecular_function_protein",
         "pathway_pathway": "gold.edges.pathway_pathway",
