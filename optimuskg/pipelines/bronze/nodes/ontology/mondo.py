@@ -91,8 +91,6 @@ mondo_node = node(
         "ontology.mondo_terms",
         "ontology.mondo_relations",
         "ontology.mondo_xrefs",
-        # "ontology.mondo_subsets",
-        # "ontology.mondo_definitions",
     ],
     name="mondo",
     tags=["bronze"],

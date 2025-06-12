@@ -41,20 +41,20 @@ def process_disease_disease_interactions(
         pl.lit("parent-child").alias("relation_type"),
     )
 
-    final_cols = [
-        "relation",
-        "relation_type",
-        "x_id",
-        "x_name",
-        "x_type",
-        "x_source",
-        "y_id",
-        "y_name",
-        "y_type",
-        "y_source",
-    ]
-
-    df_disease_disease = df_disease_disease.select(final_cols)
+    df_disease_disease = df_disease_disease.select(
+        [
+            "relation",
+            "relation_type",
+            "x_id",
+            "x_type",
+            "x_name",
+            "x_source",
+            "y_id",
+            "y_type",
+            "y_name",
+            "y_source",
+        ]
+    )
 
     return df_disease_disease
 
