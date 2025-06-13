@@ -35,7 +35,7 @@ def process_ctd_exposure_biological_process_interactions(
             [
                 pl.lit("exposure").alias("x_type"),
                 pl.lit("CTD").alias("x_source"),
-                pl.lit("biological process").alias("y_type"),
+                pl.lit("biological_process").alias("y_type"),
                 pl.lit("GO").alias("y_source"),
                 pl.lit("exposure_biological_process").alias("relation"),
                 pl.lit("interacts with").alias("relation_type"),

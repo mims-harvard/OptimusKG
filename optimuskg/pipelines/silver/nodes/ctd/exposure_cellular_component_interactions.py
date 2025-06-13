@@ -35,7 +35,7 @@ def process_ctd_exposure_cellular_component_interactions(
             [
                 pl.lit("exposure").alias("x_type"),
                 pl.lit("CTD").alias("x_source"),
-                pl.lit("cellular component").alias("y_type"),
+                pl.lit("cellular_component").alias("y_type"),
                 pl.lit("GO").alias("y_source"),
                 pl.lit("exposure_cellular_component").alias("relation"),
                 pl.lit("interacts with").alias("relation_type"),
