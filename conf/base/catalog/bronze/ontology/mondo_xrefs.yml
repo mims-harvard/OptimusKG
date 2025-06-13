@@ -1,0 +1,12 @@
+bronze.ontology.mondo_xrefs:
+  type: polars.CSVDataset
+  filepath: "data/bronze/ontology/mondo_xrefs.csv"
+  load_args:
+    infer_schema: false
+    schema:
+      "id": "${pl:Utf8}"
+      "xref_id": "${pl:Utf8}"
+  metadata:
+    checksum: "da24d9e916f3f3ad274da8884e50ce70"
+    kedro-viz:
+      layer: bronze

@@ -109,6 +109,8 @@ neo4j-import-data: ##@ Import data into Neo4j
         --relationships="/import/ExposureProtein-header.csv,/import/ExposureProtein-part.*" \
 		--relationships="/import/DiseaseProteinPositive-header.csv,/import/DiseaseProteinPositive-part.*" \
 		--relationships="/import/DiseaseProteinNegative-header.csv,/import/DiseaseProteinNegative-part.*" \
+		--relationships="/import/DiseaseDisease-header.csv,/import/DiseaseDisease-part.*" \
+		--relationships="/import/ExposureDisease-header.csv,/import/ExposureDisease-part.*" \
 		--relationships="/import/DrugProtein-header.csv,/import/DrugProtein-part.*" \
 		--relationships="/import/DrugDrug-header.csv,/import/DrugDrug-part.*" \
 		--relationships="/import/Indication-header.csv,/import/Indication-part.*" \
@@ -119,7 +121,10 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--relationships="/import/CellularComponentProtein-header.csv,/import/CellularComponentProtein-part.*" \
 		--relationships="/import/MolecularFunctionProtein-header.csv,/import/MolecularFunctionProtein-part.*" \
 		--relationships="/import/PathwayPathway-header.csv,/import/PathwayPathway-part.*" \
-		--relationships="/import/PathwayProtein-header.csv,/import/PathwayProtein-part.*"
+		--relationships="/import/PathwayProtein-header.csv,/import/PathwayProtein-part.*" \
+		--relationships="/import/ExposureBiologicalProcess-header.csv,/import/ExposureBiologicalProcess-part.*" \
+		--relationships="/import/ExposureMolecularFunction-header.csv,/import/ExposureMolecularFunction-part.*" \
+		--relationships="/import/ExposureCellularComponent-header.csv,/import/ExposureCellularComponent-part.*"
 
 .PHONY: neo4j-export-all
 neo4j-export-all: ##@ Export Neo4j database to JSONL format

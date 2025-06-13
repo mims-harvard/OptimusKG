@@ -1,8 +1,13 @@
 from .bgee import bgee_node
 from .ctd import (
+    ctd_exposure_biological_process_interactions_node,
+    ctd_exposure_cellular_component_interactions_node,
+    ctd_exposure_disease_interactions_node,
     ctd_exposure_exposure_interactions_node,
+    ctd_exposure_molecular_function_interactions_node,
     ctd_exposure_protein_interactions_node,
 )
+from .disease_disease_interactions import disease_disease_interactions_node
 from .drugbank import (
     drugbank_drug_drug_interactions_node,
     drugbank_drug_protein_interactions_node,
@@ -61,6 +66,10 @@ __all__ = [
     "opentargets_edges_node",
     "ctd_exposure_exposure_interactions_node",
     "ctd_exposure_protein_interactions_node",
+    "ctd_exposure_disease_interactions_node",
+    "ctd_exposure_biological_process_interactions_node",
+    "ctd_exposure_molecular_function_interactions_node",
+    "ctd_exposure_cellular_component_interactions_node",
     "drugcentral_node",
     "gene_names_node",
     "protein_biological_process_interactions_node",
@@ -70,4 +79,5 @@ __all__ = [
     "pathway_protein_interactions_node",
     "drugbank_drug_drug_interactions_node",
     "drugbank_drug_protein_interactions_node",
+    "disease_disease_interactions_node",
 ]

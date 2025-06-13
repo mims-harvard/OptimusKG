@@ -1,0 +1,27 @@
+landing.disgenet.curated_gene_disease_associations:
+  type: polars.CSVDataset
+  filepath: "data/landing/disgenet/curated_gene_disease_associations.tsv"
+  load_args:
+    separator: "\t"
+    infer_schema: false
+    schema:
+      "geneid": "${pl:Utf8}"
+      "geneSymbol": "${pl:Utf8}"
+      "DSI": "${pl:Float64}"
+      "DPI": "${pl:Utf8}"
+      "diseaseId": "${pl:Utf8}"
+      "diseaseName": "${pl:Utf8}"
+      "diseaseType": "${pl:Utf8}"
+      "diesaseClass": "${pl:Utf8}"
+      "diesaseSemanticType": "${pl:Utf8}"
+      "score": "${pl:Float64}"
+      "EI": "${pl:Float64}"
+      "YearInitial": "${pl:Utf8}"
+      "YearFinal": "${pl:Utf8}"
+      "NofPmids": "${pl:Utf8}"
+      "NofSnps": "${pl:Utf8}"
+      "source": "${pl:Utf8}"
+  metadata:
+    checksum: "281090c34eb94f80c4b959dd1cf35be0"
+    kedro-viz:
+      layer: landing

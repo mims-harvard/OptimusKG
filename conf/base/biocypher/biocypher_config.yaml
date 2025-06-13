@@ -13,19 +13,19 @@ biocypher:
   
   tail_ontologies:
     go_biological_process:
-      url: "http://purl.obolibrary.org/obo/go.owl"
+      url: "http://purl.obolibrary.org/obo/go/extensions/go-plus.owl"
       head_join_node: biological process # Biolink’s BiologicalProcess class is the umbrella for any process-oriented concept (e.g. signaling, metabolism, gene expression) 
       tail_join_node: biological_process # GO’s biological_process node (GO:0008150) is the single root of all process terms in GO
       merge_nodes: false
 
     go_cellular_component:
-      url: "http://purl.obolibrary.org/obo/go.owl"
+      url: "http://purl.obolibrary.org/obo/go/extensions/go-plus.owl"
       head_join_node: cellular component # Biolink’s CellularComponent class is the umbrella for any component-oriented concept (e.g. organelle, membrane, cytoskeleton)
       tail_join_node: cellular_component # GO’s cellular_component node (GO:0005575) is the single root of all component terms in GO
       merge_nodes: false
 
     go_molecular_function:
-      url: "http://purl.obolibrary.org/obo/go.owl"
+      url: "http://purl.obolibrary.org/obo/go/extensions/go-plus.owl"
       head_join_node: molecular activity # Biolink’s MolecularActivity class (https://w3id.org/biolink/vocab/MolecularActivity)
       tail_join_node: molecular_function # GO’s molecular functions represent molecular-level activities performed by gene products, such as “catalysis” or “transcription regulator activity”. (https://geneontology.org/docs/ontology-documentation/)
       merge_nodes: false

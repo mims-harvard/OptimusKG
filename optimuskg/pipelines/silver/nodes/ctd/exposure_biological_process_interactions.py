@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_ctd_exposure_cellular_component_interactions(
+def process_ctd_exposure_biological_process_interactions(
     ctd_exposure_events: pl.DataFrame,
     go_terms: pl.DataFrame,
 ) -> pl.DataFrame:
@@ -30,14 +30,14 @@ def process_ctd_exposure_cellular_component_interactions(
                 "type": "y_type",
             }
         )
-        .filter(pl.col("y_type") == "cellular_component")
+        .filter(pl.col("y_type") == "biological_process")
         .with_columns(
             [
                 pl.lit("exposure").alias("x_type"),
                 pl.lit("CTD").alias("x_source"),
-                pl.lit("cellular_component").alias("y_type"),
+                pl.lit("biological_process").alias("y_type"),
                 pl.lit("GO").alias("y_source"),
-                pl.lit("exposure_cellular_component").alias("relation"),
+                pl.lit("exposure_biological_process").alias("relation"),
                 pl.lit("interacts with").alias("relation_type"),
             ]
         )
@@ -58,13 +58,13 @@ def process_ctd_exposure_cellular_component_interactions(
     )
 
 
-ctd_exposure_cellular_component_interactions_node = node(
-    process_ctd_exposure_cellular_component_interactions,
+ctd_exposure_biological_process_interactions_node = node(
+    process_ctd_exposure_biological_process_interactions,
     inputs={
         "ctd_exposure_events": "bronze.ctd.ctd_exposure_events",
         "go_terms": "bronze.ontology.go_terms",
     },
-    outputs="ctd.ctd_exposure_cellular_component_interactions",
-    name="ctd_exposure_cellular_component_interactions",
+    outputs="ctd.ctd_exposure_biological_process_interactions",
+    name="ctd_exposure_biological_process_interactions",
     tags=["silver"],
 )

@@ -32,11 +32,13 @@ optimuskg/
 └── data/
     └── landing/
         └── drugbank/
-            └── full database.xml
-            └── drugbank_all_carrier_polypeptide_ids.csv
-            └── drugbank_all_enzyme_polypeptide_ids.csv
-            └── drugbank_all_target_polypeptide_ids.csv
-            └── drugbank_all_transporter_polypeptide_ids.csv
+        |   └── full database.xml
+        |   └── drugbank_all_carrier_polypeptide_ids.csv
+        |   └── drugbank_all_enzyme_polypeptide_ids.csv
+        |   └── drugbank_all_target_polypeptide_ids.csv
+        |   └── drugbank_all_transporter_polypeptide_ids.csv
+        └── disgenet/
+            └── curated_gene_disease_associations.tsv
 ```
 
 ### Set up Neo4j volume permissions
@@ -104,7 +106,7 @@ $ uv run kedro run --pipeline bronze
 
 ## How to work with notebooks
 
-> Note: Using `uv run kedro jupyter lab` to run your notebook provides these variables in scope: `catalog`, `context`, `pipelines` and `session`.
+> Note: Using `make jupyterlab` to run your notebook provides these variables in scope: `catalog`, `context`, `pipelines` and `session`.
 >
 > JupyterLab is already included in the project requirements by default, so once you have run `uv sync` you will not need to take any extra steps before you use them.
 
@@ -113,7 +115,7 @@ $ uv run kedro run --pipeline bronze
 You can start JupyterLab with:
 
 ```console
-$ uv run kedro jupyter lab
+$ make jupyterlab
 
 [02/01/25 00:22:01] INFO     Using 'conf/logging.yml' as logging configuration. You can change this by setting the KEDRO_LOGGING_CONFIG environment variable accordingly.                     __init__.py:270
 /home/viti/Documents/repos/harvard/optimuskg/.venv/bin/python -m jupyter lab --MultiKernelManager.default_kernel_name=kedro_optimuskg

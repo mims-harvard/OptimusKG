@@ -10,11 +10,9 @@ def process_go_plus(  # noqa: PLR0913
     go_plus: pl.DataFrame,
 ) -> tuple[pl.DataFrame, pl.DataFrame]:
     go_terms = (
-        (
-            go_plus.explode("graphs")
-            .select(pl.col("graphs").struct.field("nodes"))
-            .explode("nodes")
-        )
+        go_plus.explode("graphs")
+        .select(pl.col("graphs").struct.field("nodes"))
+        .explode("nodes")
         .select(
             [
                 pl.col("nodes")
@@ -22,10 +20,27 @@ def process_go_plus(  # noqa: PLR0913
                 .str.replace("http://purl.obolibrary.org/obo/", "")
                 .alias("id"),
                 pl.col("nodes").struct.field("lbl").alias("name"),
-                pl.col("nodes").struct.field("type").alias("type"),
+                pl.col("nodes")
+                .struct.field("meta")
+                .struct.field("basicPropertyValues")
+                .alias("bpv"),
             ]
         )
         .filter(pl.col("id").str.contains("GO_"))
+        .with_columns(
+            pl.col("bpv")
+            .list.eval(
+                pl.when(
+                    pl.element().struct.field("pred")
+                    == "http://www.geneontology.org/formats/oboInOwl#hasOBONamespace"
+                ).then(pl.element().struct.field("val"))
+            )
+            .list.drop_nulls()
+            .list.first()
+            .alias("type")
+        )
+        .drop("bpv")
+        .with_columns(pl.col("type").fill_null("CLASS"))
         .unique()
     )
 
