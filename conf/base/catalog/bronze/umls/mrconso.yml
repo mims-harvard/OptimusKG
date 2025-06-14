@@ -1,0 +1,28 @@
+bronze.umls.mrconso:
+  type: polars.CSVDataset
+  filepath: "data/bronze/umls/mrconso.csv"
+  load_args:
+    infer_schema: false
+    schema:
+      "cui": "${pl:String}" # Unique identifier for concept
+      "language": "${pl:String}" # Language of the concept
+      "term_status": "${pl:String}"
+      "lui": "${pl:String}"
+      "string type": "${pl:String}"
+      "string_identifier": "${pl:String}"
+      "is_preferred": "${pl:String}"
+      "aui": "${pl:String}" # Unique identifier for atom
+      "source_aui": "${pl:String}" # Source asserted atom identifier
+      "source_cui": "${pl:String}" # Source asserted concept identifier
+      "source_descriptor_dui": "${pl:String}" # Source asserted descriptor identifier
+      "abbreviated_source": "${pl:String}" # Abbreviated source name
+      "source_term_type": "${pl:String}" # Abbreviation for term type in source vocabulary
+      "source_code": "${pl:String}" # Most useful source asserted identifier, or a Metathesaurus-generated source entry identifier
+      "source_name": "${pl:String}" # Source name
+      "srl": "${pl:String}" # Source restriction level
+      "suppress": "${pl:String}" # Suppressible flag.
+      "cvf": "${pl:String}" # Content View flag.
+  metadata:
+    checksum: "281090c34eb94f80c4b959dd1cf35be0"
+    kedro-viz:
+      layer: bronze

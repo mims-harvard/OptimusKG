@@ -1,0 +1,30 @@
+silver.umls.umls_mondo:
+  type: polars.CSVDataset
+  filepath: "data/silver/umls/umls_mondo"
+  load_args:
+    separator: "|"
+    infer_schema: false
+    schema:
+      "cui": "${pl:Utf8}"
+      "language": "${pl:Utf8}" 
+      "term_status": "${pl:Utf8}"
+      "lui": "${pl:Utf8}"
+      "string type": "${pl:Utf8}"
+      "string_identifier": "${pl:Utf8}"
+      "is_preferred": "${pl:Utf8}"
+      "aui": "${pl:Utf8}"
+      "source_aui": "${pl:Utf8}"
+      "source_cui": "${pl:Utf8}"
+      "source_descriptor_dui": "${pl:Utf8}"
+      "source": "${pl:Utf8}"
+      "source_term_type": "${pl:Utf8}"
+      "source_code": "${pl:Utf8}"
+      "source_name": "${pl:Utf8}"
+      "x1": "${pl:Utf8}"
+      "x2": "${pl:Utf8}"
+      "x3": "${pl:Utf8}"
+      "x4": "${pl:Utf8}"
+  metadata:
+    checksum: "281090c34eb94f80c4b959dd1cf35be0"
+    kedro-viz:
+      layer: silver
