@@ -46,5 +46,8 @@ def create_pipeline(**kwargs):
             "bronze.drugbank.drug_drug",
             "bronze.drugbank.drug_protein",
             "bronze.drugbank.vocabulary",
+            "bronze.umls.mrconso",
+            # Silver
+            "silver.umls.umls_mondo",
         },
     )

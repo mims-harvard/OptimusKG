@@ -114,6 +114,8 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--relationships="/import/DrugProtein-header.csv,/import/DrugProtein-part.*" \
 		--relationships="/import/DrugDrug-header.csv,/import/DrugDrug-part.*" \
 		--relationships="/import/Indication-header.csv,/import/Indication-part.*" \
+		--relationships="/import/Contraindication-header.csv,/import/Contraindication-part.*" \
+		--relationships="/import/OffLabelUse-header.csv,/import/OffLabelUse-part.*" \
 		--relationships="/import/PhenotypeProtein-header.csv,/import/PhenotypeProtein-part.*" \
 		--relationships="/import/StrongClinicalEvidence-header.csv,/import/StrongClinicalEvidence-part.*" \
 		--relationships="/import/WeakClinicalEvidence-header.csv,/import/WeakClinicalEvidence-part.*" \

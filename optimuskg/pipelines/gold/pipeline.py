@@ -25,6 +25,7 @@ def create_pipeline(**kwargs):
             "silver.reactome.pathway_pathway_interactions",
             "silver.reactome.pathway_protein_interactions",
             "silver.ontology.mondo_disease_disease_interactions",
+            "silver.drugcentral.drug_disease",
             # Nodes
             "gold.nodes.gene",
             "gold.nodes.anatomical_entity",
@@ -51,6 +52,8 @@ def create_pipeline(**kwargs):
             "gold.edges.exposure_protein",
             "gold.edges.exposure_disease",
             "gold.edges.indication",
+            "gold.edges.contraindication",
+            "gold.edges.off_label_use",
             "gold.edges.molecular_function_protein",
             "gold.edges.pathway_pathway",
             "gold.edges.pathway_protein",

@@ -76,7 +76,10 @@ def _set_undirected_edges(df: pl.DataFrame) -> pl.DataFrame:
         .with_columns(pl.lit("true").alias("undirected"))
     )
 
-    logger.info(f"Added undirected property to {len(duplicated)} edges")
+    if len(duplicated) > 0:
+        logger.info(f"Added undirected property to {len(duplicated)} edges")
+    else:
+        logger.info("No undirected edges found")
 
     # Keep edges that only appear once as directed
     not_duplicated = df_with_pair_key.filter(

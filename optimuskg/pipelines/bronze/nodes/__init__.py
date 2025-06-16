@@ -31,6 +31,7 @@ from .opentargets import (
     uniprot_literature_node,
 )
 from .reactome import reactome_ncbi_node, reactome_pathways_node
+from .umls import umls_node
 
 __all__ = [
     "bgee_node",
@@ -68,4 +69,5 @@ __all__ = [
     "orphanet_node",
     "go_plus_node",
     "mondo_node",
+    "umls_node",
 ]
