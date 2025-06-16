@@ -143,6 +143,24 @@ indication:
     relation_type: str
     undirected: str
 
+contraindication:
+  is_a: negatively correlated with # A relationship that holds between two concepts represented by variables for which a statistical correlation is demonstrated, wherein the regression line has a negative slope (https://biolink.github.io/biolink-model/negatively_correlated_with/)
+  represented_as: edge
+  input_label: contraindication
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
+
+off label use:
+  is_a: treats # holds between a therapeutic procedure or chemical entity and a disease or phenotypic feature that it is used to treat (https://biolink.github.io/biolink-model/treats/)
+  represented_as: edge
+  input_label: off_label_use
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
+
 disease protein:
   is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
   represented_as: edge

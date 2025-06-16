@@ -43,6 +43,7 @@ from .reactome import (
     pathway_pathway_interactions_node,
     pathway_protein_interactions_node,
 )
+from .umls_mondo import umls_mondo_node
 
 __all__ = [
     "bgee_node",
@@ -80,4 +81,5 @@ __all__ = [
     "drugbank_drug_drug_interactions_node",
     "drugbank_drug_protein_interactions_node",
     "disease_disease_interactions_node",
+    "umls_mondo_node",
 ]

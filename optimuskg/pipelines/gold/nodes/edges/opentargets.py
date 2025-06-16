@@ -18,7 +18,6 @@ def process_opentargets_edges(
     disease_protein_positive = df.filter(
         pl.col("relation") == "disease_protein_positive"
     )
-    indication = df.filter(pl.col("relation") == "indication")
     disease_protein_negative = df.filter(
         pl.col("relation") == "disease_protein_negative"
     )
@@ -29,7 +28,6 @@ def process_opentargets_edges(
         phenotype_protein,
         weak_clinical_evidence,
         disease_protein_positive,
-        indication,
         disease_protein_negative,
     )
 
@@ -45,7 +43,6 @@ opentargets_edges_node = node(
         "edges.phenotype_protein",
         "edges.weak_clinical_evidence",
         "edges.disease_protein_positive",
-        "edges.indication",
         "edges.disease_protein_negative",
     ],
     name="opentargets",

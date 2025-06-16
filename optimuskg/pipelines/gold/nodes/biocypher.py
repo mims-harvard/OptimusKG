@@ -31,6 +31,8 @@ def process_biocypher(  # noqa: PLR0913
     exposure_protein: pl.DataFrame,
     exposure_disease: pl.DataFrame,
     indication: pl.DataFrame,
+    contraindication: pl.DataFrame,
+    off_label_use: pl.DataFrame,
     molecular_function_protein: pl.DataFrame,
     pathway_pathway: pl.DataFrame,
     pathway_protein: pl.DataFrame,
@@ -175,6 +177,14 @@ def process_biocypher(  # noqa: PLR0913
             mapping_config=edge_config,
         ),
         yield_edges(
+            df=contraindication,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
+            df=off_label_use,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
             df=molecular_function_protein,
             mapping_config=edge_config,
         ),
@@ -272,6 +282,8 @@ biocypher_node = node(
         "exposure_protein": "gold.edges.exposure_protein",
         "exposure_disease": "gold.edges.exposure_disease",
         "indication": "gold.edges.indication",
+        "contraindication": "gold.edges.contraindication",
+        "off_label_use": "gold.edges.off_label_use",
         "molecular_function_protein": "gold.edges.molecular_function_protein",
         "pathway_pathway": "gold.edges.pathway_pathway",
         "pathway_protein": "gold.edges.pathway_protein",

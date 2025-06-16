@@ -4,14 +4,66 @@ from kedro.pipeline import node
 
 def process_drugcentral(
     drug_disease: pl.DataFrame,
+    umls_mondo: pl.DataFrame,
+    mondo_terms: pl.DataFrame,
+    vocabulary: pl.DataFrame,
 ) -> pl.DataFrame:
-    # TODO: pending implementation see: https://github.com/mims-harvard/primekg-2/blob/main/OLD/knowledge_graph/build_graph.ipynb, "Drug disease interactions (DiseaseCentral) –– PENDING"
-    return drug_disease
+    return (
+        drug_disease.join(vocabulary, left_on="cas_reg_no", right_on="cas", how="left")
+        .join(umls_mondo, left_on="umls_cui", right_on="umls_id", how="inner")
+        .join(mondo_terms, left_on="mondo_id", right_on="id", how="left")
+        .select(["relationship_name", "drugbank_id", "common_name", "mondo_id", "name"])
+        .unique()
+        .rename(
+            {
+                "drugbank_id": "x_id",
+                "mondo_id": "y_id",
+                "common_name": "x_name",
+                "name": "y_name",
+                "relationship_name": "relation",
+            }
+        )
+        .with_columns(
+            [
+                pl.lit("drug").alias("x_type"),
+                pl.lit("DrugBank").alias("x_source"),
+                pl.lit("disease").alias("y_type"),
+                pl.lit("MONDO").alias("y_source"),
+                pl.when(pl.col("relation") == "off-label use")
+                .then(pl.lit("off_label_use"))
+                .otherwise(pl.col("relation"))
+                .alias("relation"),
+                pl.when(pl.col("relation") == "off-label use")
+                .then(pl.lit("off_label_use"))
+                .otherwise(pl.col("relation"))
+                .alias("relation_type"),
+            ]
+        )
+        .select(
+            [
+                "relation",
+                "relation_type",
+                "x_id",
+                "x_type",
+                "x_name",
+                "x_source",
+                "y_id",
+                "y_type",
+                "y_name",
+                "y_source",
+            ]
+        )
+    )
 
 
 drugcentral_node = node(
     process_drugcentral,
-    inputs={"drug_disease": "bronze.drugcentral.drug_disease"},
+    inputs={
+        "drug_disease": "bronze.drugcentral.drug_disease",
+        "umls_mondo": "silver.umls.umls_mondo",
+        "mondo_terms": "bronze.ontology.mondo_terms",
+        "vocabulary": "bronze.drugbank.vocabulary",
+    },
     outputs="drugcentral.drug_disease",
     name="drugcentral",
     tags=["silver"],

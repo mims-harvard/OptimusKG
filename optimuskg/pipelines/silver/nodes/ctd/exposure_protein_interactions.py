@@ -6,7 +6,6 @@ def process_ctd_exposure_protein_interactions(
     ctd_exposure_events: pl.DataFrame,
     protein_names: pl.DataFrame,
 ) -> pl.DataFrame:
-    # Get exposure events with marker ids
     df_exp_prot = ctd_exposure_events.select(
         [
             "exposure_stressor_name",
@@ -16,10 +15,8 @@ def process_ctd_exposure_protein_interactions(
         ]
     )
 
-    # Filter for non-null exposure marker ids
     df_exp_prot = df_exp_prot.filter(pl.col("exposure_marker_id").is_not_null())
 
-    # Filter for numeric values in exposure_marker_id
     df_exp_prot = df_exp_prot.filter(
         pl.col("exposure_marker_id").str.contains(r"^MESH:\d+$")
     )
@@ -31,12 +28,10 @@ def process_ctd_exposure_protein_interactions(
         pl.col("exposure_marker_id").str.replace("MESH:", "NCBIGene:")
     )
 
-    # Merge with protein names
     df_exp_prot = df_exp_prot.join(
         protein_names, left_on="exposure_marker_id", right_on="ncbi_id", how="left"
     )
 
-    # Rename columns and add new columns
     df_exp_prot = df_exp_prot.rename(
         {
             "exposure_stressor_id": "x_id",
@@ -46,7 +41,6 @@ def process_ctd_exposure_protein_interactions(
         }
     )
 
-    # Add relationship information
     df_exp_prot = df_exp_prot.with_columns(
         [
             pl.lit("exposure").alias("x_type"),
