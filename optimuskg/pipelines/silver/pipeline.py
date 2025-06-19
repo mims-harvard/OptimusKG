@@ -8,6 +8,8 @@ def create_pipeline(**kwargs):
         [getattr(nodes, name) for name in nodes.__all__],
         namespace="silver",
         inputs={
+            # Landing
+            "landing.disgenet.curated_gene_disease_associations",
             # Bronze
             "bronze.opentargets.evidence.cancer_gene_census",
             "bronze.opentargets.evidence.chembl",

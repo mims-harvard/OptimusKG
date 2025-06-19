@@ -44,6 +44,8 @@ from .reactome import (
     pathway_protein_interactions_node,
 )
 from .umls_mondo import umls_mondo_node
+from .disgenet_disease_protein import disgenet_disease_protein_node
+from .disgenet_effect_protein import disgenet_effect_protein_node
 
 __all__ = [
     "bgee_node",
@@ -82,4 +84,6 @@ __all__ = [
     "drugbank_drug_protein_interactions_node",
     "disease_disease_interactions_node",
     "umls_mondo_node",
+    "disgenet_disease_protein_node",
+    "disgenet_effect_protein_node",
 ]
