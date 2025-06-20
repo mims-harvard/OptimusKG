@@ -10,22 +10,20 @@ from kedro.pipeline import node
 
 
 def process_disgenet_disease_protein(
-    curated_gene_disease_associations: pl.DataFrame,
+    disgenet_diseases: pl.DataFrame,
     umls_mondo: pl.DataFrame,
     mondo_terms: pl.DataFrame,
 ) -> pl.DataFrame:
-    df_prot_dis1 = curated_gene_disease_associations.filter(pl.col("diseaseType") == "disease")
-
-    df_prot_dis1 = df_prot_dis1.join(
+    df_prot_dis = disgenet_diseases.join(
         umls_mondo, left_on="diseaseId", right_on="umls_id", how="inner"
     )
-    df_prot_dis1 = df_prot_dis1.join(mondo_terms, left_on="mondo_id", right_on="id", how="left")
+    df_prot_dis = df_prot_dis.join(mondo_terms, left_on="mondo_id", right_on="id", how="left")
 
-    df_prot_dis1 = df_prot_dis1.rename(
+    df_prot_dis = df_prot_dis.rename(
         {"geneid": "x_id", "geneSymbol": "x_name", "mondo_id": "y_id", "name": "y_name"}
     )
 
-    df_prot_dis1 = df_prot_dis1.with_columns(
+    df_prot_dis = df_prot_dis.with_columns(
         [
             pl.lit("gene/protein").alias("x_type"),
             pl.lit("NCBI").alias("x_source"),
@@ -35,9 +33,8 @@ def process_disgenet_disease_protein(
             pl.lit("associated with").alias("display_relation"),
         ]
     )
-    # df_prot_dis1 = clean_edges(df_prot_dis1)
 
-    df_prot_dis1 = df_prot_dis1.select(
+    df_prot_dis = df_prot_dis.select(
         [
             "relation",
             "display_relation",
@@ -52,13 +49,13 @@ def process_disgenet_disease_protein(
         ]
     )
 
-    return df_prot_dis1
+    return df_prot_dis
 
 
 disgenet_disease_protein_node = node(
     process_disgenet_disease_protein,
     inputs={
-        "curated_gene_disease_associations": "landing.disgenet.curated_gene_disease_associations",
+        "disgenet_diseases": "bronze.disgenet.disgenet_diseases",
         "umls_mondo": "silver.umls.umls_mondo",
         "mondo_terms": "bronze.ontology.mondo_terms",
     },

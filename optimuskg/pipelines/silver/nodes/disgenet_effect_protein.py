@@ -3,13 +3,12 @@ from kedro.pipeline import node
 
 
 def process_disgenet_effect_protein(
-    curated_gene_disease_associations: pl.DataFrame,
+    disgenet_phenotypes: pl.DataFrame,
     phenotypes: pl.DataFrame,
 ) -> pl.DataFrame:
-    df_prot_phe = curated_gene_disease_associations.query('diseaseType=="phenotype"')
 
     #NOTE: Esto esta roto. Hay que reemplazar esas dos lineas por solo una y ver como hacer el join.
-    df_prot_phe = df_prot_phe.join(phenotypes, left_on='diseaseId', right_on='ontology_id', how='inner')
+    df_prot_phe = disgenet_phenotypes.join(phenotypes, left_on='diseaseId', right_on='ontology_id', how='inner')
     df_prot_phe = df_prot_phe.join(phenotypes, left_on='hp_id', right_on='id', how='left')
 
     df_prot_phe = df_prot_phe.rename(columns={'geneId':'x_id', 'geneSymbol':'x_name', 'hp_id':'y_id', 'name':'y_name'})
@@ -27,7 +26,7 @@ def process_disgenet_effect_protein(
 disgenet_effect_protein_node = node(
     process_disgenet_effect_protein,
     inputs={
-        "curated_gene_disease_associations": "landing.disgenet.curated_gene_disease_associations",
+        "disgenet_phenotypes": "bronze.disgenet.disgenet_phenotypes",
         "phenotypes": "bronze.opentargets.phenotypes",
     },
     outputs="disgenet.effect_protein",

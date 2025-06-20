@@ -50,6 +50,7 @@ def create_pipeline(**kwargs):
             "landing.opentargets.mondo_efo_mappings",
             "landing.opentargets.diseases",
             "landing.umls.mrconso",
+            "landing.disgenet.curated_gene_disease_associations",
             # bronze
             "bronze.drugbank.vocabulary",
         },

@@ -8,8 +8,6 @@ def create_pipeline(**kwargs):
         [getattr(nodes, name) for name in nodes.__all__],
         namespace="silver",
         inputs={
-            # Landing
-            "landing.disgenet.curated_gene_disease_associations",
             # Bronze
             "bronze.opentargets.evidence.cancer_gene_census",
             "bronze.opentargets.evidence.chembl",
@@ -49,6 +47,8 @@ def create_pipeline(**kwargs):
             "bronze.drugbank.drug_protein",
             "bronze.drugbank.vocabulary",
             "bronze.umls.mrconso",
+            "bronze.disgenet.disgenet_diseases",
+            "bronze.disgenet.disgenet_phenotypes",
             # Silver
             "silver.umls.umls_mondo",
         },

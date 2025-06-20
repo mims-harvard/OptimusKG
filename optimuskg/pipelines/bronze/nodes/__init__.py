@@ -32,6 +32,7 @@ from .opentargets import (
 )
 from .reactome import reactome_ncbi_node, reactome_pathways_node
 from .umls import umls_node
+from .disgenet import disgenet_node
 
 __all__ = [
     "bgee_node",
@@ -70,4 +71,5 @@ __all__ = [
     "go_plus_node",
     "mondo_node",
     "umls_node",
+    "disgenet_node",
 ]
