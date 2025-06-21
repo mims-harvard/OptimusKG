@@ -1,13 +1,6 @@
 import polars as pl
 from kedro.pipeline import node
 
-# def clean_edges(df):
-#     df = df.get(['relation', 'display_relation', 'x_id','x_type', 'x_name', 'x_source','y_id','y_type', 'y_name', 'y_source'])
-#     df = df.dropna()
-#     df = df.drop_duplicates()
-#     df = df.query('not ((x_id == y_id) and (x_type == y_type) and (x_source == y_source) and (x_name == y_name))')
-#     return df
-
 
 def process_disgenet_disease_protein(
     disgenet_diseases: pl.DataFrame,
@@ -30,14 +23,14 @@ def process_disgenet_disease_protein(
             pl.lit("disease").alias("y_type"),
             pl.lit("MONDO").alias("y_source"),
             pl.lit("disease_protein").alias("relation"),
-            pl.lit("associated with").alias("display_relation"),
+            pl.lit("associated with").alias("relation_type"),
         ]
     )
 
     df_prot_dis = df_prot_dis.select(
         [
             "relation",
-            "display_relation",
+            "relation_type",
             "x_id",
             "x_type",
             "x_name",
