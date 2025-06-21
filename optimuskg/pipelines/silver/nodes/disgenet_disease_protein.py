@@ -20,7 +20,7 @@ def process_disgenet_disease_protein(
 
     df_prot_dis = df_prot_dis.with_columns(
         [
-            pl.lit("gene/protein").alias("x_type"),
+            pl.lit("gene").alias("x_type"),
             pl.lit("NCBI").alias("x_source"),
             pl.lit("disease").alias("y_type"),
             pl.lit("MONDO").alias("y_source"),

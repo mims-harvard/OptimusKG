@@ -19,7 +19,7 @@ def process_disgenet_effect_protein(
 
     df_prot_phe = df_prot_phe.with_columns(
         [
-            pl.lit("gene/protein").alias("x_type"),
+            pl.lit("gene").alias("x_type"),
             pl.lit("NCBI").alias("x_source"),
             pl.lit("effect/phenotype").alias("y_type"),
             pl.lit("HPO").alias("y_source"),
