@@ -8,7 +8,6 @@ def process_disgenet_effect_protein(
     phenotypes_xrefs: pl.DataFrame,
 ) -> pl.DataFrame:
 
-    # NOTE: Esto esta roto. Hay que reemplazar esas dos lineas por solo una y ver como hacer el join.
     df_prot_phe = disgenet_phenotypes.join(
         phenotypes_xrefs, left_on="disease_id", right_on="ontology_id", how="inner"
     )
