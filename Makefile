@@ -128,27 +128,20 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--relationships="/import/ExposureMolecularFunction-header.csv,/import/ExposureMolecularFunction-part.*" \
 		--relationships="/import/ExposureCellularComponent-header.csv,/import/ExposureCellularComponent-part.*"
 
-.PHONY: neo4j-export-all
-neo4j-export-all: ##@ Export Neo4j database to JSONL format
-	@echo "Exporting Neo4j database to JSONL format..."
+.PHONY: neo4j-export
+neo4j-export: ##@ Export Neo4j database to JSONL format. Set CYPHER_QUERY env var for specific query, otherwise exports all. Example: CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export
 	@mkdir -p data/export
-	@docker compose exec neo4j \
-		cypher-shell --non-interactive \
-		"CALL apoc.export.json.all('/var/lib/neo4j/export/optimuskg.jsonl', {jsonFormat: 'JSON_LINES', useTypes: true})" && \
-		echo "Database exported successfully to data/export/optimuskg.jsonl" || \
-		echo "Export failed. Make sure Neo4j container is running with 'make neo4j' and APOC plugin is installed"
-
-.PHONY: neo4j-export-query
-neo4j-export-query: ##@ Export specific Neo4j query results to JSONL format. Example: CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export-query
-	@echo "Exporting specific query results to JSONL format..."
-	@mkdir -p data/export
-	@if [ -z "$$CYPHER_QUERY" ]; then echo "Error: Please set CYPHER_QUERY environment variable"; exit 1; fi; \
-	export_filename=$$(echo "$$CYPHER_QUERY" | tr ' ' '_' | tr -cd '[:alnum:]_' | cut -c1-30); \
-	docker compose exec neo4j \
-		cypher-shell --non-interactive \
-		"CALL apoc.export.json.query(\"$$CYPHER_QUERY\", '/var/lib/neo4j/export/$${export_filename}.jsonl', {jsonFormat: 'JSON_LINES', useTypes: true})" && \
-		echo "Query results exported successfully to data/export/$${export_filename}.jsonl" || \
-		echo "Export failed. Check your query syntax and Neo4j connection."
+	@if [ -z "$$CYPHER_QUERY" ]; then \
+		echo "Exporting entire database..."; \
+		file="optimuskg.jsonl"; \
+		call="apoc.export.json.all('/var/lib/neo4j/export/$$file', {jsonFormat: 'JSON_LINES', useTypes: true})"; \
+	else \
+		echo "Exporting query results..."; \
+		file="$$(echo "$$CYPHER_QUERY" | tr ' ' '_' | tr -cd '[:alnum:]_' | cut -c1-30).jsonl"; \
+		call="apoc.export.json.query(\"$$CYPHER_QUERY\", '/var/lib/neo4j/export/$$file', {jsonFormat: 'JSON_LINES', useTypes: true})"; \
+	fi; \
+	docker compose exec neo4j cypher-shell --non-interactive "CALL $$call" && \
+		echo "Exported to data/export/$$file" || echo "Export failed"
 
 .PHONY: jupyterlab
 jupyterlab: ##@ Run jupyterlab
