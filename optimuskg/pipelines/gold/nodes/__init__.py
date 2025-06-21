@@ -5,6 +5,7 @@ from .edges import (
     cellular_component_protein_edges_node,
     contraindication_edges_node,
     disease_disease_edges_node,
+    disease_protein_edges_node,
     drug_drug_edges_node,
     drug_protein_edges_node,
     exposure_biological_process_edges_node,
@@ -19,6 +20,7 @@ from .edges import (
     opentargets_edges_node,
     pathway_pathway_edges_node,
     pathway_protein_edges_node,
+    phenotype_protein_edges_node,
 )
 from .nodes import (
     anatomical_entity_node,
@@ -48,6 +50,7 @@ __all__ = [
     "anatomy_protein_edges_node",
     "biological_process_protein_edges_node",
     "cellular_component_protein_edges_node",
+    "disease_protein_edges_node",
     "drug_drug_edges_node",
     "drug_protein_edges_node",
     "contraindication_edges_node",
@@ -59,6 +62,7 @@ __all__ = [
     "molecular_function_protein_edges_node",
     "pathway_pathway_edges_node",
     "pathway_protein_edges_node",
+    "phenotype_protein_edges_node",
     "opentargets_edges_node",
     "disease_disease_edges_node",
     "exposure_biological_process_edges_node",

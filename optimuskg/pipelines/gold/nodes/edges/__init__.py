@@ -3,6 +3,8 @@ from .biological_process_protein import biological_process_protein_edges_node
 from .cellular_component_protein import cellular_component_protein_edges_node
 from .contraindication import contraindication_edges_node
 from .disease_disease import disease_disease_edges_node
+from .disease_protein import disease_protein_edges_node
+from .phenotype_protein import phenotype_protein_edges_node
 from .drug_drug import drug_drug_edges_node
 from .drug_protein import drug_protein_edges_node
 from .exposure_biological_process import exposure_biological_process_edges_node
@@ -23,6 +25,8 @@ __all__ = [
     "biological_process_protein_edges_node",
     "cellular_component_protein_edges_node",
     "contraindication_edges_node",
+    "disease_protein_edges_node",
+    "phenotype_protein_edges_node",
     "indication_edges_node",
     "off_label_use_edges_node",
     "drug_drug_edges_node",

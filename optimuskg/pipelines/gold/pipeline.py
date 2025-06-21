@@ -26,6 +26,8 @@ def create_pipeline(**kwargs):
             "silver.reactome.pathway_protein_interactions",
             "silver.ontology.mondo_disease_disease_interactions",
             "silver.drugcentral.drug_disease",
+            "silver.disgenet.disease_protein",
+            "silver.disgenet.effect_protein",
             # Nodes
             "gold.nodes.gene",
             "gold.nodes.anatomical_entity",
