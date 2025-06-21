@@ -89,8 +89,8 @@ def process_phenotypes(
     xrefs_df = pl.DataFrame(xrefs, schema=xrefs_schema)
     xrefs_df = xrefs_df.sort(["hp_id", "ontology"])
 
-    logger.info(f"Extracted {len(phenotypes_df)} phenotypes and {len(xrefs_df)} cross-references")
-    logger.info(f"Cross-references found for {len(xrefs_df.get_column('ontology').unique())} different ontologies")
+    logger.debug(f"Extracted {len(phenotypes_df)} phenotypes and {len(xrefs_df)} cross-references")
+    logger.debug(f"Cross-references found for {len(xrefs_df.get_column('ontology').unique())} different ontologies")
 
     return phenotypes_df, xrefs_df
 
