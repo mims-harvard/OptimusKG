@@ -21,7 +21,7 @@ def process_disgenet_effect_protein(
         [
             pl.lit("gene").alias("x_type"),
             pl.lit("NCBI").alias("x_source"),
-            pl.lit("effect/phenotype").alias("y_type"),
+            pl.lit("phenotype").alias("y_type"),
             pl.lit("HPO").alias("y_source"),
             pl.lit("phenotype_protein").alias("relation"),
             pl.lit("associated with").alias("relation_type"),

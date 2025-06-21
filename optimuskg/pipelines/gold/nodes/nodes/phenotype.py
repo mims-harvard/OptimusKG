@@ -4,6 +4,7 @@ from kedro.pipeline import node
 
 def process_phenotype_nodes(
     opentargets_edges: pl.DataFrame,
+    disgenet_effect_protein: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
         pl.concat(
@@ -15,6 +16,12 @@ def process_phenotype_nodes(
                     pl.col("x_source").alias("source"),
                 ),
                 opentargets_edges.select(
+                    pl.col("y_id").alias("id"),
+                    pl.col("y_type").alias("type"),
+                    pl.col("y_name").alias("name"),
+                    pl.col("y_source").alias("source"),
+                ),
+                disgenet_effect_protein.select(
                     pl.col("y_id").alias("id"),
                     pl.col("y_type").alias("type"),
                     pl.col("y_name").alias("name"),
@@ -32,6 +39,7 @@ phenotype_node = node(
     process_phenotype_nodes,
     inputs={
         "opentargets_edges": "silver.opentargets.opentargets_edges",
+        "disgenet_effect_protein": "silver.disgenet.effect_protein",
     },
     outputs="nodes.phenotype",
     name="phenotype",
