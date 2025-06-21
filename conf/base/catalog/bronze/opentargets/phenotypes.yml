@@ -5,3 +5,11 @@ bronze.opentargets.phenotypes:
     checksum: "f9ed19eeb850663df363475d646250a6"
     kedro-viz:
       layer: bronze
+
+bronze.opentargets.phenotypes_xrefs:
+  type: polars.CSVDataset
+  filepath: "data/bronze/opentargets/phenotypes_xrefs.csv"
+  metadata:
+    checksum: ""
+    kedro-viz:
+      layer: bronze
