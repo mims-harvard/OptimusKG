@@ -25,6 +25,12 @@ def process_disgenet(
         "source": "source"
     })
     
+    # Strip whitespaces from all string columns
+    string_columns = [col for col, dtype in zip(curated_gene_disease_associations.columns, curated_gene_disease_associations.dtypes) if dtype == pl.Utf8]
+    curated_gene_disease_associations = curated_gene_disease_associations.with_columns(
+        [pl.col(col).str.strip_chars() for col in string_columns]
+    )
+
     disgenet_phenotypes = curated_gene_disease_associations.filter(
         pl.col("disease_type") == "phenotype"
     )
