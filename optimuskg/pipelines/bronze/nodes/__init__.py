@@ -1,5 +1,6 @@
 from .bgee import bgee_node
 from .ctd import ctd_node
+from .disgenet import disgenet_node
 from .drugbank import drug_drug_node, drug_protein_node, vocabulary_node
 from .drugcentral import drugcentral_node
 from .gene_names import gene_names_node
@@ -70,4 +71,5 @@ __all__ = [
     "go_plus_node",
     "mondo_node",
     "umls_node",
+    "disgenet_node",
 ]

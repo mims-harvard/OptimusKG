@@ -11,6 +11,8 @@ def process_gene_nodes(  # noqa: PLR0913
     protein_cellular_component_interactions: pl.DataFrame,
     protein_molecular_function_interactions: pl.DataFrame,
     pathway_protein_interactions: pl.DataFrame,
+    disgenet_disease_protein: pl.DataFrame,
+    disgenet_effect_protein: pl.DataFrame,
 ) -> pl.DataFrame:
     bgee_nodes = gene_expressions_in_anatomy.select(
         pl.col("x_id").alias("id"),
@@ -79,6 +81,20 @@ def process_gene_nodes(  # noqa: PLR0913
         pl.col("x_source").alias("source"),
     )
 
+    ddp_nodes = disgenet_disease_protein.select(
+        pl.col("x_id").alias("id"),
+        pl.col("x_type").alias("type"),
+        pl.col("x_name").alias("name"),
+        pl.col("x_source").alias("source"),
+    )
+
+    dep_nodes = disgenet_effect_protein.select(
+        pl.col("x_id").alias("id"),
+        pl.col("x_type").alias("type"),
+        pl.col("x_name").alias("name"),
+        pl.col("x_source").alias("source"),
+    )
+
     all_nodes = pl.concat(
         [
             bgee_nodes,
@@ -89,6 +105,8 @@ def process_gene_nodes(  # noqa: PLR0913
             pcc_nodes,
             pmf_nodes,
             pp_nodes,
+            ddp_nodes,
+            dep_nodes,
         ],
         how="vertical",
     )
@@ -107,6 +125,8 @@ gene_node = node(
         "protein_cellular_component_interactions": "silver.ncbigene.protein_cellular_component_interactions",
         "protein_molecular_function_interactions": "silver.ncbigene.protein_molecular_function_interactions",
         "pathway_protein_interactions": "silver.reactome.pathway_protein_interactions",
+        "disgenet_disease_protein": "silver.disgenet.disease_protein",
+        "disgenet_effect_protein": "silver.disgenet.effect_protein",
     },
     outputs="nodes.gene",
     name="gene",

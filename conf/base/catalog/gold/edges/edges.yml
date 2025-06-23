@@ -218,6 +218,7 @@ gold.edges.indication:
     kedro-viz:
       layer: gold
 
+
 gold.edges.contraindication:
   type: polars.CSVDataset
   filepath: "data/gold/edges/contraindication.csv"

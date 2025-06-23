@@ -7,6 +7,7 @@ def process_disease_nodes(
     disease_disease_edges: pl.DataFrame,
     exposure_disease_edges: pl.DataFrame,
     drug_disease: pl.DataFrame,
+    disgenet_disease_protein: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
         pl.concat(
@@ -47,6 +48,12 @@ def process_disease_nodes(
                     pl.col("y_name").alias("name"),
                     pl.col("y_source").alias("source"),
                 ),
+                disgenet_disease_protein.select(
+                    pl.col("y_id").alias("id"),
+                    pl.col("y_type").alias("type"),
+                    pl.col("y_name").alias("name"),
+                    pl.col("y_source").alias("source"),
+                ),
             ],
             how="vertical",
         )
@@ -62,6 +69,7 @@ disease_node = node(
         "disease_disease_edges": "silver.ontology.mondo_disease_disease_interactions",
         "exposure_disease_edges": "silver.ctd.ctd_exposure_disease_interactions",
         "drug_disease": "silver.drugcentral.drug_disease",
+        "disgenet_disease_protein": "silver.disgenet.disease_protein",
     },
     outputs="nodes.disease",
     name="disease",
