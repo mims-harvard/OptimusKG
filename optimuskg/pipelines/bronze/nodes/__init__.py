@@ -1,5 +1,6 @@
 from .bgee import bgee_node
 from .ctd import ctd_node
+from .disgenet import disgenet_node
 from .drugbank import drug_drug_node, drug_protein_node, vocabulary_node
 from .drugcentral import drugcentral_node
 from .gene_names import gene_names_node
@@ -32,7 +33,6 @@ from .opentargets import (
 )
 from .reactome import reactome_ncbi_node, reactome_pathways_node
 from .umls import umls_node
-from .disgenet import disgenet_node
 
 __all__ = [
     "bgee_node",

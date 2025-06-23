@@ -12,7 +12,7 @@ def process_phenotypes(
 ) -> tuple[pl.DataFrame, pl.DataFrame]:
     """
     Process Human Phenotype Ontology to extract phenotypes and cross-references.
-    
+
     Returns:
         tuple: (phenotypes_df, xrefs_df)
             - phenotypes_df: Contains HP terms with id, name, source
@@ -30,7 +30,7 @@ def process_phenotypes(
 
     phenotypes = []
     xrefs = []
-    
+
     phenotypes_schema = {"id": pl.Utf8, "name": pl.Utf8, "source": pl.Utf8}
     xrefs_schema = {"hp_id": pl.Utf8, "ontology": pl.Utf8, "ontology_id": pl.Utf8}
 
@@ -69,18 +69,22 @@ def process_phenotypes(
                 )
 
             # Extract cross-references
-            xref_elems = class_elem.findall(".//oboInOwl:hasDbXref", namespaces=namespaces)
+            xref_elems = class_elem.findall(
+                ".//oboInOwl:hasDbXref", namespaces=namespaces
+            )
             for xref_elem in xref_elems:
                 if xref_elem.text:
                     xref_text = xref_elem.text.strip()
                     if ":" in xref_text:
                         # Split on the first colon to separate ontology from ID
                         ontology, ontology_id = xref_text.split(":", 1)
-                        xrefs.append({
-                            "hp_id": hp_id,
-                            "ontology": ontology,
-                            "ontology_id": ontology_id,
-                        })
+                        xrefs.append(
+                            {
+                                "hp_id": hp_id,
+                                "ontology": ontology,
+                                "ontology_id": ontology_id,
+                            }
+                        )
 
     # Create DataFrames
     phenotypes_df = pl.DataFrame(phenotypes, schema=phenotypes_schema)
@@ -89,8 +93,12 @@ def process_phenotypes(
     xrefs_df = pl.DataFrame(xrefs, schema=xrefs_schema)
     xrefs_df = xrefs_df.sort(["hp_id", "ontology"])
 
-    logger.debug(f"Extracted {len(phenotypes_df)} phenotypes and {len(xrefs_df)} cross-references")
-    logger.debug(f"Cross-references found for {len(xrefs_df.get_column('ontology').unique())} different ontologies")
+    logger.debug(
+        f"Extracted {len(phenotypes_df)} phenotypes and {len(xrefs_df)} cross-references"
+    )
+    logger.debug(
+        f"Cross-references found for {len(xrefs_df.get_column('ontology').unique())} different ontologies"
+    )
 
     return phenotypes_df, xrefs_df
 

@@ -8,6 +8,8 @@ from .ctd import (
     ctd_exposure_protein_interactions_node,
 )
 from .disease_disease_interactions import disease_disease_interactions_node
+from .disgenet_disease_protein import disgenet_disease_protein_node
+from .disgenet_effect_protein import disgenet_effect_protein_node
 from .drugbank import (
     drugbank_drug_drug_interactions_node,
     drugbank_drug_protein_interactions_node,
@@ -44,8 +46,6 @@ from .reactome import (
     pathway_protein_interactions_node,
 )
 from .umls_mondo import umls_mondo_node
-from .disgenet_disease_protein import disgenet_disease_protein_node
-from .disgenet_effect_protein import disgenet_effect_protein_node
 
 __all__ = [
     "bgee_node",

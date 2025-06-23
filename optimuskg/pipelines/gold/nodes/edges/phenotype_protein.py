@@ -8,7 +8,9 @@ def process_phenotype_protein_edges(
     opentargets_edges: pl.DataFrame,
     phenotype_protein: pl.DataFrame,
 ) -> pl.DataFrame:
-    opentargets_phenotype_protein = opentargets_edges.filter(pl.col("relation") == "phenotype_protein")
+    opentargets_phenotype_protein = opentargets_edges.filter(
+        pl.col("relation") == "phenotype_protein"
+    )
     df = pl.concat([phenotype_protein, opentargets_phenotype_protein])
     df = normalize_edge_topology(df)
     return df

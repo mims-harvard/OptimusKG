@@ -8,7 +8,9 @@ def process_disease_protein_edges(
     opentargets_edges: pl.DataFrame,
     disease_protein: pl.DataFrame,
 ) -> pl.DataFrame:
-    opentargets_disease_protein = opentargets_edges.filter(pl.col("relation") == "disease_protein")
+    opentargets_disease_protein = opentargets_edges.filter(
+        pl.col("relation") == "disease_protein"
+    )
     df = pl.concat([disease_protein, opentargets_disease_protein])
     df = normalize_edge_topology(df)
     return df

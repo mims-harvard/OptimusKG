@@ -7,15 +7,21 @@ def process_disgenet_disease_protein(
     umls_mondo: pl.DataFrame,
     mondo_terms: pl.DataFrame,
 ) -> pl.DataFrame:
-    
-    #NOTE: There is a small mismatch between the umls_mondo and monto_terms here and the ones in PrimeKG.
+    # NOTE: There is a small mismatch between the umls_mondo and monto_terms here and the ones in PrimeKG.
     df_prot_dis = disgenet_diseases.join(
         umls_mondo, left_on="disease_id", right_on="umls_id", how="inner"
     )
-    df_prot_dis = df_prot_dis.join(mondo_terms, left_on="mondo_id", right_on="id", how="left")
+    df_prot_dis = df_prot_dis.join(
+        mondo_terms, left_on="mondo_id", right_on="id", how="left"
+    )
 
     df_prot_dis = df_prot_dis.rename(
-        {"gene_id": "x_id", "gene_symbol": "x_name", "mondo_id": "y_id", "name": "y_name"}
+        {
+            "gene_id": "x_id",
+            "gene_symbol": "x_name",
+            "mondo_id": "y_id",
+            "name": "y_name",
+        }
     )
 
     df_prot_dis = df_prot_dis.with_columns(
