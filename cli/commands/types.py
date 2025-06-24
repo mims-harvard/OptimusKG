@@ -38,8 +38,8 @@ class Node(BaseModel):
     def from_neo4j(cls, node: Neo4jNode) -> Self:
         possible_labels = [
             "Gene",
-            "AnatomicalEntity",
-            "EnvironmentalExposure",
+            "Anatomy",
+            "Exposure",
             "Drug",
             "Disease",
             "Phenotype",

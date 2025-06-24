@@ -6,13 +6,12 @@ gene: # A region (or regions) that includes all of the sequence elements necessa
   represented_as: node
   input_label: gene
   inherit_properties: false
-  exclude_properties: 
-    - preferred_id
   properties:
     name: str
     source: str
 
-anatomical entity: # Biological entity that is either an individual member of a biological species or constitutes the structural organization of an individual member of a biological species. (http://purl.obolibrary.org/obo/UBERON_0001062)
+anatomy: # Biological entity that is either an individual member of a biological species or constitutes the structural organization of an individual member of a biological species. (http://purl.obolibrary.org/obo/UBERON_0001062)
+  is_a: anatomical entity
   represented_as: node
   input_label: anatomy
   inherit_properties: false
@@ -20,7 +19,8 @@ anatomical entity: # Biological entity that is either an individual member of a 
     name: str
     source: str
 
-environmental exposure: # A environmental exposure is a factor relating to abiotic processes in the environment including sunlight (UV-B), atmospheric (heat, cold, general pollution) and water-born contaminants. (https://biolink.github.io/biolink-model/EnvironmentalExposure/)
+exposure: # A environmental exposure is a factor relating to abiotic processes in the environment including sunlight (UV-B), atmospheric (heat, cold, general pollution) and water-born contaminants. (https://biolink.github.io/biolink-model/EnvironmentalExposure/)
+  is_a: environmental exposure
   represented_as: node
   input_label: exposure
   inherit_properties: false
