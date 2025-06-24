@@ -3,7 +3,11 @@ from pathlib import Path
 
 import typer
 
-from cli.commands import neo4j_to_pg_command, write_metrics_command
+from cli.commands import (
+    get_primekg_metrics_command,
+    neo4j_to_pg_command,
+    write_metrics_command,
+)
 from optimuskg.utils import calculate_checksum
 
 app = typer.Typer(help="Main entry point for the CLI.")
@@ -84,6 +88,22 @@ def write_metrics(
     ),
 ):
     write_metrics_command(in_path, data_out_path)
+
+
+@app.command(help="Get statistics about a PrimeKG knowledge graph.")
+def primekg_metrics(
+    in_path: Path = typer.Option(
+        "data/primekg/kg.csv",
+        "--in",
+        help="The path to read the input file from.",
+    ),
+    out_path: Path = typer.Option(
+        "data/primekg/metrics.json",
+        "--out",
+        help="The path to write the output file to.",
+    ),
+):
+    get_primekg_metrics_command(in_path, out_path)
 
 
 if __name__ == "__main__":
