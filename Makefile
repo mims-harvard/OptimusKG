@@ -97,8 +97,8 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--nodes="/import/Phenotype-header.csv,/import/Phenotype-part.*" \
 		--nodes="/import/Drug-header.csv,/import/Drug-part.*" \
         --nodes="/import/Gene-header.csv,/import/Gene-part.*" \
-        --nodes="/import/AnatomicalEntity-header.csv,/import/AnatomicalEntity-part.*" \
-		--nodes="/import/EnvironmentalExposure-header.csv,/import/EnvironmentalExposure-part.*" \
+        --nodes="/import/Anatomy-header.csv,/import/Anatomy-part.*" \
+		--nodes="/import/Exposure-header.csv,/import/Exposure-part.*" \
 		--nodes="/import/BiologicalProcess-header.csv,/import/BiologicalProcess-part.*" \
 		--nodes="/import/CellularComponent-header.csv,/import/CellularComponent-part.*" \
 		--nodes="/import/MolecularFunction-header.csv,/import/MolecularFunction-part.*" \
