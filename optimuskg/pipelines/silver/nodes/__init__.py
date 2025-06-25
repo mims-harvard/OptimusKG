@@ -15,7 +15,11 @@ from .drugbank import (
     drugbank_drug_protein_interactions_node,
 )
 from .drugcentral import drugcentral_node
-from .gene_names import gene_names_node
+from .go import (
+    biological_process_biological_process_interactions_node,
+    cellular_component_cellular_component_interactions_node,
+    molecular_function_molecular_function_interactions_node,
+)
 from .ncbigene import (
     protein_biological_process_interactions_node,
     protein_cellular_component_interactions_node,
@@ -74,7 +78,6 @@ __all__ = [
     "ctd_exposure_molecular_function_interactions_node",
     "ctd_exposure_cellular_component_interactions_node",
     "drugcentral_node",
-    "gene_names_node",
     "protein_biological_process_interactions_node",
     "protein_cellular_component_interactions_node",
     "protein_molecular_function_interactions_node",
@@ -86,4 +89,7 @@ __all__ = [
     "umls_mondo_node",
     "disgenet_disease_protein_node",
     "disgenet_effect_protein_node",
+    "cellular_component_cellular_component_interactions_node",
+    "biological_process_biological_process_interactions_node",
+    "molecular_function_molecular_function_interactions_node",
 ]

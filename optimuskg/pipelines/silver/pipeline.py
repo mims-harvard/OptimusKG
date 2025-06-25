@@ -32,6 +32,7 @@ def create_pipeline(**kwargs):
             "bronze.opentargets.disease_phenotype_ids",
             "bronze.opentargets.drug_mappings",
             "bronze.ontology.go_terms",
+            "bronze.ontology.go_relations",
             "bronze.ontology.mondo_terms",
             "bronze.ontology.mondo_relations",
             "bronze.ontology.mondo_xrefs",

@@ -42,6 +42,9 @@ def process_biocypher(  # noqa: PLR0913
     exposure_biological_process: pl.DataFrame,
     exposure_molecular_function: pl.DataFrame,
     exposure_cellular_component: pl.DataFrame,
+    cellular_component_cellular_component: pl.DataFrame,
+    biological_process_biological_process: pl.DataFrame,
+    molecular_function_molecular_function: pl.DataFrame,
     # Nodes
     gene: pl.DataFrame,
     anatomical_entity: pl.DataFrame,
@@ -220,6 +223,18 @@ def process_biocypher(  # noqa: PLR0913
             df=exposure_cellular_component,
             mapping_config=edge_config,
         ),
+        yield_edges(
+            df=cellular_component_cellular_component,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
+            df=biological_process_biological_process,
+            mapping_config=edge_config,
+        ),
+        yield_edges(
+            df=molecular_function_molecular_function,
+            mapping_config=edge_config,
+        ),
     ]
 
     try:
@@ -293,6 +308,9 @@ biocypher_node = node(
         "exposure_biological_process": "gold.edges.exposure_biological_process",
         "exposure_molecular_function": "gold.edges.exposure_molecular_function",
         "exposure_cellular_component": "gold.edges.exposure_cellular_component",
+        "cellular_component_cellular_component": "gold.edges.cellular_component_cellular_component",
+        "biological_process_biological_process": "gold.edges.biological_process_biological_process",
+        "molecular_function_molecular_function": "gold.edges.molecular_function_molecular_function",
         # Nodes
         "gene": "gold.nodes.gene",
         "anatomical_entity": "gold.nodes.anatomical_entity",
