@@ -25,6 +25,9 @@ def create_pipeline(**kwargs):
             "silver.reactome.pathway_pathway_interactions",
             "silver.reactome.pathway_protein_interactions",
             "silver.ontology.mondo_disease_disease_interactions",
+            "silver.ontology.cellular_component_cellular_component_interactions",
+            "silver.ontology.biological_process_biological_process_interactions",
+            "silver.ontology.molecular_function_molecular_function_interactions",
             "silver.drugcentral.drug_disease",
             "silver.disgenet.disease_protein",
             "silver.disgenet.effect_protein",
@@ -65,5 +68,8 @@ def create_pipeline(**kwargs):
             "gold.edges.exposure_biological_process",
             "gold.edges.exposure_molecular_function",
             "gold.edges.exposure_cellular_component",
+            "gold.edges.cellular_component_cellular_component",
+            "gold.edges.biological_process_biological_process",
+            "gold.edges.molecular_function_molecular_function",
         },
     )

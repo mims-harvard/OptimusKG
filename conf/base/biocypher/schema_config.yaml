@@ -313,3 +313,30 @@ exposure cellular component:
   properties:
     relation_type: str
     undirected: str
+
+cellular component cellular component:
+  is_a: has_part
+  represented_as: edge
+  input_label: cellular_component_cellular_component
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
+
+biological process biological process:
+  is_a: has_part
+  represented_as: edge
+  input_label: biological_process_biological_process
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
+
+molecular function molecular function:
+  is_a: has_part
+  represented_as: edge
+  input_label: molecular_function_molecular_function
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str

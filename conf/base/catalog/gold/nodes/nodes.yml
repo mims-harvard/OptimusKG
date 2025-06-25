@@ -1,6 +1,5 @@
-gold.nodes.gene:
+_gold_nodes_args: &gold_nodes_args
   type: polars.CSVDataset
-  filepath: "data/gold/nodes/gene.csv"
   load_args:
     infer_schema: false
     schema:
@@ -8,141 +7,82 @@ gold.nodes.gene:
       "type": "${pl:String}"
       "name": "${pl:String}"
       "source": "${pl:String}"
+
+gold.nodes.gene:
+  <<: *gold_nodes_args
+  filepath: "data/gold/nodes/gene.csv"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.nodes.anatomical_entity:
-  type: polars.CSVDataset
+  <<: *gold_nodes_args
   filepath: "data/gold/nodes/anatomical_entity.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "id": "${pl:String}"
-      "type": "${pl:String}"
-      "name": "${pl:String}"
-      "source": "${pl:String}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.nodes.environmental_exposure:
-  type: polars.CSVDataset
+  <<: *gold_nodes_args
   filepath: "data/gold/nodes/environmental_exposure.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "id": "${pl:String}"
-      "type": "${pl:String}"
-      "name": "${pl:String}"
-      "source": "${pl:String}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.nodes.drug:
-  type: polars.CSVDataset
+  <<: *gold_nodes_args
   filepath: "data/gold/nodes/drug.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "id": "${pl:String}"
-      "type": "${pl:String}"
-      "name": "${pl:String}"
-      "source": "${pl:String}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.nodes.disease:
-  type: polars.CSVDataset
+  <<: *gold_nodes_args
   filepath: "data/gold/nodes/disease.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "id": "${pl:String}"
-      "type": "${pl:String}"
-      "name": "${pl:String}"
-      "source": "${pl:String}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.nodes.phenotype:
-  type: polars.CSVDataset
+  <<: *gold_nodes_args
   filepath: "data/gold/nodes/phenotype.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "id": "${pl:String}"
-      "type": "${pl:String}"
-      "name": "${pl:String}"
-      "source": "${pl:String}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.nodes.biological_process:
-  type: polars.CSVDataset
+  <<: *gold_nodes_args
   filepath: "data/gold/nodes/biological_process.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "id": "${pl:String}"
-      "type": "${pl:String}"
-      "name": "${pl:String}"
-      "source": "${pl:String}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.nodes.cellular_component:
-  type: polars.CSVDataset
+  <<: *gold_nodes_args
   filepath: "data/gold/nodes/cellular_component.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "id": "${pl:String}"
-      "type": "${pl:String}"
-      "name": "${pl:String}"
-      "source": "${pl:String}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.nodes.molecular_function:
-  type: polars.CSVDataset
+  <<: *gold_nodes_args
   filepath: "data/gold/nodes/molecular_function.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "id": "${pl:String}"
-      "type": "${pl:String}"
-      "name": "${pl:String}"
-      "source": "${pl:String}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.nodes.pathway:
-  type: polars.CSVDataset
+  <<: *gold_nodes_args
   filepath: "data/gold/nodes/pathway.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "id": "${pl:String}"
-      "type": "${pl:String}"
-      "name": "${pl:String}"
-      "source": "${pl:String}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
