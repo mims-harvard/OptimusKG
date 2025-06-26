@@ -8,6 +8,7 @@ from .ctd import (
     ctd_exposure_protein_interactions_node,
 )
 from .disease_disease_interactions import disease_disease_interactions_node
+from .disease_phenotype import disease_phenotype_node
 from .disgenet_disease_protein import disgenet_disease_protein_node
 from .disgenet_effect_protein import disgenet_effect_protein_node
 from .drugbank import (
@@ -89,6 +90,7 @@ __all__ = [
     "umls_mondo_node",
     "disgenet_disease_protein_node",
     "disgenet_effect_protein_node",
+    "disease_phenotype_node",
     "cellular_component_cellular_component_interactions_node",
     "biological_process_biological_process_interactions_node",
     "molecular_function_molecular_function_interactions_node",

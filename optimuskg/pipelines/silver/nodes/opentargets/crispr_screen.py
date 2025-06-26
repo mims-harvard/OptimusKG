@@ -66,7 +66,7 @@ crispr_screen_node = node(
     process_crispr_screen,
     inputs={
         "crispr_screen": "bronze.opentargets.evidence.crispr_screen",
-        "phenotypes": "bronze.opentargets.phenotypes",
+        "phenotypes": "bronze.ontology.phenotypes",
         "diseases": "bronze.opentargets.diseases",
         "targets": "bronze.opentargets.targets",
         "drug_mappings": "bronze.opentargets.drug_mappings",

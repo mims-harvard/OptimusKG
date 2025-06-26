@@ -2,12 +2,13 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_disease_nodes(
+def process_disease_nodes(  # noqa: PLR0913
     opentargets_edges: pl.DataFrame,
     disease_disease_edges: pl.DataFrame,
     exposure_disease_edges: pl.DataFrame,
     drug_disease: pl.DataFrame,
     disgenet_disease_protein: pl.DataFrame,
+    disease_phenotype: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
         pl.concat(
@@ -54,6 +55,12 @@ def process_disease_nodes(
                     pl.col("y_name").alias("name"),
                     pl.col("y_source").alias("source"),
                 ),
+                disease_phenotype.select(
+                    pl.col("x_id").alias("id"),
+                    pl.col("x_type").alias("type"),
+                    pl.col("x_name").alias("name"),
+                    pl.col("x_source").alias("source"),
+                ),
             ],
             how="vertical",
         )
@@ -70,6 +77,7 @@ disease_node = node(
         "exposure_disease_edges": "silver.ctd.ctd_exposure_disease_interactions",
         "drug_disease": "silver.drugcentral.drug_disease",
         "disgenet_disease_protein": "silver.disgenet.disease_protein",
+        "disease_phenotype": "silver.ontology.disease_phenotype",
     },
     outputs="nodes.disease",
     name="disease",

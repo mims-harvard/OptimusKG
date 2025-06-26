@@ -100,7 +100,7 @@ chembl_node = node(
     process_chembl,
     inputs={
         "chembl": "bronze.opentargets.evidence.chembl",
-        "phenotypes": "bronze.opentargets.phenotypes",
+        "phenotypes": "bronze.ontology.phenotypes",
         "diseases": "bronze.opentargets.diseases",
         "targets": "bronze.opentargets.targets",
         "drug_mappings": "bronze.opentargets.drug_mappings",

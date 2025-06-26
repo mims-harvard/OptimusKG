@@ -28,6 +28,7 @@ def create_pipeline(**kwargs):
             "silver.ontology.cellular_component_cellular_component_interactions",
             "silver.ontology.biological_process_biological_process_interactions",
             "silver.ontology.molecular_function_molecular_function_interactions",
+            "silver.ontology.disease_phenotype",
             "silver.drugcentral.drug_disease",
             "silver.disgenet.disease_protein",
             "silver.disgenet.effect_protein",
@@ -71,5 +72,6 @@ def create_pipeline(**kwargs):
             "gold.edges.cellular_component_cellular_component",
             "gold.edges.biological_process_biological_process",
             "gold.edges.molecular_function_molecular_function",
+            "gold.edges.disease_phenotype",
         },
     )

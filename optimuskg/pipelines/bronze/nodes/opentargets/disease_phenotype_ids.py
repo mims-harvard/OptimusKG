@@ -13,7 +13,7 @@ def process_disease_phenotype_ids(
 disease_phenotype_ids_node = node(
     process_disease_phenotype_ids,
     inputs={
-        "phenotypes": "opentargets.phenotypes",
+        "phenotypes": "ontology.phenotypes",
         "diseases": "opentargets.diseases",
     },
     outputs="opentargets.disease_phenotype_ids",

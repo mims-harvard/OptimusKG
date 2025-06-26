@@ -340,3 +340,12 @@ molecular function molecular function:
   properties:
     relation_type: str
     undirected: str
+
+disease phenotype:
+  is_a: related to
+  represented_as: edge
+  input_label: disease_phenotype
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str

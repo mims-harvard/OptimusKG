@@ -9,6 +9,7 @@ from .cellular_component_cellular_component import (
 from .cellular_component_protein import cellular_component_protein_edges_node
 from .contraindication import contraindication_edges_node
 from .disease_disease import disease_disease_edges_node
+from .disease_phenotype import disease_phenotype_edges_node
 from .disease_protein import disease_protein_edges_node
 from .drug_drug import drug_drug_edges_node
 from .drug_protein import drug_protein_edges_node
@@ -52,6 +53,7 @@ __all__ = [
     "pathway_pathway_edges_node",
     "opentargets_edges_node",
     "disease_disease_edges_node",
+    "disease_phenotype_edges_node",
     "exposure_biological_process_edges_node",
     "exposure_molecular_function_edges_node",
     "exposure_cellular_component_edges_node",

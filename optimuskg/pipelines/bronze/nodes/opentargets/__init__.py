@@ -14,7 +14,6 @@ from .genomics_england import genomics_england_node
 from .intogen import intogen_node
 from .mondo_efo_mappings import mondo_efo_mappings_node
 from .orphanet import orphanet_node
-from .phenotypes import phenotypes_node
 from .progeny import progeny_node
 from .reactome import reactome_node
 from .slapenrich import slapenrich_node
@@ -42,7 +41,6 @@ __all__ = [
     "drug_mappings_node",
     "mondo_efo_mappings_node",
     "diseases_node",
-    "phenotypes_node",
     "disease_phenotype_ids_node",
     "orphanet_node",
     "disease_to_phenotype_node",

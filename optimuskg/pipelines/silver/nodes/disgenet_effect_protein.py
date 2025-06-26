@@ -51,8 +51,8 @@ disgenet_effect_protein_node = node(
     process_disgenet_effect_protein,
     inputs={
         "disgenet_phenotypes": "bronze.disgenet.disgenet_phenotypes",
-        "phenotypes": "bronze.opentargets.phenotypes",
-        "phenotypes_xrefs": "bronze.opentargets.phenotypes_xrefs",
+        "phenotypes": "bronze.ontology.phenotypes",
+        "phenotypes_xrefs": "bronze.ontology.phenotypes_xrefs",
     },
     outputs="disgenet.effect_protein",
     name="disgenet_effect_protein",
