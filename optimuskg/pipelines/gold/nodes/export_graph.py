@@ -10,15 +10,16 @@ from optimuskg.pipelines.gold.adapter.mapping import (
     EdgeMappingConfig,
     NodeMappingConfig,
 )
-from .edges.utils import normalize_edge_topology
 from optimuskg.utils import format_rich
+
+from .edges.utils import normalize_edge_topology
 
 logger = logging.getLogger(__name__)
 
 
-def export_to_biocypher(
-    edge_datasets: list[pl.DataFrame],
-    node_datasets: list[pl.DataFrame],
+def _export_to_biocypher(
+    edges: list[pl.DataFrame],
+    nodes: list[pl.DataFrame],
 ) -> None:
     bc = BioCypher(
         head_ontology={
@@ -43,7 +44,7 @@ def export_to_biocypher(
     )
 
     node_adapters = []
-    for node_dataset in node_datasets:
+    for node_dataset in nodes:
         node_adapters.append(
             yield_nodes(
                 df=node_dataset,
@@ -52,7 +53,7 @@ def export_to_biocypher(
         )
 
     edge_adapters = []
-    for edge_dataset in edge_datasets:
+    for edge_dataset in edges:
         edge_adapters.append(
             yield_edges(
                 df=edge_dataset,
@@ -102,11 +103,11 @@ def export_to_biocypher(
         raise
 
 
-def export_to_csv(
-    edge_datasets: list[pl.DataFrame], node_datasets: list[pl.DataFrame]
+def _export_to_csv(
+    edges: list[pl.DataFrame], nodes: list[pl.DataFrame]
 ) -> tuple[pl.DataFrame, pl.DataFrame]:
-    kg_edges = normalize_edge_topology(pl.concat(edge_datasets))
-    kg_nodes = pl.concat(node_datasets).unique()
+    kg_edges = normalize_edge_topology(pl.concat(edges))
+    kg_nodes = pl.concat(nodes).unique()
 
     return kg_edges, kg_nodes
 
@@ -150,8 +151,7 @@ def process_export_graph(  # noqa: PLR0913
     molecular_function: pl.DataFrame,
     pathway: pl.DataFrame,
 ) -> tuple[pl.DataFrame, pl.DataFrame]:
-
-    node_datasets = [
+    nodes = [
         gene,
         anatomical_entity,
         environmental_exposure,
@@ -163,7 +163,7 @@ def process_export_graph(  # noqa: PLR0913
         molecular_function,
         pathway,
     ]
-    edge_datasets = [
+    edges = [
         anatomy_protein_absent,
         anatomy_protein_present,
         biological_process_protein,
@@ -194,8 +194,8 @@ def process_export_graph(  # noqa: PLR0913
         exposure_cellular_component,
     ]
 
-    export_to_biocypher(edge_datasets, node_datasets)
-    kg_edges, kg_nodes = export_to_csv(edge_datasets, node_datasets)
+    _export_to_biocypher(edges, nodes)
+    kg_edges, kg_nodes = _export_to_csv(edges, nodes)
 
     return kg_edges, kg_nodes
 
