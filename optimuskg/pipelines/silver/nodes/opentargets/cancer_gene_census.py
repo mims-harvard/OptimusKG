@@ -46,7 +46,7 @@ cancer_gene_census_node = node(
     process_cancer_gene_census,
     inputs={
         "cancer_gene_census": "bronze.opentargets.evidence.cancer_gene_census",
-        "phenotypes": "bronze.opentargets.phenotypes",
+        "phenotypes": "bronze.ontology.phenotypes",
         "diseases": "bronze.opentargets.diseases",
         "targets": "bronze.opentargets.targets",
         "disease_phenotype_ids": "bronze.opentargets.disease_phenotype_ids",

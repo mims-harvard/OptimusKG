@@ -47,7 +47,7 @@ progeny_node = node(
     process_progeny,
     inputs={
         "progeny": "bronze.opentargets.evidence.progeny",
-        "phenotypes": "bronze.opentargets.phenotypes",
+        "phenotypes": "bronze.ontology.phenotypes",
         "diseases": "bronze.opentargets.diseases",
         "targets": "bronze.opentargets.targets",
         "drug_mappings": "bronze.opentargets.drug_mappings",

@@ -239,3 +239,11 @@ gold.edges.cellular_component_cellular_component:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
+
+gold.edges.disease_phenotype:
+  <<: *gold_edges_args
+  filepath: "data/gold/edges/disease_phenotype.csv"
+  metadata:
+    checksum: "8076de699b6a489937178a6378c8ab8e"
+    kedro-viz:
+      layer: gold
