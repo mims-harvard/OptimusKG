@@ -1,4 +1,3 @@
-from .biocypher import biocypher_node
 from .edges import (
     anatomy_protein_edges_node,
     biological_process_biological_process_edges_node,
@@ -26,6 +25,7 @@ from .edges import (
     pathway_protein_edges_node,
     phenotype_protein_edges_node,
 )
+from .export_graph import export_graph_node
 from .nodes import (
     anatomical_entity_node,
     biological_process_node,
@@ -40,7 +40,7 @@ from .nodes import (
 )
 
 __all__ = [
-    "biocypher_node",
+    "export_graph_node",
     "anatomical_entity_node",
     "biological_process_node",
     "cellular_component_node",
