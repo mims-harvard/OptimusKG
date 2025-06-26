@@ -34,6 +34,7 @@ from .nodes import (
     pathway_node,
     phenotype_node,
 )
+from .csv_graph import csv_graph_node
 
 __all__ = [
     "biocypher_node",
@@ -68,4 +69,5 @@ __all__ = [
     "exposure_biological_process_edges_node",
     "exposure_molecular_function_edges_node",
     "exposure_cellular_component_edges_node",
+    "csv_graph_node",
 ]
