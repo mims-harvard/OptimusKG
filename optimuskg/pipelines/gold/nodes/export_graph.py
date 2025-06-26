@@ -140,6 +140,9 @@ def process_export_graph(  # noqa: PLR0913
     exposure_biological_process: pl.DataFrame,
     exposure_molecular_function: pl.DataFrame,
     exposure_cellular_component: pl.DataFrame,
+    cellular_component_cellular_component: pl.DataFrame,
+    biological_process_biological_process: pl.DataFrame,
+    molecular_function_molecular_function: pl.DataFrame,
     # Nodes
     gene: pl.DataFrame,
     anatomical_entity: pl.DataFrame,
@@ -191,9 +194,9 @@ def process_export_graph(  # noqa: PLR0913
         exposure_biological_process,
         exposure_molecular_function,
         exposure_cellular_component,
-        exposure_biological_process,
-        exposure_molecular_function,
-        exposure_cellular_component,
+        cellular_component_cellular_component,
+        biological_process_biological_process,
+        molecular_function_molecular_function,
     ]
 
     _export_to_biocypher(edges, nodes)
@@ -214,6 +217,7 @@ export_graph_node = node(
         "disease_protein_positive": "gold.edges.disease_protein_positive",
         "disease_protein": "gold.edges.disease_protein",
         "disease_disease": "gold.edges.disease_disease",
+        "disease_phenotype": "gold.edges.disease_phenotype",
         "drug_drug": "gold.edges.drug_drug",
         "drug_protein": "gold.edges.drug_protein",
         "exposure_exposure": "gold.edges.exposure_exposure",
@@ -234,7 +238,6 @@ export_graph_node = node(
         "cellular_component_cellular_component": "gold.edges.cellular_component_cellular_component",
         "biological_process_biological_process": "gold.edges.biological_process_biological_process",
         "molecular_function_molecular_function": "gold.edges.molecular_function_molecular_function",
-        "disease_phenotype": "gold.edges.disease_phenotype",
         # Nodes
         "gene": "gold.nodes.gene",
         "anatomical_entity": "gold.nodes.anatomical_entity",
