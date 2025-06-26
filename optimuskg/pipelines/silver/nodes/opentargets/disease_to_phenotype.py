@@ -37,7 +37,7 @@ disease_to_phenotype_node = node(
     inputs={
         "disease_to_phenotype": "bronze.opentargets.disease_to_phenotype",
         "diseases": "bronze.opentargets.diseases",
-        "phenotypes": "bronze.opentargets.phenotypes",
+        "phenotypes": "bronze.ontology.phenotypes",
     },
     outputs="opentargets.disease_to_phenotype",
     name="disease_to_phenotype",

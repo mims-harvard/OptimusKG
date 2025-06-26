@@ -62,7 +62,7 @@ expression_atlas_node = node(
     process_expression_atlas,
     inputs={
         "expression_atlas": "bronze.opentargets.evidence.expression_atlas",
-        "phenotypes": "bronze.opentargets.phenotypes",
+        "phenotypes": "bronze.ontology.phenotypes",
         "diseases": "bronze.opentargets.diseases",
         "targets": "bronze.opentargets.targets",
         "drug_mappings": "bronze.opentargets.drug_mappings",

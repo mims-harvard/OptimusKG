@@ -11,6 +11,10 @@ biocypher:
   cache_directory: .biocypher/biocypher_cache
   output_directory: data/neo4j/import/
   
+  head_ontology:
+    url: https://github.com/biolink/biolink-model/raw/v3.2.1/biolink-model.owl.ttl
+    root_node: entity
+
   tail_ontologies:
     go_biological_process:
       url: "http://purl.obolibrary.org/obo/go/extensions/go-plus.owl"
@@ -51,4 +55,4 @@ neo4j:
   skip_duplicate_nodes: false
   skip_bad_relationships: false
 
-  labels_order: "Ascending" # Note: This is not being used by biocypher. Possible options: "Alphabetcal", "Ascending", "Descending", "Leaves". See https://github.com/biocypher/biocypher/blob/main/biocypher/output/write/_batch_writer.py#L289
+  labels_order: "Leaves" # Note: This is not being used by biocypher. Possible options: "Alphabetcal", "Ascending", "Descending", "Leaves". See https://github.com/biocypher/biocypher/blob/main/biocypher/output/write/_batch_writer.py#L289

@@ -60,6 +60,13 @@ def process_mondo(
             pl.col("id"),
             pl.col("xrefs").struct.field("val").alias("xref_id"),
         )
+        .with_columns(
+            pl.col("xref_id")
+            .map_elements(
+                lambda x: x.replace("Orphanet:", "Orphanet_"), return_dtype=pl.Utf8
+            )
+            .alias("xref_id")
+        )
         .unique()
     )
 

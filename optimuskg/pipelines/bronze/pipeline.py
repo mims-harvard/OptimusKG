@@ -11,7 +11,8 @@ def create_pipeline(**kwargs):
             # landing
             "landing.ontology.go_plus",
             "landing.ontology.mondo",
-            "landing.ontology.human_phenotype",
+            "landing.ontology.hpo",
+            "landing.ontology.hpo_mappings",
             "landing.bgee.homo_sapiens_expressions_advanced",
             "landing.ctd.ctd_exposure_events",
             "landing.reactome.ncbi2_reactome",

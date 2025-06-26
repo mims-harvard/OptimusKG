@@ -1,6 +1,5 @@
-gold.edges.anatomy_protein_present:
+_gold_edges_args: &gold_edges_args
   type: polars.CSVDataset
-  filepath: "data/gold/edges/anatomy_protein_present.csv"
   load_args:
     infer_schema: false
     schema:
@@ -15,204 +14,82 @@ gold.edges.anatomy_protein_present:
       "y_name": "${pl:String}"
       "y_source": "${pl:String}"
       "undirected": "${pl:Boolean}"
+
+gold.edges.anatomy_protein_present:
+  <<: *gold_edges_args
+  filepath: "data/gold/edges/anatomy_protein_present.csv"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.exposure_biological_process:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/exposure_biological_process.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.exposure_molecular_function:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/exposure_molecular_function.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.exposure_cellular_component:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/exposure_cellular_component.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.anatomy_protein_absent:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/anatomy_protein_absent.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.disease_disease:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/disease_disease.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.exposure_disease:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/exposure_disease.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.exposure_exposure:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/exposure_exposure.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.exposure_protein:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/exposure_protein.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.indication:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/indication.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
@@ -220,330 +97,152 @@ gold.edges.indication:
 
 
 gold.edges.contraindication:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/contraindication.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.off_label_use:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/off_label_use.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.disease_protein:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/disease_protein.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.strong_clinical_evidence:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/strong_clinical_evidence.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.weak_clinical_evidence:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/weak_clinical_evidence.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.phenotype_protein:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/phenotype_protein.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.drug_protein:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/drug_protein.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.drug_drug:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/drug_drug.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.disease_protein_positive:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/disease_protein_positive.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.disease_protein_negative:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/disease_protein_negative.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.biological_process_protein:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/biological_process_protein.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.cellular_component_protein:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/cellular_component_protein.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.molecular_function_protein:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/molecular_function_protein.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.pathway_pathway:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/pathway_pathway.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
 
 gold.edges.pathway_protein:
-  type: polars.CSVDataset
+  <<: *gold_edges_args
   filepath: "data/gold/edges/pathway_protein.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "relation": "${pl:String}"
-      "relation_type": "${pl:String}"
-      "x_id": "${pl:String}"
-      "x_type": "${pl:String}"
-      "x_name": "${pl:String}"
-      "x_source": "${pl:String}"
-      "y_id": "${pl:String}"
-      "y_type": "${pl:String}"
-      "y_name": "${pl:String}"
-      "y_source": "${pl:String}"
-      "undirected": "${pl:Boolean}"
+  metadata:
+    checksum: "8076de699b6a489937178a6378c8ab8e"
+    kedro-viz:
+      layer: gold
+
+gold.edges.biological_process_biological_process:
+  <<: *gold_edges_args
+  filepath: "data/gold/edges/biological_process_biological_process.csv"
+  metadata:
+    checksum: "8076de699b6a489937178a6378c8ab8e"
+    kedro-viz:
+      layer: gold
+
+gold.edges.molecular_function_molecular_function:
+  <<: *gold_edges_args
+  filepath: "data/gold/edges/molecular_function_molecular_function.csv"
+  metadata:
+    checksum: "8076de699b6a489937178a6378c8ab8e"
+    kedro-viz:
+      layer: gold
+
+gold.edges.cellular_component_cellular_component:
+  <<: *gold_edges_args
+  filepath: "data/gold/edges/cellular_component_cellular_component.csv"
+  metadata:
+    checksum: "8076de699b6a489937178a6378c8ab8e"
+    kedro-viz:
+      layer: gold
+
+gold.edges.disease_phenotype:
+  <<: *gold_edges_args
+  filepath: "data/gold/edges/disease_phenotype.csv"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:

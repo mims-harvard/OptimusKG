@@ -97,8 +97,8 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--nodes="/import/Phenotype-header.csv,/import/Phenotype-part.*" \
 		--nodes="/import/Drug-header.csv,/import/Drug-part.*" \
         --nodes="/import/Gene-header.csv,/import/Gene-part.*" \
-        --nodes="/import/AnatomicalEntity-header.csv,/import/AnatomicalEntity-part.*" \
-		--nodes="/import/EnvironmentalExposure-header.csv,/import/EnvironmentalExposure-part.*" \
+        --nodes="/import/Anatomy-header.csv,/import/Anatomy-part.*" \
+		--nodes="/import/Exposure-header.csv,/import/Exposure-part.*" \
 		--nodes="/import/BiologicalProcess-header.csv,/import/BiologicalProcess-part.*" \
 		--nodes="/import/CellularComponent-header.csv,/import/CellularComponent-part.*" \
 		--nodes="/import/MolecularFunction-header.csv,/import/MolecularFunction-part.*" \
@@ -126,7 +126,11 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--relationships="/import/PathwayProtein-header.csv,/import/PathwayProtein-part.*" \
 		--relationships="/import/ExposureBiologicalProcess-header.csv,/import/ExposureBiologicalProcess-part.*" \
 		--relationships="/import/ExposureMolecularFunction-header.csv,/import/ExposureMolecularFunction-part.*" \
-		--relationships="/import/ExposureCellularComponent-header.csv,/import/ExposureCellularComponent-part.*"
+		--relationships="/import/ExposureCellularComponent-header.csv,/import/ExposureCellularComponent-part.*" \
+		--relationships="/import/MolecularFunctionMolecularFunction-header.csv,/import/MolecularFunctionMolecularFunction-part.*" \
+		--relationships="/import/BiologicalProcessBiologicalProcess-header.csv,/import/BiologicalProcessBiologicalProcess-part.*" \
+		--relationships="/import/CellularComponentCellularComponent-header.csv,/import/CellularComponentCellularComponent-part.*" \
+		--relationships="/import/DiseasePhenotype-header.csv,/import/DiseasePhenotype-part.*" \
 
 .PHONY: neo4j-export
 neo4j-export: ##@ Export Neo4j database to JSONL format. Set CYPHER_QUERY env var for specific query, otherwise exports all. Example: CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export

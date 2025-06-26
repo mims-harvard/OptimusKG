@@ -103,12 +103,12 @@ def process_phenotypes(
     return phenotypes_df, xrefs_df
 
 
-phenotypes_node = node(
+hpo_node = node(
     process_phenotypes,
     inputs={
-        "human_phenotype_ontology": "landing.ontology.human_phenotype",
+        "human_phenotype_ontology": "landing.ontology.hpo",
     },
-    outputs=["opentargets.phenotypes", "opentargets.phenotypes_xrefs"],
+    outputs=["ontology.phenotypes", "ontology.phenotypes_xrefs"],
     name="phenotypes",
     tags=["bronze"],
 )

@@ -6,13 +6,12 @@ gene: # A region (or regions) that includes all of the sequence elements necessa
   represented_as: node
   input_label: gene
   inherit_properties: false
-  exclude_properties: 
-    - preferred_id
   properties:
     name: str
     source: str
 
-anatomical entity: # Biological entity that is either an individual member of a biological species or constitutes the structural organization of an individual member of a biological species. (http://purl.obolibrary.org/obo/UBERON_0001062)
+anatomy: # Biological entity that is either an individual member of a biological species or constitutes the structural organization of an individual member of a biological species. (http://purl.obolibrary.org/obo/UBERON_0001062)
+  is_a: anatomical entity
   represented_as: node
   input_label: anatomy
   inherit_properties: false
@@ -20,7 +19,8 @@ anatomical entity: # Biological entity that is either an individual member of a 
     name: str
     source: str
 
-environmental exposure: # A environmental exposure is a factor relating to abiotic processes in the environment including sunlight (UV-B), atmospheric (heat, cold, general pollution) and water-born contaminants. (https://biolink.github.io/biolink-model/EnvironmentalExposure/)
+exposure: # A environmental exposure is a factor relating to abiotic processes in the environment including sunlight (UV-B), atmospheric (heat, cold, general pollution) and water-born contaminants. (https://biolink.github.io/biolink-model/EnvironmentalExposure/)
+  is_a: environmental exposure
   represented_as: node
   input_label: exposure
   inherit_properties: false
@@ -309,6 +309,42 @@ exposure cellular component:
   is_a: related to
   represented_as: edge
   input_label: exposure_cellular_component
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
+
+cellular component cellular component:
+  is_a: has_part
+  represented_as: edge
+  input_label: cellular_component_cellular_component
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
+
+biological process biological process:
+  is_a: has_part
+  represented_as: edge
+  input_label: biological_process_biological_process
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
+
+molecular function molecular function:
+  is_a: has_part
+  represented_as: edge
+  input_label: molecular_function_molecular_function
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
+
+disease phenotype:
+  is_a: related to
+  represented_as: edge
+  input_label: disease_phenotype
   inherit_properties: false
   properties:
     relation_type: str

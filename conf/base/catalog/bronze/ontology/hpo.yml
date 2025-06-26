@@ -1,14 +1,14 @@
-bronze.opentargets.phenotypes:
+bronze.ontology.phenotypes:
   type: polars.CSVDataset
-  filepath: "data/bronze/opentargets/phenotypes.csv"
+  filepath: "data/bronze/ontology/phenotypes.csv"
   metadata:
     checksum: "f9ed19eeb850663df363475d646250a6"
     kedro-viz:
       layer: bronze
 
-bronze.opentargets.phenotypes_xrefs:
+bronze.ontology.phenotypes_xrefs:
   type: polars.CSVDataset
-  filepath: "data/bronze/opentargets/phenotypes_xrefs.csv"
+  filepath: "data/bronze/ontology/phenotypes_xrefs.csv"
   metadata:
     checksum: ""
     kedro-viz:

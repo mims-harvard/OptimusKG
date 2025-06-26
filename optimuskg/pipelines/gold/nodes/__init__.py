@@ -1,10 +1,12 @@
-from .export_graph import export_graph_node
 from .edges import (
     anatomy_protein_edges_node,
+    biological_process_biological_process_edges_node,
     biological_process_protein_edges_node,
+    cellular_component_cellular_component_edges_node,
     cellular_component_protein_edges_node,
     contraindication_edges_node,
     disease_disease_edges_node,
+    disease_phenotype_edges_node,
     disease_protein_edges_node,
     drug_drug_edges_node,
     drug_protein_edges_node,
@@ -15,6 +17,7 @@ from .edges import (
     exposure_molecular_function_edges_node,
     exposure_protein_edges_node,
     indication_edges_node,
+    molecular_function_molecular_function_edges_node,
     molecular_function_protein_edges_node,
     off_label_use_edges_node,
     opentargets_edges_node,
@@ -22,6 +25,7 @@ from .edges import (
     pathway_protein_edges_node,
     phenotype_protein_edges_node,
 )
+from .export_graph import export_graph_node
 from .nodes import (
     anatomical_entity_node,
     biological_process_node,
@@ -49,7 +53,9 @@ __all__ = [
     "phenotype_node",
     "anatomy_protein_edges_node",
     "biological_process_protein_edges_node",
+    "biological_process_biological_process_edges_node",
     "cellular_component_protein_edges_node",
+    "cellular_component_cellular_component_edges_node",
     "disease_protein_edges_node",
     "drug_drug_edges_node",
     "drug_protein_edges_node",
@@ -60,11 +66,13 @@ __all__ = [
     "exposure_protein_edges_node",
     "exposure_disease_edges_node",
     "molecular_function_protein_edges_node",
+    "molecular_function_molecular_function_edges_node",
     "pathway_pathway_edges_node",
     "pathway_protein_edges_node",
     "phenotype_protein_edges_node",
     "opentargets_edges_node",
     "disease_disease_edges_node",
+    "disease_phenotype_edges_node",
     "exposure_biological_process_edges_node",
     "exposure_molecular_function_edges_node",
     "exposure_cellular_component_edges_node",

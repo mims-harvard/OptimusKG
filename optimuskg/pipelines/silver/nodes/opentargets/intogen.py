@@ -47,7 +47,7 @@ intogen_node = node(
     process_intogen,
     inputs={
         "intogen": "bronze.opentargets.evidence.intogen",
-        "phenotypes": "bronze.opentargets.phenotypes",
+        "phenotypes": "bronze.ontology.phenotypes",
         "diseases": "bronze.opentargets.diseases",
         "targets": "bronze.opentargets.targets",
         "disease_phenotype_ids": "bronze.opentargets.disease_phenotype_ids",

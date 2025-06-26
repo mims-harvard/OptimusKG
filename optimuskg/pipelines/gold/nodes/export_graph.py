@@ -17,7 +17,7 @@ from .edges.utils import normalize_edge_topology
 logger = logging.getLogger(__name__)
 
 
-def _export_to_biocypher(
+def _export_to_biocypher(  # noqa: PLR0912
     edges: list[pl.DataFrame],
     nodes: list[pl.DataFrame],
 ) -> None:
@@ -122,6 +122,7 @@ def process_export_graph(  # noqa: PLR0913
     disease_protein_positive: pl.DataFrame,
     disease_protein: pl.DataFrame,
     disease_disease: pl.DataFrame,
+    disease_phenotype: pl.DataFrame,
     drug_drug: pl.DataFrame,
     drug_protein: pl.DataFrame,
     exposure_exposure: pl.DataFrame,
@@ -172,6 +173,7 @@ def process_export_graph(  # noqa: PLR0913
         disease_protein_positive,
         disease_protein,
         disease_disease,
+        disease_phenotype,
         drug_drug,
         drug_protein,
         exposure_exposure,
@@ -229,6 +231,10 @@ export_graph_node = node(
         "exposure_biological_process": "gold.edges.exposure_biological_process",
         "exposure_molecular_function": "gold.edges.exposure_molecular_function",
         "exposure_cellular_component": "gold.edges.exposure_cellular_component",
+        "cellular_component_cellular_component": "gold.edges.cellular_component_cellular_component",
+        "biological_process_biological_process": "gold.edges.biological_process_biological_process",
+        "molecular_function_molecular_function": "gold.edges.molecular_function_molecular_function",
+        "disease_phenotype": "gold.edges.disease_phenotype",
         # Nodes
         "gene": "gold.nodes.gene",
         "anatomical_entity": "gold.nodes.anatomical_entity",
