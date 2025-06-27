@@ -13,3 +13,11 @@ bronze.ontology.phenotypes_xrefs:
     checksum: ""
     kedro-viz:
       layer: bronze
+
+bronze.opentargets.phenotypes_parents:
+  type: polars.CSVDataset
+  filepath: "data/bronze/opentargets/phenotypes_parents.csv"
+  metadata:
+    checksum: ""
+    kedro-viz:
+      layer: bronze
