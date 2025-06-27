@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_ctd_exposure_cellular_component_interactions(
+def run(
     ctd_exposure_events: pl.DataFrame,
     go_terms: pl.DataFrame,
 ) -> pl.DataFrame:
@@ -59,7 +59,7 @@ def process_ctd_exposure_cellular_component_interactions(
 
 
 ctd_exposure_cellular_component_interactions_node = node(
-    process_ctd_exposure_cellular_component_interactions,
+    run,
     inputs={
         "ctd_exposure_events": "bronze.ctd.ctd_exposure_events",
         "go_terms": "bronze.ontology.go_terms",

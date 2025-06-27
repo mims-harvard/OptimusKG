@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_disease_phenotype(
+def run(
     hpo_mappings: pl.DataFrame,
     mondo_xrefs: pl.DataFrame,
     mondo_terms: pl.DataFrame,
@@ -77,7 +77,7 @@ def process_disease_phenotype(
 
 
 disease_phenotype_node = node(
-    process_disease_phenotype,
+    run,
     inputs={
         "hpo_mappings": "bronze.ontology.hpo_mappings",
         "mondo_xrefs": "bronze.ontology.mondo_xrefs",

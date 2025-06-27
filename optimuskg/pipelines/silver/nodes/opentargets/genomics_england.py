@@ -5,7 +5,7 @@ from kedro.pipeline import node
 from .utils import construct_edges
 
 
-def process_genomics_england(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     genomics_england: pd.DataFrame,
     phenotypes: pl.DataFrame,
     diseases: pl.DataFrame,
@@ -46,7 +46,7 @@ def process_genomics_england(  # noqa: PLR0913
 
 
 genomics_england_node = node(
-    process_genomics_england,
+    run,
     inputs={
         "genomics_england": "bronze.opentargets.evidence.genomics_england",
         "phenotypes": "bronze.ontology.phenotypes",

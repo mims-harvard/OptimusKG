@@ -8,7 +8,7 @@ from kedro.pipeline import node
 from .utils import concat_json_partitions
 
 
-def process_targets(targets: dict[str, Callable[[], Any]]) -> pd.DataFrame:
+def run(targets: dict[str, Callable[[], Any]]) -> pd.DataFrame:
     concated_df = concat_json_partitions(targets)
     df = concated_df.select(
         pl.col("id").cast(pl.String),
@@ -22,7 +22,7 @@ def process_targets(targets: dict[str, Callable[[], Any]]) -> pd.DataFrame:
 
 
 targets_node = node(
-    process_targets,
+    run,
     inputs={
         "targets": "landing.opentargets.targets",
     },

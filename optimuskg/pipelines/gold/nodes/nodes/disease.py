@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_disease_nodes(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     opentargets_edges: pl.DataFrame,
     disease_disease_edges: pl.DataFrame,
     exposure_disease_edges: pl.DataFrame,
@@ -70,7 +70,7 @@ def process_disease_nodes(  # noqa: PLR0913
 
 
 disease_node = node(
-    process_disease_nodes,
+    run,
     inputs={
         "opentargets_edges": "silver.opentargets.opentargets_edges",
         "disease_disease_edges": "silver.ontology.mondo_disease_disease_interactions",

@@ -6,7 +6,7 @@ from kedro.pipeline import node
 logger = logging.getLogger(__name__)
 
 
-def process_umls(
+def run(
     mrconso: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
@@ -49,7 +49,7 @@ def process_umls(
 
 
 umls_node = node(
-    process_umls,
+    run,
     inputs={"mrconso": "landing.umls.mrconso"},
     outputs="umls.mrconso",
     name="umls",

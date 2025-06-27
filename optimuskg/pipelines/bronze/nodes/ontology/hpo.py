@@ -7,7 +7,7 @@ from lxml import etree
 logger = logging.getLogger(__name__)
 
 
-def process_phenotypes(
+def run(
     human_phenotype_ontology: etree._ElementTree,
 ) -> tuple[pl.DataFrame, pl.DataFrame]:
     """
@@ -104,7 +104,7 @@ def process_phenotypes(
 
 
 hpo_node = node(
-    process_phenotypes,
+    run,
     inputs={
         "human_phenotype_ontology": "landing.ontology.hpo",
     },

@@ -4,7 +4,7 @@ from kedro.pipeline import node
 from .utils import normalize_edge_topology
 
 
-def process_drug_drug_edges(
+def run(
     drug_drug: pl.DataFrame,
 ) -> pl.DataFrame:
     df = normalize_edge_topology(drug_drug)
@@ -12,7 +12,7 @@ def process_drug_drug_edges(
 
 
 drug_drug_edges_node = node(
-    process_drug_drug_edges,
+    run,
     inputs={
         "drug_drug": "silver.drugbank.drug_drug",
     },

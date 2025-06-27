@@ -6,7 +6,7 @@ from kedro.pipeline import node
 logger = logging.getLogger(__name__)
 
 
-def process_bgee(
+def run(
     homo_sapiens_expressions_advanced: pl.DataFrame,
     expression_rank_threshold: int,
     call_quality: str,
@@ -41,7 +41,7 @@ def process_bgee(
 
 
 bgee_node = node(
-    process_bgee,
+    run,
     inputs={
         "homo_sapiens_expressions_advanced": "landing.bgee.homo_sapiens_expressions_advanced",
         "expression_rank_threshold": "params:expression_rank_threshold",

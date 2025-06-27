@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_biological_process_biological_process_interactions(
+def run(
     go_relations: pl.DataFrame,
     go_terms: pl.DataFrame,
 ) -> pl.DataFrame:
@@ -52,7 +52,7 @@ def process_biological_process_biological_process_interactions(
 
 
 biological_process_biological_process_interactions_node = node(
-    process_biological_process_biological_process_interactions,
+    run,
     inputs={
         "go_relations": "bronze.ontology.go_relations",
         "go_terms": "bronze.ontology.go_terms",

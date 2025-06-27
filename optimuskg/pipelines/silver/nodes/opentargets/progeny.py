@@ -5,7 +5,7 @@ from kedro.pipeline import node
 from .utils import construct_edges
 
 
-def process_progeny(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     progeny: pd.DataFrame,
     phenotypes: pl.DataFrame,
     diseases: pl.DataFrame,
@@ -44,7 +44,7 @@ def process_progeny(  # noqa: PLR0913
 
 
 progeny_node = node(
-    process_progeny,
+    run,
     inputs={
         "progeny": "bronze.opentargets.evidence.progeny",
         "phenotypes": "bronze.ontology.phenotypes",

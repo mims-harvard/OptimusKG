@@ -7,7 +7,7 @@ from kedro.pipeline import node
 from .utils import TargetDiseaseEvidenceSchema, concat_partitions
 
 
-def process_genomics_england(
+def run(
     genomics_england: dict[str, Callable[[], Any]],
 ) -> pd.DataFrame:
     concated_df = concat_partitions(genomics_england)
@@ -16,7 +16,7 @@ def process_genomics_england(
 
 
 genomics_england_node = node(
-    process_genomics_england,
+    run,
     inputs={"genomics_england": "landing.opentargets.evidence.genomics_england"},
     outputs="opentargets.evidence.genomics_england",
     name="genomics_england",

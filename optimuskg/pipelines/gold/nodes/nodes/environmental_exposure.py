@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_environmental_exposure_nodes(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     exposure_protein: pl.DataFrame,
     exposure_exposure: pl.DataFrame,
     exposure_disease: pl.DataFrame,
@@ -64,7 +64,7 @@ def process_environmental_exposure_nodes(  # noqa: PLR0913
 
 
 environmental_exposure_node = node(
-    process_environmental_exposure_nodes,
+    run,
     inputs={
         "exposure_protein": "silver.ctd.ctd_exposure_protein_interactions",
         "exposure_exposure": "silver.ctd.ctd_exposure_exposure_interactions",

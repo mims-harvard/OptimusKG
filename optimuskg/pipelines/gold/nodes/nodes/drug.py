@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_drug_nodes(
+def run(
     opentargets_edges: pl.DataFrame,
     drug_drug: pl.DataFrame,
     drug_protein: pl.DataFrame,
@@ -56,7 +56,7 @@ def process_drug_nodes(
 
 
 drug_node = node(
-    process_drug_nodes,
+    run,
     inputs={
         "opentargets_edges": "silver.opentargets.opentargets_edges",
         "drug_drug": "silver.drugbank.drug_drug",

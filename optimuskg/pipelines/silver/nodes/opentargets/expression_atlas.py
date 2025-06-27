@@ -5,7 +5,7 @@ from kedro.pipeline import node
 from .utils import construct_edges
 
 
-def process_expression_atlas(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     expression_atlas: pd.DataFrame,
     phenotypes: pl.DataFrame,
     diseases: pl.DataFrame,
@@ -59,7 +59,7 @@ def process_expression_atlas(  # noqa: PLR0913
 
 
 expression_atlas_node = node(
-    process_expression_atlas,
+    run,
     inputs={
         "expression_atlas": "bronze.opentargets.evidence.expression_atlas",
         "phenotypes": "bronze.ontology.phenotypes",

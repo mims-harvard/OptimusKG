@@ -7,7 +7,7 @@ from kedro.pipeline import node
 logger = logging.getLogger(__name__)
 
 
-def process_gene2go(
+def run(
     gene2go: Gene2GoReader,
 ) -> pl.DataFrame:
     ns2assc_has1 = gene2go.get_ns2assc()
@@ -51,7 +51,7 @@ def process_gene2go(
 
 
 gene2go_node = node(
-    process_gene2go,
+    run,
     inputs={"gene2go": "landing.ncbigene.gene2go"},
     outputs="ncbigene.protein_go_associations",
     name="gene2go",

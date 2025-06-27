@@ -5,7 +5,7 @@ from kedro.pipeline import node
 from .utils import construct_edges
 
 
-def process_orphanet(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     orphanet: pd.DataFrame,
     phenotypes: pl.DataFrame,
     diseases: pl.DataFrame,
@@ -48,7 +48,7 @@ def process_orphanet(  # noqa: PLR0913
 
 
 orphanet_node = node(
-    process_orphanet,
+    run,
     inputs={
         "orphanet": "bronze.opentargets.evidence.orphanet",
         "phenotypes": "bronze.ontology.phenotypes",

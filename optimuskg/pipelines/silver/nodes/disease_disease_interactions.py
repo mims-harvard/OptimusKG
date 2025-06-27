@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_disease_disease_interactions(
+def run(
     mondo_terms: pl.DataFrame,
     mondo_relations: pl.DataFrame,
 ) -> pl.DataFrame:
@@ -60,7 +60,7 @@ def process_disease_disease_interactions(
 
 
 disease_disease_interactions_node = node(
-    process_disease_disease_interactions,
+    run,
     inputs={
         "mondo_terms": "bronze.ontology.mondo_terms",
         "mondo_relations": "bronze.ontology.mondo_relations",

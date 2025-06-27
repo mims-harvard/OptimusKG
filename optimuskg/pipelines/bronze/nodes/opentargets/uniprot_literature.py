@@ -7,7 +7,7 @@ from kedro.pipeline import node
 from .utils import TargetDiseaseEvidenceSchema, concat_partitions
 
 
-def process_uniprot_literature(
+def run(
     uniprot_literature: dict[str, Callable[[], Any]],
 ) -> pd.DataFrame:
     concated_df = concat_partitions(uniprot_literature)
@@ -16,7 +16,7 @@ def process_uniprot_literature(
 
 
 uniprot_literature_node = node(
-    process_uniprot_literature,
+    run,
     inputs={"uniprot_literature": "landing.opentargets.evidence.uniprot_literature"},
     outputs="opentargets.evidence.uniprot_literature",
     name="uniprot_literature",

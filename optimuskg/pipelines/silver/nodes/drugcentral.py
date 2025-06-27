@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_drugcentral(
+def run(
     drug_disease: pl.DataFrame,
     umls_mondo: pl.DataFrame,
     mondo_terms: pl.DataFrame,
@@ -57,7 +57,7 @@ def process_drugcentral(
 
 
 drugcentral_node = node(
-    process_drugcentral,
+    run,
     inputs={
         "drug_disease": "bronze.drugcentral.drug_disease",
         "umls_mondo": "silver.umls.umls_mondo",

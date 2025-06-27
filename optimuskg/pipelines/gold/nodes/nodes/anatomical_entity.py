@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_anatomical_entity_nodes(
+def run(
     gene_expressions_in_anatomy: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
@@ -16,7 +16,7 @@ def process_anatomical_entity_nodes(
 
 
 anatomical_entity_node = node(
-    process_anatomical_entity_nodes,
+    run,
     inputs={
         "gene_expressions_in_anatomy": "silver.bgee.gene_expressions_in_anatomy",
     },

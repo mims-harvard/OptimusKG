@@ -4,7 +4,7 @@ from kedro.pipeline import node
 from .utils import normalize_edge_topology
 
 
-def process_biological_process_biological_process_edges(
+def run(
     biological_process_biological_process: pl.DataFrame,
 ) -> pl.DataFrame:
     df = normalize_edge_topology(biological_process_biological_process)
@@ -12,7 +12,7 @@ def process_biological_process_biological_process_edges(
 
 
 biological_process_biological_process_edges_node = node(
-    process_biological_process_biological_process_edges,
+    run,
     inputs={
         "biological_process_biological_process": "silver.ontology.biological_process_biological_process_interactions",
     },

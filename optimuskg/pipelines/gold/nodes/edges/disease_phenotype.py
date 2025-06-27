@@ -4,7 +4,7 @@ from kedro.pipeline import node
 from .utils import normalize_edge_topology
 
 
-def process_disease_phenotype_edges(
+def run(
     disease_phenotype: pl.DataFrame,
 ) -> pl.DataFrame:
     df = normalize_edge_topology(disease_phenotype)
@@ -12,7 +12,7 @@ def process_disease_phenotype_edges(
 
 
 disease_phenotype_edges_node = node(
-    process_disease_phenotype_edges,
+    run,
     inputs={
         "disease_phenotype": "silver.ontology.disease_phenotype",
     },

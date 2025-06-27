@@ -4,7 +4,7 @@ from kedro.pipeline import node
 from .utils import normalize_edge_topology
 
 
-def process_exposure_disease_edges(
+def run(
     exposure_disease: pl.DataFrame,
 ) -> pl.DataFrame:
     df = normalize_edge_topology(exposure_disease)
@@ -12,7 +12,7 @@ def process_exposure_disease_edges(
 
 
 exposure_disease_edges_node = node(
-    process_exposure_disease_edges,
+    run,
     inputs={
         "exposure_disease": "silver.ctd.ctd_exposure_disease_interactions",
     },

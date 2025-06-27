@@ -5,7 +5,7 @@ from kedro.pipeline import node
 from .utils import construct_edges
 
 
-def process_crispr(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     crispr: pd.DataFrame,
     phenotypes: pl.DataFrame,
     diseases: pl.DataFrame,
@@ -43,7 +43,7 @@ def process_crispr(  # noqa: PLR0913
 
 
 crispr_node = node(
-    process_crispr,
+    run,
     inputs={
         "crispr": "bronze.opentargets.evidence.crispr",
         "phenotypes": "bronze.ontology.phenotypes",

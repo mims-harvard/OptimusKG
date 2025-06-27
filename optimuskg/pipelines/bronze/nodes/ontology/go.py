@@ -6,7 +6,7 @@ from kedro.pipeline import node
 logger = logging.getLogger(__name__)
 
 
-def process_go_plus(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     go_plus: pl.DataFrame,
 ) -> tuple[pl.DataFrame, pl.DataFrame]:
     go_terms = (
@@ -71,7 +71,7 @@ def process_go_plus(  # noqa: PLR0913
 
 
 go_plus_node = node(
-    process_go_plus,
+    run,
     inputs={
         "go_plus": "landing.ontology.go_plus",
     },

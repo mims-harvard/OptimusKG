@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_umls_mondo(
+def run(
     mrconso: pl.DataFrame,
     mondo_xrefs: pl.DataFrame,
 ) -> pl.DataFrame:
@@ -16,7 +16,7 @@ def process_umls_mondo(
 
 
 umls_mondo_node = node(
-    process_umls_mondo,
+    run,
     inputs={
         "mrconso": "bronze.umls.mrconso",
         "mondo_xrefs": "bronze.ontology.mondo_xrefs",

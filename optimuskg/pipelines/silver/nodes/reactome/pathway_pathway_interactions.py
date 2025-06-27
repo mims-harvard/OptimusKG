@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_pathway_pathway_interactions(
+def run(
     reactome_relations: pl.DataFrame,
     reactome_terms: pl.DataFrame,
 ) -> pl.DataFrame:
@@ -57,7 +57,7 @@ def process_pathway_pathway_interactions(
 
 
 pathway_pathway_interactions_node = node(
-    process_pathway_pathway_interactions,
+    run,
     inputs={
         "reactome_relations": "bronze.reactome.reactome_relations",
         "reactome_terms": "bronze.reactome.reactome_terms",

@@ -13,6 +13,12 @@ class LabelMetricsEntry(BaseModel):
     type: str
     count: int
     percentage: float
+    avg_degree: float | None = Field(
+        default=None, description="Average degree for nodes of this type."
+    )
+    std_dev_degree: float | None = Field(
+        default=None, description="Standard deviation of degree for nodes of this type."
+    )
 
 
 class EdgeTopologyMetrics(BaseModel):
@@ -86,23 +92,38 @@ def _count_element_labels(labels_count: dict[str, int], element: Node | Edge) ->
 
 
 def _get_element_metrics(
-    element_label_type: dict[str, int], num_elements: int
+    element_label_type: dict[str, int],
+    num_elements: int,
+    degrees_by_label: dict[str, list[int]] | None = None,
 ) -> list[LabelMetricsEntry]:
     """Returns a list of LabelMetricsEntry objects sorted by label."""
     element_label_stats_list: list[LabelMetricsEntry] = []
     for labels, count in sorted(element_label_type.items()):
-        percentage = (count / num_elements) * 100
+        percentage = (count / num_elements) * 100 if num_elements > 0 else 0
+
+        avg_degree, std_dev_degree = None, None
+        if degrees_by_label:
+            degrees = degrees_by_label.get(labels, [])
+            if degrees:
+                mean = sum(degrees) / len(degrees)
+                variance = sum((x - mean) ** 2 for x in degrees) / len(degrees)
+                std_dev = variance**0.5
+                avg_degree = round(mean, 5)
+                std_dev_degree = round(std_dev, 5)
+
         element_label_stats_list.append(
             LabelMetricsEntry(
                 type=labels,
                 count=count,
                 percentage=round(percentage, 5),
+                avg_degree=avg_degree,
+                std_dev_degree=std_dev_degree,
             )
         )
     return element_label_stats_list
 
 
-def _process_input_file(in_path: Path) -> Metrics:
+def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915
     """
     Reads the input file, parses JSON objects, and categorizes them.
     """
@@ -114,6 +135,7 @@ def _process_input_file(in_path: Path) -> Metrics:
     processed_lines = 0
     node_label_type: dict[str, int] = {}
     edge_label_type: dict[str, int] = {}
+    node_id_to_label: dict[str, str] = {}
 
     try:
         with open(in_path, encoding="utf-8") as infile:
@@ -128,6 +150,7 @@ def _process_input_file(in_path: Path) -> Metrics:
                         num_nodes += 1
                         all_node_ids.add(node.id)
                         _count_element_labels(node_label_type, node)
+                        node_id_to_label[node.id] = _join_labels(node.labels)
                     elif object_type == "edge":
                         edge = Edge(**data)
                         num_edges += 1
@@ -162,6 +185,19 @@ def _process_input_file(in_path: Path) -> Metrics:
         f"Finished processing {in_path}. Total lines: {processed_lines}. Nodes: {num_nodes}, Edges: {num_edges}. Malformed/Skipped: {malformed_lines}."
     )
 
+    from collections import defaultdict
+
+    node_degrees: dict[str, int] = defaultdict(int)
+    for edge in all_edges:
+        node_degrees[edge.from_node] += 1
+        node_degrees[edge.to_node] += 1
+
+    degrees_by_label: dict[str, list[int]] = defaultdict(list)
+    for node_id in all_node_ids:
+        label = node_id_to_label.get(node_id)
+        if label:
+            degrees_by_label[label].append(node_degrees.get(node_id, 0))
+
     edge_topology_metrics: EdgeTopologyMetrics = _get_edge_topology_metrics(all_edges)
 
     return Metrics(
@@ -171,7 +207,9 @@ def _process_input_file(in_path: Path) -> Metrics:
         processed_lines=processed_lines,
         malformed_lines=malformed_lines,
         node_metrics=NodeMetrics(
-            label_type=_get_element_metrics(node_label_type, num_nodes)
+            label_type=_get_element_metrics(
+                node_label_type, num_nodes, degrees_by_label
+            )
         ),
         edge_metrics=EdgeMetrics(
             topology_metrics=edge_topology_metrics,

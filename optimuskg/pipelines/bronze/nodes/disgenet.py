@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_disgenet(
+def run(
     curated_gene_disease_associations: pl.DataFrame,
 ) -> pl.DataFrame:
     curated_gene_disease_associations = curated_gene_disease_associations.rename(
@@ -61,7 +61,7 @@ def process_disgenet(
 
 
 disgenet_node = node(
-    process_disgenet,
+    run,
     inputs={
         "curated_gene_disease_associations": "landing.disgenet.curated_gene_disease_associations",
     },

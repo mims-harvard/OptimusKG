@@ -7,7 +7,7 @@ from kedro.pipeline import node
 from .utils import TargetDiseaseEvidenceSchema, concat_partitions
 
 
-def process_clingen(
+def run(
     clingen: dict[str, Callable[[], Any]],
 ) -> pd.DataFrame:
     concated_df = concat_partitions(clingen)
@@ -16,7 +16,7 @@ def process_clingen(
 
 
 clingen_node = node(
-    process_clingen,
+    run,
     inputs={"clingen": "landing.opentargets.evidence.clingen"},
     outputs="opentargets.evidence.clingen",
     name="clingen",

@@ -42,7 +42,7 @@ class DiseaseSchema(PolarsTypedFrame):
     }
 
 
-def process_diseases(
+def run(
     diseases: dict[str, Callable[[], Any]],
     mondo_efo_mappings_df: pl.DataFrame,
 ) -> pl.DataFrame:
@@ -83,7 +83,7 @@ def process_diseases(
 
 
 diseases_node = node(
-    process_diseases,
+    run,
     inputs={
         "diseases": "landing.opentargets.diseases",
         "mondo_efo_mappings_df": "opentargets.mondo_efo_mappings",

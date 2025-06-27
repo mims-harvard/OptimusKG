@@ -112,7 +112,7 @@ def _export_to_csv(
     return kg_edges, kg_nodes
 
 
-def process_export_graph(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     # Edges
     anatomy_protein_absent: pl.DataFrame,
     anatomy_protein_present: pl.DataFrame,
@@ -206,7 +206,7 @@ def process_export_graph(  # noqa: PLR0913
 
 
 export_graph_node = node(
-    process_export_graph,
+    run,
     inputs={
         # Edges
         "anatomy_protein_absent": "gold.edges.anatomy_protein_absent",

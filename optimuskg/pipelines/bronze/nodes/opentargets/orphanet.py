@@ -7,7 +7,7 @@ from kedro.pipeline import node
 from .utils import TargetDiseaseEvidenceSchema, concat_partitions
 
 
-def process_orphanet(
+def run(
     orphanet: dict[str, Callable[[], Any]],
 ) -> pd.DataFrame:
     concated_df = concat_partitions(orphanet)
@@ -16,7 +16,7 @@ def process_orphanet(
 
 
 orphanet_node = node(
-    process_orphanet,
+    run,
     inputs={"orphanet": "landing.opentargets.evidence.orphanet"},
     outputs="opentargets.evidence.orphanet",
     name="orphanet",

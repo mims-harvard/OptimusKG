@@ -7,7 +7,7 @@ from kedro.pipeline import node
 from .utils import TargetDiseaseEvidenceSchema, concat_partitions
 
 
-def process_crispr(
+def run(
     crispr: dict[str, Callable[[], Any]],
 ) -> pd.DataFrame:
     concated_df = concat_partitions(crispr)
@@ -16,7 +16,7 @@ def process_crispr(
 
 
 crispr_node = node(
-    process_crispr,
+    run,
     inputs={"crispr": "landing.opentargets.evidence.crispr"},
     outputs="opentargets.evidence.crispr",
     name="crispr",

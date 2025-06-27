@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_drug_protein(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     df_gene_map: pl.DataFrame,
     df_carrier: pl.DataFrame,
     df_enzyme: pl.DataFrame,
@@ -80,7 +80,7 @@ def process_drug_protein(  # noqa: PLR0913
 
 
 drug_protein_node = node(
-    process_drug_protein,
+    run,
     inputs={
         "df_gene_map": "landing.drugbank.gene_map",
         "df_carrier": "landing.drugbank.carrier",

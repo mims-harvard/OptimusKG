@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_ctd_exposure_disease_interactions(
+def run(
     ctd_exposure_events: pl.DataFrame,
     mondo_xrefs: pl.DataFrame,
     mondo_terms: pl.DataFrame,
@@ -60,7 +60,7 @@ def process_ctd_exposure_disease_interactions(
 
 
 ctd_exposure_disease_interactions_node = node(
-    process_ctd_exposure_disease_interactions,
+    run,
     inputs={
         "ctd_exposure_events": "bronze.ctd.ctd_exposure_events",
         "mondo_xrefs": "bronze.ontology.mondo_xrefs",

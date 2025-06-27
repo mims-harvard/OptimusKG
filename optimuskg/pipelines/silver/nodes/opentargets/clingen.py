@@ -10,7 +10,7 @@ from .utils import construct_edges
 SCORE_THRESHOLD: Final[float] = 0.5
 
 
-def process_clingen(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     clingen: pd.DataFrame,
     phenotypes: pl.DataFrame,
     diseases: pl.DataFrame,
@@ -52,7 +52,7 @@ def process_clingen(  # noqa: PLR0913
 
 
 clingen_node = node(
-    process_clingen,
+    run,
     inputs={
         "clingen": "bronze.opentargets.evidence.clingen",
         "phenotypes": "bronze.ontology.phenotypes",
