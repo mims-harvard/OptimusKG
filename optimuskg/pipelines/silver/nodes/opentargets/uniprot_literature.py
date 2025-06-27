@@ -5,7 +5,7 @@ from kedro.pipeline import node
 from .utils import construct_edges
 
 
-def process_uniprot_literature(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     uniprot_literature: pd.DataFrame,
     phenotypes: pl.DataFrame,
     diseases: pl.DataFrame,
@@ -48,7 +48,7 @@ def process_uniprot_literature(  # noqa: PLR0913
 
 
 uniprot_literature_node = node(
-    process_uniprot_literature,
+    run,
     inputs={
         "uniprot_literature": "bronze.opentargets.evidence.uniprot_literature",
         "phenotypes": "bronze.ontology.phenotypes",

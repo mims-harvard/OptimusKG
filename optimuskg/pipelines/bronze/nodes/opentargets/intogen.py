@@ -7,7 +7,7 @@ from kedro.pipeline import node
 from .utils import TargetDiseaseEvidenceSchema, concat_partitions
 
 
-def process_intogen(
+def run(
     intogen: dict[str, Callable[[], Any]],
 ) -> pd.DataFrame:
     concated_df = concat_partitions(intogen)
@@ -16,7 +16,7 @@ def process_intogen(
 
 
 intogen_node = node(
-    process_intogen,
+    run,
     inputs={"intogen": "landing.opentargets.evidence.intogen"},
     outputs="opentargets.evidence.intogen",
     name="intogen",

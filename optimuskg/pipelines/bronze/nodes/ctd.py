@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_ctd(
+def run(
     ctd_exposure_events: pl.DataFrame,
 ) -> pl.DataFrame:
     ctd_exposure_events = ctd_exposure_events.select(
@@ -71,7 +71,7 @@ def process_ctd(
 
 
 ctd_node = node(
-    process_ctd,
+    run,
     inputs={"ctd_exposure_events": "landing.ctd.ctd_exposure_events"},
     outputs="ctd.ctd_exposure_events",
     name="ctd",

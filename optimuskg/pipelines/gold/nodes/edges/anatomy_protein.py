@@ -4,7 +4,7 @@ from kedro.pipeline import node
 from .utils import normalize_edge_topology
 
 
-def process_anatomy_protein_edges(
+def run(
     gene_expressions_in_anatomy: pl.DataFrame,
 ) -> tuple[pl.DataFrame, ...]:
     df = normalize_edge_topology(gene_expressions_in_anatomy)
@@ -14,7 +14,7 @@ def process_anatomy_protein_edges(
 
 
 anatomy_protein_edges_node = node(
-    process_anatomy_protein_edges,
+    run,
     inputs={
         "gene_expressions_in_anatomy": "silver.bgee.gene_expressions_in_anatomy",
     },

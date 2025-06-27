@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_reactome_pathways(
+def run(
     reactome_pathways_relation: pl.DataFrame,
     reactome_pathways: pl.DataFrame,
 ) -> tuple[pl.DataFrame, pl.DataFrame]:
@@ -40,7 +40,7 @@ def process_reactome_pathways(
 
 
 reactome_pathways_node = node(
-    process_reactome_pathways,
+    run,
     inputs={
         "reactome_pathways_relation": "landing.reactome.reactome_pathways_relation",
         "reactome_pathways": "landing.reactome.reactome_pathways",

@@ -6,7 +6,7 @@ from kedro.pipeline import node
 logger = logging.getLogger(__name__)
 
 
-def process_hpo_mappings(
+def run(
     hpo_mappings: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
@@ -32,7 +32,7 @@ def process_hpo_mappings(
 
 
 hpo_mappings_node = node(
-    process_hpo_mappings,
+    run,
     inputs={
         "hpo_mappings": "landing.ontology.hpo_mappings",
     },

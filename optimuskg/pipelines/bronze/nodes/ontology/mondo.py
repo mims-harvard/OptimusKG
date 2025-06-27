@@ -14,7 +14,7 @@ def _clean_uri(expr: pl.Expr) -> pl.Expr:
     return expr.str.replace(OBO_PREFIX, "")
 
 
-def process_mondo(
+def run(
     mondo: pl.DataFrame,
 ) -> tuple[pl.DataFrame, pl.DataFrame, pl.DataFrame]:
     """Processes the raw Mondo ontology data to extract terms, relations, and cross-references.
@@ -90,7 +90,7 @@ def process_mondo(
 
 
 mondo_node = node(
-    process_mondo,
+    run,
     inputs={
         "mondo": "landing.ontology.mondo",
     },

@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_gene_nodes(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     gene_expressions_in_anatomy: pl.DataFrame,
     opentargets_edges: pl.DataFrame,
     ctd_exposure_protein_interactions: pl.DataFrame,
@@ -115,7 +115,7 @@ def process_gene_nodes(  # noqa: PLR0913
 
 
 gene_node = node(
-    process_gene_nodes,
+    run,
     inputs={
         "gene_expressions_in_anatomy": "silver.bgee.gene_expressions_in_anatomy",
         "opentargets_edges": "silver.opentargets.opentargets_edges",

@@ -5,7 +5,7 @@ from kedro.pipeline import node
 from .utils import construct_edges
 
 
-def process_gene_burden(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     gene_burden: pd.DataFrame,
     phenotypes: pl.DataFrame,
     diseases: pl.DataFrame,
@@ -45,7 +45,7 @@ def process_gene_burden(  # noqa: PLR0913
 
 
 gene_burden_node = node(
-    process_gene_burden,
+    run,
     inputs={
         "gene_burden": "bronze.opentargets.evidence.gene_burden",
         "phenotypes": "bronze.ontology.phenotypes",

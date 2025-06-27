@@ -4,7 +4,7 @@ from kedro.pipeline import node
 from .utils import normalize_edge_topology
 
 
-def process_contraindication_edges(
+def run(
     drug_disease: pl.DataFrame,
 ) -> pl.DataFrame:
     return normalize_edge_topology(
@@ -13,7 +13,7 @@ def process_contraindication_edges(
 
 
 contraindication_edges_node = node(
-    process_contraindication_edges,
+    run,
     inputs={
         "drug_disease": "silver.drugcentral.drug_disease",
     },

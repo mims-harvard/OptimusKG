@@ -4,7 +4,7 @@ from kedro.pipeline import node
 from .utils import normalize_edge_topology
 
 
-def process_cellular_component_protein_edges(
+def run(
     cellular_component_protein: pl.DataFrame,
 ) -> pl.DataFrame:
     df = normalize_edge_topology(cellular_component_protein)
@@ -12,7 +12,7 @@ def process_cellular_component_protein_edges(
 
 
 cellular_component_protein_edges_node = node(
-    process_cellular_component_protein_edges,
+    run,
     inputs={
         "cellular_component_protein": "silver.ncbigene.protein_cellular_component_interactions",
     },

@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_mondo_efo_mappings(
+def run(
     mondo_efo_mappings_df: pl.DataFrame,
 ) -> pl.DataFrame:
     df = mondo_efo_mappings_df.with_columns(
@@ -21,7 +21,7 @@ def process_mondo_efo_mappings(
 
 
 mondo_efo_mappings_node = node(
-    process_mondo_efo_mappings,
+    run,
     inputs={"mondo_efo_mappings_df": "landing.opentargets.mondo_efo_mappings"},
     outputs="opentargets.mondo_efo_mappings",
     name="mondo_efo_mappings",

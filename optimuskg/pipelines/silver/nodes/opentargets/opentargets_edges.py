@@ -37,7 +37,7 @@ def _handle_duplicate_edges(df: pl.DataFrame) -> pl.DataFrame:
     )
 
 
-def process_opentargets_edges(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     cancer_gene_census: pl.DataFrame,
     chembl_drug_disease: pl.DataFrame,
     chembl_drug_gene: pl.DataFrame,
@@ -139,7 +139,7 @@ def process_opentargets_edges(  # noqa: PLR0913
 
 
 opentargets_edges_node = node(
-    process_opentargets_edges,
+    run,
     inputs={
         "cancer_gene_census": "opentargets.evidence.cancer_gene_census",
         "chembl_drug_disease": "opentargets.evidence.chembl_drug_disease",

@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_gene_names(
+def run(
     gene_names: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
@@ -26,7 +26,7 @@ def process_gene_names(
 
 
 gene_names_node = node(
-    process_gene_names,
+    run,
     inputs={"gene_names": "landing.gene_names.gene_names"},
     outputs="gene_names.protein_names",
     name="gene_names",

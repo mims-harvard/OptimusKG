@@ -5,7 +5,7 @@ from kedro.pipeline import node
 from .utils import construct_edges
 
 
-def process_chembl(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     chembl: pd.DataFrame,
     phenotypes: pl.DataFrame,
     diseases: pl.DataFrame,
@@ -97,7 +97,7 @@ def process_chembl(  # noqa: PLR0913
 
 
 chembl_node = node(
-    process_chembl,
+    run,
     inputs={
         "chembl": "bronze.opentargets.evidence.chembl",
         "phenotypes": "bronze.ontology.phenotypes",

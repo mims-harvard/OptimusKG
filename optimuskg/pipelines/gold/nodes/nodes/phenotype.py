@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_phenotype_nodes(
+def run(
     opentargets_edges: pl.DataFrame,
     disgenet_effect_protein: pl.DataFrame,
     disease_phenotype: pl.DataFrame,
@@ -43,7 +43,7 @@ def process_phenotype_nodes(
 
 
 phenotype_node = node(
-    process_phenotype_nodes,
+    run,
     inputs={
         "opentargets_edges": "silver.opentargets.opentargets_edges",
         "disgenet_effect_protein": "silver.disgenet.effect_protein",

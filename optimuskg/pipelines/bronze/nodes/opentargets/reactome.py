@@ -7,7 +7,7 @@ from kedro.pipeline import node
 from .utils import TargetDiseaseEvidenceSchema, concat_partitions
 
 
-def process_reactome(
+def run(
     reactome: dict[str, Callable[[], Any]],
 ) -> pd.DataFrame:
     concated_df = concat_partitions(reactome)
@@ -16,7 +16,7 @@ def process_reactome(
 
 
 reactome_node = node(
-    process_reactome,
+    run,
     inputs={"reactome": "landing.opentargets.evidence.reactome"},
     outputs="opentargets.evidence.reactome",
     name="reactome",

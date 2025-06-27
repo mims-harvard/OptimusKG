@@ -4,7 +4,7 @@ from kedro.pipeline import node
 from .utils import normalize_edge_topology
 
 
-def process_off_label_use_edges(
+def run(
     drug_disease: pl.DataFrame,
 ) -> pl.DataFrame:
     return normalize_edge_topology(
@@ -13,7 +13,7 @@ def process_off_label_use_edges(
 
 
 off_label_use_edges_node = node(
-    process_off_label_use_edges,
+    run,
     inputs={
         "drug_disease": "silver.drugcentral.drug_disease",
     },

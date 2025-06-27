@@ -5,7 +5,7 @@ from kedro.pipeline import node
 from .utils import construct_edges
 
 
-def process_intogen(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     intogen: pd.DataFrame,
     phenotypes: pl.DataFrame,
     diseases: pl.DataFrame,
@@ -44,7 +44,7 @@ def process_intogen(  # noqa: PLR0913
 
 
 intogen_node = node(
-    process_intogen,
+    run,
     inputs={
         "intogen": "bronze.opentargets.evidence.intogen",
         "phenotypes": "bronze.ontology.phenotypes",

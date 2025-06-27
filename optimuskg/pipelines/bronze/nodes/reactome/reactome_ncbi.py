@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_reactome_ncbi(
+def run(
     ncbi2_reactome_df: pl.DataFrame,
 ) -> pl.DataFrame:
     df = (
@@ -32,7 +32,7 @@ def process_reactome_ncbi(
 
 
 reactome_ncbi_node = node(
-    process_reactome_ncbi,
+    run,
     inputs={"ncbi2_reactome_df": "landing.reactome.ncbi2_reactome"},
     outputs="reactome.reactome_ncbi",
     name="reactome_ncbi",

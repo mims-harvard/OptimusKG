@@ -7,7 +7,7 @@ from kedro.pipeline import node
 from .utils import concat_json_partitions
 
 
-def process_drug_mappings(
+def run(
     drug_mappings_df: pl.DataFrame,
     molecule: dict[str, Callable[[], Any]],
 ) -> pl.DataFrame:
@@ -45,7 +45,7 @@ def process_drug_mappings(
 
 
 drug_mappings_node = node(
-    process_drug_mappings,
+    run,
     inputs={
         "drug_mappings_df": "landing.opentargets.drug_mappings",
         "molecule": "landing.opentargets.molecule",

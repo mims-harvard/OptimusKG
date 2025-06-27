@@ -3,7 +3,7 @@ from kedro.pipeline import node
 from lxml import etree
 
 
-def process_drug_drug(full_database: etree._ElementTree) -> pl.DataFrame:
+def run(full_database: etree._ElementTree) -> pl.DataFrame:
     """Extract drug-drug interactions from DrugBank XML database.
 
     Args:
@@ -41,7 +41,7 @@ def process_drug_drug(full_database: etree._ElementTree) -> pl.DataFrame:
 
 
 drug_drug_node = node(
-    process_drug_drug,
+    run,
     inputs={
         "full_database": "landing.drugbank.full_database",
     },

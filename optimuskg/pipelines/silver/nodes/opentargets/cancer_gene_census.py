@@ -9,7 +9,7 @@ from .utils import construct_edges
 logger = logging.getLogger(__name__)
 
 
-def process_cancer_gene_census(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     cancer_gene_census: pd.DataFrame,
     phenotypes: pl.DataFrame,
     diseases: pl.DataFrame,
@@ -43,7 +43,7 @@ def process_cancer_gene_census(  # noqa: PLR0913
 
 
 cancer_gene_census_node = node(
-    process_cancer_gene_census,
+    run,
     inputs={
         "cancer_gene_census": "bronze.opentargets.evidence.cancer_gene_census",
         "phenotypes": "bronze.ontology.phenotypes",

@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_protein_biological_process_interactions(
+def run(
     ncbigene_protein_go_associations: pl.DataFrame,
     go_terms: pl.DataFrame,
     protein_names: pl.DataFrame,
@@ -69,7 +69,7 @@ def process_protein_biological_process_interactions(
 
 
 protein_biological_process_interactions_node = node(
-    process_protein_biological_process_interactions,
+    run,
     inputs={
         "ncbigene_protein_go_associations": "bronze.ncbigene.protein_go_associations",
         "go_terms": "bronze.ontology.go_terms",

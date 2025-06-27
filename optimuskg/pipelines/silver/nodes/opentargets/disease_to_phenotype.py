@@ -3,7 +3,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_disease_to_phenotype(
+def run(
     disease_to_phenotype: pd.DataFrame, phenotypes: pl.DataFrame, diseases: pl.DataFrame
 ) -> pl.DataFrame:
     df = pl.from_pandas(disease_to_phenotype)
@@ -33,7 +33,7 @@ def process_disease_to_phenotype(
 
 
 disease_to_phenotype_node = node(
-    process_disease_to_phenotype,
+    run,
     inputs={
         "disease_to_phenotype": "bronze.opentargets.disease_to_phenotype",
         "diseases": "bronze.opentargets.diseases",

@@ -4,7 +4,7 @@ from kedro.pipeline import node
 from .utils import normalize_edge_topology
 
 
-def process_opentargets_edges(
+def run(
     opentargets_edges: pl.DataFrame,
 ) -> tuple[pl.DataFrame, ...]:
     df = normalize_edge_topology(opentargets_edges)
@@ -29,7 +29,7 @@ def process_opentargets_edges(
 
 
 opentargets_edges_node = node(
-    process_opentargets_edges,
+    run,
     inputs={
         "opentargets_edges": "silver.opentargets.opentargets_edges",
     },

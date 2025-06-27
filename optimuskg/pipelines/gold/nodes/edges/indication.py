@@ -4,7 +4,7 @@ from kedro.pipeline import node
 from .utils import normalize_edge_topology
 
 
-def process_indication_edges(
+def run(
     drug_disease: pl.DataFrame,
     opentargets_edges: pl.DataFrame,
 ) -> pl.DataFrame:
@@ -16,7 +16,7 @@ def process_indication_edges(
 
 
 indication_edges_node = node(
-    process_indication_edges,
+    run,
     inputs={
         "drug_disease": "silver.drugcentral.drug_disease",
         "opentargets_edges": "silver.opentargets.opentargets_edges",

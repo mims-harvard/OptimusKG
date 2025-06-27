@@ -7,7 +7,7 @@ from kedro.pipeline import node
 from .utils import TargetDiseaseEvidenceSchema, concat_partitions
 
 
-def process_progeny(
+def run(
     progeny: dict[str, Callable[[], Any]],
 ) -> pd.DataFrame:
     concated_df = concat_partitions(progeny)
@@ -16,7 +16,7 @@ def process_progeny(
 
 
 progeny_node = node(
-    process_progeny,
+    run,
     inputs={"progeny": "landing.opentargets.evidence.progeny"},
     outputs="opentargets.evidence.progeny",
     name="progeny",

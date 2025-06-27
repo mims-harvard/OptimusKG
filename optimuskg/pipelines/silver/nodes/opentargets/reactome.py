@@ -5,7 +5,7 @@ from kedro.pipeline import node
 from .utils import construct_edges
 
 
-def process_reactome(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     reactome: pd.DataFrame,
     phenotypes: pl.DataFrame,
     diseases: pl.DataFrame,
@@ -48,7 +48,7 @@ def process_reactome(  # noqa: PLR0913
 
 
 ot__reactome_node = node(
-    process_reactome,
+    run,
     inputs={
         "reactome": "bronze.opentargets.evidence.reactome",
         "phenotypes": "bronze.ontology.phenotypes",

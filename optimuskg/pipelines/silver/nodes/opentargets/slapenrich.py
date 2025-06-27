@@ -5,7 +5,7 @@ from kedro.pipeline import node
 from .utils import construct_edges
 
 
-def process_slapenrich(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     slapenrich: pd.DataFrame,
     phenotypes: pl.DataFrame,
     diseases: pl.DataFrame,
@@ -45,7 +45,7 @@ def process_slapenrich(  # noqa: PLR0913
 
 
 slapenrich_node = node(
-    process_slapenrich,
+    run,
     inputs={
         "slapenrich": "bronze.opentargets.evidence.slapenrich",
         "phenotypes": "bronze.ontology.phenotypes",

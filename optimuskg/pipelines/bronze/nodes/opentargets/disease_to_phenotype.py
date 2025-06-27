@@ -7,7 +7,7 @@ from kedro.pipeline import node
 from .utils import concat_json_partitions
 
 
-def process_disease_to_phenotype(
+def run(
     disease_to_phenotype: dict[str, Callable[[], Any]],
 ) -> pd.DataFrame:
     concated_df = concat_json_partitions(disease_to_phenotype)
@@ -16,7 +16,7 @@ def process_disease_to_phenotype(
 
 
 disease_to_phenotype_node = node(
-    process_disease_to_phenotype,
+    run,
     inputs={
         "disease_to_phenotype": "landing.opentargets.disease_to_phenotype",
     },

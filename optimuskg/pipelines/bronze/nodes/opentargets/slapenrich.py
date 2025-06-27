@@ -7,7 +7,7 @@ from kedro.pipeline import node
 from .utils import TargetDiseaseEvidenceSchema, concat_partitions
 
 
-def process_slapenrich(
+def run(
     slapenrich: dict[str, Callable[[], Any]],
 ) -> pd.DataFrame:
     concated_df = concat_partitions(slapenrich)
@@ -16,7 +16,7 @@ def process_slapenrich(
 
 
 slapenrich_node = node(
-    process_slapenrich,
+    run,
     inputs={"slapenrich": "landing.opentargets.evidence.slapenrich"},
     outputs="opentargets.evidence.slapenrich",
     name="slapenrich",

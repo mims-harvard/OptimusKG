@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_cellular_component_nodes(
+def run(
     protein_cellular_component_interactions: pl.DataFrame,
     exposure_cellular_component: pl.DataFrame,
     cellular_component_cellular_component: pl.DataFrame,
@@ -40,7 +40,7 @@ def process_cellular_component_nodes(
 
 
 cellular_component_node = node(
-    process_cellular_component_nodes,
+    run,
     inputs={
         "protein_cellular_component_interactions": "silver.ncbigene.protein_cellular_component_interactions",
         "exposure_cellular_component": "silver.ctd.ctd_exposure_cellular_component_interactions",

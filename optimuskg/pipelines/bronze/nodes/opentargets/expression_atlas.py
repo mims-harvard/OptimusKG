@@ -7,7 +7,7 @@ from kedro.pipeline import node
 from .utils import TargetDiseaseEvidenceSchema, concat_partitions
 
 
-def process_expression_atlas(
+def run(
     expression_atlas: dict[str, Callable[[], Any]],
 ) -> pd.DataFrame:
     concated_df = concat_partitions(expression_atlas)
@@ -16,7 +16,7 @@ def process_expression_atlas(
 
 
 expression_atlas_node = node(
-    process_expression_atlas,
+    run,
     inputs={"expression_atlas": "landing.opentargets.evidence.expression_atlas"},
     outputs="opentargets.evidence.expression_atlas",
     name="expression_atlas",

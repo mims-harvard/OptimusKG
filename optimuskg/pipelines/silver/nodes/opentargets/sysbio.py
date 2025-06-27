@@ -5,7 +5,7 @@ from kedro.pipeline import node
 from .utils import construct_edges
 
 
-def process_sysbio(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     sysbio: pd.DataFrame,
     phenotypes: pl.DataFrame,
     diseases: pl.DataFrame,
@@ -45,7 +45,7 @@ def process_sysbio(  # noqa: PLR0913
 
 
 sysbio_node = node(
-    process_sysbio,
+    run,
     inputs={
         "sysbio": "bronze.opentargets.evidence.sysbio",
         "phenotypes": "bronze.ontology.phenotypes",

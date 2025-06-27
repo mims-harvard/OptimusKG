@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_molecular_function_nodes(
+def run(
     protein_molecular_function_interactions: pl.DataFrame,
     exposure_molecular_function: pl.DataFrame,
     molecular_function_molecular_function: pl.DataFrame,
@@ -40,7 +40,7 @@ def process_molecular_function_nodes(
 
 
 molecular_function_node = node(
-    process_molecular_function_nodes,
+    run,
     inputs={
         "protein_molecular_function_interactions": "silver.ncbigene.protein_molecular_function_interactions",
         "exposure_molecular_function": "silver.ctd.ctd_exposure_molecular_function_interactions",

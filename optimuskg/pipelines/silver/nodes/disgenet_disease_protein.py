@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_disgenet_disease_protein(
+def run(
     disgenet_diseases: pl.DataFrame,
     umls_mondo: pl.DataFrame,
     mondo_terms: pl.DataFrame,
@@ -54,7 +54,7 @@ def process_disgenet_disease_protein(
 
 
 disgenet_disease_protein_node = node(
-    process_disgenet_disease_protein,
+    run,
     inputs={
         "disgenet_diseases": "bronze.disgenet.disgenet_diseases",
         "umls_mondo": "silver.umls.umls_mondo",

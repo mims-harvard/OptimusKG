@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_vocabulary(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     vocabulary: pl.DataFrame,
 ) -> pl.DataFrame:
     vocabulary = vocabulary.rename(
@@ -25,7 +25,7 @@ def process_vocabulary(  # noqa: PLR0913
 
 
 vocabulary_node = node(
-    process_vocabulary,
+    run,
     inputs={"vocabulary": "landing.drugbank.vocabulary"},
     outputs="drugbank.vocabulary",
     name="vocabulary",

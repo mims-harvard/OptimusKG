@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_pathway_protein_interactions(
+def run(
     reactome_ncbi: pl.DataFrame,
     protein_names: pl.DataFrame,
 ) -> pl.DataFrame:
@@ -51,7 +51,7 @@ def process_pathway_protein_interactions(
 
 
 pathway_protein_interactions_node = node(
-    process_pathway_protein_interactions,
+    run,
     inputs={
         "reactome_ncbi": "bronze.reactome.reactome_ncbi",
         "protein_names": "bronze.gene_names.protein_names",

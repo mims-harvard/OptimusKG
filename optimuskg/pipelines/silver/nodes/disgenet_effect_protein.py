@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_disgenet_effect_protein(
+def run(
     disgenet_phenotypes: pl.DataFrame,
     phenotypes: pl.DataFrame,
     phenotypes_xrefs: pl.DataFrame,
@@ -48,7 +48,7 @@ def process_disgenet_effect_protein(
 
 
 disgenet_effect_protein_node = node(
-    process_disgenet_effect_protein,
+    run,
     inputs={
         "disgenet_phenotypes": "bronze.disgenet.disgenet_phenotypes",
         "phenotypes": "bronze.ontology.phenotypes",

@@ -2,16 +2,14 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_disease_phenotype_ids(
-    phenotypes: pl.DataFrame, diseases: pl.DataFrame
-) -> pl.DataFrame:
+def run(phenotypes: pl.DataFrame, diseases: pl.DataFrame) -> pl.DataFrame:
     df = pl.concat([diseases.select("id"), phenotypes.select("id")])
     df = df.sort(by=sorted(df.columns))
     return df
 
 
 disease_phenotype_ids_node = node(
-    process_disease_phenotype_ids,
+    run,
     inputs={
         "phenotypes": "ontology.phenotypes",
         "diseases": "opentargets.diseases",

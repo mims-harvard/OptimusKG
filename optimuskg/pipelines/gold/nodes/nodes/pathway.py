@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_pathway_nodes(  # noqa: PLR0913
+def run(  # noqa: PLR0913
     pathway_pathway_interactions: pl.DataFrame,
     pathway_protein_interactions: pl.DataFrame,
 ) -> pl.DataFrame:
@@ -36,7 +36,7 @@ def process_pathway_nodes(  # noqa: PLR0913
 
 
 pathway_node = node(
-    process_pathway_nodes,
+    run,
     inputs={
         "pathway_pathway_interactions": "silver.reactome.pathway_pathway_interactions",
         "pathway_protein_interactions": "silver.reactome.pathway_protein_interactions",

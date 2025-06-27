@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_drugbank_drug_drug_interactions(
+def run(
     drug_drug: pl.DataFrame,
     vocabulary: pl.DataFrame,
 ) -> pl.DataFrame:
@@ -74,7 +74,7 @@ def process_drugbank_drug_drug_interactions(
 
 
 drugbank_drug_drug_interactions_node = node(
-    process_drugbank_drug_drug_interactions,
+    run,
     inputs={
         "drug_drug": "bronze.drugbank.drug_drug",
         "vocabulary": "bronze.drugbank.vocabulary",
