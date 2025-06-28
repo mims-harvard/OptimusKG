@@ -2,7 +2,7 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def process_effect_effect(
+def run(
     phenotypes: pl.DataFrame,
     phenotypes_parents: pl.DataFrame,
 ) -> pl.DataFrame:
@@ -57,7 +57,7 @@ def process_effect_effect(
 
 
 effect_effect_node = node(
-    process_effect_effect,
+    run,
     inputs={
         "phenotypes": "bronze.opentargets.phenotypes",
         "phenotypes_parents": "bronze.opentargets.phenotypes_parents",
