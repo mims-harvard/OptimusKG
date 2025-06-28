@@ -16,7 +16,7 @@ from .drugbank import (
     drugbank_drug_protein_interactions_node,
 )
 from .drugcentral import drugcentral_node
-from .effect_effect import effect_effect_node
+from .phenotype_phenotype import phenotype_phenotype_node
 from .go import (
     biological_process_biological_process_interactions_node,
     cellular_component_cellular_component_interactions_node,
@@ -95,5 +95,5 @@ __all__ = [
     "cellular_component_cellular_component_interactions_node",
     "biological_process_biological_process_interactions_node",
     "molecular_function_molecular_function_interactions_node",
-    "effect_effect_node",
+    "phenotype_phenotype_node",
 ]

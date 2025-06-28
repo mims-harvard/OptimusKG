@@ -131,15 +131,15 @@ def run(
     return phenotypes_df, xrefs_df, parents_df
 
 
-phenotypes_node = node(
+hpo_node = node(
     run,
     inputs={
         "human_phenotype_ontology": "landing.ontology.hpo",
     },
     outputs=[
-        "opentargets.phenotypes",
-        "opentargets.phenotypes_xrefs",
-        "opentargets.phenotypes_parents",
+        "ontology.phenotypes",
+        "ontology.phenotypes_xrefs",
+        "ontology.phenotypes_parents",
     ],
     name="phenotypes",
     tags=["bronze"],

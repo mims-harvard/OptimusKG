@@ -56,13 +56,13 @@ def run(
     return df_effect_effect
 
 
-effect_effect_node = node(
+phenotype_phenotype_node = node(
     run,
     inputs={
-        "phenotypes": "bronze.opentargets.phenotypes",
-        "phenotypes_parents": "bronze.opentargets.phenotypes_parents",
+        "phenotypes": "bronze.ontology.phenotypes",
+        "phenotypes_parents": "bronze.ontology.phenotypes_parents",
     },
-    outputs="effect_effect",
-    name="effect_effect",
+    outputs="phenotype_phenotype",
+    name="phenotype_phenotype",
     tags=["silver"],
 )
