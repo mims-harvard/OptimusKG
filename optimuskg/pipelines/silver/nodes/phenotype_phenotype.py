@@ -62,7 +62,7 @@ phenotype_phenotype_node = node(
         "phenotypes": "bronze.ontology.phenotypes",
         "phenotypes_parents": "bronze.ontology.phenotypes_parents",
     },
-    outputs="phenotype_phenotype",
+    outputs="ontology.phenotype_phenotype",
     name="phenotype_phenotype",
     tags=["silver"],
 )
