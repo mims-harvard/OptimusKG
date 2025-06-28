@@ -6,19 +6,19 @@ def run(
     phenotypes: pl.DataFrame,
     phenotypes_parents: pl.DataFrame,
 ) -> pl.DataFrame:
-    df_effect_effect = phenotypes_parents.join(
+    df_phenotype_phenotype = phenotypes_parents.join(
         phenotypes, left_on="parent", right_on="id", how="left"
     )
 
-    df_effect_effect = df_effect_effect.rename({"name": "parent_name"})
+    df_phenotype_phenotype = df_phenotype_phenotype.rename({"name": "parent_name"})
 
-    df_effect_effect = df_effect_effect.join(
+    df_phenotype_phenotype = df_phenotype_phenotype.join(
         phenotypes, left_on="child", right_on="id", how="left"
     )
 
-    df_effect_effect = df_effect_effect.rename({"name": "child_name"})
+    df_phenotype_phenotype = df_phenotype_phenotype.rename({"name": "child_name"})
 
-    df_effect_effect = df_effect_effect.rename(
+    df_phenotype_phenotype = df_phenotype_phenotype.rename(
         {
             "parent": "x_id",
             "child": "y_id",
@@ -27,7 +27,7 @@ def run(
         }
     )
 
-    df_effect_effect = df_effect_effect.with_columns(
+    df_phenotype_phenotype = df_phenotype_phenotype.with_columns(
         [
             pl.lit("phenotype").alias("x_type"),
             pl.lit("HPO").alias("x_source"),
@@ -38,7 +38,7 @@ def run(
         ]
     )
 
-    df_effect_effect = df_effect_effect.select(
+    df_phenotype_phenotype = df_phenotype_phenotype.select(
         [
             "relation",
             "relation_type",
@@ -53,7 +53,7 @@ def run(
         ]
     )
 
-    return df_effect_effect
+    return df_phenotype_phenotype
 
 
 phenotype_phenotype_node = node(
