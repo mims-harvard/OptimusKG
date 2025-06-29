@@ -247,3 +247,11 @@ gold.edges.disease_phenotype:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold
+
+gold.edges.anatomy_anatomy:
+  <<: *gold_edges_args
+  filepath: "data/gold/edges/anatomy_anatomy.csv"
+  metadata:
+    checksum: "8076de699b6a489937178a6378c8ab8e"
+    kedro-viz:
+      layer: gold

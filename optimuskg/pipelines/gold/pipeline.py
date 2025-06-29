@@ -29,12 +29,13 @@ def create_pipeline(**kwargs):
             "silver.ontology.biological_process_biological_process_interactions",
             "silver.ontology.molecular_function_molecular_function_interactions",
             "silver.ontology.disease_phenotype",
+            "silver.ontology.anatomy_anatomy",
             "silver.drugcentral.drug_disease",
             "silver.disgenet.disease_protein",
             "silver.disgenet.effect_protein",
             # Nodes
             "gold.nodes.gene",
-            "gold.nodes.anatomical_entity",
+            "gold.nodes.anatomy",
             "gold.nodes.environmental_exposure",
             "gold.nodes.drug",
             "gold.nodes.disease",
@@ -73,5 +74,6 @@ def create_pipeline(**kwargs):
             "gold.edges.biological_process_biological_process",
             "gold.edges.molecular_function_molecular_function",
             "gold.edges.disease_phenotype",
+            "gold.edges.anatomy_anatomy",
         },
     )

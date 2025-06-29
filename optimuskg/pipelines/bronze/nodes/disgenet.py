@@ -4,7 +4,7 @@ from kedro.pipeline import node
 
 def run(
     curated_gene_disease_associations: pl.DataFrame,
-) -> pl.DataFrame:
+) -> tuple[pl.DataFrame, pl.DataFrame]:
     curated_gene_disease_associations = curated_gene_disease_associations.rename(
         {
             "geneid": "gene_id",

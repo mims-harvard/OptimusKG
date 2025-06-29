@@ -16,9 +16,9 @@ gold.nodes.gene:
     kedro-viz:
       layer: gold
 
-gold.nodes.anatomical_entity:
+gold.nodes.anatomy:
   <<: *gold_nodes_args
-  filepath: "data/gold/nodes/anatomical_entity.csv"
+  filepath: "data/gold/nodes/anatomy.csv"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
