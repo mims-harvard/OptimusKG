@@ -61,7 +61,7 @@ def run(
         if not about_attr or "UBERON" not in about_attr:
             continue
 
-        term_id = about_attr.split("/")[-1].replace("_", ":")
+        term_id = about_attr.split("/")[-1]
 
         # Skip obsolete terms
         if class_elem.find("owl:deprecated", namespaces=namespaces) is not None:
@@ -88,7 +88,7 @@ def run(
                 and "UBERON" in resource_attr
                 and not resource_attr.startswith("_:")
             ):
-                is_a_id = resource_attr.split("/")[-1].replace("_", ":")
+                is_a_id = resource_attr.split("/")[-1]
                 relations.append(
                     {
                         "id": term_id,
