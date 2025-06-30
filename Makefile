@@ -131,6 +131,7 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--relationships="/import/BiologicalProcessBiologicalProcess-header.csv,/import/BiologicalProcessBiologicalProcess-part.*" \
 		--relationships="/import/CellularComponentCellularComponent-header.csv,/import/CellularComponentCellularComponent-part.*" \
 		--relationships="/import/DiseasePhenotype-header.csv,/import/DiseasePhenotype-part.*" \
+		--relationships="/import/AnatomyAnatomy-header.csv,/import/AnatomyAnatomy-part.*" \
 
 .PHONY: neo4j-export
 neo4j-export: ##@ Export Neo4j database to JSONL format. Set CYPHER_QUERY env var for specific query, otherwise exports all. Example: CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export

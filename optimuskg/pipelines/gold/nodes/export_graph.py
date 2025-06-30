@@ -143,9 +143,10 @@ def run(  # noqa: PLR0913
     cellular_component_cellular_component: pl.DataFrame,
     biological_process_biological_process: pl.DataFrame,
     molecular_function_molecular_function: pl.DataFrame,
+    anatomy_anatomy: pl.DataFrame,
     # Nodes
     gene: pl.DataFrame,
-    anatomical_entity: pl.DataFrame,
+    anatomy: pl.DataFrame,
     environmental_exposure: pl.DataFrame,
     drug: pl.DataFrame,
     disease: pl.DataFrame,
@@ -157,7 +158,7 @@ def run(  # noqa: PLR0913
 ) -> tuple[pl.DataFrame, pl.DataFrame]:
     nodes = [
         gene,
-        anatomical_entity,
+        anatomy,
         environmental_exposure,
         drug,
         disease,
@@ -197,6 +198,7 @@ def run(  # noqa: PLR0913
         cellular_component_cellular_component,
         biological_process_biological_process,
         molecular_function_molecular_function,
+        anatomy_anatomy,
     ]
 
     _export_to_biocypher(edges, nodes)
@@ -238,9 +240,10 @@ export_graph_node = node(
         "cellular_component_cellular_component": "gold.edges.cellular_component_cellular_component",
         "biological_process_biological_process": "gold.edges.biological_process_biological_process",
         "molecular_function_molecular_function": "gold.edges.molecular_function_molecular_function",
+        "anatomy_anatomy": "gold.edges.anatomy_anatomy",
         # Nodes
         "gene": "gold.nodes.gene",
-        "anatomical_entity": "gold.nodes.anatomical_entity",
+        "anatomy": "gold.nodes.anatomy",
         "environmental_exposure": "gold.nodes.environmental_exposure",
         "drug": "gold.nodes.drug",
         "disease": "gold.nodes.disease",

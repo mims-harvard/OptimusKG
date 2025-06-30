@@ -38,6 +38,8 @@ def create_pipeline(**kwargs):
             "bronze.ontology.phenotypes",
             "bronze.ontology.phenotypes_xrefs",
             "bronze.ontology.hpo_mappings",
+            "bronze.ontology.uberon_terms",
+            "bronze.ontology.uberon_relations",
             "bronze.bgee.gene_expressions_in_anatomy",
             "bronze.ctd.ctd_exposure_events",
             "bronze.drugcentral.drug_disease",

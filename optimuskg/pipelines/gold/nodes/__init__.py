@@ -1,4 +1,5 @@
 from .edges import (
+    anatomy_anatomy_edges_node,
     anatomy_protein_edges_node,
     biological_process_biological_process_edges_node,
     biological_process_protein_edges_node,
@@ -27,7 +28,7 @@ from .edges import (
 )
 from .export_graph import export_graph_node
 from .nodes import (
-    anatomical_entity_node,
+    anatomy_node,
     biological_process_node,
     cellular_component_node,
     disease_node,
@@ -41,7 +42,7 @@ from .nodes import (
 
 __all__ = [
     "export_graph_node",
-    "anatomical_entity_node",
+    "anatomy_node",
     "biological_process_node",
     "cellular_component_node",
     "disease_node",
@@ -76,4 +77,5 @@ __all__ = [
     "exposure_biological_process_edges_node",
     "exposure_molecular_function_edges_node",
     "exposure_cellular_component_edges_node",
+    "anatomy_anatomy_edges_node",
 ]

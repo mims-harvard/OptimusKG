@@ -1,3 +1,4 @@
+from .anatomy_anatomy import anatomy_anatomy_edges_node
 from .anatomy_protein import anatomy_protein_edges_node
 from .biological_process_biological_process import (
     biological_process_biological_process_edges_node,
@@ -57,4 +58,5 @@ __all__ = [
     "exposure_biological_process_edges_node",
     "exposure_molecular_function_edges_node",
     "exposure_cellular_component_edges_node",
+    "anatomy_anatomy_edges_node",
 ]

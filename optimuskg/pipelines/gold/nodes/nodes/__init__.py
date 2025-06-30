@@ -1,4 +1,4 @@
-from .anatomical_entity import anatomical_entity_node
+from .anatomy import anatomy_node
 from .biological_process import biological_process_node
 from .cellular_component import cellular_component_node
 from .disease import disease_node
@@ -10,7 +10,7 @@ from .pathway import pathway_node
 from .phenotype import phenotype_node
 
 __all__ = [
-    "anatomical_entity_node",
+    "anatomy_node",
     "biological_process_node",
     "cellular_component_node",
     "disease_node",

@@ -107,6 +107,15 @@ anatomy protein absent:
     relation_type: str
     undirected: str
 
+anatomy anatomy:
+  is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
+  represented_as: edge
+  input_label: anatomy_anatomy
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
+
 exposure disease:
   is_a: linked to # holds between a disease and an environmental exposure (https://biolink.github.io/biolink-model/linked_to/)
   represented_as: edge
