@@ -28,6 +28,7 @@ from .off_label_use import off_label_use_edges_node
 from .opentargets import opentargets_edges_node
 from .pathway_pathway import pathway_pathway_edges_node
 from .pathway_protein import pathway_protein_edges_node
+from .phenotype_phenotype import phenotype_phenotype_edges_node
 from .phenotype_protein import phenotype_protein_edges_node
 
 __all__ = [
@@ -57,4 +58,5 @@ __all__ = [
     "exposure_biological_process_edges_node",
     "exposure_molecular_function_edges_node",
     "exposure_cellular_component_edges_node",
+    "phenotype_phenotype_edges_node",
 ]

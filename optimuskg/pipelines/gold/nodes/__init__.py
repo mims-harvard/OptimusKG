@@ -24,6 +24,7 @@ from .edges import (
     pathway_pathway_edges_node,
     pathway_protein_edges_node,
     phenotype_protein_edges_node,
+    phenotype_phenotype_edges_node,
 )
 from .export_graph import export_graph_node
 from .nodes import (
@@ -76,4 +77,5 @@ __all__ = [
     "exposure_biological_process_edges_node",
     "exposure_molecular_function_edges_node",
     "exposure_cellular_component_edges_node",
+    "phenotype_phenotype_edges_node",
 ]
