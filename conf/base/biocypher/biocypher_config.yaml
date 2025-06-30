@@ -35,7 +35,7 @@ biocypher:
       merge_nodes: false
 
     uberon:
-      url: "http://purl.obolibrary.org/obo/uberon.owl"
+      url: "data/landing/ontology/uberon.owl"
       head_join_node: anatomical entity # Biolink’s AnatomicalEntity class is the umbrella for any anatomical concept (e.g. organ, tissue, cell)
       tail_join_node: anatomical entity # UBERON’s anatomical entity node (UBERON:0001062) is the single root of all anatomical terms in UBERON
       merge_nodes: false
