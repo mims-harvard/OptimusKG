@@ -13,6 +13,12 @@ class LabelMetricsEntry(BaseModel):
     type: str
     count: int
     percentage: float
+
+
+class EdgeLabelMetricsEntry(LabelMetricsEntry): ...
+
+
+class NodeLabelMetricsEntry(LabelMetricsEntry):
     avg_degree: float | None = Field(
         default=None, description="Average degree for nodes of this type."
     )
@@ -53,13 +59,13 @@ class EdgeMetrics(BaseModel):
     topology_metrics: EdgeTopologyMetrics = Field(
         description="Metrics related to the traversal of edges."
     )
-    label_type: list[LabelMetricsEntry] = Field(
+    label_type: list[EdgeLabelMetricsEntry] = Field(
         description="Count and percentage of edges by their label"
     )
 
 
 class NodeMetrics(BaseModel):
-    label_type: list[LabelMetricsEntry] = Field(
+    label_type: list[NodeLabelMetricsEntry] = Field(
         description="List of node label combinations and their counts. The label combination is the sorted labels concatenated with '|'."
     )
 
@@ -91,13 +97,32 @@ def _count_element_labels(labels_count: dict[str, int], element: Node | Edge) ->
     labels_count[label_key] = labels_count.get(label_key, 0) + 1
 
 
-def _get_element_metrics(
+def _get_edge_label_metrics(
     element_label_type: dict[str, int],
     num_elements: int,
-    degrees_by_label: dict[str, list[int]] | None = None,
-) -> list[LabelMetricsEntry]:
-    """Returns a list of LabelMetricsEntry objects sorted by label."""
-    element_label_stats_list: list[LabelMetricsEntry] = []
+) -> list[EdgeLabelMetricsEntry]:
+    """Returns a list of EdgeLabelMetricsEntry objects sorted by label."""
+    element_label_stats_list: list[EdgeLabelMetricsEntry] = []
+    for labels, count in sorted(element_label_type.items()):
+        percentage = (count / num_elements) * 100 if num_elements > 0 else 0
+
+        element_label_stats_list.append(
+            EdgeLabelMetricsEntry(
+                type=labels,
+                count=count,
+                percentage=round(percentage, 5),
+            )
+        )
+    return element_label_stats_list
+
+
+def _get_node_label_metrics(
+    element_label_type: dict[str, int],
+    num_elements: int,
+    degrees_by_label: dict[str, list[int]],
+) -> list[NodeLabelMetricsEntry]:
+    """Returns a list of NodeLabelMetricsEntry objects sorted by label."""
+    element_label_stats_list: list[NodeLabelMetricsEntry] = []
     for labels, count in sorted(element_label_type.items()):
         percentage = (count / num_elements) * 100 if num_elements > 0 else 0
 
@@ -112,7 +137,7 @@ def _get_element_metrics(
                 std_dev_degree = round(std_dev, 5)
 
         element_label_stats_list.append(
-            LabelMetricsEntry(
+            NodeLabelMetricsEntry(
                 type=labels,
                 count=count,
                 percentage=round(percentage, 5),
@@ -207,13 +232,13 @@ def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915
         processed_lines=processed_lines,
         malformed_lines=malformed_lines,
         node_metrics=NodeMetrics(
-            label_type=_get_element_metrics(
+            label_type=_get_node_label_metrics(
                 node_label_type, num_nodes, degrees_by_label
             )
         ),
         edge_metrics=EdgeMetrics(
             topology_metrics=edge_topology_metrics,
-            label_type=_get_element_metrics(edge_label_type, num_edges),
+            label_type=_get_edge_label_metrics(edge_label_type, num_edges),
         ),
     )
 
