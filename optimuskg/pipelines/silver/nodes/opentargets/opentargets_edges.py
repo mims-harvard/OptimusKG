@@ -19,11 +19,11 @@ def _handle_duplicate_edges(df: pl.DataFrame) -> pl.DataFrame:
         )
         .with_columns(
             is_duplicate=pl.col("edge_id").is_duplicated(),
-            relation_order=pl.col("relation").replace_strict(
+            relation_order=pl.col(
+                "relation"
+            ).replace_strict(  # TODO: Verify if this is correct
                 {
-                    "disease_protein_positive": 0,
-                    "disease_protein_negative": 1,
-                    "disease_protein": 2,
+                    "disease_protein": 0,
                 },
                 default="unknown",
             ),

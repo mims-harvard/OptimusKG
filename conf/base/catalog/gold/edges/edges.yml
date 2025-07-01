@@ -15,14 +15,6 @@ _gold_edges_args: &gold_edges_args
       "y_source": "${pl:String}"
       "undirected": "${pl:Boolean}"
 
-gold.edges.anatomy_protein_present:
-  <<: *gold_edges_args
-  filepath: "data/gold/edges/anatomy_protein_present.csv"
-  metadata:
-    checksum: "8076de699b6a489937178a6378c8ab8e"
-    kedro-viz:
-      layer: gold
-
 gold.edges.exposure_biological_process:
   <<: *gold_edges_args
   filepath: "data/gold/edges/exposure_biological_process.csv"
@@ -47,9 +39,9 @@ gold.edges.exposure_cellular_component:
     kedro-viz:
       layer: gold
 
-gold.edges.anatomy_protein_absent:
+gold.edges.anatomy_protein:
   <<: *gold_edges_args
-  filepath: "data/gold/edges/anatomy_protein_absent.csv"
+  filepath: "data/gold/edges/anatomy_protein.csv"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
@@ -155,22 +147,6 @@ gold.edges.drug_protein:
 gold.edges.drug_drug:
   <<: *gold_edges_args
   filepath: "data/gold/edges/drug_drug.csv"
-  metadata:
-    checksum: "8076de699b6a489937178a6378c8ab8e"
-    kedro-viz:
-      layer: gold
-
-gold.edges.disease_protein_positive:
-  <<: *gold_edges_args
-  filepath: "data/gold/edges/disease_protein_positive.csv"
-  metadata:
-    checksum: "8076de699b6a489937178a6378c8ab8e"
-    kedro-viz:
-      layer: gold
-
-gold.edges.disease_protein_negative:
-  <<: *gold_edges_args
-  filepath: "data/gold/edges/disease_protein_negative.csv"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:

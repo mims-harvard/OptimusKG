@@ -12,10 +12,6 @@ def run(
         .with_columns(
             [
                 pl.when(pl.col("expression") == "present")
-                .then(pl.lit("anatomy_protein_present"))
-                .otherwise(pl.lit("anatomy_protein_absent"))
-                .alias("relation"),
-                pl.when(pl.col("expression") == "present")
                 .then(pl.lit("expression present"))
                 .otherwise(pl.lit("expression absent"))
                 .alias("relation_type"),
@@ -27,6 +23,7 @@ def run(
                 pl.lit("anatomy").alias("y_type"),
                 pl.col("anatomy_name").alias("y_name"),
                 pl.lit("BGEE").alias("y_source"),
+                pl.lit("anatomy_protein").alias("relation"),
             ]
         )
         .drop(["expression", "gene_id", "gene_name", "anatomy_id", "anatomy_name"])
@@ -55,7 +52,7 @@ def run(
 bgee_node = node(
     run,
     inputs={"gene_expressions_in_anatomy": "bronze.bgee.gene_expressions_in_anatomy"},
-    outputs="bgee.gene_expressions_in_anatomy",
+    outputs="bgee.anatomy_protein",
     name="bgee",
     tags=["silver"],
 )

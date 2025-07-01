@@ -89,19 +89,10 @@ pathway:
 # Edges
 # ---
 
-anatomy protein present:
-  is_a: expressed in # holds between a gene or gene product and an anatomical entity in which it is expressed (https://biolink.github.io/biolink-model/expressed_in/)
+anatomy protein:
+  is_a: linked to
   represented_as: edge
-  input_label: anatomy_protein_present
-  inherit_properties: false
-  properties:
-    relation_type: str
-    undirected: str
-
-anatomy protein absent:
-  is_a: expressed in # holds between a gene or gene product and an anatomical entity in which it is expressed (https://biolink.github.io/biolink-model/expressed_in/)
-  represented_as: edge
-  input_label: anatomy_protein_absent
+  input_label: anatomy_protein
   inherit_properties: false
   properties:
     relation_type: str
@@ -228,24 +219,6 @@ drug drug:
   is_a: physically interacts with # holds between two entities that make physical contact as part of some interaction (https://biolink.github.io/biolink-model/physically_interacts_with/)
   represented_as: edge
   input_label: drug_drug
-  inherit_properties: false
-  properties:
-    relation_type: str
-    undirected: str
-
-disease protein positive:
-  is_a: positively correlated with # A relationship that holds between two concepts represented by variables for which a statistical correlation is demonstrated, wherein the regression line has a positive slope (https://biolink.github.io/biolink-model/positively_correlated_with/)
-  represented_as: edge
-  input_label: disease_protein_positive
-  inherit_properties: false
-  properties:
-    relation_type: str
-    undirected: str
-
-disease protein negative:
-  is_a: negatively correlated with # A relationship that holds between two concepts represented by variables for which a statistical correlation is demonstrated, wherein the regression line has a negative slope (https://biolink.github.io/biolink-model/negatively_correlated_with/)
-  represented_as: edge
-  input_label: disease_protein_negative
   inherit_properties: false
   properties:
     relation_type: str

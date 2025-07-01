@@ -36,10 +36,7 @@ def run(  # noqa: PLR0913
         .filter(pl.col("score") > score_threshold)
         .filter(pl.col("log2FoldChangeValue") != 0)
         .with_columns(
-            pl.when(pl.col("log2FoldChangeValue") < 0)
-            .then(pl.lit("disease_protein_negative"))
-            .otherwise(pl.lit("disease_protein_positive"))
-            .alias("relation"),
+            pl.lit("disease_protein").alias("relation"),
             pl.when(pl.col("log2FoldChangeValue") < 0)
             .then(pl.lit("expression downregulated"))
             .otherwise(pl.lit("expression upregulated"))
