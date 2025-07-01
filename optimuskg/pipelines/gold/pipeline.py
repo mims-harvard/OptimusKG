@@ -9,7 +9,7 @@ def create_pipeline(**kwargs):
         namespace="gold",
         inputs={
             # Silver
-            "silver.bgee.gene_expressions_in_anatomy",
+            "silver.bgee.anatomy_protein",
             "silver.opentargets.opentargets_edges",
             "silver.ctd.ctd_exposure_protein_interactions",
             "silver.ctd.ctd_exposure_exposure_interactions",
@@ -45,12 +45,9 @@ def create_pipeline(**kwargs):
             "gold.nodes.molecular_function",
             "gold.nodes.pathway",
             # Edges
-            "gold.edges.anatomy_protein_absent",
-            "gold.edges.anatomy_protein_present",
+            "gold.edges.anatomy_protein",
             "gold.edges.biological_process_protein",
             "gold.edges.cellular_component_protein",
-            "gold.edges.disease_protein_negative",
-            "gold.edges.disease_protein_positive",
             "gold.edges.disease_protein",
             "gold.edges.disease_disease",
             "gold.edges.drug_drug",

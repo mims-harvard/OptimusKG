@@ -1,6 +1,6 @@
-silver.bgee.gene_expressions_in_anatomy:
+silver.bgee.anatomy_protein:
   type: polars.CSVDataset
-  filepath: "data/silver/bgee/gene_expressions_in_anatomy.csv"
+  filepath: "data/silver/bgee/anatomy_protein.csv"
   load_args:
     infer_schema: false
     schema:

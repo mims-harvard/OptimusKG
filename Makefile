@@ -103,12 +103,10 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--nodes="/import/CellularComponent-header.csv,/import/CellularComponent-part.*" \
 		--nodes="/import/MolecularFunction-header.csv,/import/MolecularFunction-part.*" \
 		--nodes="/import/Pathway-header.csv,/import/Pathway-part.*" \
-        --relationships="/import/AnatomyProteinAbsent-header.csv,/import/AnatomyProteinAbsent-part.*" \
-        --relationships="/import/AnatomyProteinPresent-header.csv,/import/AnatomyProteinPresent-part.*" \
+        --relationships="/import/AnatomyProtein-header.csv,/import/AnatomyProtein-part.*" \
         --relationships="/import/ExposureExposure-header.csv,/import/ExposureExposure-part.*" \
         --relationships="/import/ExposureProtein-header.csv,/import/ExposureProtein-part.*" \
-		--relationships="/import/DiseaseProteinPositive-header.csv,/import/DiseaseProteinPositive-part.*" \
-		--relationships="/import/DiseaseProteinNegative-header.csv,/import/DiseaseProteinNegative-part.*" \
+		--relationships="/import/DiseaseProtein-header.csv,/import/DiseaseProtein-part.*" \
 		--relationships="/import/DiseaseDisease-header.csv,/import/DiseaseDisease-part.*" \
 		--relationships="/import/ExposureDisease-header.csv,/import/ExposureDisease-part.*" \
 		--relationships="/import/DrugProtein-header.csv,/import/DrugProtein-part.*" \

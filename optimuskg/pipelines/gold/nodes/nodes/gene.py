@@ -3,7 +3,7 @@ from kedro.pipeline import node
 
 
 def run(  # noqa: PLR0913
-    gene_expressions_in_anatomy: pl.DataFrame,
+    anatomy_protein: pl.DataFrame,
     opentargets_edges: pl.DataFrame,
     ctd_exposure_protein_interactions: pl.DataFrame,
     drug_protein: pl.DataFrame,
@@ -14,7 +14,7 @@ def run(  # noqa: PLR0913
     disgenet_disease_protein: pl.DataFrame,
     disgenet_effect_protein: pl.DataFrame,
 ) -> pl.DataFrame:
-    bgee_nodes = gene_expressions_in_anatomy.select(
+    bgee_nodes = anatomy_protein.select(
         pl.col("x_id").alias("id"),
         pl.col("x_type").alias("type"),
         pl.col("x_name").alias("name"),
@@ -117,7 +117,7 @@ def run(  # noqa: PLR0913
 gene_node = node(
     run,
     inputs={
-        "gene_expressions_in_anatomy": "silver.bgee.gene_expressions_in_anatomy",
+        "anatomy_protein": "silver.bgee.anatomy_protein",
         "opentargets_edges": "silver.opentargets.opentargets_edges",
         "ctd_exposure_protein_interactions": "silver.ctd.ctd_exposure_protein_interactions",
         "drug_protein": "silver.drugbank.drug_protein",

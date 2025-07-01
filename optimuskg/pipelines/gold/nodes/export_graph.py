@@ -114,12 +114,9 @@ def _export_to_csv(
 
 def run(  # noqa: PLR0913
     # Edges
-    anatomy_protein_absent: pl.DataFrame,
-    anatomy_protein_present: pl.DataFrame,
+    anatomy_protein: pl.DataFrame,
     biological_process_protein: pl.DataFrame,
     cellular_component_protein: pl.DataFrame,
-    disease_protein_negative: pl.DataFrame,
-    disease_protein_positive: pl.DataFrame,
     disease_protein: pl.DataFrame,
     disease_disease: pl.DataFrame,
     disease_phenotype: pl.DataFrame,
@@ -169,12 +166,9 @@ def run(  # noqa: PLR0913
         pathway,
     ]
     edges = [
-        anatomy_protein_absent,
-        anatomy_protein_present,
+        anatomy_protein,
         biological_process_protein,
         cellular_component_protein,
-        disease_protein_negative,
-        disease_protein_positive,
         disease_protein,
         disease_disease,
         disease_phenotype,
@@ -211,12 +205,9 @@ export_graph_node = node(
     run,
     inputs={
         # Edges
-        "anatomy_protein_absent": "gold.edges.anatomy_protein_absent",
-        "anatomy_protein_present": "gold.edges.anatomy_protein_present",
+        "anatomy_protein": "gold.edges.anatomy_protein",
         "biological_process_protein": "gold.edges.biological_process_protein",
         "cellular_component_protein": "gold.edges.cellular_component_protein",
-        "disease_protein_negative": "gold.edges.disease_protein_negative",
-        "disease_protein_positive": "gold.edges.disease_protein_positive",
         "disease_protein": "gold.edges.disease_protein",
         "disease_disease": "gold.edges.disease_disease",
         "disease_phenotype": "gold.edges.disease_phenotype",

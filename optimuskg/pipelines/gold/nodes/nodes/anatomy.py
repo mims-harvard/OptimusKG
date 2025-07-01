@@ -3,12 +3,12 @@ from kedro.pipeline import node
 
 
 def run(
-    gene_expressions_in_anatomy: pl.DataFrame,
+    anatomy_protein: pl.DataFrame,
     anatomy_anatomy: pl.DataFrame,
 ) -> pl.DataFrame:
     return pl.concat(
         [
-            gene_expressions_in_anatomy.filter(pl.col("y_type") == "anatomy").select(
+            anatomy_protein.filter(pl.col("y_type") == "anatomy").select(
                 pl.col("y_id").alias("id"),
                 pl.col("y_type").alias("type"),
                 pl.col("y_name").alias("name"),
@@ -33,7 +33,7 @@ def run(
 anatomy_node = node(
     run,
     inputs={
-        "gene_expressions_in_anatomy": "silver.bgee.gene_expressions_in_anatomy",
+        "anatomy_protein": "silver.bgee.anatomy_protein",
         "anatomy_anatomy": "silver.ontology.anatomy_anatomy",
     },
     outputs="nodes.anatomy",
