@@ -1,3 +1,4 @@
+from .anatomy_anatomy import anatomy_anatomy_node
 from .bgee import bgee_node
 from .ctd import (
     ctd_exposure_biological_process_interactions_node,
@@ -96,4 +97,5 @@ __all__ = [
     "biological_process_biological_process_interactions_node",
     "molecular_function_molecular_function_interactions_node",
     "phenotype_phenotype_node",
+    "anatomy_anatomy_node",
 ]

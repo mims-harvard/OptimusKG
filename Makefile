@@ -103,22 +103,16 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--nodes="/import/CellularComponent-header.csv,/import/CellularComponent-part.*" \
 		--nodes="/import/MolecularFunction-header.csv,/import/MolecularFunction-part.*" \
 		--nodes="/import/Pathway-header.csv,/import/Pathway-part.*" \
-        --relationships="/import/AnatomyProteinAbsent-header.csv,/import/AnatomyProteinAbsent-part.*" \
-        --relationships="/import/AnatomyProteinPresent-header.csv,/import/AnatomyProteinPresent-part.*" \
+        --relationships="/import/AnatomyProtein-header.csv,/import/AnatomyProtein-part.*" \
         --relationships="/import/ExposureExposure-header.csv,/import/ExposureExposure-part.*" \
         --relationships="/import/ExposureProtein-header.csv,/import/ExposureProtein-part.*" \
-		--relationships="/import/DiseaseProteinPositive-header.csv,/import/DiseaseProteinPositive-part.*" \
-		--relationships="/import/DiseaseProteinNegative-header.csv,/import/DiseaseProteinNegative-part.*" \
+		--relationships="/import/DiseaseProtein-header.csv,/import/DiseaseProtein-part.*" \
 		--relationships="/import/DiseaseDisease-header.csv,/import/DiseaseDisease-part.*" \
 		--relationships="/import/ExposureDisease-header.csv,/import/ExposureDisease-part.*" \
 		--relationships="/import/DrugProtein-header.csv,/import/DrugProtein-part.*" \
 		--relationships="/import/DrugDrug-header.csv,/import/DrugDrug-part.*" \
-		--relationships="/import/Indication-header.csv,/import/Indication-part.*" \
-		--relationships="/import/Contraindication-header.csv,/import/Contraindication-part.*" \
-		--relationships="/import/OffLabelUse-header.csv,/import/OffLabelUse-part.*" \
+		--relationships="/import/DrugDisease-header.csv,/import/DrugDisease-part.*" \
 		--relationships="/import/PhenotypeProtein-header.csv,/import/PhenotypeProtein-part.*" \
-		--relationships="/import/StrongClinicalEvidence-header.csv,/import/StrongClinicalEvidence-part.*" \
-		--relationships="/import/WeakClinicalEvidence-header.csv,/import/WeakClinicalEvidence-part.*" \
 		--relationships="/import/BiologicalProcessProtein-header.csv,/import/BiologicalProcessProtein-part.*" \
 		--relationships="/import/CellularComponentProtein-header.csv,/import/CellularComponentProtein-part.*" \
 		--relationships="/import/MolecularFunctionProtein-header.csv,/import/MolecularFunctionProtein-part.*" \
@@ -131,6 +125,7 @@ neo4j-import-data: ##@ Import data into Neo4j
 		--relationships="/import/BiologicalProcessBiologicalProcess-header.csv,/import/BiologicalProcessBiologicalProcess-part.*" \
 		--relationships="/import/CellularComponentCellularComponent-header.csv,/import/CellularComponentCellularComponent-part.*" \
 		--relationships="/import/DiseasePhenotype-header.csv,/import/DiseasePhenotype-part.*" \
+		--relationships="/import/AnatomyAnatomy-header.csv,/import/AnatomyAnatomy-part.*" \
 
 .PHONY: neo4j-export
 neo4j-export: ##@ Export Neo4j database to JSONL format. Set CYPHER_QUERY env var for specific query, otherwise exports all. Example: CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export

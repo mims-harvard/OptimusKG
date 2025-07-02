@@ -1,6 +1,6 @@
-landing.ontology.uber_anatomy:
-  type: optimuskg.datasets.OWLDataset
-  filepath: "data/landing/ontology/uber_anatomy.owl"
+landing.ontology.uberon:
+  type: optimuskg.datasets.LXMLDataset
+  filepath: "data/landing/ontology/uberon.owl"
   metadata:
     checksum: "a4a89b03d4e62b54495bb138a6fd7108"
     title: "Uber Anatomy Ontology"
@@ -8,6 +8,6 @@ landing.ontology.uber_anatomy:
     origin:
       provider: bioontology
       acronym: UBERON
-      version: "348"
+      version: "351"
     kedro-viz:
       layer: landing
