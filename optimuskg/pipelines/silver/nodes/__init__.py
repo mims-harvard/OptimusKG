@@ -47,6 +47,7 @@ from .opentargets import (
     sysbio_node,
     uniprot_literature_node,
 )
+from .phenotype_phenotype import phenotype_phenotype_node
 from .reactome import (
     pathway_pathway_interactions_node,
     pathway_protein_interactions_node,
@@ -95,5 +96,6 @@ __all__ = [
     "cellular_component_cellular_component_interactions_node",
     "biological_process_biological_process_interactions_node",
     "molecular_function_molecular_function_interactions_node",
+    "phenotype_phenotype_node",
     "anatomy_anatomy_node",
 ]

@@ -295,3 +295,12 @@ disease phenotype:
   properties:
     relation_type: str
     undirected: str
+
+phenotype phenotype:
+  is_a: has_part
+  represented_as: edge
+  input_label: phenotype_phenotype
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
