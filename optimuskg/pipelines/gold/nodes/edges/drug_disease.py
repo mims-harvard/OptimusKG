@@ -5,23 +5,23 @@ from .utils import normalize_edge_topology
 
 
 def run(
-    drug_disease: pl.DataFrame,
     opentargets_edges: pl.DataFrame,
+    drug_disease: pl.DataFrame,
 ) -> pl.DataFrame:
-    return normalize_edge_topology(
-        pl.concat([drug_disease, opentargets_edges]).filter(
-            pl.col("relation") == "indication"
-        )
-    )
+    df = opentargets_edges.filter(pl.col("relation") == "drug_disease")
+    df = pl.concat([drug_disease, df])
+    df = normalize_edge_topology(df)
+
+    return df
 
 
-indication_edges_node = node(
+drug_disease_edges_node = node(
     run,
     inputs={
         "drug_disease": "silver.drugcentral.drug_disease",
         "opentargets_edges": "silver.opentargets.opentargets_edges",
     },
-    outputs="edges.indication",
-    name="indication",
+    outputs="edges.drug_disease",
+    name="drug_disease",
     tags=["gold"],
 )

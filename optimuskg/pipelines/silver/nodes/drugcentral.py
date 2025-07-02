@@ -29,13 +29,13 @@ def run(
                 pl.lit("DrugBank").alias("x_source"),
                 pl.lit("disease").alias("y_type"),
                 pl.lit("MONDO").alias("y_source"),
+                pl.lit("drug_disease").alias("relation"),
                 pl.when(pl.col("relation") == "off-label use")
                 .then(pl.lit("off_label_use"))
-                .otherwise(pl.col("relation"))
-                .alias("relation"),
-                pl.when(pl.col("relation") == "off-label use")
-                .then(pl.lit("off_label_use"))
-                .otherwise(pl.col("relation"))
+                .when(pl.col("relation") == "indication")
+                .then(pl.lit("indication"))
+                .when(pl.col("relation") == "contraindication")
+                .then(pl.lit("contraindication"))
                 .alias("relation_type"),
             ]
         )

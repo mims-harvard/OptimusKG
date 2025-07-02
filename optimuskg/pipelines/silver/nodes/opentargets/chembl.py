@@ -45,15 +45,12 @@ def run(  # noqa: PLR0913
         .group_by(["drugId", "diseaseId"])
         .agg(pl.col("score").mean().alias("score"))
         .with_columns(
-            pl.when(pl.col("score") == 1)
+            pl.lit("drug_disease").alias("relation"),
+            pl.when(pl.col("score") == display_relation_score)
             .then(pl.lit("indication"))
             .when(pl.col("score") < relation_score_threshold)
             .then(pl.lit("weak_clinical_evidence"))
             .otherwise(pl.lit("strong_clinical_evidence"))
-            .alias("relation"),
-            pl.when(pl.col("score") == display_relation_score)
-            .then(pl.lit("indication"))
-            .otherwise(pl.lit("clinical candidate"))
             .alias("relation_type"),
         )
         .pipe(

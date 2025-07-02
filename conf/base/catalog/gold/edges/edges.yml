@@ -79,50 +79,9 @@ gold.edges.exposure_protein:
     kedro-viz:
       layer: gold
 
-gold.edges.indication:
-  <<: *gold_edges_args
-  filepath: "data/gold/edges/indication.csv"
-  metadata:
-    checksum: "8076de699b6a489937178a6378c8ab8e"
-    kedro-viz:
-      layer: gold
-
-
-gold.edges.contraindication:
-  <<: *gold_edges_args
-  filepath: "data/gold/edges/contraindication.csv"
-  metadata:
-    checksum: "8076de699b6a489937178a6378c8ab8e"
-    kedro-viz:
-      layer: gold
-
-gold.edges.off_label_use:
-  <<: *gold_edges_args
-  filepath: "data/gold/edges/off_label_use.csv"
-  metadata:
-    checksum: "8076de699b6a489937178a6378c8ab8e"
-    kedro-viz:
-      layer: gold
-
 gold.edges.disease_protein:
   <<: *gold_edges_args
   filepath: "data/gold/edges/disease_protein.csv"
-  metadata:
-    checksum: "8076de699b6a489937178a6378c8ab8e"
-    kedro-viz:
-      layer: gold
-
-gold.edges.strong_clinical_evidence:
-  <<: *gold_edges_args
-  filepath: "data/gold/edges/strong_clinical_evidence.csv"
-  metadata:
-    checksum: "8076de699b6a489937178a6378c8ab8e"
-    kedro-viz:
-      layer: gold
-
-gold.edges.weak_clinical_evidence:
-  <<: *gold_edges_args
-  filepath: "data/gold/edges/weak_clinical_evidence.csv"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
@@ -147,6 +106,14 @@ gold.edges.drug_protein:
 gold.edges.drug_drug:
   <<: *gold_edges_args
   filepath: "data/gold/edges/drug_drug.csv"
+  metadata:
+    checksum: "8076de699b6a489937178a6378c8ab8e"
+    kedro-viz:
+      layer: gold
+
+gold.edges.drug_disease:
+  <<: *gold_edges_args
+  filepath: "data/gold/edges/drug_disease.csv"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
