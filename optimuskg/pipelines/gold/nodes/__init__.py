@@ -21,8 +21,8 @@ from .edges import (
     molecular_function_protein_edges_node,
     pathway_pathway_edges_node,
     pathway_protein_edges_node,
-    phenotype_protein_edges_node,
     phenotype_phenotype_edges_node,
+    phenotype_protein_edges_node,
 )
 from .export_graph import export_graph_node
 from .nodes import (
