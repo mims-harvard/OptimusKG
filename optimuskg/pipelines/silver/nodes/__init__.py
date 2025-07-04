@@ -12,6 +12,7 @@ from .disease_disease_interactions import disease_disease_interactions_node
 from .disease_phenotype import disease_phenotype_node
 from .disgenet_disease_protein import disgenet_disease_protein_node
 from .disgenet_effect_protein import disgenet_effect_protein_node
+from .drug_phenotype import drug_phenotype_node
 from .drugbank import (
     drugbank_drug_drug_interactions_node,
     drugbank_drug_protein_interactions_node,
@@ -98,4 +99,5 @@ __all__ = [
     "molecular_function_molecular_function_interactions_node",
     "phenotype_phenotype_node",
     "anatomy_anatomy_node",
+    "drug_phenotype_node",
 ]
