@@ -1,5 +1,6 @@
 import json
 import logging
+from collections import defaultdict
 from pathlib import Path
 
 from pydantic import BaseModel, Field, model_serializer
@@ -13,6 +14,14 @@ class LabelMetricsEntry(BaseModel):
     type: str
     count: int
     percentage: float
+    avg_num_properties: float | None = Field(
+        default=None,
+        description="Average number of property keys for elements of this type.",
+    )
+    std_dev_num_properties: float | None = Field(
+        default=None,
+        description="Standard deviation of number of property keys for elements of this type.",
+    )
 
 
 class EdgeLabelMetricsEntry(LabelMetricsEntry): ...
@@ -74,6 +83,9 @@ class Metrics(BaseModel):
     total_elements: int = Field(
         description="Total number of elements (nodes + edges) in the file."
     )
+    total_properties: int = Field(
+        description="Total number of property keys across all nodes and edges in the file."
+    )
     num_nodes: int = Field(description="Number of nodes in the file.")
     num_edges: int = Field(description="Number of edges in the file.")
     processed_lines: int = Field(
@@ -100,17 +112,30 @@ def _count_element_labels(labels_count: dict[str, int], element: Node | Edge) ->
 def _get_edge_label_metrics(
     element_label_type: dict[str, int],
     num_elements: int,
+    property_counts_by_label: dict[str, list[int]],
 ) -> list[EdgeLabelMetricsEntry]:
     """Returns a list of EdgeLabelMetricsEntry objects sorted by label."""
     element_label_stats_list: list[EdgeLabelMetricsEntry] = []
     for labels, count in sorted(element_label_type.items()):
         percentage = (count / num_elements) * 100 if num_elements > 0 else 0
 
+        avg_props, std_dev_props = None, None
+        if property_counts_by_label:
+            props = property_counts_by_label.get(labels, [])
+            if props:
+                mean_props = sum(props) / len(props)
+                variance_props = sum((x - mean_props) ** 2 for x in props) / len(props)
+                std_dev = variance_props**0.5
+                avg_props = round(mean_props, 5)
+                std_dev_props = round(std_dev, 5)
+
         element_label_stats_list.append(
             EdgeLabelMetricsEntry(
                 type=labels,
                 count=count,
                 percentage=round(percentage, 5),
+                avg_num_properties=avg_props,
+                std_dev_num_properties=std_dev_props,
             )
         )
     return element_label_stats_list
@@ -120,12 +145,14 @@ def _get_node_label_metrics(
     element_label_type: dict[str, int],
     num_elements: int,
     degrees_by_label: dict[str, list[int]],
+    property_counts_by_label: dict[str, list[int]],
 ) -> list[NodeLabelMetricsEntry]:
     """Returns a list of NodeLabelMetricsEntry objects sorted by label."""
     element_label_stats_list: list[NodeLabelMetricsEntry] = []
     for labels, count in sorted(element_label_type.items()):
         percentage = (count / num_elements) * 100 if num_elements > 0 else 0
 
+        # Degree statistics
         avg_degree, std_dev_degree = None, None
         if degrees_by_label:
             degrees = degrees_by_label.get(labels, [])
@@ -136,6 +163,17 @@ def _get_node_label_metrics(
                 avg_degree = round(mean, 5)
                 std_dev_degree = round(std_dev, 5)
 
+        # Property count statistics
+        avg_props, std_dev_props = None, None
+        if property_counts_by_label:
+            props = property_counts_by_label.get(labels, [])
+            if props:
+                mean_props = sum(props) / len(props)
+                variance_props = sum((x - mean_props) ** 2 for x in props) / len(props)
+                std_dev = variance_props**0.5
+                avg_props = round(mean_props, 5)
+                std_dev_props = round(std_dev, 5)
+
         element_label_stats_list.append(
             NodeLabelMetricsEntry(
                 type=labels,
@@ -143,6 +181,8 @@ def _get_node_label_metrics(
                 percentage=round(percentage, 5),
                 avg_degree=avg_degree,
                 std_dev_degree=std_dev_degree,
+                avg_num_properties=avg_props,
+                std_dev_num_properties=std_dev_props,
             )
         )
     return element_label_stats_list
@@ -154,6 +194,7 @@ def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915
     """
     num_nodes = 0
     num_edges = 0
+    total_properties = 0
     all_edges: list[Edge] = []
     all_node_ids: set[str] = set()  # Collect unique node IDs
     malformed_lines = 0
@@ -161,6 +202,8 @@ def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915
     node_label_type: dict[str, int] = {}
     edge_label_type: dict[str, int] = {}
     node_id_to_label: dict[str, str] = {}
+    node_properties_counts_by_label: dict[str, list[int]] = defaultdict(list)
+    edge_properties_counts_by_label: dict[str, list[int]] = defaultdict(list)
 
     try:
         with open(in_path, encoding="utf-8") as infile:
@@ -176,10 +219,20 @@ def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915
                         all_node_ids.add(node.id)
                         _count_element_labels(node_label_type, node)
                         node_id_to_label[node.id] = _join_labels(node.labels)
+                        num_props = len(node.properties.keys())
+                        total_properties += num_props
+                        node_properties_counts_by_label[
+                            _join_labels(node.labels)
+                        ].append(num_props)
                     elif object_type == "edge":
                         edge = Edge(**data)
                         num_edges += 1
                         _count_element_labels(edge_label_type, edge)
+                        num_props = len(edge.properties.keys())
+                        total_properties += num_props
+                        edge_properties_counts_by_label[
+                            _join_labels(edge.labels)
+                        ].append(num_props)
                         all_edges.append(edge)
                     else:
                         logger.warning(
@@ -210,8 +263,6 @@ def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915
         f"Finished processing {in_path}. Total lines: {processed_lines}. Nodes: {num_nodes}, Edges: {num_edges}. Malformed/Skipped: {malformed_lines}."
     )
 
-    from collections import defaultdict
-
     node_degrees: dict[str, int] = defaultdict(int)
     for edge in all_edges:
         node_degrees[edge.from_node] += 1
@@ -227,18 +278,24 @@ def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915
 
     return Metrics(
         total_elements=num_nodes + num_edges,
+        total_properties=total_properties,
         num_nodes=num_nodes,
         num_edges=num_edges,
         processed_lines=processed_lines,
         malformed_lines=malformed_lines,
         node_metrics=NodeMetrics(
             label_type=_get_node_label_metrics(
-                node_label_type, num_nodes, degrees_by_label
+                node_label_type,
+                num_nodes,
+                degrees_by_label,
+                node_properties_counts_by_label,
             )
         ),
         edge_metrics=EdgeMetrics(
             topology_metrics=edge_topology_metrics,
-            label_type=_get_edge_label_metrics(edge_label_type, num_edges),
+            label_type=_get_edge_label_metrics(
+                edge_label_type, num_edges, edge_properties_counts_by_label
+            ),
         ),
     )
 

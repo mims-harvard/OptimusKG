@@ -53,6 +53,9 @@ def create_pipeline(**kwargs):
             "landing.opentargets.diseases",
             "landing.umls.mrconso",
             "landing.disgenet.curated_gene_disease_associations",
+            "landing.onsides.high_confidence",
+            "landing.onsides.vocab_rxnorm_ingredient",
+            "landing.onsides.vocab_meddra_adverse_effect",
             # bronze
             "bronze.drugbank.vocabulary",
         },

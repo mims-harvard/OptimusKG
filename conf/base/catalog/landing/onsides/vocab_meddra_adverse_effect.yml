@@ -1,0 +1,19 @@
+landing.onsides.vocab_meddra_adverse_effect:
+  type: optimuskg.datasets.ZipDataset
+  zipped_filename: "csv/vocab_meddra_adverse_effect.csv"
+  filepath: "data/landing/onsides/onsides.zip" # NOTE: polars can handle zip files
+  dataset: 
+    type: polars.CSVDataset
+    load_args:
+      infer_schema: false
+      schema:
+        "meddra_id": "${pl:String}"
+        "meddra_name": "${pl:String}"
+        "meddra_term_type": "${pl:String}"
+  metadata:
+    checksum: "a3a0cd6ffa71c4069f02f2de967aa67a"
+    origin:
+      provider: http
+      url: "https://github.com/tatonetti-lab/onsides/releases/download/v3.1.0/onsides-v3.1.0.zip"
+    kedro-viz:
+      layer: landing

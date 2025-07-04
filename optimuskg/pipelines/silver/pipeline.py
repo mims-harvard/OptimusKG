@@ -57,6 +57,7 @@ def create_pipeline(**kwargs):
             "bronze.ontology.phenotypes",
             "bronze.ontology.phenotypes_xrefs",
             "bronze.ontology.phenotypes_parents",
+            "bronze.onsides.high_confidence",
             # Silver
             "silver.umls.umls_mondo",
         },
