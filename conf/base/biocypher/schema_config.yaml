@@ -188,6 +188,15 @@ drug disease:
     relation_type: str
     undirected: str
 
+drug phenotype:
+  is_a: related to
+  represented_as: edge
+  input_label: drug_phenotype
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
+
 biological process protein:
   is_a: regulates # holds between a gene or gene product and a biological process (https://biolink.github.io/biolink-model/regulates/)
   represented_as: edge
@@ -291,6 +300,15 @@ disease phenotype:
   is_a: related to
   represented_as: edge
   input_label: disease_phenotype
+  inherit_properties: false
+  properties:
+    relation_type: str
+    undirected: str
+
+phenotype phenotype:
+  is_a: has_part
+  represented_as: edge
+  input_label: phenotype_phenotype
   inherit_properties: false
   properties:
     relation_type: str

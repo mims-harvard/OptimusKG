@@ -7,6 +7,7 @@ def run(
     drug_drug: pl.DataFrame,
     drug_protein: pl.DataFrame,
     drug_disease: pl.DataFrame,
+    drug_phenotype: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
         pl.concat(
@@ -47,6 +48,12 @@ def run(
                     pl.col("x_name").alias("name"),
                     pl.col("x_source").alias("source"),
                 ),
+                drug_phenotype.select(
+                    pl.col("x_id").alias("id"),
+                    pl.col("x_type").alias("type"),
+                    pl.col("x_name").alias("name"),
+                    pl.col("x_source").alias("source"),
+                ),
             ],
             how="vertical",
         )
@@ -62,6 +69,7 @@ drug_node = node(
         "drug_drug": "silver.drugbank.drug_drug",
         "drug_protein": "silver.drugbank.drug_protein",
         "drug_disease": "silver.drugcentral.drug_disease",
+        "drug_phenotype": "silver.onsides.drug_phenotype",
     },
     outputs="nodes.drug",
     name="drug",

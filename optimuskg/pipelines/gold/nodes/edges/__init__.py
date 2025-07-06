@@ -13,6 +13,7 @@ from .disease_phenotype import disease_phenotype_edges_node
 from .disease_protein import disease_protein_edges_node
 from .drug_disease import drug_disease_edges_node
 from .drug_drug import drug_drug_edges_node
+from .drug_phenotype import drug_phenotype_edges_node
 from .drug_protein import drug_protein_edges_node
 from .exposure_biological_process import exposure_biological_process_edges_node
 from .exposure_cellular_component import exposure_cellular_component_edges_node
@@ -26,6 +27,7 @@ from .molecular_function_molecular_function import (
 from .molecular_function_protein import molecular_function_protein_edges_node
 from .pathway_pathway import pathway_pathway_edges_node
 from .pathway_protein import pathway_protein_edges_node
+from .phenotype_phenotype import phenotype_phenotype_edges_node
 from .phenotype_protein import phenotype_protein_edges_node
 
 __all__ = [
@@ -52,5 +54,7 @@ __all__ = [
     "exposure_biological_process_edges_node",
     "exposure_molecular_function_edges_node",
     "exposure_cellular_component_edges_node",
+    "phenotype_phenotype_edges_node",
     "anatomy_anatomy_edges_node",
+    "drug_phenotype_edges_node",
 ]

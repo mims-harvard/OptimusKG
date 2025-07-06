@@ -12,6 +12,7 @@ from .disease_disease_interactions import disease_disease_interactions_node
 from .disease_phenotype import disease_phenotype_node
 from .disgenet_disease_protein import disgenet_disease_protein_node
 from .disgenet_effect_protein import disgenet_effect_protein_node
+from .drug_phenotype import drug_phenotype_node
 from .drugbank import (
     drugbank_drug_drug_interactions_node,
     drugbank_drug_protein_interactions_node,
@@ -47,6 +48,7 @@ from .opentargets import (
     sysbio_node,
     uniprot_literature_node,
 )
+from .phenotype_phenotype import phenotype_phenotype_node
 from .reactome import (
     pathway_pathway_interactions_node,
     pathway_protein_interactions_node,
@@ -95,5 +97,7 @@ __all__ = [
     "cellular_component_cellular_component_interactions_node",
     "biological_process_biological_process_interactions_node",
     "molecular_function_molecular_function_interactions_node",
+    "phenotype_phenotype_node",
     "anatomy_anatomy_node",
+    "drug_phenotype_node",
 ]

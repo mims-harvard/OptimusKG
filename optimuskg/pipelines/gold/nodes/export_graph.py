@@ -136,7 +136,9 @@ def run(  # noqa: PLR0913
     cellular_component_cellular_component: pl.DataFrame,
     biological_process_biological_process: pl.DataFrame,
     molecular_function_molecular_function: pl.DataFrame,
+    phenotype_phenotype: pl.DataFrame,
     anatomy_anatomy: pl.DataFrame,
+    drug_phenotype: pl.DataFrame,
     # Nodes
     gene: pl.DataFrame,
     anatomy: pl.DataFrame,
@@ -184,7 +186,9 @@ def run(  # noqa: PLR0913
         cellular_component_cellular_component,
         biological_process_biological_process,
         molecular_function_molecular_function,
+        phenotype_phenotype,
         anatomy_anatomy,
+        drug_phenotype,
     ]
 
     _export_to_biocypher(edges, nodes)
@@ -219,7 +223,9 @@ export_graph_node = node(
         "cellular_component_cellular_component": "gold.edges.cellular_component_cellular_component",
         "biological_process_biological_process": "gold.edges.biological_process_biological_process",
         "molecular_function_molecular_function": "gold.edges.molecular_function_molecular_function",
+        "phenotype_phenotype": "gold.edges.phenotype_phenotype",
         "anatomy_anatomy": "gold.edges.anatomy_anatomy",
+        "drug_phenotype": "gold.edges.drug_phenotype",
         # Nodes
         "gene": "gold.nodes.gene",
         "anatomy": "gold.nodes.anatomy",

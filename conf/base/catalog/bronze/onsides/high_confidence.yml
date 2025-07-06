@@ -1,0 +1,16 @@
+bronze.onsides.high_confidence:
+  type: polars.CSVDataset
+  filepath: "data/bronze/onsides/high_confidence.csv"
+  load_args:
+    infer_schema: false
+    schema:
+      "ingredient_id": "${pl:String}"
+      "effect_meddra_id": "${pl:String}"
+      "rxnorm_name": "${pl:String}"
+      "rxnorm_term_type": "${pl:String}"
+      "meddra_name": "${pl:String}"
+      "meddra_term_type": "${pl:String}"
+  metadata:
+    checksum: "a3a0cd6ffa71c4069f02f2de967aa67a"
+    kedro-viz:
+      layer: bronze

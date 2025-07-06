@@ -54,6 +54,10 @@ def create_pipeline(**kwargs):
             "bronze.umls.mrconso",
             "bronze.disgenet.disgenet_diseases",
             "bronze.disgenet.disgenet_phenotypes",
+            "bronze.ontology.phenotypes",
+            "bronze.ontology.phenotypes_xrefs",
+            "bronze.ontology.phenotypes_parents",
+            "bronze.onsides.high_confidence",
             # Silver
             "silver.umls.umls_mondo",
         },
