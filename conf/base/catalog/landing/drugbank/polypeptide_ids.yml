@@ -22,6 +22,7 @@ landing.drugbank.carrier:
   <<: *landing_drugbank_args
   filepath: "data/landing/drugbank/drugbank_all_carrier_polypeptide_ids.csv"
   metadata:
+    private: true
     checksum: "f74557e3b02ad41887acdf687fc5d7ae"
     kedro-viz:
         layer: landing
@@ -30,6 +31,7 @@ landing.drugbank.enzyme:
   <<: *landing_drugbank_args
   filepath: "data/landing/drugbank/drugbank_all_enzyme_polypeptide_ids.csv"
   metadata:
+    private: true
     checksum: "32fbfbc8f12e14a837064377a746c733"
     kedro-viz:
       layer: landing
@@ -38,6 +40,7 @@ landing.drugbank.target:
   <<: *landing_drugbank_args
   filepath: "data/landing/drugbank/drugbank_all_target_polypeptide_ids.csv"
   metadata:
+    private: true
     checksum: "b00c3eb9dfde92015e825931823f2762"
     kedro-viz:
       layer: landing
@@ -46,6 +49,7 @@ landing.drugbank.transporter:
   <<: *landing_drugbank_args
   filepath: "data/landing/drugbank/drugbank_all_transporter_polypeptide_ids.csv"
   metadata:
+    private: true
     checksum: "3981d9efae2b819cd9028bb1221ba58d"
     kedro-viz:
       layer: landing

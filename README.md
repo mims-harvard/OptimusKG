@@ -224,12 +224,12 @@ This command reads the PG-JSONL file from `data/export/optimuskg.pg.jsonl` and s
 
 ## Handling Private Datasets
 
-This project supports marking datasets as private using the `tags: ["private"]` field in `catalog.yml`. By default, private datasets are replaced with empty Polars DataFrames and are not loaded or downloaded.
+This project supports marking datasets as private using the `private: true` in `catalog.yml`. By default, private datasets are replaced with empty Polars DataFrames and are not loaded or downloaded.
 
-To enable loading of private datasets, use the `--private` flag when running Kedro:
+To enable loading of private datasets, use the `--kedro run --params=private=true` flag when running Kedro:
 
 ```sh
-kedro run --private
+kedro run --params=private=true 
 ```
 
 Without this flag, any dataset tagged as `private` will be replaced with an empty dataset at runtime, preventing accidental access or download of private data.

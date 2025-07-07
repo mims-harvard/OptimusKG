@@ -15,6 +15,7 @@ landing.drugbank.vocabulary:
         "Synonyms": "${pl:String}"
         "Standard InChI Key": "${pl:String}"
   metadata:
+    private: true
     checksum: "a3a0cd6ffa71c4069f02f2de967aa67a"
     origin:
       provider: drugbank
