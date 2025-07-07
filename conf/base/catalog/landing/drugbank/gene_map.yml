@@ -10,7 +10,6 @@ landing.drugbank.gene_map:
   metadata:
     checksum: "281090c34eb94f80c4b959dd1cf35be0"
     origin:
-      private: true
       provider: "http"
       url: "https://www.genenames.org/cgi-bin/download/custom?col=md_eg_id&col=md_prot_id&status=Approved&hgnc_dbtag=on&order_by=gd_app_sym_sort&format=text&submit=submit"
     kedro-viz:

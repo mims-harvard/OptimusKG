@@ -1,6 +1,9 @@
 import logging
+from typing import Any
 
 from kedro.framework.hooks import hook_impl
+from kedro.io import DataCatalog
+from kedro.pipeline import Pipeline
 from pydantic import ValidationError
 
 from optimuskg.hooks.origin.providers import BaseProvider, OriginProviderAdapter
@@ -15,6 +18,18 @@ logger = logging.getLogger(__name__)
 
 
 class OriginHooks:
+    def __init__(self):
+        self._run_with_private_datasets = False
+
+    @hook_impl
+    def before_pipeline_run(
+        self, run_params: dict[str, Any], pipeline: Pipeline, catalog: DataCatalog
+    ) -> None:
+        """Hook to access runtime parameters passed via --params"""
+        self._run_with_private_datasets = run_params.get("extra_params", {}).get(
+            "private", False
+        )
+
     @hook_impl
     def before_dataset_loaded(self, dataset_name: str) -> None:
         if dataset_name.startswith("landing."):
