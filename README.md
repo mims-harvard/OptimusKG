@@ -221,16 +221,3 @@ $ uv run cli write-metrics
 ```
 
 This command reads the PG-JSONL file from `data/export/optimuskg.pg.jsonl` and saves the metrics to `data/export/metrics/metrics.json`. You can specify different input and output paths using the `--in` and `--out` options.
-
-## Handling Private Datasets
-
-This project supports marking datasets as private using the `private: true` in `catalog.yml`. By default, private datasets are replaced with empty Polars DataFrames and are not loaded or downloaded.
-
-To enable loading of private datasets, use the `--kedro run --params=private=true` flag when running Kedro:
-
-```sh
-kedro run --params=private=true 
-```
-
-Without this flag, any dataset tagged as `private` will be replaced with an empty dataset at runtime, preventing accidental access or download of private data.
-
