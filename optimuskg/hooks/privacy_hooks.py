@@ -17,7 +17,7 @@ class EmptyPolarsDataset(AbstractDataset):
         return {}
 
 
-class PrivacyHook:
+class PrivacyHooks:
     def __init__(self):
         pass
 
