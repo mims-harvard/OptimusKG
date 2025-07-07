@@ -221,3 +221,18 @@ $ uv run cli write-metrics
 ```
 
 This command reads the PG-JSONL file from `data/export/optimuskg.pg.jsonl` and saves the metrics to `data/export/metrics/metrics.json`. You can specify different input and output paths using the `--in` and `--out` options.
+
+### Private Datasets
+
+The following datasets are not publicly available:
+- `landing.umls.mrconso`
+- `landing.disgenet.curated_gene_disease_associations`
+- `landing.drugbank.full_database`
+- `landing.drugbank.carrier`
+- `landing.drugbank.enzyme`
+- `landing.drugbank.target`
+- `landing.drugbank.transporter`
+
+If you have access to these files, place them in the appropriate subdirectories under `data/landing/`. The pipeline will automatically use them if present.
+
+If you do not have access, the Origin Hook will generate empty placeholder datasets in their place. This allows pipeline nodes that depend on both public and private data to run, even if the private data is missing. As a result, you can still execute the pipeline and work with the public portions of the data without interruption.

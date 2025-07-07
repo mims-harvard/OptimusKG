@@ -36,13 +36,15 @@ class OriginHooks:
 
         origin_dict = getattr(ds, "metadata", {}).get("origin")
         if not origin_dict:
-            if os.path.exists(ds_path):
-                return
-
             logger.warning(
-                f"No {self._origin_display_str()} metadata found for dataset {get_dataset_display_name(ds_name)}. Pipeline will use a dummy database.",
+                f"{get_dataset_display_name(ds_name)} is missing Origin metadata. "
+                "If you added this dataset manually, it will be used as-is. "
+                "Otherwise, an empty dataset will be used. This is because the dataset is probably private.",
                 extra={"markup": True},
             )
+
+            if os.path.exists(ds_path):
+                return
 
             ds_type = type(ds).__name__
             ds_path.parent.mkdir(parents=True, exist_ok=True)
