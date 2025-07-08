@@ -39,6 +39,7 @@ jobs:
       - name: Upload build files to Vercel Blob
         run: |
           for file in $(find build -type f); do
+            echo "$VERCEL_BLOB_READ_WRITE_TOKEN"
             vercel blob put "$file" --pathname "$file" --rw-token "$VERCEL_BLOB_READ_WRITE_TOKEN" --force --token "$VERCEL_ACCESS_TOKEN"
           done
 
