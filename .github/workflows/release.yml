@@ -34,7 +34,7 @@ jobs:
         with:
           source: "build/"
           destination: "build/" # NOTE: we could use something like "${{ github.sha }}/build/" but we want to re-write the folder in the blob storage.
-          read-write-token: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
+          read-write-token: ${{ secrets.VERCEL_BLOB_READ_WRITE_TOKEN }}
 
       - name: Get package version
         id: package_version
