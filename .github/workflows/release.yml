@@ -8,6 +8,8 @@ env:
   PYTHON_VERSION: 3.12
   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  VERCEL_BLOB_READ_WRITE_TOKEN: ${{ secrets.VERCEL_BLOB_READ_WRITE_TOKEN }}
+  VERCEL_ACCESS_TOKEN: ${{ secrets.VERCEL_ACCESS_TOKEN }}
 
 jobs:
   release:
@@ -40,7 +42,7 @@ jobs:
             # Upload each file to Vercel Blob, preserving the path.
             # e.g., build/index.html will be uploaded to build/index.html in the blob store.
             # The --force flag overwrites files if they already exist.
-            vercel blob put "$file" --pathname "$file" --force --token ${{ secrets.VERCEL_ACCESS_TOKEN }} --rw-token ${{ secrets.VERCEL_BLOB_READ_WRITE_TOKEN }}
+            vercel blob put "$file" --pathname "$file" --force
           done
 
       - name: Get package version
