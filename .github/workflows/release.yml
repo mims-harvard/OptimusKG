@@ -29,12 +29,19 @@ jobs:
       - name: Install the project dependencies
         run: uv run kedro viz build
 
-      - name: Upload file to Vercel Blob
-        uses: dartilesm/vercel-blob-action@v2
-        with:
-          source: "build/"
-          destination: "build/" # NOTE: we could use something like "${{ github.sha }}/build/" but we want to re-write the folder in the blob storage.
-          read-write-token: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Upload to Vercel Blob
+        run: |
+          find build -type f | while read -r file; do
+            # Upload each file to Vercel Blob, preserving the path.
+            # e.g., build/index.html will be uploaded to build/index.html in the blob store.
+            # The --force flag overwrites files if they already exist.
+            vercel blob put "$file" --pathname "$file" --force
+          done
+        env:
+          VERCEL_BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
 
       - name: Get package version
         id: package_version
