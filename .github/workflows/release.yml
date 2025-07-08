@@ -38,10 +38,11 @@ jobs:
 
       - name: Upload to Vercel Blob
         run: |
+          export VERCEL_BLOB_READ_WRITE_TOKEN="${{ env.VERCEL_BLOB_READ_WRITE_TOKEN }}"
           find build -type f | while read -r file; do
             # Upload each file to Vercel Blob, preserving the path.
             # e.g., build/index.html will be uploaded to build/index.html in the blob store.
-            VERCEL_BLOB_READ_WRITE_TOKEN="${{ env.VERCEL_BLOB_READ_WRITE_TOKEN }}" vercel blob put "$file" --pathname "$file" --token ${{ env.VERCEL_ACCESS_TOKEN }} --force
+            vercel blob put "$file" --pathname "$file" --token ${{ env.VERCEL_ACCESS_TOKEN }} --force
           done
 
       - name: Get package version
