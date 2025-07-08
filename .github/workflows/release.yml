@@ -38,9 +38,8 @@ jobs:
 
       - name: Upload build files to Vercel Blob
         run: |
-          export VERCEL_BLOB_READ_WRITE_TOKEN="${{ secrets.VERCEL_BLOB_READ_WRITE_TOKEN }}"
-          find build -type f | while read -r file; do
-            vercel blob put "$file" --pathname "$file" --rw-token "$VERCEL_BLOB_READ_WRITE_TOKEN" --force --token ${{ secrets.VERCEL_ACCESS_TOKEN }}
+          for file in $(find build -type f); do
+            vercel blob put "$file" --pathname "$file" --rw-token "$VERCEL_BLOB_READ_WRITE_TOKEN" --force --token "$VERCEL_ACCESS_TOKEN"
           done
 
       - name: Get package version
