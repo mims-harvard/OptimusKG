@@ -38,10 +38,8 @@ jobs:
             # Upload each file to Vercel Blob, preserving the path.
             # e.g., build/index.html will be uploaded to build/index.html in the blob store.
             # The --force flag overwrites files if they already exist.
-            vercel blob put "$file" --pathname "$file" --force
+            vercel blob put "$file" --pathname "$file" --force --token=${{ secrets.BLOB_READ_WRITE_TOKEN }}
           done
-        env:
-          VERCEL_BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
 
       - name: Get package version
         id: package_version
