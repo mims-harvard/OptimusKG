@@ -35,12 +35,14 @@ jobs:
         run: npm install --global vercel@latest
 
       - name: Upload to Vercel Blob
+        env:
+          VERCEL_BLOB_READ_WRITE_TOKEN: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
         run: |
           find build -type f | while read -r file; do
             # Upload each file to Vercel Blob, preserving the path.
             # e.g., build/index.html will be uploaded to build/index.html in the blob store.
             # The --force flag overwrites files if they already exist.
-            vercel blob put "$file" --pathname "$file" --force --token=${{ secrets.VERCEL_ACCESS_TOKEN }} --rw-token=${{ secrets.BLOB_READ_WRITE_TOKEN }}
+            vercel blob put "$file" --pathname "$file" --force --token=${{ secrets.VERCEL_ACCESS_TOKEN }}
           done
 
       - name: Get package version
