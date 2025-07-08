@@ -6,10 +6,6 @@ on:
 
 env:
   PYTHON_VERSION: 3.12
-  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  VERCEL_BLOB_READ_WRITE_TOKEN: ${{ secrets.VERCEL_BLOB_READ_WRITE_TOKEN }}
-  VERCEL_ACCESS_TOKEN: ${{ secrets.VERCEL_ACCESS_TOKEN }}
 
 jobs:
   release:
@@ -33,15 +29,12 @@ jobs:
       - name: Install the project dependencies
         run: uv run kedro viz build
 
-      - name: Install Vercel CLI
-        run: npm install --global vercel@44.2.13
-
-      - name: Upload build files to Vercel Blob
-        run: |
-          for file in $(find build -type f); do
-            echo "$VERCEL_BLOB_READ_WRITE_TOKEN"
-            vercel blob put "$file" --pathname "$file" --rw-token "$VERCEL_BLOB_READ_WRITE_TOKEN" --force --token "$VERCEL_ACCESS_TOKEN"
-          done
+      - name: Upload file to Vercel Blob
+        uses: dartilesm/vercel-blob-action@v2
+        with:
+          source: "build/"
+          destination: "build/" # NOTE: we could use something like "${{ github.sha }}/build/" but we want to re-write the folder in the blob storage.
+          read-write-token: ${{ secrets.BLOB_READ_WRITE_TOKEN }}
 
       - name: Get package version
         id: package_version
