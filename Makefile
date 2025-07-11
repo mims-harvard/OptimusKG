@@ -82,52 +82,7 @@ neo4j: ##@ Run the Neo4j container
 
 .PHONY: neo4j-import-data
 neo4j-import-data: ##@ Import data into Neo4j    
-	@docker run --interactive --tty --rm --publish=7474:7474 --publish=7687:7687 \
-	    --volume=./data/neo4j/data:/data \
-		--volume=./data/neo4j/import:/import \
-		--volume=./data/export:/export \
-		neo4j:5.26.2-community-bullseye \
-		neo4j-admin database import full neo4j \
-		--verbose \
-		--delimiter=";" \
-		--array-delimiter="|" \
-		--quote='"' \
-		--overwrite-destination=true \
-		--nodes="/import/Disease-header.csv,/import/Disease-part.*" \
-		--nodes="/import/Phenotype-header.csv,/import/Phenotype-part.*" \
-		--nodes="/import/Drug-header.csv,/import/Drug-part.*" \
-        --nodes="/import/Gene-header.csv,/import/Gene-part.*" \
-        --nodes="/import/Anatomy-header.csv,/import/Anatomy-part.*" \
-		--nodes="/import/Exposure-header.csv,/import/Exposure-part.*" \
-		--nodes="/import/BiologicalProcess-header.csv,/import/BiologicalProcess-part.*" \
-		--nodes="/import/CellularComponent-header.csv,/import/CellularComponent-part.*" \
-		--nodes="/import/MolecularFunction-header.csv,/import/MolecularFunction-part.*" \
-		--nodes="/import/Pathway-header.csv,/import/Pathway-part.*" \
-        --relationships="/import/AnatomyProtein-header.csv,/import/AnatomyProtein-part.*" \
-        --relationships="/import/ExposureExposure-header.csv,/import/ExposureExposure-part.*" \
-        --relationships="/import/ExposureProtein-header.csv,/import/ExposureProtein-part.*" \
-		--relationships="/import/DiseaseProtein-header.csv,/import/DiseaseProtein-part.*" \
-		--relationships="/import/DiseaseDisease-header.csv,/import/DiseaseDisease-part.*" \
-		--relationships="/import/ExposureDisease-header.csv,/import/ExposureDisease-part.*" \
-		--relationships="/import/DrugProtein-header.csv,/import/DrugProtein-part.*" \
-		--relationships="/import/DrugDrug-header.csv,/import/DrugDrug-part.*" \
-		--relationships="/import/DrugDisease-header.csv,/import/DrugDisease-part.*" \
-		--relationships="/import/DrugPhenotype-header.csv,/import/DrugPhenotype-part.*" \
-		--relationships="/import/PhenotypePhenotype-header.csv,/import/PhenotypePhenotype-part.*" \
-		--relationships="/import/PhenotypeProtein-header.csv,/import/PhenotypeProtein-part.*" \
-		--relationships="/import/BiologicalProcessProtein-header.csv,/import/BiologicalProcessProtein-part.*" \
-		--relationships="/import/CellularComponentProtein-header.csv,/import/CellularComponentProtein-part.*" \
-		--relationships="/import/MolecularFunctionProtein-header.csv,/import/MolecularFunctionProtein-part.*" \
-		--relationships="/import/PathwayPathway-header.csv,/import/PathwayPathway-part.*" \
-		--relationships="/import/PathwayProtein-header.csv,/import/PathwayProtein-part.*" \
-		--relationships="/import/ExposureBiologicalProcess-header.csv,/import/ExposureBiologicalProcess-part.*" \
-		--relationships="/import/ExposureMolecularFunction-header.csv,/import/ExposureMolecularFunction-part.*" \
-		--relationships="/import/ExposureCellularComponent-header.csv,/import/ExposureCellularComponent-part.*" \
-		--relationships="/import/MolecularFunctionMolecularFunction-header.csv,/import/MolecularFunctionMolecularFunction-part.*" \
-		--relationships="/import/BiologicalProcessBiologicalProcess-header.csv,/import/BiologicalProcessBiologicalProcess-part.*" \
-		--relationships="/import/CellularComponentCellularComponent-header.csv,/import/CellularComponentCellularComponent-part.*" \
-		--relationships="/import/DiseasePhenotype-header.csv,/import/DiseasePhenotype-part.*" \
-		--relationships="/import/AnatomyAnatomy-header.csv,/import/AnatomyAnatomy-part.*" \
+	@uv run cli neo4j-import
 
 .PHONY: neo4j-export
 neo4j-export: ##@ Export Neo4j database to JSONL format. Set CYPHER_QUERY env var for specific query, otherwise exports all. Example: CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export
