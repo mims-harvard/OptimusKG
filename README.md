@@ -222,3 +222,8 @@ $ uv run cli write-metrics
 
 This command reads the PG-JSONL file from `data/export/optimuskg.pg.jsonl` and saves the metrics to `data/export/metrics/metrics.json`. You can specify different input and output paths using the `--in` and `--out` options.
 
+### Private Datasets
+
+If you have access to private datasets, place them in the appropriate subdirectories under `data/landing/`. The pipeline will automatically use them if present.
+
+If you do not have access, the Origin Hook will generate empty placeholder datasets in their place (see [line 52 in `optimuskg/hooks/origin/origin_hooks.py`](https://github.com/mims-harvard/optimuskg/blob/main/optimuskg/hooks/origin/origin_hooks.py#L52)). This allows pipeline nodes that depend on both public and private data to run, even if the private data is missing. As a result, you can still execute the pipeline and work with the public portions of the data without interruption.
