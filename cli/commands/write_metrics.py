@@ -34,6 +34,12 @@ class NodeLabelMetricsEntry(LabelMetricsEntry):
     std_dev_degree: float | None = Field(
         default=None, description="Standard deviation of degree for nodes of this type."
     )
+    ontologies: list[str] | None = Field(
+        default=None, description="List of unique ontologies for nodes of this type."
+    )
+    sources: list[str] | None = Field(
+        default=None, description="List of unique sources for nodes of this type."
+    )
 
 
 class EdgeTopologyMetrics(BaseModel):
@@ -141,11 +147,13 @@ def _get_edge_label_metrics(
     return element_label_stats_list
 
 
-def _get_node_label_metrics(
+def _get_node_label_metrics(  # noqa: PLR0913
     element_label_type: dict[str, int],
     num_elements: int,
     degrees_by_label: dict[str, list[int]],
     property_counts_by_label: dict[str, list[int]],
+    ontologies_by_node_label: dict[str, set[str]],
+    sources_by_node_label: dict[str, set[str]],
 ) -> list[NodeLabelMetricsEntry]:
     """Returns a list of NodeLabelMetricsEntry objects sorted by label."""
     element_label_stats_list: list[NodeLabelMetricsEntry] = []
@@ -174,6 +182,16 @@ def _get_node_label_metrics(
                 avg_props = round(mean_props, 5)
                 std_dev_props = round(std_dev, 5)
 
+        ontologies = None
+        ontologies = ontologies_by_node_label.get(labels)
+        if ontologies:
+            ontologies = sorted(list(ontologies))
+
+        sources = None
+        node_sources = sources_by_node_label.get(labels)
+        if node_sources:
+            sources = sorted(list(node_sources))
+
         element_label_stats_list.append(
             NodeLabelMetricsEntry(
                 type=labels,
@@ -183,12 +201,14 @@ def _get_node_label_metrics(
                 std_dev_degree=std_dev_degree,
                 avg_num_properties=avg_props,
                 std_dev_num_properties=std_dev_props,
+                ontologies=ontologies,
+                sources=sources,
             )
         )
     return element_label_stats_list
 
 
-def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915
+def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915, PLR0912
     """
     Reads the input file, parses JSON objects, and categorizes them.
     """
@@ -202,6 +222,8 @@ def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915
     node_label_type: dict[str, int] = {}
     edge_label_type: dict[str, int] = {}
     node_id_to_label: dict[str, str] = {}
+    ontologies_by_node_label: dict[str, set[str]] = defaultdict(set)
+    sources_by_node_label: dict[str, set[str]] = defaultdict(set)
     node_properties_counts_by_label: dict[str, list[int]] = defaultdict(list)
     edge_properties_counts_by_label: dict[str, list[int]] = defaultdict(list)
 
@@ -218,7 +240,23 @@ def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915
                         num_nodes += 1
                         all_node_ids.add(node.id)
                         _count_element_labels(node_label_type, node)
-                        node_id_to_label[node.id] = _join_labels(node.labels)
+                        label_key = _join_labels(node.labels)
+                        node_id_to_label[node.id] = label_key
+
+                        ontology_prefix = ""
+                        if ":" in node.id:
+                            ontology_prefix = node.id.split(":", 1)[0]
+                        elif "_" in node.id:
+                            ontology_prefix = node.id.split("_", 1)[0]
+
+                        if ontology_prefix:
+                            ontologies_by_node_label[label_key].add(ontology_prefix)
+
+                        node_sources = node.properties.get("source")
+                        if node_sources:
+                            for source in node_sources:
+                                sources_by_node_label[label_key].add(str(source))
+
                         num_props = len(node.properties.keys())
                         total_properties += num_props
                         node_properties_counts_by_label[
@@ -289,6 +327,8 @@ def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915
                 num_nodes,
                 degrees_by_label,
                 node_properties_counts_by_label,
+                ontologies_by_node_label,
+                sources_by_node_label,
             )
         ),
         edge_metrics=EdgeMetrics(
