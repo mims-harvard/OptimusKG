@@ -6,7 +6,7 @@ def run(
     hpo_mappings: pl.DataFrame,
     mondo_xrefs: pl.DataFrame,
     mondo_terms: pl.DataFrame,
-    phenotypes: pl.DataFrame,
+    hpo_terms: pl.DataFrame,
 ) -> pl.DataFrame:
     disease_phenotype = (
         hpo_mappings.filter(
@@ -32,7 +32,7 @@ def run(
             how="left",
         )
         .join(
-            phenotypes,
+            hpo_terms,
             left_on="hpo_id",
             right_on="id",
             how="left",
@@ -82,7 +82,7 @@ disease_phenotype_node = node(
         "hpo_mappings": "bronze.ontology.hpo_mappings",
         "mondo_xrefs": "bronze.ontology.mondo_xrefs",
         "mondo_terms": "bronze.ontology.mondo_terms",
-        "phenotypes": "bronze.ontology.phenotypes",
+        "hpo_terms": "bronze.ontology.hpo_terms",
     },
     outputs="ontology.disease_phenotype",
     name="disease_phenotype",

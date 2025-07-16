@@ -4,14 +4,14 @@ from kedro.pipeline import node
 
 def run(
     disgenet_phenotypes: pl.DataFrame,
-    phenotypes: pl.DataFrame,
-    phenotypes_xrefs: pl.DataFrame,
+    hpo_terms: pl.DataFrame,
+    hpo_xrefs: pl.DataFrame,
 ) -> pl.DataFrame:
     df_prot_phe = disgenet_phenotypes.join(
-        phenotypes_xrefs, left_on="disease_id", right_on="ontology_id", how="inner"
+        hpo_xrefs, left_on="disease_id", right_on="ontology_id", how="inner"
     )
     df_prot_phe = df_prot_phe.join(
-        phenotypes, left_on="hp_id", right_on="id", how="left"
+        hpo_terms, left_on="hp_id", right_on="id", how="left"
     )
 
     df_prot_phe = df_prot_phe.rename(
@@ -51,8 +51,8 @@ disgenet_effect_protein_node = node(
     run,
     inputs={
         "disgenet_phenotypes": "bronze.disgenet.disgenet_phenotypes",
-        "phenotypes": "bronze.ontology.phenotypes",
-        "phenotypes_xrefs": "bronze.ontology.phenotypes_xrefs",
+        "hpo_terms": "bronze.ontology.hpo_terms",
+        "hpo_xrefs": "bronze.ontology.hpo_xrefs",
     },
     outputs="disgenet.effect_protein",
     name="disgenet_effect_protein",

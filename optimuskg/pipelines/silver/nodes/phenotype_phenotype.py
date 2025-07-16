@@ -3,17 +3,17 @@ from kedro.pipeline import node
 
 
 def run(
-    phenotypes: pl.DataFrame,
-    phenotypes_parents: pl.DataFrame,
+    hpo_terms: pl.DataFrame,
+    hpo_relations: pl.DataFrame,
 ) -> pl.DataFrame:
-    df_phenotype_phenotype = phenotypes_parents.join(
-        phenotypes, left_on="parent", right_on="id", how="left"
+    df_phenotype_phenotype = hpo_relations.join(
+        hpo_terms, left_on="parent", right_on="id", how="left"
     )
 
     df_phenotype_phenotype = df_phenotype_phenotype.rename({"name": "parent_name"})
 
     df_phenotype_phenotype = df_phenotype_phenotype.join(
-        phenotypes, left_on="child", right_on="id", how="left"
+        hpo_terms, left_on="child", right_on="id", how="left"
     )
 
     df_phenotype_phenotype = df_phenotype_phenotype.rename({"name": "child_name"})
@@ -59,8 +59,8 @@ def run(
 phenotype_phenotype_node = node(
     run,
     inputs={
-        "phenotypes": "bronze.ontology.phenotypes",
-        "phenotypes_parents": "bronze.ontology.phenotypes_parents",
+        "hpo_terms": "bronze.ontology.hpo_terms",
+        "hpo_relations": "bronze.ontology.hpo_relations",
     },
     outputs="ontology.phenotype_phenotype",
     name="phenotype_phenotype",

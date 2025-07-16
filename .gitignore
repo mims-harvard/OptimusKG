@@ -161,3 +161,10 @@ venv.bak/
 # stub data
 !tests/stub_data/
 tests/stub_data/bronze/**
+
+# notebooks
+!notebooks/quickstart.ipynb
+notebooks/**
+notebooks/**.ipynb
+
+

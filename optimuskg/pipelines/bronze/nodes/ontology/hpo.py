@@ -2,144 +2,131 @@ import logging
 
 import polars as pl
 from kedro.pipeline import node
-from lxml import etree
 
 logger = logging.getLogger(__name__)
 
 
 def run(
-    human_phenotype_ontology: etree._ElementTree,
+    hp: pl.DataFrame,
 ) -> tuple[pl.DataFrame, pl.DataFrame, pl.DataFrame]:
-    """
-    Process Human Phenotype Ontology to extract phenotypes, cross-references, and parent-child relationships.
-
-    Returns:
-        tuple: (phenotypes_df, xrefs_df, parents_df)
-            - phenotypes_df: Contains HP terms with id, name, source
-            - xrefs_df: Contains cross-references with hp_id, ontology, ontology_id
-            - parents_df: Contains parent-child relationships with parent, child
-    """
-    root = human_phenotype_ontology.getroot()
-
-    namespaces = {
-        "owl": "http://www.w3.org/2002/07/owl#",
-        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-        "obo": "http://purl.obolibrary.org/obo/",
-        "oboInOwl": "http://www.geneontology.org/formats/oboInOwl#",
+    predicates = {
+        "description": "http://purl.org/dc/elements/1.1/description",
+        "title": "http://purl.org/dc/elements/1.1/title",
+        "license": "http://purl.org/dc/terms/license",
+        "version": "http://www.w3.org/2002/07/owl#versionInfo",
     }
 
-    phenotypes = []
-    xrefs = []
-    parents = []
-
-    phenotypes_schema = {"id": pl.Utf8, "name": pl.Utf8, "source": pl.Utf8}
-    xrefs_schema = {"hp_id": pl.Utf8, "ontology": pl.Utf8, "ontology_id": pl.Utf8}
-    parents_schema = {"parent": pl.Utf8, "child": pl.Utf8}
-
-    xpath_results: etree._XPathObject = root.xpath("//owl:Class", namespaces=namespaces)
-    if not isinstance(xpath_results, list):
-        logger.error("XPath results are not a list, returning empty DataFrames")
-        return (
-            pl.DataFrame(schema=phenotypes_schema),
-            pl.DataFrame(schema=xrefs_schema),
-            pl.DataFrame(schema=parents_schema),
+    hp_terms = (
+        hp.explode("graphs")
+        .select(
+            pl.col("graphs").struct.field("nodes").alias("nodes"),
+            pl.col("graphs").struct.field("meta").alias("meta"),
         )
-
-    for class_elem in xpath_results:
-        if not isinstance(class_elem, etree._Element):
-            logger.debug(f"Skipping non-element: {class_elem!r}")
-            continue
-
-        about_attr = class_elem.get(
-            "{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about"
+        .explode("nodes")
+        .select(
+            pl.col("nodes")
+            .struct.field("id")
+            .str.replace("http://purl.obolibrary.org/obo/", "")
+            .alias("id"),
+            pl.col("nodes").struct.field("lbl").alias("name"),
+            pl.col("nodes").struct.field("meta").alias("meta"),
+            pl.col("meta").struct.field("basicPropertyValues").alias("meta_bpv"),
         )
-
-        if about_attr and "HP_" in about_attr:
-            hp_id = about_attr.split("/")[-1]
-
-            # Extract name/label
-            label_elem: etree._Element | None = class_elem.find(
-                ".//rdfs:label", namespaces=namespaces
-            )
-            name: str | None = None
-            if label_elem is not None:
-                name = label_elem.text
-
-            if hp_id and name:
-                phenotypes.append(
-                    {
-                        "id": hp_id,
-                        "name": name,
-                        "source": "HPO",
-                    }
+        .filter(pl.col("id").str.contains("HP_"))
+        .with_columns(
+            pl.lit("HPO").alias("source"),
+            pl.col("meta")
+            .struct.field("definition")
+            .struct.field("val")
+            .alias("definition"),
+            pl.col("meta")
+            .struct.field("xrefs")
+            .list.eval(pl.element().struct.field("val"))
+            .list.join("|")
+            .alias("xrefs"),
+            pl.col("meta")
+            .struct.field("synonyms")
+            .list.eval(pl.element().struct.field("val"))
+            .list.join("|")
+            .alias("synonyms"),
+        )
+        .with_columns(
+            [
+                pl.col("meta_bpv")
+                .list.eval(
+                    pl.element()
+                    .filter(pl.element().struct.field("pred") == uri)
+                    .struct.field("val")
                 )
-
-            # Extract cross-references
-            xref_elems = class_elem.findall(
-                ".//oboInOwl:hasDbXref", namespaces=namespaces
-            )
-            for xref_elem in xref_elems:
-                if xref_elem.text:
-                    xref_text = xref_elem.text.strip()
-                    if ":" in xref_text:
-                        # Split on the first colon to separate ontology from ID
-                        ontology, ontology_id = xref_text.split(":", 1)
-                        xrefs.append(
-                            {
-                                "hp_id": hp_id,
-                                "ontology": ontology,
-                                "ontology_id": ontology_id,
-                            }
-                        )
-
-            # Extract parent-child relationships (is_a relationships)
-            subclass_elems = class_elem.findall(
-                ".//rdfs:subClassOf", namespaces=namespaces
-            )
-            for subclass_elem in subclass_elems:
-                # Check if it's a direct resource reference (not a restriction)
-                resource_attr = subclass_elem.get(
-                    "{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource"
-                )
-                if resource_attr and "HP_" in resource_attr:
-                    parent_id = resource_attr.split("/")[-1]
-                    parents.append(
-                        {
-                            "parent": parent_id,
-                            "child": hp_id,
-                        }
-                    )
-
-    # Create DataFrames
-    phenotypes_df = pl.DataFrame(phenotypes, schema=phenotypes_schema)
-    phenotypes_df = phenotypes_df.sort("id")
-
-    xrefs_df = pl.DataFrame(xrefs, schema=xrefs_schema)
-    xrefs_df = xrefs_df.sort(["hp_id", "ontology"])
-
-    parents_df = pl.DataFrame(parents, schema=parents_schema)
-    parents_df = parents_df.sort(["parent", "child"])
-
-    logger.debug(
-        f"Extracted {len(phenotypes_df)} phenotypes, {len(xrefs_df)} cross-references, and {len(parents_df)} parent-child relationships"
-    )
-    logger.debug(
-        f"Cross-references found for {len(xrefs_df.get_column('ontology').unique())} different ontologies"
+                .list.get(0)
+                .alias(f"ontology_{name}")
+                for name, uri in predicates.items()
+            ]
+        )
+        .drop(["meta_bpv", "meta"])
+        .unique()
+        .select(
+            [
+                "id",
+                "name",
+                "source",
+                "definition",
+                "xrefs",
+                "synonyms",
+                "ontology_description",
+                "ontology_title",
+                "ontology_license",
+                "ontology_version",
+            ]
+        )
+        .sort("id")
     )
 
-    return phenotypes_df, xrefs_df, parents_df
+    hp_xrefs = (
+        hp_terms.select(["id", "xrefs"])
+        .filter(pl.col("xrefs").is_not_null())
+        .rename({"id": "hp_id"})
+        .with_columns(pl.col("xrefs").str.split("|"))
+        .explode("xrefs")
+        .with_columns(pl.col("xrefs").str.split_exact(":", 1).alias("split_cols"))
+        .unnest("split_cols")
+        .rename({"field_0": "ontology", "field_1": "ontology_id"})
+        .select(["hp_id", "ontology", "ontology_id"])
+    )
+
+    hp_relations = (
+        hp.explode("graphs")
+        .select(
+            pl.col("graphs").struct.field("edges"),
+        )
+        .explode("edges")
+        .select(
+            pl.col("edges")
+            .struct.field("sub")
+            .str.replace("http://purl.obolibrary.org/obo/", "")
+            .alias("parent"),
+            pl.col("edges")
+            .struct.field("sub")
+            .str.replace("http://purl.obolibrary.org/obo/", "")
+            .alias("child"),
+        )
+        .filter(
+            pl.col("parent").str.contains("HP_"), pl.col("child").str.contains("HP_")
+        )
+    )
+
+    return hp_terms, hp_xrefs, hp_relations
 
 
 hpo_node = node(
     run,
     inputs={
-        "human_phenotype_ontology": "landing.ontology.hpo",
+        "hp": "landing.ontology.hp",
     },
     outputs=[
-        "ontology.phenotypes",
-        "ontology.phenotypes_xrefs",
-        "ontology.phenotypes_parents",
+        "ontology.hpo_terms",
+        "ontology.hpo_xrefs",
+        "ontology.hpo_relations",
     ],
     name="phenotypes",
     tags=["bronze"],
