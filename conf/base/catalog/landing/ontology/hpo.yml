@@ -1,17 +1,3 @@
-landing.ontology.hpo:
-  type: optimuskg.datasets.LXMLDataset
-  filepath: "data/landing/ontology/hpo.owl"
-  metadata:
-    checksum: "8f713ce3d940895c6b2cdd7916301e96"
-    title: "Human Phenotype Ontology"
-    description: "The Human Phenotype Ontology (HPO) provides a standardized vocabulary of phenotypic abnormalities encountered in human disease."
-    origin:
-      provider: http
-      url: "http://purl.obolibrary.org/obo/hp.owl"
-    kedro-viz:
-      layer: landing
-
-
 landing.ontology.hp:
   type: optimuskg.datasets.polars.JSONDataset
   filepath: "data/landing/ontology/hp.json"
