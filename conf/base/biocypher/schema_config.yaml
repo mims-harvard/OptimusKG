@@ -18,6 +18,11 @@ anatomy: # Biological entity that is either an individual member of a biological
   properties:
     name: str
     source: str
+    definition: str
+    ontology_description: str
+    ontology_title: str
+    ontology_license: str
+    ontology_version: str
 
 exposure: # A environmental exposure is a factor relating to abiotic processes in the environment including sunlight (UV-B), atmospheric (heat, cold, general pollution) and water-born contaminants. (https://biolink.github.io/biolink-model/EnvironmentalExposure/)
   is_a: environmental exposure
@@ -52,6 +57,11 @@ phenotype: # A phenotypic feature (https://biolink.github.io/biolink-model/Pheno
   properties:
     name: str
     source: str
+    definition: str
+    ontology_description: str
+    ontology_title: str
+    ontology_license: str
+    ontology_version: str
 
 biological process:
   represented_as: node
@@ -60,6 +70,11 @@ biological process:
   properties:
     name: str
     source: str
+    definition: str
+    ontology_description: str
+    ontology_title: str
+    ontology_license: str
+    ontology_version: str
 
 cellular component:
   represented_as: node
@@ -68,6 +83,11 @@ cellular component:
   properties:
     name: str
     source: str
+    definition: str
+    ontology_description: str
+    ontology_title: str
+    ontology_license: str
+    ontology_version: str
 
 molecular function:
   represented_as: node
@@ -76,6 +96,11 @@ molecular function:
   properties:
     name: str
     source: str
+    definition: str
+    ontology_description: str
+    ontology_title: str
+    ontology_license: str
+    ontology_version: str
 
 pathway:
   represented_as: node

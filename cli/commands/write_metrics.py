@@ -1,6 +1,6 @@
 import json
 import logging
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 
 from pydantic import BaseModel, Field, model_serializer
@@ -34,11 +34,11 @@ class NodeLabelMetricsEntry(LabelMetricsEntry):
     std_dev_degree: float | None = Field(
         default=None, description="Standard deviation of degree for nodes of this type."
     )
-    ontologies: list[str] | None = Field(
-        default=None, description="List of unique ontologies for nodes of this type."
+    ontologies: dict[str, int] | None = Field(
+        default=None, description="Occurrences of each ontology for nodes of this type."
     )
-    sources: list[str] | None = Field(
-        default=None, description="List of unique sources for nodes of this type."
+    sources: dict[str, int] | None = Field(
+        default=None, description="Occurrences of each source for nodes of this type."
     )
 
 
@@ -152,8 +152,8 @@ def _get_node_label_metrics(  # noqa: PLR0913
     num_elements: int,
     degrees_by_label: dict[str, list[int]],
     property_counts_by_label: dict[str, list[int]],
-    ontologies_by_node_label: dict[str, set[str]],
-    sources_by_node_label: dict[str, set[str]],
+    ontologies_by_node_label: dict[str, list[str]],
+    sources_by_node_label: dict[str, list[str]],
 ) -> list[NodeLabelMetricsEntry]:
     """Returns a list of NodeLabelMetricsEntry objects sorted by label."""
     element_label_stats_list: list[NodeLabelMetricsEntry] = []
@@ -183,14 +183,14 @@ def _get_node_label_metrics(  # noqa: PLR0913
                 std_dev_props = round(std_dev, 5)
 
         ontologies = None
-        ontologies = ontologies_by_node_label.get(labels)
-        if ontologies:
-            ontologies = sorted(list(ontologies))
+        ontologies_list = ontologies_by_node_label.get(labels)
+        if ontologies_list:
+            ontologies = dict(Counter(ontologies_list))
 
         sources = None
         node_sources = sources_by_node_label.get(labels)
         if node_sources:
-            sources = sorted(list(node_sources))
+            sources = dict(Counter(node_sources))
 
         element_label_stats_list.append(
             NodeLabelMetricsEntry(
@@ -222,8 +222,8 @@ def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915, PLR0912
     node_label_type: dict[str, int] = {}
     edge_label_type: dict[str, int] = {}
     node_id_to_label: dict[str, str] = {}
-    ontologies_by_node_label: dict[str, set[str]] = defaultdict(set)
-    sources_by_node_label: dict[str, set[str]] = defaultdict(set)
+    ontologies_by_node_label: dict[str, list[str]] = defaultdict(list)
+    sources_by_node_label: dict[str, list[str]] = defaultdict(list)
     node_properties_counts_by_label: dict[str, list[int]] = defaultdict(list)
     edge_properties_counts_by_label: dict[str, list[int]] = defaultdict(list)
 
@@ -250,12 +250,12 @@ def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915, PLR0912
                             ontology_prefix = node.id.split("_", 1)[0]
 
                         if ontology_prefix:
-                            ontologies_by_node_label[label_key].add(ontology_prefix)
+                            ontologies_by_node_label[label_key].append(ontology_prefix)
 
                         node_sources = node.properties.get("source")
                         if node_sources:
                             for source in node_sources:
-                                sources_by_node_label[label_key].add(str(source))
+                                sources_by_node_label[label_key].append(str(source))
 
                         num_props = len(node.properties.keys())
                         total_properties += num_props

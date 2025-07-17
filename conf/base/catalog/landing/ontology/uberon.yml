@@ -1,13 +1,12 @@
 landing.ontology.uberon:
-  type: optimuskg.datasets.LXMLDataset
-  filepath: "data/landing/ontology/uberon.owl"
+  type: optimuskg.datasets.polars.JSONDataset
+  filepath: "data/landing/ontology/uberon.json"
   metadata:
     checksum: "a4a89b03d4e62b54495bb138a6fd7108"
     title: "Uber Anatomy Ontology"
     description: "Uberon is an integrated cross-species anatomy ontology representing a variety of entities classified according to traditional anatomical criteria such as structure, function and developmental lineage."
     origin:
-      provider: bioontology
-      acronym: UBERON
-      version: "351"
+      provider: http
+      url: "https://github.com/obophenotype/uberon/releases/download/v2025-05-28/uberon-full.json"
     kedro-viz:
       layer: landing

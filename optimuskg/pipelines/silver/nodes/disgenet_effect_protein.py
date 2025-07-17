@@ -4,15 +4,13 @@ from kedro.pipeline import node
 
 def run(
     disgenet_phenotypes: pl.DataFrame,
-    hpo_terms: pl.DataFrame,
-    hpo_xrefs: pl.DataFrame,
+    hp_terms: pl.DataFrame,
+    hp_xrefs: pl.DataFrame,
 ) -> pl.DataFrame:
     df_prot_phe = disgenet_phenotypes.join(
-        hpo_xrefs, left_on="disease_id", right_on="ontology_id", how="inner"
+        hp_xrefs, left_on="disease_id", right_on="ontology_id", how="inner"
     )
-    df_prot_phe = df_prot_phe.join(
-        hpo_terms, left_on="hp_id", right_on="id", how="left"
-    )
+    df_prot_phe = df_prot_phe.join(hp_terms, left_on="hp_id", right_on="id", how="left")
 
     df_prot_phe = df_prot_phe.rename(
         {"gene_id": "x_id", "gene_symbol": "x_name", "hp_id": "y_id", "name": "y_name"}
@@ -23,7 +21,7 @@ def run(
             pl.lit("gene").alias("x_type"),
             pl.lit("NCBI").alias("x_source"),
             pl.lit("phenotype").alias("y_type"),
-            pl.lit("HPO").alias("y_source"),
+            pl.lit("HP").alias("y_source"),
             pl.lit("phenotype_protein").alias("relation"),
             pl.lit("associated with").alias("relation_type"),
         ]
@@ -51,8 +49,8 @@ disgenet_effect_protein_node = node(
     run,
     inputs={
         "disgenet_phenotypes": "bronze.disgenet.disgenet_phenotypes",
-        "hpo_terms": "bronze.ontology.hpo_terms",
-        "hpo_xrefs": "bronze.ontology.hpo_xrefs",
+        "hp_terms": "bronze.ontology.hp_terms",
+        "hp_xrefs": "bronze.ontology.hp_xrefs",
     },
     outputs="disgenet.effect_protein",
     name="disgenet_effect_protein",

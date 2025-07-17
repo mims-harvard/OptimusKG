@@ -1,4 +1,4 @@
-landing.ontology.hpo_mappings:
+landing.ontology.hp_mappings:
   type: polars.CSVDataset
   filepath: "data/landing/ontology/phenotype.hpoa"
   load_args:
@@ -9,7 +9,7 @@ landing.ontology.hpo_mappings:
       "database_id": "${pl:String}"
       "disease_name": "${pl:String}"
       "qualifier": "${pl:String}"
-      "hpo_id": "${pl:String}"
+      "hp_id": "${pl:String}"
       "reference": "${pl:String}"
       "evidence": "${pl:String}"
       "onset": "${pl:String}"
@@ -21,7 +21,7 @@ landing.ontology.hpo_mappings:
   metadata:
     checksum: "8f713ce3d940895c6b2cdd7916301e96"
     title: "Human Phenotype Ontology Mapping"
-    description: "A mapping of phenotypic terms (HPO IDs) to diseases and genes. It includes both manually and semi-automatically curated relationships"
+    description: "A mapping of phenotypic terms (HP IDs) to diseases and genes. It includes both manually and semi-automatically curated relationships"
     origin:
       provider: http
       url: "https://github.com/obophenotype/human-phenotype-ontology/releases/download/v2025-05-06/phenotype.hpoa"

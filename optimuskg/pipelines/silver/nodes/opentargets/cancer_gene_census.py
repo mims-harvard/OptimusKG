@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 def run(  # noqa: PLR0913
     cancer_gene_census: pd.DataFrame,
-    hpo_terms: pl.DataFrame,
+    hp_terms: pl.DataFrame,
     diseases: pl.DataFrame,
     targets: pl.DataFrame,
     drug_mappings: pl.DataFrame,
@@ -29,7 +29,7 @@ def run(  # noqa: PLR0913
         .pipe(
             construct_edges,
             targets_df=pl.DataFrame(targets),
-            phenotypes_df=pl.DataFrame(hpo_terms),
+            phenotypes_df=pl.DataFrame(hp_terms),
             diseases_df=diseases,
             drug_mappings_df=drug_mappings,
             type_x="gene",
@@ -46,7 +46,7 @@ cancer_gene_census_node = node(
     run,
     inputs={
         "cancer_gene_census": "bronze.opentargets.evidence.cancer_gene_census",
-        "hpo_terms": "bronze.ontology.hpo_terms",
+        "hp_terms": "bronze.ontology.hp_terms",
         "diseases": "bronze.opentargets.diseases",
         "targets": "bronze.opentargets.targets",
         "disease_phenotype_ids": "bronze.opentargets.disease_phenotype_ids",

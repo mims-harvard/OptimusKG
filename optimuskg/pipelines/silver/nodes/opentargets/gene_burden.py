@@ -7,7 +7,7 @@ from .utils import construct_edges
 
 def run(  # noqa: PLR0913
     gene_burden: pd.DataFrame,
-    hpo_terms: pl.DataFrame,
+    hp_terms: pl.DataFrame,
     diseases: pl.DataFrame,
     targets: pl.DataFrame,
     drug_mappings: pl.DataFrame,
@@ -31,7 +31,7 @@ def run(  # noqa: PLR0913
         .pipe(
             construct_edges,
             targets_df=pl.DataFrame(targets),
-            phenotypes_df=pl.DataFrame(hpo_terms),
+            phenotypes_df=pl.DataFrame(hp_terms),
             diseases_df=diseases,
             drug_mappings_df=drug_mappings,
             type_x="gene",
@@ -48,7 +48,7 @@ gene_burden_node = node(
     run,
     inputs={
         "gene_burden": "bronze.opentargets.evidence.gene_burden",
-        "hpo_terms": "bronze.ontology.hpo_terms",
+        "hp_terms": "bronze.ontology.hp_terms",
         "diseases": "bronze.opentargets.diseases",
         "targets": "bronze.opentargets.targets",
         "disease_phenotype_ids": "bronze.opentargets.disease_phenotype_ids",

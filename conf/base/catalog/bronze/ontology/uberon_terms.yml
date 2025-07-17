@@ -6,7 +6,14 @@ bronze.ontology.uberon_terms:
     schema:
       "id": "${pl:Utf8}"
       "name": "${pl:Utf8}"
-      "def": "${pl:Utf8}"
+      "type": "${pl:Utf8}"
+      "definition": "${pl:Utf8}"
+      "xrefs": "${pl:Utf8}"
+      "synonyms": "${pl:Utf8}"
+      "ontology_description": "${pl:Utf8}"
+      "ontology_title": "${pl:Utf8}"
+      "ontology_license": "${pl:Utf8}"
+      "ontology_version": "${pl:Utf8}"
   metadata:
     checksum: "da24d9e916f3f3ad274da8884e50ce70"
     kedro-viz:

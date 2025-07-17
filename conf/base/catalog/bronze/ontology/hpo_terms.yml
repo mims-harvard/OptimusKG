@@ -1,0 +1,20 @@
+bronze.ontology.hp_terms:
+  type: polars.CSVDataset
+  filepath: "data/bronze/ontology/hp_terms.csv"
+  load_args:
+    infer_schema: false
+    schema:
+      "id": "${pl:String}"
+      "name": "${pl:String}"
+      "source": "${pl:String}"
+      "definition": "${pl:String}"
+      "xrefs": "${pl:String}"
+      "synonyms": "${pl:String}"
+      "ontology_description": "${pl:String}"
+      "ontology_title": "${pl:String}"
+      "ontology_license": "${pl:String}"
+      "ontology_version": "${pl:String}"
+  metadata:
+    checksum: "f9ed19eeb850663df363475d646250a6"
+    kedro-viz:
+      layer: bronze

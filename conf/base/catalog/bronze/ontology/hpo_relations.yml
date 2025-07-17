@@ -1,0 +1,12 @@
+bronze.ontology.hp_relations:
+  type: polars.CSVDataset
+  filepath: "data/bronze/ontology/hp_relations.csv"
+  load_args:
+    infer_schema: false
+    schema:
+      "parent": "${pl:String}"
+      "child": "${pl:String}"
+  metadata:
+    checksum: "f9ed19eeb850663df363475d646250a6"
+    kedro-viz:
+      layer: bronze

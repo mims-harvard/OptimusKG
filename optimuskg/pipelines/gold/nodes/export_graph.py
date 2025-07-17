@@ -33,7 +33,13 @@ def _export_to_biocypher(  # noqa: PLR0912
     node_config = NodeMappingConfig(
         id_field="id",
         label_field="type",
-        properties_fields=["name", "source"],
+        properties_fields=[
+            "name",
+            "source",
+            "definition",
+            "ontology_description",
+            "ontology_title",
+        ],
     )
 
     edge_config = EdgeMappingConfig(

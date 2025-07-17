@@ -8,6 +8,11 @@ def create_pipeline(**kwargs):
         [getattr(nodes, name) for name in nodes.__all__],
         namespace="gold",
         inputs={
+            # Bronze
+            "bronze.ontology.mondo_terms",
+            "bronze.ontology.hp_terms",
+            "bronze.ontology.uberon_terms",
+            "bronze.ontology.go_terms",
             # Silver
             "silver.bgee.anatomy_protein",
             "silver.opentargets.opentargets_edges",

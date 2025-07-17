@@ -1,12 +1,12 @@
-bronze.ontology.hpo_mappings:
+bronze.ontology.hp_mappings:
   type: polars.CSVDataset
-  filepath: "data/bronze/ontology/hpo_mappings.csv"
+  filepath: "data/bronze/ontology/hp_mappings.csv"
   load_args:
     infer_schema: false
     schema_overrides:
       "database_id": "${pl:String}"
       "disease_name": "${pl:String}"
-      "hpo_id": "${pl:String}"
+      "hp_id": "${pl:String}"
       "qualifier": "${pl:String}"
   metadata:
     checksum: "8f713ce3d940895c6b2cdd7916301e96"

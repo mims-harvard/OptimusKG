@@ -6,7 +6,7 @@ from .drugcentral import drugcentral_node
 from .gene_names import gene_names_node
 from .ncbigene import gene2go_node
 from .onsides import onsides_node
-from .ontology import go_plus_node, hpo_mappings_node, hpo_node, mondo_node, uberon_node
+from .ontology import go_plus_node, hp_mappings_node, hp_node, mondo_node, uberon_node
 from .opentargets import (
     cancer_gene_census_node,
     chembl_node,
@@ -65,7 +65,7 @@ __all__ = [
     "drug_mappings_node",
     "mondo_efo_mappings_node",
     "diseases_node",
-    "hpo_node",
+    "hp_node",
     "disease_phenotype_ids_node",
     "disease_to_phenotype_node",
     "orphanet_node",
@@ -74,5 +74,5 @@ __all__ = [
     "umls_node",
     "disgenet_node",
     "onsides_node",
-    "hpo_mappings_node",
+    "hp_mappings_node",
 ]

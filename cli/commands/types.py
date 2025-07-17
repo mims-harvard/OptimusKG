@@ -36,7 +36,8 @@ class Node(BaseModel):
 
     @classmethod
     def from_neo4j(cls, node: Neo4jNode) -> Self:
-        possible_labels = [
+        label_preference = [
+            "Pathway",
             "Gene",
             "Anatomy",
             "Exposure",
@@ -46,10 +47,9 @@ class Node(BaseModel):
             "BiologicalProcess",
             "CellularComponent",
             "MolecularFunction",
-            "Pathway",
         ]
         first_matching_label = next(
-            lbl for lbl in node.labels if lbl in possible_labels
+            lbl for lbl in label_preference if lbl in node.labels
         )
 
         return cls(

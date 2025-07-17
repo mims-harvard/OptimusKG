@@ -12,7 +12,7 @@ def create_pipeline(**kwargs):
             "landing.ontology.go_plus",
             "landing.ontology.mondo",
             "landing.ontology.hp",
-            "landing.ontology.hpo_mappings",
+            "landing.ontology.hp_mappings",
             "landing.ontology.uberon",
             "landing.bgee.homo_sapiens_expressions_advanced",
             "landing.ctd.ctd_exposure_events",

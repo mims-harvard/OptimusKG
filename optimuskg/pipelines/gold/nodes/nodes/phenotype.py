@@ -2,12 +2,13 @@ import polars as pl
 from kedro.pipeline import node
 
 
-def run(
+def run(  # noqa: PLR0913
     opentargets_edges: pl.DataFrame,
     disgenet_effect_protein: pl.DataFrame,
     disease_phenotype: pl.DataFrame,
     phenotype_phenotype: pl.DataFrame,
     drug_phenotype: pl.DataFrame,
+    hp_terms: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
         pl.concat(
@@ -59,6 +60,24 @@ def run(
         )
         .filter(pl.col("type") == "phenotype")
         .unique()
+        .join(
+            hp_terms,
+            left_on="id",
+            right_on="id",
+            how="left",
+        )
+        .select(
+            "id",
+            "name",
+            "type",
+            "source",
+            "xrefs",
+            "synonyms",
+            "ontology_description",
+            "ontology_title",
+            "ontology_license",
+            "ontology_version",
+        )
     )
 
 
@@ -70,6 +89,7 @@ phenotype_node = node(
         "disease_phenotype": "silver.ontology.disease_phenotype",
         "phenotype_phenotype": "silver.ontology.phenotype_phenotype",
         "drug_phenotype": "silver.onsides.drug_phenotype",
+        "hp_terms": "bronze.ontology.hp_terms",
     },
     outputs="nodes.phenotype",
     name="phenotype",

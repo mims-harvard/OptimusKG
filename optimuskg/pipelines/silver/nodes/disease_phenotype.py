@@ -3,13 +3,13 @@ from kedro.pipeline import node
 
 
 def run(
-    hpo_mappings: pl.DataFrame,
+    hp_mappings: pl.DataFrame,
     mondo_xrefs: pl.DataFrame,
     mondo_terms: pl.DataFrame,
-    hpo_terms: pl.DataFrame,
+    hp_terms: pl.DataFrame,
 ) -> pl.DataFrame:
     disease_phenotype = (
-        hpo_mappings.filter(
+        hp_mappings.filter(
             pl.col("database_id").str.contains(
                 "Orphanet_"
             )  # NOTE: Only keep diseases from the phenotype mappings
@@ -32,8 +32,8 @@ def run(
             how="left",
         )
         .join(
-            hpo_terms,
-            left_on="hpo_id",
+            hp_terms,
+            left_on="hp_id",
             right_on="id",
             how="left",
         )
@@ -46,14 +46,14 @@ def run(
     )
 
     disease_phenotype = disease_phenotype.rename(
-        {"id": "x_id", "disease_name": "x_name", "hpo_id": "y_id", "name": "y_name"}
+        {"id": "x_id", "disease_name": "x_name", "hp_id": "y_id", "name": "y_name"}
     )
 
     disease_phenotype = disease_phenotype.with_columns(
         pl.lit("disease").alias("x_type"),
         pl.lit("MONDO").alias("x_source"),
         pl.lit("phenotype").alias("y_type"),
-        pl.lit("HPO").alias("y_source"),
+        pl.lit("HP").alias("y_source"),
         pl.lit("disease_phenotype").alias("relation"),
         pl.col("relation_type").alias("relation_type"),
     )
@@ -79,10 +79,10 @@ def run(
 disease_phenotype_node = node(
     run,
     inputs={
-        "hpo_mappings": "bronze.ontology.hpo_mappings",
+        "hp_mappings": "bronze.ontology.hp_mappings",
         "mondo_xrefs": "bronze.ontology.mondo_xrefs",
         "mondo_terms": "bronze.ontology.mondo_terms",
-        "hpo_terms": "bronze.ontology.hpo_terms",
+        "hp_terms": "bronze.ontology.hp_terms",
     },
     outputs="ontology.disease_phenotype",
     name="disease_phenotype",
