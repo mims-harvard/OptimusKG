@@ -3,7 +3,7 @@ from kedro.pipeline import node
 
 
 def run(
-    protein_cellular_component_interactions: pl.DataFrame,
+    protein_cellular_component: pl.DataFrame,
     exposure_cellular_component: pl.DataFrame,
     cellular_component_cellular_component: pl.DataFrame,
     go_terms: pl.DataFrame,
@@ -11,7 +11,7 @@ def run(
     return (
         pl.concat(
             [
-                protein_cellular_component_interactions.filter(
+                protein_cellular_component.filter(
                     pl.col("y_type") == "cellular_component"
                 ).select(
                     pl.col("y_id").alias("id"),
@@ -48,9 +48,10 @@ def run(
         )
         .select(
             "id",
-            "name",
             "type",
+            "name",
             "source",
+            "definition",
             "xrefs",
             "synonyms",
             "ontology_description",
@@ -64,9 +65,9 @@ def run(
 cellular_component_node = node(
     run,
     inputs={
-        "protein_cellular_component_interactions": "silver.ncbigene.protein_cellular_component_interactions",
-        "exposure_cellular_component": "silver.ctd.ctd_exposure_cellular_component_interactions",
-        "cellular_component_cellular_component": "silver.ontology.cellular_component_cellular_component_interactions",
+        "protein_cellular_component": "silver.ncbigene.protein_cellular_component",
+        "exposure_cellular_component": "silver.ctd.exposure_cellular_component",
+        "cellular_component_cellular_component": "silver.ontology.cellular_component_cellular_component",
         "go_terms": "bronze.ontology.go_terms",
     },
     outputs="nodes.cellular_component",

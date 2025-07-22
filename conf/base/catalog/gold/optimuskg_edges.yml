@@ -1,6 +1,6 @@
 gold.optimuskg_edges:
   type: polars.CSVDataset
-  filepath: "data/gold/optimuskg_edges.csv"
+  filepath: "data/export/optimuskg_edges.csv"
   load_args:
     infer_schema: false
     schema:
@@ -16,6 +16,6 @@ gold.optimuskg_edges:
       "y_source": "${pl:String}"
       "undirected": "${pl:Boolean}"
   metadata:
-    checksum: ""
+    checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:
       layer: gold

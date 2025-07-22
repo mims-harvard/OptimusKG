@@ -11,7 +11,7 @@ def run(
     return df
 
 
-anatomy_anatomy_edges_node = node(
+anatomy_anatomy_node = node(
     run,
     inputs={
         "anatomy_anatomy": "silver.ontology.anatomy_anatomy",

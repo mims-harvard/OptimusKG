@@ -69,13 +69,13 @@ def _to_snake_case(text: str) -> str:
     if text and not re.match(r"^[a-z_]", text):
         text = "_" + text
 
-    if not _is_snake_case(text):
+    if not is_snake_case(text):
         raise NameError(f"{text} is not in snake_case format")
 
     return text
 
 
-def _is_snake_case(text: str) -> bool:
+def is_snake_case(text: str) -> bool:
     """
     Check if a string follows Python snake_case naming convention using regex.
 

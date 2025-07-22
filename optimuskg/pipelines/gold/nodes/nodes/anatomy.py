@@ -39,9 +39,10 @@ def run(
         .unique()
         .select(
             "id",
-            "name",
             "type",
+            "name",
             "source",
+            "definition",
             "xrefs",
             "synonyms",
             "ontology_description",

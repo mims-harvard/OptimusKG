@@ -1,18 +1,3 @@
-# landing.ontology.gene:
-#   type: optimuskg.datasets.OWLDataset
-#   filepath: "data/landing/ontology/gene.owl"
-#   metadata:
-#     checksum: "da24d9e916f3f3ad274da8884e50ce70"
-#     title: "Gene Ontology"
-#     description: "The GO is designed to be species-agnostic to enable the annotation of gene products across the entire tree of life. The computational framework of the GO enables consistent gene annotation, comparison of functions across organisms, and integration of knowledge across diverse biological databases."
-#     origin:
-#       provider: bioontology
-#       acronym: GO-PLUS
-#       version: "703"
-#     kedro-viz:
-#       layer: landing
-
-# TODO: this go_plus SHOULD replace the landing.ontology.gene dataset instead. Is used in PRIMEKGv2 here: https://github.com/mims-harvard/primekg-2/blob/e79b20586d7d20f6f3e2d7ed06bc6d75efdce584/src/primekg/data_sources/go.py#L17C10-L17C68
 landing.ontology.go_plus:
   type: optimuskg.datasets.polars.JSONDataset
   filepath: "data/landing/ontology/go_plus.json"

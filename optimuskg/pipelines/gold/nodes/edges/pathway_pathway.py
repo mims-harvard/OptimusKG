@@ -11,10 +11,10 @@ def run(
     return df
 
 
-pathway_pathway_edges_node = node(
+pathway_pathway_node = node(
     run,
     inputs={
-        "pathway_pathway": "silver.reactome.pathway_pathway_interactions",
+        "pathway_pathway": "silver.reactome.pathway_pathway",
     },
     outputs="edges.pathway_pathway",
     name="pathway_pathway",

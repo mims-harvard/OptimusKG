@@ -11,10 +11,10 @@ def run(
     return df
 
 
-pathway_protein_edges_node = node(
+pathway_protein_node = node(
     run,
     inputs={
-        "pathway_protein": "silver.reactome.pathway_protein_interactions",
+        "pathway_protein": "silver.reactome.pathway_protein",
     },
     outputs="edges.pathway_protein",
     name="pathway_protein",

@@ -1,13 +1,7 @@
 gold.optimuskg_nodes:
   type: polars.CSVDataset
-  filepath: "data/gold/optimuskg_nodes.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "id": "${pl:String}"
-      "type": "${pl:String}"
-      "name": "${pl:String}"
-      "source": "${pl:String}"
+  filepath: "data/export/optimuskg_nodes.csv"
+  # TODO: add schema
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:

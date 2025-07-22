@@ -11,10 +11,10 @@ def run(
     return df
 
 
-exposure_cellular_component_edges_node = node(
+exposure_cellular_component_node = node(
     run,
     inputs={
-        "exposure_cellular_component": "silver.ctd.ctd_exposure_cellular_component_interactions",
+        "exposure_cellular_component": "silver.ctd.exposure_cellular_component",
     },
     outputs="edges.exposure_cellular_component",
     name="exposure_cellular_component",

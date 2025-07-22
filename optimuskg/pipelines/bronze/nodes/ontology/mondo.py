@@ -131,6 +131,7 @@ def run(
             pl.col("id"),
             pl.col("xrefs").struct.field("val").alias("xref_id"),
         )
+        .drop_nulls()
         .with_columns(
             pl.col("xref_id")
             .map_elements(

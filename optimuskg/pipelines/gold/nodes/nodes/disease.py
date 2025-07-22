@@ -75,9 +75,10 @@ def run(  # noqa: PLR0913
         )
         .select(
             "id",
-            "name",
             "type",
+            "name",
             "source",
+            "definition",
             "xrefs",
             "synonyms",
             "ontology_description",
@@ -92,8 +93,8 @@ disease_node = node(
     run,
     inputs={
         "opentargets_edges": "silver.opentargets.opentargets_edges",
-        "disease_disease": "silver.ontology.mondo_disease_disease_interactions",
-        "exposure_disease": "silver.ctd.ctd_exposure_disease_interactions",
+        "disease_disease": "silver.ontology.disease_disease",
+        "exposure_disease": "silver.ctd.exposure_disease",
         "drug_disease": "silver.drugcentral.drug_disease",
         "disease_protein": "silver.disgenet.disease_protein",
         "disease_phenotype": "silver.ontology.disease_phenotype",

@@ -11,10 +11,10 @@ def run(
     return df
 
 
-biological_process_protein_edges_node = node(
+biological_process_protein_node = node(
     run,
     inputs={
-        "biological_process_protein": "silver.ncbigene.protein_biological_process_interactions",
+        "biological_process_protein": "silver.ncbigene.protein_biological_process",
     },
     outputs="edges.biological_process_protein",
     name="biological_process_protein",

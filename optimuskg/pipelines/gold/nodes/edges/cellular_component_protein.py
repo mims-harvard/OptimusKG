@@ -11,10 +11,10 @@ def run(
     return df
 
 
-cellular_component_protein_edges_node = node(
+cellular_component_protein_node = node(
     run,
     inputs={
-        "cellular_component_protein": "silver.ncbigene.protein_cellular_component_interactions",
+        "cellular_component_protein": "silver.ncbigene.protein_cellular_component",
     },
     outputs="edges.cellular_component_protein",
     name="cellular_component_protein",

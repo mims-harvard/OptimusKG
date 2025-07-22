@@ -1,6 +1,6 @@
-silver.ontology.mondo_disease_disease_interactions:
+silver.ontology.anatomy_anatomy:
   type: polars.CSVDataset
-  filepath: "data/silver/ontology/mondo_disease_disease_interactions.csv"
+  filepath: "data/silver/ontology/anatomy_anatomy.csv"
   load_args:
     infer_schema: false
     schema:

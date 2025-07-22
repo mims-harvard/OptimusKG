@@ -12,7 +12,7 @@ Labels = list[Identifier]
 class _Neo4jNode(BaseModel):
     id: Identifier
     labels: Labels
-    properties: dict[Identifier, str]
+    properties: dict[Identifier, PropertyValue | PropertyArray]
 
 
 class Neo4jNode(_Neo4jNode):
@@ -23,7 +23,7 @@ class Neo4jEdge(BaseModel):
     type: Literal["relationship"]
     id: Identifier
     label: Identifier
-    properties: dict[Identifier, str]
+    properties: dict[Identifier, PropertyValue | PropertyArray]
     start: _Neo4jNode
     end: _Neo4jNode
 
@@ -57,7 +57,9 @@ class Node(BaseModel):
             id=node.properties.get("id", ""),
             labels=[first_matching_label],
             properties={
-                k: [v] for k, v in node.properties.items() if k in ["name", "source"]
+                k: v if isinstance(v, list) else [v]
+                for k, v in node.properties.items()
+                if k not in ["preferred_id", "id"]
             },
         )
 
@@ -81,7 +83,9 @@ class Edge(BaseModel):
                 "to": edge.end.properties.get("id"),
                 "labels": [edge.label],
                 "properties": {
-                    k: [v] for k, v in edge.properties.items() if k == "relation_type"
+                    k: v if isinstance(v, list) else [v]
+                    for k, v in edge.properties.items()
+                    if k == "relation_type"
                 },
                 "undirected": edge.properties.get("undirected", "false").lower()
                 == "true",

@@ -11,7 +11,7 @@ def run(
     return df
 
 
-drug_phenotype_edges_node = node(
+drug_phenotype_node = node(
     run,
     inputs={
         "drug_phenotype": "silver.onsides.drug_phenotype",

@@ -1,32 +1,32 @@
 from .anatomy_anatomy import anatomy_anatomy_node
 from .bgee import bgee_node
 from .ctd import (
-    ctd_exposure_biological_process_interactions_node,
-    ctd_exposure_cellular_component_interactions_node,
-    ctd_exposure_disease_interactions_node,
-    ctd_exposure_exposure_interactions_node,
-    ctd_exposure_molecular_function_interactions_node,
-    ctd_exposure_protein_interactions_node,
+    exposure_biological_process_node,
+    exposure_cellular_component_node,
+    exposure_disease_node,
+    exposure_exposure_node,
+    exposure_molecular_function_node,
+    exposure_protein_node,
 )
-from .disease_disease_interactions import disease_disease_interactions_node
+from .disease_disease import disease_disease_node
 from .disease_phenotype import disease_phenotype_node
 from .disgenet_disease_protein import disgenet_disease_protein_node
 from .disgenet_effect_protein import disgenet_effect_protein_node
 from .drug_phenotype import drug_phenotype_node
 from .drugbank import (
-    drugbank_drug_drug_interactions_node,
-    drugbank_drug_protein_interactions_node,
+    drug_drug_node,
+    drug_protein_node,
 )
 from .drugcentral import drugcentral_node
 from .go import (
-    biological_process_biological_process_interactions_node,
-    cellular_component_cellular_component_interactions_node,
-    molecular_function_molecular_function_interactions_node,
+    biological_process_biological_process_node,
+    cellular_component_cellular_component_node,
+    molecular_function_molecular_function_node,
 )
 from .ncbigene import (
-    protein_biological_process_interactions_node,
-    protein_cellular_component_interactions_node,
-    protein_molecular_function_interactions_node,
+    protein_biological_process_node,
+    protein_cellular_component_node,
+    protein_molecular_function_node,
 )
 from .opentargets import (
     cancer_gene_census_node,
@@ -50,8 +50,8 @@ from .opentargets import (
 )
 from .phenotype_phenotype import phenotype_phenotype_node
 from .reactome import (
-    pathway_pathway_interactions_node,
-    pathway_protein_interactions_node,
+    pathway_pathway_node,
+    pathway_protein_node,
 )
 from .umls_mondo import umls_mondo_node
 
@@ -75,28 +75,28 @@ __all__ = [
     "sysbio_node",
     "uniprot_literature_node",
     "opentargets_edges_node",
-    "ctd_exposure_exposure_interactions_node",
-    "ctd_exposure_protein_interactions_node",
-    "ctd_exposure_disease_interactions_node",
-    "ctd_exposure_biological_process_interactions_node",
-    "ctd_exposure_molecular_function_interactions_node",
-    "ctd_exposure_cellular_component_interactions_node",
+    "exposure_exposure_node",
+    "exposure_protein_node",
+    "exposure_disease_node",
+    "exposure_biological_process_node",
+    "exposure_molecular_function_node",
+    "exposure_cellular_component_node",
     "drugcentral_node",
-    "protein_biological_process_interactions_node",
-    "protein_cellular_component_interactions_node",
-    "protein_molecular_function_interactions_node",
-    "pathway_pathway_interactions_node",
-    "pathway_protein_interactions_node",
-    "drugbank_drug_drug_interactions_node",
-    "drugbank_drug_protein_interactions_node",
-    "disease_disease_interactions_node",
+    "protein_biological_process_node",
+    "protein_cellular_component_node",
+    "protein_molecular_function_node",
+    "pathway_pathway_node",
+    "pathway_protein_node",
+    "drug_drug_node",
+    "drug_protein_node",
+    "disease_disease_node",
     "umls_mondo_node",
     "disgenet_disease_protein_node",
     "disgenet_effect_protein_node",
     "disease_phenotype_node",
-    "cellular_component_cellular_component_interactions_node",
-    "biological_process_biological_process_interactions_node",
-    "molecular_function_molecular_function_interactions_node",
+    "cellular_component_cellular_component_node",
+    "biological_process_biological_process_node",
+    "molecular_function_molecular_function_node",
     "phenotype_phenotype_node",
     "anatomy_anatomy_node",
     "drug_phenotype_node",

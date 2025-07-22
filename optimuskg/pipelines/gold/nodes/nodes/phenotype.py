@@ -68,9 +68,10 @@ def run(  # noqa: PLR0913
         )
         .select(
             "id",
-            "name",
             "type",
+            "name",
             "source",
+            "definition",
             "xrefs",
             "synonyms",
             "ontology_description",

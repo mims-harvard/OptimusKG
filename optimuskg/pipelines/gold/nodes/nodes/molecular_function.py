@@ -3,7 +3,7 @@ from kedro.pipeline import node
 
 
 def run(
-    protein_molecular_function_interactions: pl.DataFrame,
+    protein_molecular_function: pl.DataFrame,
     exposure_molecular_function: pl.DataFrame,
     molecular_function_molecular_function: pl.DataFrame,
     go_terms: pl.DataFrame,
@@ -11,8 +11,9 @@ def run(
     return (
         pl.concat(
             [
-                protein_molecular_function_interactions.filter(
-                    pl.col("y_type") == "molecular_function"
+                protein_molecular_function.filter(
+                    pl.col("y_type")
+                    == "molecular_function"  # TODO: Why this filter is needed?
                 ).select(
                     pl.col("y_id").alias("id"),
                     pl.col("y_type").alias("type"),
@@ -48,9 +49,10 @@ def run(
         )
         .select(
             "id",
-            "name",
             "type",
+            "name",
             "source",
+            "definition",
             "xrefs",
             "synonyms",
             "ontology_description",
@@ -64,9 +66,9 @@ def run(
 molecular_function_node = node(
     run,
     inputs={
-        "protein_molecular_function_interactions": "silver.ncbigene.protein_molecular_function_interactions",
-        "exposure_molecular_function": "silver.ctd.ctd_exposure_molecular_function_interactions",
-        "molecular_function_molecular_function": "silver.ontology.molecular_function_molecular_function_interactions",
+        "protein_molecular_function": "silver.ncbigene.protein_molecular_function",
+        "exposure_molecular_function": "silver.ctd.exposure_molecular_function",
+        "molecular_function_molecular_function": "silver.ontology.molecular_function_molecular_function",
         "go_terms": "bronze.ontology.go_terms",
     },
     outputs="nodes.molecular_function",

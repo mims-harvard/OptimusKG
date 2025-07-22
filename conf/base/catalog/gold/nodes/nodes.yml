@@ -17,6 +17,7 @@ _gold_nodes_args_with_metadata: &gold_nodes_args_with_metadata
       "type": "${pl:String}"
       "name": "${pl:String}"
       "source": "${pl:String}"
+      "definition": "${pl:String}"
       "xrefs": "${pl:String}"
       "synonyms": "${pl:String}"
       "ontology_description": "${pl:String}"

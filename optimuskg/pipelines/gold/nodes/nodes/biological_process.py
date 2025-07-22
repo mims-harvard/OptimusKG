@@ -3,7 +3,7 @@ from kedro.pipeline import node
 
 
 def run(
-    protein_biological_process_interactions: pl.DataFrame,
+    protein_biological_process: pl.DataFrame,
     exposure_biological_process: pl.DataFrame,
     biological_process_biological_process: pl.DataFrame,
     go_terms: pl.DataFrame,
@@ -11,7 +11,7 @@ def run(
     return (
         pl.concat(
             [
-                protein_biological_process_interactions.filter(
+                protein_biological_process.filter(
                     pl.col("y_type") == "biological_process"
                 ).select(
                     pl.col("y_id").alias("id"),
@@ -48,9 +48,10 @@ def run(
         )
         .select(
             "id",
-            "name",
             "type",
+            "name",
             "source",
+            "definition",
             "xrefs",
             "synonyms",
             "ontology_description",
@@ -64,9 +65,9 @@ def run(
 biological_process_node = node(
     run,
     inputs={
-        "protein_biological_process_interactions": "silver.ncbigene.protein_biological_process_interactions",
-        "exposure_biological_process": "silver.ctd.ctd_exposure_biological_process_interactions",
-        "biological_process_biological_process": "silver.ontology.biological_process_biological_process_interactions",
+        "protein_biological_process": "silver.ncbigene.protein_biological_process",
+        "exposure_biological_process": "silver.ctd.exposure_biological_process",
+        "biological_process_biological_process": "silver.ontology.biological_process_biological_process",
         "go_terms": "bronze.ontology.go_terms",
     },
     outputs="nodes.biological_process",

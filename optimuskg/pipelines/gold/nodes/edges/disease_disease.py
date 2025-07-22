@@ -11,10 +11,10 @@ def run(
     return df
 
 
-disease_disease_edges_node = node(
+disease_disease_node = node(
     run,
     inputs={
-        "disease_disease": "silver.ontology.mondo_disease_disease_interactions",
+        "disease_disease": "silver.ontology.disease_disease",
     },
     outputs="edges.disease_disease",
     name="disease_disease",
