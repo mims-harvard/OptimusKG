@@ -95,8 +95,7 @@ def write_metrics(
     ),
 ):
     write_metrics_command(in_path, data_out_path)
-    if report_out_path:
-        write_metrics_report_command(data_out_path, report_out_path)
+    write_metrics_report_command(data_out_path, report_out_path)
 
 
 @app.command(help="Get statistics about a PrimeKG knowledge graph.")
