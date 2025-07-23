@@ -16,7 +16,7 @@ def run(
     return df
 
 
-phenotype_protein_edges_node = node(
+phenotype_protein_node = node(
     run,
     inputs={
         "opentargets_edges": "silver.opentargets.opentargets_edges",

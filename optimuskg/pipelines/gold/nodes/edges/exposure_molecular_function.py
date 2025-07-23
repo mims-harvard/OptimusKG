@@ -11,10 +11,10 @@ def run(
     return df
 
 
-exposure_molecular_function_edges_node = node(
+exposure_molecular_function_node = node(
     run,
     inputs={
-        "exposure_molecular_function": "silver.ctd.ctd_exposure_molecular_function_interactions",
+        "exposure_molecular_function": "silver.ctd.exposure_molecular_function",
     },
     outputs="edges.exposure_molecular_function",
     name="exposure_molecular_function",

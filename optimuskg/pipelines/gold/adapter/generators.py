@@ -19,10 +19,19 @@ def yield_nodes(
             if mapping_config.label_field and row.get(mapping_config.label_field)
             else mapping_config.default_label or "Unknown"
         )
-
         node_properties = (
             {
-                field: row[field]
+                field: (
+                    row[field].split(
+                        "|"
+                    )  # NOTE: Since we're using kedro polars.CSVDataset for dumping intermediate data, we need to split multi-valued fields into a list
+                    if row[field] is not None
+                    and "|" in row[field]  # Decompose multi-valued fields into a list
+                    else row[field].replace('"', '""')
+                    if row[field]
+                    is not None  # Escape double quotes since biocypher doesn't escape them
+                    else None
+                )
                 for field in mapping_config.properties_fields
                 if field in row
             }

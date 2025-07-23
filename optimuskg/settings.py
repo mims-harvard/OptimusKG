@@ -1,10 +1,10 @@
 import polars as pl
 from kedro.io import KedroDataCatalog
 
-from optimuskg.hooks import ChecksumHooks, OriginHooks, SilverHooks
+from optimuskg.hooks import ChecksumHooks, OriginHooks, QualityChecksHooks
 
 # Hooks are executed in a Last-In-First-Out (LIFO) order.
-HOOKS = (SilverHooks(), ChecksumHooks(), OriginHooks())
+HOOKS = (QualityChecksHooks(), ChecksumHooks(), OriginHooks())
 
 # Installed plugins for which to disable hook auto-registration.
 # DISABLE_HOOKS_FOR_PLUGINS = ("kedro-viz",)

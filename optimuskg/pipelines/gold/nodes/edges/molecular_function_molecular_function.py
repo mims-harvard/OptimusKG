@@ -11,10 +11,10 @@ def run(
     return df
 
 
-molecular_function_molecular_function_edges_node = node(
+molecular_function_molecular_function_node = node(
     run,
     inputs={
-        "molecular_function_molecular_function": "silver.ontology.molecular_function_molecular_function_interactions",
+        "molecular_function_molecular_function": "silver.ontology.molecular_function_molecular_function",
     },
     outputs="edges.molecular_function_molecular_function",
     name="molecular_function_molecular_function",

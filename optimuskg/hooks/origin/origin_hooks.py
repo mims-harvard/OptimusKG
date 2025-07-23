@@ -78,8 +78,16 @@ class OriginHooks:
             return
 
         try:
+            if os.path.exists(ds_path):
+                logger.info(
+                    f"Skipping download for {get_dataset_display_name(ds_name)} because it already exists.",
+                    extra={"markup": True},
+                )
+                return
+
             logger.info(
-                f"Attempting download for {get_dataset_display_name(ds_name)} using {self._provider_display_str(provider)} provider."
+                f"Attempting download for {get_dataset_display_name(ds_name)} using {self._provider_display_str(provider)} provider.",
+                extra={"markup": True},
             )
             provider.download(output_path=ds_path)
         except Exception:
@@ -95,9 +103,7 @@ class OriginHooks:
         separator = load_args.get("separator", ",")
 
         if schema:
-            # Create headers from schema
             headers = list(schema.keys())
-            # Create empty dataframe with the schema
             df = pl.DataFrame({col: [] for col in headers}, schema=schema)
 
             # Write to file

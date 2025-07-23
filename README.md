@@ -220,7 +220,7 @@ To calculate metrics about the PG-JSONL graph, run:
 $ uv run cli write-metrics
 ```
 
-This command reads the PG-JSONL file from `data/export/optimuskg.pg.jsonl` and saves the metrics to `data/export/metrics/metrics.json`. You can specify different input and output paths using the `--in` and `--out` options.
+This command reads the PG-JSONL file from `data/export/optimuskg.pg.jsonl` and saves the metrics to `data/export/metrics.json`. You can specify different input and output paths using the `--in` and `--out` options.
 
 ### Private Datasets
 

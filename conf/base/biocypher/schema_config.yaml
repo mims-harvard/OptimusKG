@@ -5,7 +5,6 @@
 gene: # A region (or regions) that includes all of the sequence elements necessary to encode a functional transcript. (https://biolink.github.io/biolink-model/Gene/)                   
   represented_as: node
   input_label: gene
-  inherit_properties: false
   properties:
     name: str
     source: str
@@ -14,16 +13,21 @@ anatomy: # Biological entity that is either an individual member of a biological
   is_a: anatomical entity
   represented_as: node
   input_label: anatomy
-  inherit_properties: false
   properties:
     name: str
     source: str
+    definition: str
+    xrefs: str[]
+    synonyms: str[]
+    ontology_description: str
+    ontology_title: str
+    ontology_license: str
+    ontology_version: str
 
 exposure: # A environmental exposure is a factor relating to abiotic processes in the environment including sunlight (UV-B), atmospheric (heat, cold, general pollution) and water-born contaminants. (https://biolink.github.io/biolink-model/EnvironmentalExposure/)
   is_a: environmental exposure
   represented_as: node
   input_label: exposure
-  inherit_properties: false
   properties:
     name: str
     source: str
@@ -31,7 +35,6 @@ exposure: # A environmental exposure is a factor relating to abiotic processes i
 drug: # A substance that is used to treat, prevent, or diagnose a disease or condition (https://biolink.github.io/biolink-model/Drug/)
   represented_as: node
   input_label: drug
-  inherit_properties: false
   properties:
     name: str
     source: str
@@ -39,7 +42,6 @@ drug: # A substance that is used to treat, prevent, or diagnose a disease or con
 disease: # A disease or phenotypic feature (https://biolink.github.io/biolink-model/Disease/)
   represented_as: node
   input_label: disease
-  inherit_properties: false
   properties:
     name: str
     source: str
@@ -48,39 +50,62 @@ phenotype: # A phenotypic feature (https://biolink.github.io/biolink-model/Pheno
   is_a: phenotypic feature
   represented_as: node
   input_label: phenotype
-  inherit_properties: false
   properties:
     name: str
     source: str
+    definition: str
+    xrefs: str[]
+    synonyms: str[]
+    ontology_description: str
+    ontology_title: str
+    ontology_license: str
+    ontology_version: str
 
 biological process:
   represented_as: node
   input_label: biological_process
-  inherit_properties: false
   properties:
     name: str
     source: str
+    definition: str
+    xrefs: str[]
+    synonyms: str[]
+    ontology_description: str
+    ontology_title: str
+    ontology_license: str
+    ontology_version: str
 
 cellular component:
   represented_as: node
   input_label: cellular_component
-  inherit_properties: false
   properties:
     name: str
     source: str
+    definition: str
+    xrefs: str[]
+    synonyms: str[]
+    ontology_description: str
+    ontology_title: str
+    ontology_license: str
+    ontology_version: str
 
 molecular function:
   represented_as: node
   input_label: molecular_function
-  inherit_properties: false
   properties:
     name: str
     source: str
+    definition: str
+    xrefs: str[]
+    synonyms: str[]
+    ontology_description: str
+    ontology_title: str
+    ontology_license: str
+    ontology_version: str
 
 pathway:
   represented_as: node
   input_label: pathway # Biolink’s Pathway class (https://biolink.github.io/biolink-model/Pathway/)
-  inherit_properties: false
   properties:
     name: str
     source: str
@@ -93,7 +118,6 @@ anatomy protein:
   is_a: linked to
   represented_as: edge
   input_label: anatomy_protein
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -102,7 +126,6 @@ anatomy anatomy:
   is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
   represented_as: edge
   input_label: anatomy_anatomy
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -111,7 +134,6 @@ exposure disease:
   is_a: linked to # holds between a disease and an environmental exposure (https://biolink.github.io/biolink-model/linked_to/)
   represented_as: edge
   input_label: exposure_disease
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -120,7 +142,6 @@ exposure exposure:
   is_a: has_part # holds between a part and its whole (https://biolink.github.io/biolink-model/has_part/)
   represented_as: edge
   input_label: exposure_exposure
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -129,7 +150,6 @@ exposure protein:
   is_a: interacts_with # holds between a gene or gene product and an environmental exposure (https://biolink.github.io/biolink-model/interacts_with/)
   represented_as: edge
   input_label: exposure_protein
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -138,7 +158,6 @@ disease protein:
   is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
   represented_as: edge
   input_label: disease_protein
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -147,7 +166,6 @@ disease disease:
   is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
   represented_as: edge
   input_label: disease_disease
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -156,7 +174,6 @@ phenotype protein:
   is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
   represented_as: edge
   input_label: phenotype_protein
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -165,7 +182,6 @@ drug protein:
   is_a: physically interacts with # holds between two entities that make physical contact as part of some interaction (https://biolink.github.io/biolink-model/physically_interacts_with/)
   represented_as: edge
   input_label: drug_protein
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -174,7 +190,6 @@ drug drug:
   is_a: physically interacts with # holds between two entities that make physical contact as part of some interaction (https://biolink.github.io/biolink-model/physically_interacts_with/)
   represented_as: edge
   input_label: drug_drug
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -183,7 +198,6 @@ drug disease:
   is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
   represented_as: edge
   input_label: drug_disease
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -192,7 +206,6 @@ drug phenotype:
   is_a: related to
   represented_as: edge
   input_label: drug_phenotype
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -201,7 +214,6 @@ biological process protein:
   is_a: regulates # holds between a gene or gene product and a biological process (https://biolink.github.io/biolink-model/regulates/)
   represented_as: edge
   input_label: biological_process_protein
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -210,7 +222,6 @@ cellular component protein:
   is_a: regulates # holds between a gene or gene product and a cellular component (https://biolink.github.io/biolink-model/regulates/)
   represented_as: edge
   input_label: cellular_component_protein
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -219,7 +230,6 @@ molecular function protein:
   is_a: regulates # holds between a gene or gene product and a molecular function (https://biolink.github.io/biolink-model/regulates/)
   represented_as: edge
   input_label: molecular_function_protein
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -228,7 +238,6 @@ pathway pathway:
   is_a: has_part # holds between a part and its whole (https://biolink.github.io/biolink-model/has_part/)
   represented_as: edge
   input_label: pathway_pathway
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -237,7 +246,6 @@ pathway protein:
   is_a: has_part # holds between a part and its whole (https://biolink.github.io/biolink-model/has_part/)
   represented_as: edge
   input_label: pathway_protein
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -246,7 +254,6 @@ exposure biological process:
   is_a: related to
   represented_as: edge
   input_label: exposure_biological_process
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -255,7 +262,6 @@ exposure molecular function:
   is_a: related to
   represented_as: edge
   input_label: exposure_molecular_function
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -264,7 +270,6 @@ exposure cellular component:
   is_a: related to
   represented_as: edge
   input_label: exposure_cellular_component
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -273,7 +278,6 @@ cellular component cellular component:
   is_a: has_part
   represented_as: edge
   input_label: cellular_component_cellular_component
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -282,7 +286,6 @@ biological process biological process:
   is_a: has_part
   represented_as: edge
   input_label: biological_process_biological_process
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -291,7 +294,6 @@ molecular function molecular function:
   is_a: has_part
   represented_as: edge
   input_label: molecular_function_molecular_function
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -300,7 +302,6 @@ disease phenotype:
   is_a: related to
   represented_as: edge
   input_label: disease_phenotype
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str
@@ -309,7 +310,6 @@ phenotype phenotype:
   is_a: has_part
   represented_as: edge
   input_label: phenotype_phenotype
-  inherit_properties: false
   properties:
     relation_type: str
     undirected: str

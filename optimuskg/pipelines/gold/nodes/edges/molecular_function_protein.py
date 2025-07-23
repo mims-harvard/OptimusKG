@@ -11,10 +11,10 @@ def run(
     return df
 
 
-molecular_function_protein_edges_node = node(
+molecular_function_protein_node = node(
     run,
     inputs={
-        "molecular_function_protein": "silver.ncbigene.protein_molecular_function_interactions",
+        "molecular_function_protein": "silver.ncbigene.protein_molecular_function",
     },
     outputs="edges.molecular_function_protein",
     name="molecular_function_protein",

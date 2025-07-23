@@ -11,10 +11,10 @@ def run(
     return df
 
 
-exposure_disease_edges_node = node(
+exposure_disease_node = node(
     run,
     inputs={
-        "exposure_disease": "silver.ctd.ctd_exposure_disease_interactions",
+        "exposure_disease": "silver.ctd.exposure_disease",
     },
     outputs="edges.exposure_disease",
     name="exposure_disease",

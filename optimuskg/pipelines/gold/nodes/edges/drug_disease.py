@@ -15,7 +15,7 @@ def run(
     return df
 
 
-drug_disease_edges_node = node(
+drug_disease_node = node(
     run,
     inputs={
         "drug_disease": "silver.drugcentral.drug_disease",

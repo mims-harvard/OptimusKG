@@ -40,7 +40,7 @@ def construct_edges(  # noqa: PLR0913
         pheno_count = evidence_df.filter(pl.col("diseaseId").str.contains("HP")).height
         if pheno_count > 0:
             logger.debug(
-                f"Identified {pheno_count} HPO phenotypes, analyzing separately from diseases"
+                f"Identified {pheno_count} HP phenotypes, analyzing separately from diseases"
             )
 
             # Split evidence into phenotype and disease dataframes

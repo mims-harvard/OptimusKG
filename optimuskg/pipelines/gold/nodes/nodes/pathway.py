@@ -3,25 +3,25 @@ from kedro.pipeline import node
 
 
 def run(  # noqa: PLR0913
-    pathway_pathway_interactions: pl.DataFrame,
-    pathway_protein_interactions: pl.DataFrame,
+    pathway_pathway: pl.DataFrame,
+    pathway_protein: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
         pl.concat(
             [
-                pathway_pathway_interactions.select(
+                pathway_pathway.select(
                     pl.col("x_id").alias("id"),
                     pl.col("x_type").alias("type"),
                     pl.col("x_name").alias("name"),
                     pl.col("x_source").alias("source"),
                 ),
-                pathway_pathway_interactions.select(
+                pathway_pathway.select(
                     pl.col("y_id").alias("id"),
                     pl.col("y_type").alias("type"),
                     pl.col("y_name").alias("name"),
                     pl.col("y_source").alias("source"),
                 ),
-                pathway_protein_interactions.select(
+                pathway_protein.select(
                     pl.col("y_id").alias("id"),
                     pl.col("y_type").alias("type"),
                     pl.col("y_name").alias("name"),
@@ -38,8 +38,8 @@ def run(  # noqa: PLR0913
 pathway_node = node(
     run,
     inputs={
-        "pathway_pathway_interactions": "silver.reactome.pathway_pathway_interactions",
-        "pathway_protein_interactions": "silver.reactome.pathway_protein_interactions",
+        "pathway_pathway": "silver.reactome.pathway_pathway",
+        "pathway_protein": "silver.reactome.pathway_protein",
     },
     outputs="nodes.pathway",
     name="pathway",

@@ -14,6 +14,7 @@ biocypher:
   head_ontology:
     url: https://github.com/biolink/biolink-model/raw/v3.2.1/biolink-model.owl.ttl
     root_node: entity
+    format: ttl
 
   tail_ontologies:
     go_biological_process:

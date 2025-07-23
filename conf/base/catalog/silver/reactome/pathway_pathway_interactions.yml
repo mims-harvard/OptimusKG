@@ -1,6 +1,6 @@
-silver.reactome.pathway_pathway_interactions:
+silver.reactome.pathway_pathway:
   type: polars.CSVDataset
-  filepath: "data/silver/reactome/pathway_pathway_interactions.csv"
+  filepath: "data/silver/reactome/pathway_pathway.csv"
   load_args:
     infer_schema: false
     schema:

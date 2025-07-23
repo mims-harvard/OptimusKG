@@ -64,6 +64,10 @@ def run(
                 lambda x: f"MESH:{x}",
                 return_dtype=pl.Utf8,
             ),
+            pl.col("disease_id").map_elements(
+                lambda x: f"MESH:{x}",
+                return_dtype=pl.Utf8,
+            ),
         ]
     )
 

@@ -8,6 +8,7 @@ from cli.commands import (
     neo4j_import_command,
     neo4j_to_pg_command,
     write_metrics_command,
+    write_metrics_report_command,
 )
 from optimuskg.utils import calculate_checksum
 
@@ -83,12 +84,18 @@ def write_metrics(
         help="The path to read the input file from.",
     ),
     data_out_path: Path = typer.Option(
-        "data/export/metrics/metrics.json",
+        "data/export/metrics.json",
         "--out",
         help="The path to write the output file to.",
     ),
+    report_out_path: Path = typer.Option(
+        "data/export/metrics_report.md",
+        "--report-out",
+        help="The path to write the markdown report to.",
+    ),
 ):
     write_metrics_command(in_path, data_out_path)
+    write_metrics_report_command(data_out_path, report_out_path)
 
 
 @app.command(help="Get statistics about a PrimeKG knowledge graph.")

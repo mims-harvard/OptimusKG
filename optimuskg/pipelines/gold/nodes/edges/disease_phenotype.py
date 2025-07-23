@@ -11,7 +11,7 @@ def run(
     return df
 
 
-disease_phenotype_edges_node = node(
+disease_phenotype_node = node(
     run,
     inputs={
         "disease_phenotype": "silver.ontology.disease_phenotype",

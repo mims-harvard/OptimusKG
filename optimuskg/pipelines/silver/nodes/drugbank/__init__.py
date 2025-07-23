@@ -1,11 +1,11 @@
-from .drugbank_drug_drug_interactions import (
-    drugbank_drug_drug_interactions_node,
+from .drug_drug import (
+    drug_drug_node,
 )
-from .drugbank_drug_protein_interactions import (
-    drugbank_drug_protein_interactions_node,
+from .drug_protein import (
+    drug_protein_node,
 )
 
 __all__ = [
-    "drugbank_drug_protein_interactions_node",
-    "drugbank_drug_drug_interactions_node",
+    "drug_protein_node",
+    "drug_drug_node",
 ]

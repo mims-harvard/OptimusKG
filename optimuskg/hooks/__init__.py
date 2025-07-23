@@ -1,5 +1,5 @@
 from .checksum_hooks import ChecksumHooks
 from .origin import OriginHooks
-from .silver_hooks import SilverHooks
+from .quality_checks_hooks import QualityChecksHooks
 
-__all__ = ["SilverHooks", "ChecksumHooks", "OriginHooks"]
+__all__ = ["QualityChecksHooks", "ChecksumHooks", "OriginHooks"]

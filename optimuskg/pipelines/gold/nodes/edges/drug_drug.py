@@ -11,7 +11,7 @@ def run(
     return df
 
 
-drug_drug_edges_node = node(
+drug_drug_node = node(
     run,
     inputs={
         "drug_drug": "silver.drugbank.drug_drug",

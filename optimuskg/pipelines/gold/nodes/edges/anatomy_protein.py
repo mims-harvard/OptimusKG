@@ -11,7 +11,7 @@ def run(
     return df
 
 
-anatomy_protein_edges_node = node(
+anatomy_protein_node = node(
     run,
     inputs={
         "anatomy_protein": "silver.bgee.anatomy_protein",

@@ -11,10 +11,10 @@ def run(
     return df
 
 
-cellular_component_cellular_component_edges_node = node(
+cellular_component_cellular_component_node = node(
     run,
     inputs={
-        "cellular_component_cellular_component": "silver.ontology.cellular_component_cellular_component_interactions",
+        "cellular_component_cellular_component": "silver.ontology.cellular_component_cellular_component",
     },
     outputs="edges.cellular_component_cellular_component",
     name="cellular_component_cellular_component",
