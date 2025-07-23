@@ -22,7 +22,9 @@ def yield_nodes(
         node_properties = (
             {
                 field: (
-                    row[field].split("|")
+                    row[field].split(
+                        "|"
+                    )  # NOTE: Since we're using kedro polars.CSVDataset for dumping intermediate data, we need to split multi-valued fields into a list
                     if row[field] is not None
                     and "|" in row[field]  # Decompose multi-valued fields into a list
                     else row[field].replace('"', '""')
