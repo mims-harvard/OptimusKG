@@ -10,35 +10,36 @@ from .types import Edge, Node
 logger = logging.getLogger("cli")
 
 
+class Statistics(BaseModel):
+    avg: float | None
+    std: float | None
+
+
 class LabelMetricsEntry(BaseModel):
     type: str
     count: int
     percentage: float
-    avg_num_properties: float | None = Field(
+    properties: Statistics | None = Field(
         default=None,
-        description="Average number of property keys for elements of this type.",
+        description="Statistics of number of property keys for elements of this type.",
     )
-    std_dev_num_properties: float | None = Field(
-        default=None,
-        description="Standard deviation of number of property keys for elements of this type.",
-    )
+
+
+class OntologyMetrics(BaseModel):
+    count: int
+    properties: Statistics | None
+    sources: dict[str, int] | None
 
 
 class EdgeLabelMetricsEntry(LabelMetricsEntry): ...
 
 
 class NodeLabelMetricsEntry(LabelMetricsEntry):
-    avg_degree: float | None = Field(
-        default=None, description="Average degree for nodes of this type."
+    degree: Statistics | None = Field(
+        default=None, description="Degree statistics for nodes of this type."
     )
-    std_dev_degree: float | None = Field(
-        default=None, description="Standard deviation of degree for nodes of this type."
-    )
-    ontologies: dict[str, int] | None = Field(
-        default=None, description="Occurrences of each ontology for nodes of this type."
-    )
-    sources: dict[str, int] | None = Field(
-        default=None, description="Occurrences of each source for nodes of this type."
+    ontologies: dict[str, OntologyMetrics] | None = Field(
+        default=None, description="Metrics for each ontology for nodes of this type."
     )
 
 
@@ -125,23 +126,23 @@ def _get_edge_label_metrics(
     for labels, count in sorted(element_label_type.items()):
         percentage = (count / num_elements) * 100 if num_elements > 0 else 0
 
-        avg_props, std_dev_props = None, None
+        properties_stats = None
         if property_counts_by_label:
             props = property_counts_by_label.get(labels, [])
             if props:
                 mean_props = sum(props) / len(props)
                 variance_props = sum((x - mean_props) ** 2 for x in props) / len(props)
                 std_dev = variance_props**0.5
-                avg_props = round(mean_props, 5)
-                std_dev_props = round(std_dev, 5)
+                properties_stats = Statistics(
+                    avg=round(mean_props, 5), std=round(std_dev, 5)
+                )
 
         element_label_stats_list.append(
             EdgeLabelMetricsEntry(
                 type=labels,
                 count=count,
                 percentage=round(percentage, 5),
-                avg_num_properties=avg_props,
-                std_dev_num_properties=std_dev_props,
+                properties=properties_stats,
             )
         )
     return element_label_stats_list
@@ -151,9 +152,9 @@ def _get_node_label_metrics(  # noqa: PLR0913
     element_label_type: dict[str, int],
     num_elements: int,
     degrees_by_label: dict[str, list[int]],
-    property_counts_by_label: dict[str, list[int]],
+    property_counts_by_label: dict[str, dict[str, list[int]]],
     ontologies_by_node_label: dict[str, list[str]],
-    sources_by_node_label: dict[str, list[str]],
+    sources_by_node_label: dict[str, dict[str, list[str]]],
 ) -> list[NodeLabelMetricsEntry]:
     """Returns a list of NodeLabelMetricsEntry objects sorted by label."""
     element_label_stats_list: list[NodeLabelMetricsEntry] = []
@@ -161,51 +162,85 @@ def _get_node_label_metrics(  # noqa: PLR0913
         percentage = (count / num_elements) * 100 if num_elements > 0 else 0
 
         # Degree statistics
-        avg_degree, std_dev_degree = None, None
+        degree_stats = None
         if degrees_by_label:
             degrees = degrees_by_label.get(labels, [])
             if degrees:
                 mean = sum(degrees) / len(degrees)
                 variance = sum((x - mean) ** 2 for x in degrees) / len(degrees)
                 std_dev = variance**0.5
-                avg_degree = round(mean, 5)
-                std_dev_degree = round(std_dev, 5)
+                degree_stats = Statistics(avg=round(mean, 5), std=round(std_dev, 5))
 
-        # Property count statistics
-        avg_props, std_dev_props = None, None
-        if property_counts_by_label:
-            props = property_counts_by_label.get(labels, [])
-            if props:
-                mean_props = sum(props) / len(props)
-                variance_props = sum((x - mean_props) ** 2 for x in props) / len(props)
-                std_dev = variance_props**0.5
-                avg_props = round(mean_props, 5)
-                std_dev_props = round(std_dev, 5)
+        # Property count statistics for the entire node label
+        all_props_for_label = [
+            prop
+            for ontology_props in property_counts_by_label.get(labels, {}).values()
+            for prop in ontology_props
+        ]
+        properties_stats_label = None
+        if all_props_for_label:
+            mean_props_label = sum(all_props_for_label) / len(all_props_for_label)
+            variance_props_label = sum(
+                (x - mean_props_label) ** 2 for x in all_props_for_label
+            ) / len(all_props_for_label)
+            std_dev_label = variance_props_label**0.5
+            properties_stats_label = Statistics(
+                avg=round(mean_props_label, 5), std=round(std_dev_label, 5)
+            )
 
-        ontologies = None
-        ontologies_list = ontologies_by_node_label.get(labels)
+        # Ontology and source metrics
+        ontologies: dict[str, OntologyMetrics] = {}
+        ontologies_list = ontologies_by_node_label.get(labels, [])
         if ontologies_list:
-            ontologies = dict(Counter(ontologies_list))
+            ontology_counts = Counter(ontologies_list)
+            for ontology, ontology_count in ontology_counts.items():
+                properties_stats = None
+                props = property_counts_by_label.get(labels, {}).get(ontology, [])
+                if props:
+                    mean_props = sum(props) / len(props)
+                    variance_props = sum((x - mean_props) ** 2 for x in props) / len(
+                        props
+                    )
+                    std_dev = variance_props**0.5
+                    properties_stats = Statistics(
+                        avg=round(mean_props, 5), std=round(std_dev, 5)
+                    )
 
-        sources = None
-        node_sources = sources_by_node_label.get(labels)
-        if node_sources:
-            sources = dict(Counter(node_sources))
+                ontologies[ontology] = OntologyMetrics(
+                    count=ontology_count,
+                    properties=properties_stats,
+                    sources=dict(
+                        Counter(sources_by_node_label.get(labels, {}).get(ontology, []))
+                    )
+                    if sources_by_node_label.get(labels, {}).get(ontology)
+                    else None,
+                )
 
         element_label_stats_list.append(
             NodeLabelMetricsEntry(
                 type=labels,
                 count=count,
                 percentage=round(percentage, 5),
-                avg_degree=avg_degree,
-                std_dev_degree=std_dev_degree,
-                avg_num_properties=avg_props,
-                std_dev_num_properties=std_dev_props,
-                ontologies=ontologies,
-                sources=sources,
+                properties=properties_stats_label,
+                degree=degree_stats,
+                ontologies=ontologies if ontologies else None,
             )
         )
     return element_label_stats_list
+
+
+def _get_ontology_prefix(node_id: str) -> str:
+    """Returns the ontology prefix of a node ID."""
+    # TODO: Maybe this can be less hardcoded when we switch to indentifiers.og for the IDs
+    if ":" in node_id:
+        return node_id.split(":", 1)[0]
+    elif "_" in node_id:
+        return node_id.split("_", 1)[0]
+    elif "CHEMBL" in node_id:
+        return "CHEMBL"
+    elif "ENSG" in node_id:
+        return "Ensembl"
+    return ""
 
 
 def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915, PLR0912
@@ -223,8 +258,12 @@ def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915, PLR0912
     edge_label_type: dict[str, int] = {}
     node_id_to_label: dict[str, str] = {}
     ontologies_by_node_label: dict[str, list[str]] = defaultdict(list)
-    sources_by_node_label: dict[str, list[str]] = defaultdict(list)
-    node_properties_counts_by_label: dict[str, list[int]] = defaultdict(list)
+    sources_by_node_label: dict[str, dict[str, list[str]]] = defaultdict(
+        lambda: defaultdict(list)
+    )
+    node_properties_counts_by_label: dict[str, dict[str, list[int]]] = defaultdict(
+        lambda: defaultdict(list)
+    )
     edge_properties_counts_by_label: dict[str, list[int]] = defaultdict(list)
 
     try:
@@ -243,24 +282,21 @@ def _process_input_file(in_path: Path) -> Metrics:  # noqa: PLR0915, PLR0912
                         label_key = _join_labels(node.labels)
                         node_id_to_label[node.id] = label_key
 
-                        ontology_prefix = ""
-                        if ":" in node.id:
-                            ontology_prefix = node.id.split(":", 1)[0]
-                        elif "_" in node.id:
-                            ontology_prefix = node.id.split("_", 1)[0]
-
+                        ontology_prefix = _get_ontology_prefix(node.id)
                         if ontology_prefix:
                             ontologies_by_node_label[label_key].append(ontology_prefix)
 
                         node_sources = node.properties.get("source")
                         if node_sources:
                             for source in node_sources:
-                                sources_by_node_label[label_key].append(str(source))
+                                sources_by_node_label[label_key][
+                                    ontology_prefix
+                                ].append(str(source))
 
                         num_props = len(node.properties.keys())
                         total_properties += num_props
-                        node_properties_counts_by_label[
-                            _join_labels(node.labels)
+                        node_properties_counts_by_label[label_key][
+                            ontology_prefix
                         ].append(num_props)
                     elif object_type == "edge":
                         edge = Edge(**data)
