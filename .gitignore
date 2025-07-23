@@ -163,8 +163,7 @@ venv.bak/
 tests/stub_data/bronze/**
 
 # notebooks
-!notebooks/quickstart.ipynb
 notebooks/**
-notebooks/**.ipynb
+!notebooks/quickstart.ipynb
 
 
