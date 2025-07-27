@@ -29,6 +29,7 @@ def concat_json_partitions(
     assert isinstance(concated_df, pl.DataFrame)
     return concated_df
 
+
 def concat_partitions(
     partitioned_input: dict[str, Callable[[], Any]],
 ) -> pl.DataFrame:

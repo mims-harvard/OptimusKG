@@ -152,26 +152,28 @@ def run(  # noqa: PLR0913
             .alias(column_name)
         )
     disease_protein = disease_protein.group_by(keys).agg(agg_exprs)
-    return disease_protein.select([
-        "relation",
-        "relation_type", 
-        "x_id",
-        "x_type",
-        "x_name",
-        "x_source",
-        "y_id", 
-        "y_type",
-        "y_name",
-        "y_source",
-        # NOTE: metadata
-        "log2_fold_change_value",
-        "disease_specificity_index",
-        "disease_pleiotropy_index", 
-        "evidence_index",
-        "number_of_pmids",
-        "number_of_snps",
-        "disgenet_score"
-    ]).sort(by=["x_id", "y_id"])
+    return disease_protein.select(
+        [
+            "relation",
+            "relation_type",
+            "x_id",
+            "x_type",
+            "x_name",
+            "x_source",
+            "y_id",
+            "y_type",
+            "y_name",
+            "y_source",
+            # NOTE: metadata
+            "log2_fold_change_value",
+            "disease_specificity_index",
+            "disease_pleiotropy_index",
+            "evidence_index",
+            "number_of_pmids",
+            "number_of_snps",
+            "disgenet_score",
+        ]
+    ).sort(by=["x_id", "y_id"])
 
 
 disease_protein_node = node(
