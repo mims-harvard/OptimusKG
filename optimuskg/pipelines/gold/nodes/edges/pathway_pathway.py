@@ -14,7 +14,7 @@ def run(
 pathway_pathway_node = node(
     run,
     inputs={
-        "pathway_pathway": "silver.reactome.pathway_pathway",
+        "pathway_pathway": "silver.pathway_pathway",
     },
     outputs="edges.pathway_pathway",
     name="pathway_pathway",

@@ -14,7 +14,7 @@ def run(
 exposure_biological_process_node = node(
     run,
     inputs={
-        "exposure_biological_process": "silver.ctd.exposure_biological_process",
+        "exposure_biological_process": "silver.exposure_biological_process",
     },
     outputs="edges.exposure_biological_process",
     name="exposure_biological_process",

@@ -14,7 +14,7 @@ def run(
 anatomy_protein_node = node(
     run,
     inputs={
-        "anatomy_protein": "silver.bgee.anatomy_protein",
+        "anatomy_protein": "silver.anatomy_protein",
     },
     outputs="edges.anatomy_protein",
     name="anatomy_protein",

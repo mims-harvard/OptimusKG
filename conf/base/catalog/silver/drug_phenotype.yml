@@ -1,0 +1,20 @@
+silver.drug_phenotype:
+  type: polars.CSVDataset
+  filepath: "data/silver/drug_phenotype.csv"
+  load_args:
+    infer_schema: false
+    schema:
+      "relation": "${pl:String}"
+      "relation_type": "${pl:String}"
+      "x_id": "${pl:String}"
+      "x_type": "${pl:String}"
+      "x_name": "${pl:String}"
+      "x_source": "${pl:String}"
+      "y_id": "${pl:String}"
+      "y_type": "${pl:String}"
+      "y_name": "${pl:String}"
+      "y_source": "${pl:String}"
+  metadata:
+    checksum: "a3a0cd6ffa71c4069f02f2de967aa67a"
+    kedro-viz:
+      layer: silver

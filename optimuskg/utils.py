@@ -4,7 +4,6 @@ import re
 from functools import lru_cache
 from pathlib import Path
 
-import polars as pl
 from kedro.framework.session import KedroSession
 from kedro.io.core import AbstractDataset, CatalogProtocol, DatasetNotFoundError
 from kedro.logging import _format_rich
@@ -16,7 +15,7 @@ from kedro_datasets.partitions.partitioned_dataset import (
 logger = logging.getLogger(__name__)
 
 
-def _to_snake_case(text: str) -> str:
+def to_snake_case(text: str) -> str:
     """
     Convert a string to valid snake_case following Python naming conventions.
 
@@ -112,18 +111,6 @@ def is_snake_case(text: str) -> bool:
     return bool(re.match(snake_pattern, text)) and not bool(
         re.match(double_underscore_pattern, text)
     )
-
-
-def convert_columns_to_snake_case(df: pl.DataFrame) -> pl.DataFrame:
-    """Return a new DataFrame with all column names converted to snake_case.
-
-    Args:
-        df (pl.DataFrame): The DataFrame to convert
-
-    Returns:
-        pl.DataFrame: A new DataFrame with all column names converted to snake_case
-    """
-    return df.rename({col: _to_snake_case(col) for col in df.columns})
 
 
 def calculate_checksum(

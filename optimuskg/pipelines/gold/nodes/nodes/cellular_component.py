@@ -65,9 +65,9 @@ def run(
 cellular_component_node = node(
     run,
     inputs={
-        "protein_cellular_component": "silver.ncbigene.protein_cellular_component",
-        "exposure_cellular_component": "silver.ctd.exposure_cellular_component",
-        "cellular_component_cellular_component": "silver.ontology.cellular_component_cellular_component",
+        "protein_cellular_component": "silver.protein_cellular_component",
+        "exposure_cellular_component": "silver.exposure_cellular_component",
+        "cellular_component_cellular_component": "silver.cellular_component_cellular_component",
         "go_terms": "bronze.ontology.go_terms",
     },
     outputs="nodes.cellular_component",

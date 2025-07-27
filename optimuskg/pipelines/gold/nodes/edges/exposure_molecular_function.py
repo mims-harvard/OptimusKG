@@ -14,7 +14,7 @@ def run(
 exposure_molecular_function_node = node(
     run,
     inputs={
-        "exposure_molecular_function": "silver.ctd.exposure_molecular_function",
+        "exposure_molecular_function": "silver.exposure_molecular_function",
     },
     outputs="edges.exposure_molecular_function",
     name="exposure_molecular_function",

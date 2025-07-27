@@ -81,7 +81,7 @@ disease_phenotype_node = node(
         "mondo_xrefs": "bronze.ontology.mondo_xrefs",
         "mondo_terms": "bronze.ontology.mondo_terms",
     },
-    outputs="ontology.disease_phenotype",
+    outputs="disease_phenotype",
     name="disease_phenotype",
     tags=["silver"],
 )

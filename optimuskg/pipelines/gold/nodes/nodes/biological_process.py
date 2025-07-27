@@ -65,9 +65,9 @@ def run(
 biological_process_node = node(
     run,
     inputs={
-        "protein_biological_process": "silver.ncbigene.protein_biological_process",
-        "exposure_biological_process": "silver.ctd.exposure_biological_process",
-        "biological_process_biological_process": "silver.ontology.biological_process_biological_process",
+        "protein_biological_process": "silver.protein_biological_process",
+        "exposure_biological_process": "silver.exposure_biological_process",
+        "biological_process_biological_process": "silver.biological_process_biological_process",
         "go_terms": "bronze.ontology.go_terms",
     },
     outputs="nodes.biological_process",

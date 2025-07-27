@@ -46,7 +46,7 @@ drug_phenotype_node = node(
     inputs={
         "high_confidence": "bronze.onsides.high_confidence",
     },
-    outputs="onsides.drug_phenotype",
+    outputs="drug_phenotype",
     name="onsides",
     tags=["silver"],
 )

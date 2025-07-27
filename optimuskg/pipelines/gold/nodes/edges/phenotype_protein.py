@@ -20,7 +20,7 @@ phenotype_protein_node = node(
     run,
     inputs={
         "opentargets_edges": "silver.opentargets.opentargets_edges",
-        "phenotype_protein": "silver.disgenet.effect_protein",
+        "phenotype_protein": "silver.effect_protein",
     },
     outputs="edges.phenotype_protein",
     name="phenotype_protein",

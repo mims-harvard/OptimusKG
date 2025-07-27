@@ -14,7 +14,7 @@ def run(
 molecular_function_molecular_function_node = node(
     run,
     inputs={
-        "molecular_function_molecular_function": "silver.ontology.molecular_function_molecular_function",
+        "molecular_function_molecular_function": "silver.molecular_function_molecular_function",
     },
     outputs="edges.molecular_function_molecular_function",
     name="molecular_function_molecular_function",

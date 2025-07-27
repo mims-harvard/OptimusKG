@@ -66,9 +66,9 @@ def run(
 molecular_function_node = node(
     run,
     inputs={
-        "protein_molecular_function": "silver.ncbigene.protein_molecular_function",
-        "exposure_molecular_function": "silver.ctd.exposure_molecular_function",
-        "molecular_function_molecular_function": "silver.ontology.molecular_function_molecular_function",
+        "protein_molecular_function": "silver.protein_molecular_function",
+        "exposure_molecular_function": "silver.exposure_molecular_function",
+        "molecular_function_molecular_function": "silver.molecular_function_molecular_function",
         "go_terms": "bronze.ontology.go_terms",
     },
     outputs="nodes.molecular_function",

@@ -51,6 +51,7 @@ def create_pipeline(**kwargs):
             "landing.opentargets.molecule",
             "landing.opentargets.mondo_efo_mappings",
             "landing.opentargets.diseases",
+            "landing.opentargets.association_by_datasource_direct",
             "landing.umls.mrconso",
             "landing.disgenet.curated_gene_disease_associations",
             "landing.onsides.high_confidence",

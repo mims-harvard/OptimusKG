@@ -45,7 +45,7 @@ drug_drug_node = node(
     inputs={
         "full_database": "landing.drugbank.full_database",
     },
-    outputs="drugbank.drug_drug",
+    outputs="drug_drug",
     name="drug_drug",
     tags=["bronze"],
 )

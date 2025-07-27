@@ -52,7 +52,7 @@ anatomy_anatomy_node = node(
         "uberon_terms": "bronze.ontology.uberon_terms",
         "uberon_relations": "bronze.ontology.uberon_relations",
     },
-    outputs="ontology.anatomy_anatomy",
+    outputs="anatomy_anatomy",
     name="anatomy_anatomy",
     tags=["silver"],
 )

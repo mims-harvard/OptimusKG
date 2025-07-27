@@ -13,7 +13,7 @@ drugcentral_node = node(
     inputs={
         "drugcentral": "landing.drugcentral.psql_dump",
     },
-    outputs="drugcentral.drug_disease",
+    outputs="drug_disease",
     name="drugcentral",
     tags=["bronze"],
 )

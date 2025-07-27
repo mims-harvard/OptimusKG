@@ -14,7 +14,7 @@ def run(
 biological_process_biological_process_node = node(
     run,
     inputs={
-        "biological_process_biological_process": "silver.ontology.biological_process_biological_process",
+        "biological_process_biological_process": "silver.biological_process_biological_process",
     },
     outputs="edges.biological_process_biological_process",
     name="biological_process_biological_process",

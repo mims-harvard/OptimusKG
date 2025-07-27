@@ -20,7 +20,7 @@ disease_protein_node = node(
     run,
     inputs={
         "opentargets_edges": "silver.opentargets.opentargets_edges",
-        "disease_protein": "silver.disgenet.disease_protein",
+        "disease_protein": "silver.disease_protein",
     },
     outputs="edges.disease_protein",
     name="disease_protein",

@@ -20,7 +20,7 @@ drug_protein_node = node(
     run,
     inputs={
         "opentargets_edges": "silver.opentargets.opentargets_edges",
-        "drug_protein": "silver.drugbank.drug_protein",
+        "drug_protein": "silver.drug_protein",
     },
     outputs="edges.drug_protein",
     name="drug_protein",

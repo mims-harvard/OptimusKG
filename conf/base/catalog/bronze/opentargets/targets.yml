@@ -1,11 +1,13 @@
 bronze.opentargets.targets:
-  type: pandas.JSONDataset
-  filepath: "data/bronze/opentargets/targets.jsonl"
-  save_args:
-    lines: true
-    orient: records
+  type: polars.CSVDataset
+  filepath: "data/bronze/opentargets/targets.csv"
   load_args:
-    lines: true
+    infer_schema: false
+    schema:
+      id: "${pl:Utf8}"
+      name: "${pl:Utf8}"
+      symbol: "${pl:Utf8}"
+      source: "${pl:Utf8}"
   metadata:
     checksum: "8076de699b6a489937178a6378c8ab8e"
     kedro-viz:

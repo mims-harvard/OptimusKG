@@ -66,12 +66,12 @@ def run(  # noqa: PLR0913
 exposure_node = node(
     run,
     inputs={
-        "exposure_protein": "silver.ctd.exposure_protein",
-        "exposure_exposure": "silver.ctd.exposure_exposure",
-        "exposure_disease": "silver.ctd.exposure_disease",
-        "exposure_biological_process": "silver.ctd.exposure_biological_process",
-        "exposure_molecular_function": "silver.ctd.exposure_molecular_function",
-        "exposure_cellular_component": "silver.ctd.exposure_cellular_component",
+        "exposure_protein": "silver.exposure_protein",
+        "exposure_exposure": "silver.exposure_exposure",
+        "exposure_disease": "silver.exposure_disease",
+        "exposure_biological_process": "silver.exposure_biological_process",
+        "exposure_molecular_function": "silver.exposure_molecular_function",
+        "exposure_cellular_component": "silver.exposure_cellular_component",
     },
     outputs="nodes.exposure",
     name="exposure",

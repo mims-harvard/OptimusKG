@@ -38,8 +38,8 @@ def run(  # noqa: PLR0913
 pathway_node = node(
     run,
     inputs={
-        "pathway_pathway": "silver.reactome.pathway_pathway",
-        "pathway_protein": "silver.reactome.pathway_protein",
+        "pathway_pathway": "silver.pathway_pathway",
+        "pathway_protein": "silver.pathway_protein",
     },
     outputs="nodes.pathway",
     name="pathway",

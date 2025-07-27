@@ -14,7 +14,7 @@ def run(
 molecular_function_protein_node = node(
     run,
     inputs={
-        "molecular_function_protein": "silver.ncbigene.protein_molecular_function",
+        "molecular_function_protein": "silver.protein_molecular_function",
     },
     outputs="edges.molecular_function_protein",
     name="molecular_function_protein",

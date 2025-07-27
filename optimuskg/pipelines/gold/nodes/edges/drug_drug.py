@@ -14,7 +14,7 @@ def run(
 drug_drug_node = node(
     run,
     inputs={
-        "drug_drug": "silver.drugbank.drug_drug",
+        "drug_drug": "silver.drug_drug",
     },
     outputs="edges.drug_drug",
     name="drug_drug",

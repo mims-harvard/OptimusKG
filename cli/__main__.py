@@ -63,7 +63,7 @@ def checksum(  # noqa: PLR0913
 @app.command(help="Convert a Neo4j export JSONL file into a PG-JSONL representation.")
 def neo4j_to_pg(
     in_path: Path = typer.Option(
-        "data/neo4j/export/optimuskg.jsonl",
+        "data/export/optimuskg.jsonl",
         "--in",
         help="The path to read the input file from.",
     ),

@@ -14,7 +14,7 @@ def run(
 drug_phenotype_node = node(
     run,
     inputs={
-        "drug_phenotype": "silver.onsides.drug_phenotype",
+        "drug_phenotype": "silver.drug_phenotype",
     },
     outputs="edges.drug_phenotype",
     name="drug_phenotype",

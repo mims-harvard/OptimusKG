@@ -62,7 +62,7 @@ phenotype_phenotype_node = node(
         "hp_terms": "bronze.ontology.hp_terms",
         "hp_relations": "bronze.ontology.hp_relations",
     },
-    outputs="ontology.phenotype_phenotype",
+    outputs="phenotype_phenotype",
     name="phenotype_phenotype",
     tags=["silver"],
 )

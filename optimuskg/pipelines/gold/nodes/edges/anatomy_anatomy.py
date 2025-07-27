@@ -14,7 +14,7 @@ def run(
 anatomy_anatomy_node = node(
     run,
     inputs={
-        "anatomy_anatomy": "silver.ontology.anatomy_anatomy",
+        "anatomy_anatomy": "silver.anatomy_anatomy",
     },
     outputs="edges.anatomy_anatomy",
     name="anatomy_anatomy",

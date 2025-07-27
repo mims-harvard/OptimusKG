@@ -31,7 +31,8 @@ class OntologyMetrics(BaseModel):
     sources: dict[str, int] | None
 
 
-class EdgeLabelMetricsEntry(LabelMetricsEntry): ...
+class EdgeLabelMetricsEntry(LabelMetricsEntry):
+    ...
 
 
 class NodeLabelMetricsEntry(LabelMetricsEntry):

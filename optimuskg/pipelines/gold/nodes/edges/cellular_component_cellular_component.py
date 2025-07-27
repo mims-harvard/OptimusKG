@@ -14,7 +14,7 @@ def run(
 cellular_component_cellular_component_node = node(
     run,
     inputs={
-        "cellular_component_cellular_component": "silver.ontology.cellular_component_cellular_component",
+        "cellular_component_cellular_component": "silver.cellular_component_cellular_component",
     },
     outputs="edges.cellular_component_cellular_component",
     name="cellular_component_cellular_component",

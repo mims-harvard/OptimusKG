@@ -14,7 +14,7 @@ def run(
 exposure_cellular_component_node = node(
     run,
     inputs={
-        "exposure_cellular_component": "silver.ctd.exposure_cellular_component",
+        "exposure_cellular_component": "silver.exposure_cellular_component",
     },
     outputs="edges.exposure_cellular_component",
     name="exposure_cellular_component",

@@ -1,87 +1,50 @@
 from .anatomy_anatomy import anatomy_anatomy_node
-from .bgee import bgee_node
-from .ctd import (
-    exposure_biological_process_node,
-    exposure_cellular_component_node,
-    exposure_disease_node,
-    exposure_exposure_node,
-    exposure_molecular_function_node,
-    exposure_protein_node,
+from .anatomy_protein import anatomy_protein_node
+from .biological_process_biological_process import (
+    biological_process_biological_process_node,
+)
+from .cellular_component_cellular_component import (
+    cellular_component_cellular_component_node,
 )
 from .disease_disease import disease_disease_node
 from .disease_phenotype import disease_phenotype_node
-from .disgenet_disease_protein import disgenet_disease_protein_node
+from .disease_protein import disease_protein_node
 from .disgenet_effect_protein import disgenet_effect_protein_node
+from .drug_disease import drug_disease_node
+from .drug_drug import drug_drug_node
 from .drug_phenotype import drug_phenotype_node
-from .drugbank import (
-    drug_drug_node,
-    drug_protein_node,
-)
-from .drugcentral import drugcentral_node
-from .go import (
-    biological_process_biological_process_node,
-    cellular_component_cellular_component_node,
+from .drug_protein import drug_protein_node
+from .exposure_biological_process import exposure_biological_process_node
+from .exposure_cellular_component import exposure_cellular_component_node
+from .exposure_disease import exposure_disease_node
+from .exposure_exposure import exposure_exposure_node
+from .exposure_molecular_function import exposure_molecular_function_node
+from .exposure_protein import exposure_protein_node
+from .molecular_function_molecular_function import (
     molecular_function_molecular_function_node,
 )
-from .ncbigene import (
-    protein_biological_process_node,
-    protein_cellular_component_node,
-    protein_molecular_function_node,
-)
 from .opentargets import (
-    cancer_gene_census_node,
-    chembl_node,
-    clingen_node,
-    crispr_node,
-    crispr_screen_node,
     disease_to_phenotype_node,
-    expression_atlas_node,
-    gene2phenotype_node,
-    gene_burden_node,
-    genomics_england_node,
-    intogen_node,
-    opentargets_edges_node,
-    orphanet_node,
-    ot__reactome_node,
-    progeny_node,
-    slapenrich_node,
-    sysbio_node,
-    uniprot_literature_node,
 )
+from .pathway_pathway import pathway_pathway_node
+from .pathway_protein import pathway_protein_node
 from .phenotype_phenotype import phenotype_phenotype_node
-from .reactome import (
-    pathway_pathway_node,
-    pathway_protein_node,
-)
+from .protein_biological_process import protein_biological_process_node
+from .protein_cellular_component import protein_cellular_component_node
+from .protein_molecular_function import protein_molecular_function_node
 from .umls_mondo import umls_mondo_node
 
 __all__ = [
-    "bgee_node",
-    "cancer_gene_census_node",
-    "chembl_node",
-    "clingen_node",
-    "crispr_node",
-    "crispr_screen_node",
+    "anatomy_protein_node",
     "disease_to_phenotype_node",
-    "expression_atlas_node",
-    "gene2phenotype_node",
-    "gene_burden_node",
-    "genomics_england_node",
-    "intogen_node",
-    "orphanet_node",
-    "progeny_node",
-    "ot__reactome_node",
-    "slapenrich_node",
-    "sysbio_node",
-    "uniprot_literature_node",
-    "opentargets_edges_node",
+    "disease_protein_node",
     "exposure_exposure_node",
     "exposure_protein_node",
     "exposure_disease_node",
     "exposure_biological_process_node",
     "exposure_molecular_function_node",
     "exposure_cellular_component_node",
-    "drugcentral_node",
+    "drug_disease_node",
     "protein_biological_process_node",
     "protein_cellular_component_node",
     "protein_molecular_function_node",
@@ -91,7 +54,6 @@ __all__ = [
     "drug_protein_node",
     "disease_disease_node",
     "umls_mondo_node",
-    "disgenet_disease_protein_node",
     "disgenet_effect_protein_node",
     "disease_phenotype_node",
     "cellular_component_cellular_component_node",

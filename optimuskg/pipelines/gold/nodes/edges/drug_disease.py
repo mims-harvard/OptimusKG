@@ -18,7 +18,7 @@ def run(
 drug_disease_node = node(
     run,
     inputs={
-        "drug_disease": "silver.drugcentral.drug_disease",
+        "drug_disease": "silver.drug_disease",
         "opentargets_edges": "silver.opentargets.opentargets_edges",
     },
     outputs="edges.drug_disease",

@@ -1,131 +1,53 @@
-_bronze_opentargets_evidence_args: &bronze_opentargets_evidence_args
-  type: pandas.JSONDataset
-  save_args:
-    lines: true
-    orient: records
+bronze.opentargets.evidence:
+  type: polars.CSVDataset
   load_args:
-    lines: true
-
-bronze.opentargets.evidence.cancer_gene_census:
-  <<: *bronze_opentargets_evidence_args
-  filepath: "data/bronze/opentargets/evidence/cancer_gene_census.jsonl"
+    infer_schema: false
+    schema:
+      datasource_id: "${pl:Utf8}"
+      target_id: "${pl:Utf8}"
+      disease_id: "${pl:Utf8}"
+      drug_id: "${pl:Utf8}"
+      drug_response: "${pl:Utf8}"
+      ancestry_id: "${pl:Utf8}"
+      beta_confidence_interval_lower: "${pl:Float64}"
+      beta_confidence_interval_upper: "${pl:Float64}"
+      cell_type: "${pl:Utf8}"
+      clinical_phase: "${pl:Float64}"
+      clinical_status: "${pl:Utf8}"
+      confidence: "${pl:Utf8}"
+      contrast: "${pl:Utf8}"
+      crispr_screen_library: "${pl:Utf8}"
+      datatype_id: "${pl:Utf8}"
+      disease_from_source_mapped_id: "${pl:Utf8}"
+      genetic_background: "${pl:Utf8}"
+      log2_fold_change_percentile_rank: "${pl:Float64}"
+      log2_fold_change_value: "${pl:Float64}"
+      odds_ratio: "${pl:Float64}"
+      odds_ratio_confidence_interval_lower: "${pl:Float64}"
+      odds_ratio_confidence_interval_upper: "${pl:Float64}"
+      p_value_exponent: "${pl:Float64}"
+      p_value_mantissa: "${pl:Float64}"
+      project_id: "${pl:Utf8}"
+      publication_first_author: "${pl:Utf8}"
+      publication_year: "${pl:Float64}"
+      reaction_id: "${pl:Utf8}"
+      reaction_name: "${pl:Utf8}"
+      release_date: "${pl:Utf8}"
+      release_version: "${pl:Utf8}"
+      resource_score: "${pl:Float64}"
+      statistical_method: "${pl:Utf8}"
+      statistical_method_overview: "${pl:Utf8}"
+      study_cases: "${pl:Float64}"
+      study_id: "${pl:Utf8}"
+      study_overview: "${pl:Utf8}"
+      study_sample_size: "${pl:Float64}"
+      study_start_date: "${pl:Utf8}"
+      study_stop_reason: "${pl:Utf8}"
+      target_from_source: "${pl:Utf8}"
+      target_from_source_id: "${pl:Utf8}"
+      score: "${pl:Float64}"
+      variant_effect: "${pl:Utf8}"
+      direction_on_trait: "${pl:Utf8}"
+  filepath: "data/bronze/opentargets/evidence/evidence.csv"
   metadata:
     checksum: "d85377227fafa1dfbfe1f8b5e78e4e46"
-
-bronze.opentargets.evidence.chembl:
-  <<: *bronze_opentargets_evidence_args
-  filepath: "data/bronze/opentargets/evidence/chembl.jsonl"
-  metadata:
-    checksum: "90f7b32eabcb1b3d98e0815ee5fd108b"
-
-bronze.opentargets.evidence.clingen:
-  <<: *bronze_opentargets_evidence_args
-  filepath: "data/bronze/opentargets/evidence/clingen.jsonl"
-  metadata:
-    checksum: "27147b6615299f4aea51d9374c0bcf70"
-    kedro-viz:
-      layer: bronze
-
-bronze.opentargets.evidence.crispr:
-  <<: *bronze_opentargets_evidence_args
-  filepath: "data/bronze/opentargets/evidence/crispr.jsonl"
-  metadata:
-    checksum: "ae3c262f5018ce0109e4e3515f68e5a8"
-    kedro-viz:
-      layer: bronze
-
-bronze.opentargets.evidence.crispr_screen:
-  <<: *bronze_opentargets_evidence_args
-  filepath: "data/bronze/opentargets/evidence/crispr_screen.jsonl"
-  metadata:
-    checksum: "1c847745ea0d9ad932fcd1df1cc754a0"
-    kedro-viz:
-      layer: bronze
-
-bronze.opentargets.evidence.expression_atlas:
-  <<: *bronze_opentargets_evidence_args
-  filepath: "data/bronze/opentargets/evidence/expression_atlas.jsonl"
-  metadata:
-    checksum: "f6de8abe5f4ad881af3bfda8a9d70810"
-    kedro-viz:
-      layer: bronze
-
-bronze.opentargets.evidence.gene_burden:
-  <<: *bronze_opentargets_evidence_args
-  filepath: "data/bronze/opentargets/evidence/gene_burden.jsonl"
-  metadata:
-    checksum: "5069b8d1d44a5ba5e80c2313c7f68d29"
-    kedro-viz:
-      layer: bronze
-
-bronze.opentargets.evidence.gene2phenotype:
-  <<: *bronze_opentargets_evidence_args
-  filepath: "data/bronze/opentargets/evidence/gene2phenotype.jsonl"
-  metadata:
-    checksum: "61d259c87c4de8d08cb1aae60946c053"
-    kedro-viz:
-      layer: bronze
-
-bronze.opentargets.evidence.genomics_england:
-  <<: *bronze_opentargets_evidence_args
-  filepath: "data/bronze/opentargets/evidence/genomics_england.jsonl"
-  metadata:
-    checksum: "aab5cd91bdce08e527716696050e2cc3"
-    kedro-viz:
-      layer: bronze
-
-bronze.opentargets.evidence.intogen:
-  <<: *bronze_opentargets_evidence_args
-  filepath: "data/bronze/opentargets/evidence/intogen.jsonl"
-  metadata:
-    checksum: "387030c6ea941edd631e913b36fc2d69"
-    kedro-viz:
-      layer: bronze
-
-bronze.opentargets.evidence.orphanet:
-  <<: *bronze_opentargets_evidence_args
-  filepath: "data/bronze/opentargets/evidence/orphanet.jsonl"
-  metadata:
-    checksum: "c738241c6066db859f40aa416af3324f"
-    kedro-viz:
-      layer: bronze
-
-bronze.opentargets.evidence.progeny:
-  <<: *bronze_opentargets_evidence_args
-  filepath: "data/bronze/opentargets/evidence/progeny.jsonl"
-  metadata:
-    checksum: "75e2ac8f8e7c56713efaf1279f596fb3"
-    kedro-viz:
-      layer: bronze
-
-bronze.opentargets.evidence.reactome:
-  <<: *bronze_opentargets_evidence_args
-  filepath: "data/bronze/opentargets/evidence/reactome.jsonl"
-  metadata:
-    checksum: "dc6929075777854762b15aff6912e6b7"
-    kedro-viz:
-      layer: bronze
-
-bronze.opentargets.evidence.slapenrich:
-  <<: *bronze_opentargets_evidence_args
-  filepath: "data/bronze/opentargets/evidence/slapenrich.jsonl"
-  metadata:
-    checksum: "1bbb6ece1b44a2297e4a44816c531680"
-    kedro-viz:
-      layer: bronze
-
-bronze.opentargets.evidence.sysbio:
-  <<: *bronze_opentargets_evidence_args
-  filepath: "data/bronze/opentargets/evidence/sysbio.jsonl"
-  metadata:
-    checksum: "fdcc1ea90e7b703cd4c6c68ef96e4f06"
-    kedro-viz:
-      layer: bronze
-
-bronze.opentargets.evidence.uniprot_literature:
-  <<: *bronze_opentargets_evidence_args
-  filepath: "data/bronze/opentargets/evidence/uniprot_literature.jsonl"
-  metadata:
-    checksum: "677f912a865e8a51220d3b0f59badda6"
-    kedro-viz:
-      layer: bronze

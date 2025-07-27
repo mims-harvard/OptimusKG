@@ -15,11 +15,6 @@ _common_opentargets_origin: &common_opentargets_origin
 landing.opentargets.evidence.cancer_gene_census:
   <<: *common_landing_opentargets_evidence_args
   path: "data/landing/opentargets/evidence/cancer_gene_census"
-  dataset:
-    type: pandas.ParquetDataset
-    load_args:
-      engine: pyarrow
-  filename_suffix: ".parquet"
   metadata:
     checksum: "3bd8ca4b2db8159493ed2a29e68fab3b"
     origin:

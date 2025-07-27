@@ -56,8 +56,8 @@ def run(
 anatomy_node = node(
     run,
     inputs={
-        "anatomy_protein": "silver.bgee.anatomy_protein",
-        "anatomy_anatomy": "silver.ontology.anatomy_anatomy",
+        "anatomy_protein": "silver.anatomy_protein",
+        "anatomy_anatomy": "silver.anatomy_anatomy",
         "uberon_terms": "bronze.ontology.uberon_terms",
     },
     outputs="nodes.anatomy",

@@ -45,6 +45,13 @@ disease: # A disease or phenotypic feature (https://biolink.github.io/biolink-mo
   properties:
     name: str
     source: str
+    definition: str
+    xrefs: str[]
+    synonyms: str[]
+    ontology_description: str
+    ontology_title: str
+    ontology_license: str
+    ontology_version: str
 
 phenotype: # A phenotypic feature (https://biolink.github.io/biolink-model/PhenotypicFeature/)
   is_a: phenotypic feature

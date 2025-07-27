@@ -52,7 +52,7 @@ disgenet_effect_protein_node = node(
         "hp_terms": "bronze.ontology.hp_terms",
         "hp_xrefs": "bronze.ontology.hp_xrefs",
     },
-    outputs="disgenet.effect_protein",
+    outputs="effect_protein",
     name="disgenet_effect_protein",
     tags=["silver"],
 )

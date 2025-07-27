@@ -14,7 +14,7 @@ def run(
 disease_disease_node = node(
     run,
     inputs={
-        "disease_disease": "silver.ontology.disease_disease",
+        "disease_disease": "silver.disease_disease",
     },
     outputs="edges.disease_disease",
     name="disease_disease",

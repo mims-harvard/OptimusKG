@@ -14,7 +14,7 @@ def run(
 cellular_component_protein_node = node(
     run,
     inputs={
-        "cellular_component_protein": "silver.ncbigene.protein_cellular_component",
+        "cellular_component_protein": "silver.protein_cellular_component",
     },
     outputs="edges.cellular_component_protein",
     name="cellular_component_protein",

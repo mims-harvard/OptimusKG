@@ -14,7 +14,7 @@ def run(
 exposure_exposure_node = node(
     run,
     inputs={
-        "exposure_exposure": "silver.ctd.exposure_exposure",
+        "exposure_exposure": "silver.exposure_exposure",
     },
     outputs="edges.exposure_exposure",
     name="exposure_exposure",

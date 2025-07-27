@@ -65,7 +65,7 @@ disease_disease_node = node(
         "mondo_terms": "bronze.ontology.mondo_terms",
         "mondo_relations": "bronze.ontology.mondo_relations",
     },
-    outputs="ontology.disease_disease",
+    outputs="disease_disease",
     name="disease_disease",
     tags=["silver"],
 )

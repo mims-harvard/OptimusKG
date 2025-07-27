@@ -171,21 +171,35 @@ class JSONDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
 
     def load(self) -> pl.DataFrame:
         load_path = str(self._get_load_path())
+        use_ndjson = self._load_args.pop("lines", False)
+
         if self._protocol == "file":
             # file:// protocol seems to misbehave on Windows
             # (<urlopen error file not on local host>),
             # so we don't join that back to the filepath;
             # storage_options also don't work with local paths
-            return pl.read_json(load_path, **self._load_args)
+            return (
+                pl.read_ndjson(load_path, **self._load_args)
+                if use_ndjson
+                else pl.read_json(load_path, **self._load_args)
+            )
 
         load_path = f"{self._protocol}{PROTOCOL_DELIMITER}{load_path}"
-        return pl.read_json(load_path, **self._load_args)
+        return (
+            pl.read_ndjson(load_path, **self._load_args)
+            if use_ndjson
+            else pl.read_json(load_path, **self._load_args)
+        )
 
     def save(self, data: pl.DataFrame) -> None:
         save_path = get_filepath_str(self._get_save_path(), self._protocol)
+        use_ndjson = self._save_args.pop("lines", False)
 
         with self._fs.open(save_path, **self._fs_open_args_save) as fs_file:
-            data.write_json(file=fs_file, **self._save_args)
+            if use_ndjson:
+                data.write_ndjson(file=fs_file, **self._save_args)
+            else:
+                data.write_json(file=fs_file, **self._save_args)
 
         self._invalidate_cache()
 
