@@ -3,63 +3,29 @@ from kedro.pipeline import node
 
 
 def run(
-    hp_terms: pl.DataFrame,
     hp_relations: pl.DataFrame,
 ) -> pl.DataFrame:
-    df_phenotype_phenotype = hp_relations.join(
-        hp_terms, left_on="parent", right_on="id", how="left"
-    )
-
-    df_phenotype_phenotype = df_phenotype_phenotype.rename({"name": "parent_name"})
-
-    df_phenotype_phenotype = df_phenotype_phenotype.join(
-        hp_terms, left_on="child", right_on="id", how="left"
-    )
-
-    df_phenotype_phenotype = df_phenotype_phenotype.rename({"name": "child_name"})
-
-    df_phenotype_phenotype = df_phenotype_phenotype.rename(
-        {
-            "parent": "x_id",
-            "child": "y_id",
-            "parent_name": "x_name",
-            "child_name": "y_name",
-        }
-    )
-
-    df_phenotype_phenotype = df_phenotype_phenotype.with_columns(
-        [
-            pl.lit("phenotype").alias("x_type"),
-            pl.lit("HP").alias("x_source"),
-            pl.lit("phenotype").alias("y_type"),
-            pl.lit("HP").alias("y_source"),
+    return (
+        hp_relations.select(
+            pl.col("parent").alias("from"),
+            pl.col("child").alias("to"),
             pl.lit("phenotype_phenotype").alias("relation"),
-            pl.lit("parent-child").alias("relation_type"),
-        ]
+            pl.lit(False).alias("undirected"),
+            pl.struct(  # TODO: we can add more metadata merging with opentargets disease_phenotype and disease dataset
+                [
+                    pl.lit(["HP"]).alias("sources"),
+                    pl.lit("parent").alias("relationType"),
+                ]
+            ).alias("properties"),
+        )
+        .unique(subset=["from", "to"])
+        .sort(by=["from", "to"])
     )
-
-    df_phenotype_phenotype = df_phenotype_phenotype.select(
-        [
-            "relation",
-            "relation_type",
-            "x_id",
-            "x_type",
-            "x_name",
-            "x_source",
-            "y_id",
-            "y_type",
-            "y_name",
-            "y_source",
-        ]
-    )
-
-    return df_phenotype_phenotype
 
 
 phenotype_phenotype_node = node(
     run,
     inputs={
-        "hp_terms": "bronze.ontology.hp_terms",
         "hp_relations": "bronze.ontology.hp_relations",
     },
     outputs="phenotype_phenotype",

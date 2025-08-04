@@ -29,18 +29,15 @@ def checksum(  # noqa: PLR0913
     digest_size: int = typer.Option(
         16, "--digest-size", help="The size of the digest to use for the checksum."
     ),
-    dir: bool = typer.Option(
-        False, "--dir", help="Generate one checksum of all files in the directory."
-    ),
 ):
     try:
         actual_checksum = calculate_checksum(
             path=path,
             chunk_size=chunk_size,
             digest_size=digest_size,
-            process_directory=dir,
         )
-        display_path = f"directory '{path}'" if dir else f"'{path}'"
+
+        display_path = f"directory '{path}'" if path.is_dir() else f"'{path}'"
 
         if not checksum:
             logger.info(f"The checksum of {display_path} is: {actual_checksum}")

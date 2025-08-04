@@ -3,67 +3,40 @@ from kedro.pipeline import node
 
 
 def run(
-    mondo_terms: pl.DataFrame,
-    mondo_relations: pl.DataFrame,
+    disease: pl.DataFrame,
 ) -> pl.DataFrame:
-    # Filter for is_a relationships
-    mondo_parents = mondo_relations.filter(pl.col("edge_type") == "is_a")
-
-    # Join with mondo_terms to get parent names ('head')
-    df = mondo_parents.join(
-        mondo_terms.select("id", "name"), left_on="head", right_on="id", how="left"
+    return (
+        disease.with_columns(
+            pl.col("metadata").struct.field("parents"),
+        )
+        .explode("parents")
+        .filter(
+            pl.col("parents").is_not_null(),
+            ~pl.col("id").str.contains("HP"),
+            ~pl.col("id").str.contains("Orphanet"),  # TODO: why im filtering this?
+        )
+        .with_columns(
+            pl.col("parents").alias("from"),
+            pl.col("id").alias("to"),
+            pl.lit("disease_disease").alias("relation"),
+            pl.lit(False).alias("undirected"),
+            pl.struct(
+                [
+                    pl.lit("parent").alias("relationType"),
+                    pl.lit(["opentargets"]).alias("sources"),
+                ]
+            ).alias("properties"),
+        )
+        .select(["from", "to", "relation", "undirected", "properties"])
+        .unique(subset=["from", "to"])
+        .sort(by=["from", "to"])
     )
-
-    # Join with mondo_terms to get child names ('tail')
-    df = df.join(
-        mondo_terms.select("id", "name"),
-        left_on="tail",
-        right_on="id",
-        how="left",
-        suffix="_child",
-    )
-
-    df = df.rename(
-        {
-            "head": "x_id",
-            "name": "x_name",
-            "tail": "y_id",
-            "name_child": "y_name",
-        }
-    )
-
-    df_disease_disease = df.with_columns(
-        pl.lit("disease").alias("x_type"),
-        pl.lit("MONDO").alias("x_source"),
-        pl.lit("disease").alias("y_type"),
-        pl.lit("MONDO").alias("y_source"),
-        pl.lit("disease_disease").alias("relation"),
-        pl.lit("parent-child").alias("relation_type"),
-    )
-
-    df_disease_disease = df_disease_disease.select(
-        [
-            "relation",
-            "relation_type",
-            "x_id",
-            "x_type",
-            "x_name",
-            "x_source",
-            "y_id",
-            "y_type",
-            "y_name",
-            "y_source",
-        ]
-    )
-
-    return df_disease_disease
 
 
 disease_disease_node = node(
     run,
     inputs={
-        "mondo_terms": "bronze.ontology.mondo_terms",
-        "mondo_relations": "bronze.ontology.mondo_relations",
+        "disease": "bronze.opentargets.disease",
     },
     outputs="disease_disease",
     name="disease_disease",

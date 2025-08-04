@@ -1,4 +1,4 @@
-"""``JSONDataset`` loads/saves data from/to a JSON file using an underlying
+"""``JsonDataset`` loads/saves data from/to a JSON file using an underlying
 filesystem (e.g.: local, S3, GCS). It uses polars to handle the JSON file.
 """
 
@@ -23,8 +23,8 @@ from kedro.io.core import (
 logger = logging.getLogger(__name__)
 
 
-class JSONDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
-    """``JSONDataset`` loads/saves data from/to a JSON file using an underlying
+class JsonDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
+    """``JsonDataset`` loads/saves data from/to a JSON file using an underlying
     filesystem (e.g.: local, S3, GCS). It uses polars to handle the JSON file.
 
     Example usage for the `YAML API <https://docs.kedro.org/en/stable/data/\
@@ -33,7 +33,7 @@ class JSONDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
     .. code-block:: yaml
 
         cars:
-          type: polars.JSONDataset
+          type: polars.JsonDataset
           filepath: data/01_raw/company/cars.json
           load_args:
             schema: null
@@ -41,7 +41,7 @@ class JSONDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
             row_oriented: true
 
         motorbikes:
-          type: polars.JSONDataset
+          type: polars.JsonDataset
           filepath: s3://your_bucket/data/02_intermediate/company/motorbikes.json
           credentials: dev_s3
 
@@ -55,14 +55,14 @@ class JSONDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
         >>>
         >>> import polars as pl
         >>> import pytest
-        >>> from kedro_datasets.polars import JSONDataset
+        >>> from kedro_datasets.polars import JsonDataset
         >>>
         >>> if sys.platform.startswith("win"):
         ...     pytest.skip("this doctest fails on Windows CI runner")
         ...
         >>> data = pl.DataFrame({"col1": [1, 2], "col2": [4, 5], "col3": [5, 6]})
         >>>
-        >>> dataset = JSONDataset(filepath=tmp_path / "test.json")
+        >>> dataset = JsonDataset(filepath=tmp_path / "test.json")
         >>> dataset.save(data)
         >>> reloaded = dataset.load()
         >>> assert data.equals(reloaded)
@@ -86,7 +86,7 @@ class JSONDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
         fs_args: dict[str, Any] | None = None,
         metadata: dict[str, Any] | None = None,
     ) -> None:
-        """Creates a new instance of ``JSONDataset`` pointing to a concrete JSON file
+        """Creates a new instance of ``JsonDataset`` pointing to a concrete JSON file
         on a specific filesystem.
 
         Args:

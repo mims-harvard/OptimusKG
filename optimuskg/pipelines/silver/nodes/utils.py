@@ -1,74 +1,46 @@
 import logging
-
-import requests
-from pydantic import BaseModel, Field
+import re
 
 logger = logging.getLogger(__name__)
 
 
-class GeneMetadata(BaseModel):
-    ncbi_id: str = Field(..., description="NCBI Gene ID", nullable=False)
-    symbol: str = Field(..., description="Gene symbol", nullable=False)
-    name: str = Field(..., description="Gene name", nullable=False)
-    tax_id: str = Field(
-        ..., description="NCBI Taxonomy ID for the organism", nullable=False
-    )
-    tax_name: str = Field(
-        ..., description="Taxonomic name of the organism", nullable=False
-    )
-    common_name: str = Field(
-        ..., description="Common name of the organism", nullable=False
-    )
-    type: str = Field(
-        ..., description="GeneType values match Entrez Gene", nullable=False
-    )
-    orientation: str = Field(..., description="The gene orientation", nullable=False)
-    chromosomes: list[str] = Field(..., description="The chromosomes", nullable=False)
-    swiss_prot_accessions: list[str] = Field(
-        ..., description="The Swiss-Prot accessions", nullable=False
-    )
-    ensembl_gene_ids: list[str] = Field(
-        ..., description="The Ensembl gene IDs", nullable=False
-    )
-    omim_ids: list[str] = Field(..., description="The OMIM IDs", nullable=False)
-    synonyms: list[str] = Field(..., description="The synonyms", nullable=False)
-    transcript_count: int = Field(
-        ..., description="Number of transcripts encoded by the gene", nullable=False
-    )
-    protein_count: int = Field(
-        ..., description="Number of proteins encoded by the gene", nullable=False
-    )
-    summary: str = Field(
-        ...,
-        description="Gene summary text itself that describes the gene",
-        nullable=False,
-    )
+def classify_age_type(age_str: str, qualifier_str: str) -> str:
+    """Classify age and return type string"""
+    if not age_str or age_str in ["", "null"]:
+        return "null"
+
+    age_clean = str(age_str).strip()
+    qualifier_clean = str(qualifier_str).lower().strip() if qualifier_str else ""
+
+    # Check patterns
+    pattern_type = {r"[><=]+\s*\d+": "open_range", r"\d+\s*[-–]\s*\d+": "closed_range"}
+
+    for pattern, type_ in pattern_type.items():
+        if re.search(pattern, age_clean):
+            return type_
+
+    if re.search(r"\d+", age_clean):
+        if "mean" in qualifier_clean:
+            return "mean"
+        if "median" in qualifier_clean:
+            return "median"
+        return "point"
+
+    return "unparsed"
 
 
-def get_gene_metadata_by_symbol(symbol: str) -> GeneMetadata:
-    response = requests.get(
-        f"https://api.ncbi.nlm.nih.gov/datasets/v2/gene/symbol/{symbol}/taxon/9606",
-        headers={"accept": "application/json"},
-    )
-    response.raise_for_status()
-    gene_report = response.json()["reports"][0][0]["gene"]
-    gene_metadata = GeneMetadata(
-        ncbi_id=gene_report["gene_id"],
-        symbol=gene_report["symbol"],
-        name=gene_report["description"],
-        tax_id=gene_report["tax_id"],
-        tax_name=gene_report["tax_name"],
-        common_name=gene_report["common_name"],
-        type=gene_report["type"],
-        orientation=gene_report["orientation"],
-        chromosomes=gene_report["chromosomes"],
-        swiss_prot_accessions=gene_report["swiss_prot_accessions"],
-        ensembl_gene_ids=gene_report["ensembl_gene_ids"],
-        omim_ids=gene_report["omim_ids"],
-        synonyms=gene_report["synonyms"],
-        transcript_count=gene_report["transcript_count"],
-        protein_count=gene_report["protein_count"],
-        summary=gene_report["summary"][0]["description"],
-    )
-    logger.info(f"Gene metadata for {symbol}: {gene_metadata}")
-    return gene_metadata
+def extract_age_value(age_str: str, unit_str: str) -> float | None:
+    """Extract numeric value from age, converted to years"""
+    if not age_str or age_str in ["", "null"]:
+        return None
+
+    age_clean = str(age_str).strip()
+    unit_clean = str(unit_str).lower().strip() if unit_str else "years"
+
+    conversion_factor = 1.0 / 12 if unit_clean == "months" else 1.0
+
+    # Extract first number found
+    number_match = re.search(r"(\d+(?:\.\d+)?)", age_clean)
+    if number_match:
+        return float(number_match.group(1)) * conversion_factor
+    return None

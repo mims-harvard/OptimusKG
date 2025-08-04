@@ -1,0 +1,11 @@
+landing.opentargets.disease_phenotype:
+  filepath: "data/landing/opentargets/disease_phenotype"
+  type: optimuskg.datasets.polars.ParquetDataset
+  metadata:
+    checksum: "0dc00d77ff5e42a35ba51c33dd4b78ea"
+    origin:
+      provider: opentargets
+      version: "25.06"
+      dataset_name: disease_phenotype
+    kedro-viz:
+      layer: landing

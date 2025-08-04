@@ -1,5 +1,5 @@
 landing.ontology.mondo:
-  type: optimuskg.datasets.polars.JSONDataset
+  type: optimuskg.datasets.polars.JsonDataset
   filepath: "data/landing/ontology/mondo.json"
   metadata:
     checksum: "95b1fa409012c24d39a89c7529ed87b4"

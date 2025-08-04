@@ -8,14 +8,13 @@ from .ncbigene import gene2go_node
 from .onsides import onsides_node
 from .ontology import go_plus_node, hp_mappings_node, hp_node, mondo_node, uberon_node
 from .opentargets import (
-    association_by_datasource_direct_node,
-    disease_phenotype_ids_node,
-    disease_to_phenotype_node,
-    diseases_node,
-    drug_mappings_node,
-    evidence_node,
-    mondo_efo_mappings_node,
-    targets_node,
+    disease_node,
+    disease_phenotype_node,
+    drug_indication_node,
+    drug_mechanism_of_action_node,
+    drug_molecule_node,
+    target_disease_associations_node,
+    target_node,
 )
 from .reactome import reactome_ncbi_node, reactome_pathways_node
 from .umls import umls_node
@@ -32,19 +31,19 @@ __all__ = [
     "vocabulary_node",
     "drugcentral_node",
     "uberon_node",
-    "evidence_node",
-    "targets_node",
-    "drug_mappings_node",
-    "mondo_efo_mappings_node",
-    "diseases_node",
     "hp_node",
-    "disease_phenotype_ids_node",
-    "disease_to_phenotype_node",
     "go_plus_node",
     "mondo_node",
     "umls_node",
     "disgenet_node",
     "onsides_node",
     "hp_mappings_node",
-    "association_by_datasource_direct_node",
+    # opentargets
+    "target_disease_associations_node",
+    "drug_mechanism_of_action_node",
+    "drug_molecule_node",
+    "drug_indication_node",
+    "target_node",
+    "disease_node",
+    "disease_phenotype_node",
 ]

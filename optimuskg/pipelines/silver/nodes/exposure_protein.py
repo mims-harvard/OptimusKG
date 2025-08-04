@@ -1,80 +1,241 @@
 import polars as pl
 from kedro.pipeline import node
 
+from .utils import classify_age_type, extract_age_value
+
 
 def run(
     ctd_exposure_events: pl.DataFrame,
-    protein_names: pl.DataFrame,
+    target: pl.DataFrame,
 ) -> pl.DataFrame:
-    df_exp_prot = ctd_exposure_events.select(
-        [
-            "exposure_stressor_name",
-            "exposure_stressor_id",
-            "exposure_marker",
-            "exposure_marker_id",
-        ]
+    return (
+        ctd_exposure_events.filter(
+            # exposure_marker_id is a MeSH or a NCBI Gene identifier (when the ID is only a number). see: https://ctdbase.org/downloads/#exposureevents
+            # we filter the Genes to later map them by their symbol to get the Ensembl ID
+            pl.col("exposure_marker_id").str.contains(r"^MESH:\d+$")
+        )
+        .join(
+            target.select("id", "approved_symbol"),
+            left_on="exposure_marker",
+            right_on="approved_symbol",
+            how="inner",
+        )
+        .with_columns(
+            [
+                pl.col("exposure_stressor_id").alias("from"),
+                pl.col("id").alias("to"),
+                # Classify age types
+                pl.struct(["age", "age_qualifier"])
+                .map_elements(
+                    lambda row: classify_age_type(
+                        row["age"],
+                        row["age_qualifier"],
+                    ),
+                    return_dtype=pl.String,
+                )
+                .alias("age_type"),
+                # Extract numeric values
+                pl.struct(["age", "age_units_of_measurement"])
+                .map_elements(
+                    lambda row: extract_age_value(
+                        row["age"],
+                        row["age_units_of_measurement"],
+                    ),
+                    return_dtype=pl.Float64,
+                )
+                .alias("age_value_years"),
+            ]
+        )
+        .group_by(["from", "to"])
+        .agg(
+            [
+                pl.len().alias("evidenceCount"),
+                pl.col("number_of_stressor_samples")
+                .cast(pl.Int64)
+                .sum()
+                .alias("numberOfStressorSamples"),
+                # TODO: we could add the stressor_notes column
+                pl.col("number_of_receptors")
+                .cast(pl.Int64)
+                .sum()
+                .alias("numberOfReceptors"),
+                pl.col("receptors").drop_nulls().unique().alias("receptors"),
+                pl.col("receptor_notes").drop_nulls().unique().alias("receptorNotes"),
+                pl.col("smoking_status")
+                .str.split("|")
+                .explode()
+                .drop_nulls()
+                .str.strip_chars()
+                .unique()
+                .alias("smokingStatuses"),
+                pl.col("age_type")
+                .filter(pl.col("age_type") != "null")
+                .len()
+                .alias("ageEntries"),
+                pl.when(pl.col("age_type") == "closed_range")
+                .then(pl.col("age"))
+                .drop_nulls()
+                .unique()
+                .alias("ageRangeValues"),
+                pl.when(pl.col("age_type") == "mean")
+                .then(pl.col("age"))
+                .drop_nulls()
+                .unique()
+                .alias("ageMeanValues"),
+                pl.when(pl.col("age_type") == "median")
+                .then(pl.col("age"))
+                .drop_nulls()
+                .unique()
+                .alias("ageMedianValues"),
+                pl.when(pl.col("age_type") == "point")
+                .then(pl.col("age"))
+                .drop_nulls()
+                .unique()
+                .alias("agePointValues"),
+                pl.when(pl.col("age_type") == "open_range")
+                .then(pl.col("age"))
+                .drop_nulls()
+                .unique()
+                .alias("ageOpenRangeValues"),
+                pl.col("sex")
+                .str.split("|")
+                .explode()
+                .drop_nulls()
+                .str.strip_chars()
+                .unique()
+                .alias("sexes"),
+                pl.col("race")
+                .str.split("|")
+                .explode()
+                .drop_nulls()
+                .str.strip_chars()
+                .unique()
+                .alias("races"),
+                pl.col("methods")
+                .str.split("|")
+                .explode()
+                .drop_nulls()
+                .str.strip_chars()
+                .unique()
+                .alias("methods"),
+                pl.col("detection_limit").drop_nulls().unique().alias("detectionLimit"),
+                pl.col("detection_limit_uom")
+                .drop_nulls()
+                .unique()
+                .alias("detectionLimitUom"),
+                pl.col("detection_frequency")
+                .drop_nulls()
+                .unique()
+                .alias("detectionFrequency"),
+                pl.col("medium").drop_nulls().unique().alias("mediums"),
+                pl.col("assay_notes").drop_nulls().unique().alias("assayNotes"),
+                # TODO: we can add this columns with a similar approach of the ages columns: marker_level, marker_units_of_measurement, marker_measurement_statistic
+                pl.col("study_countries")
+                .str.split("|")
+                .explode()
+                .drop_nulls()
+                .unique()
+                .alias("studyCountries"),
+                pl.col("state_or_province")
+                .str.split("|")
+                .explode()
+                .drop_nulls()
+                .unique()
+                .alias("statesOrProvinces"),
+                pl.col("city_town_region_area")
+                .drop_nulls()
+                .unique()
+                .alias("cityTownRegionAreas"),
+                pl.col("exposure_event_notes")
+                .drop_nulls()
+                .unique()
+                .alias("exposureEventNotes"),
+                pl.col("outcome_relationship")
+                .drop_nulls()
+                .unique()
+                .alias("outcomeRelationships"),
+                pl.col("exposure_outcome_notes")
+                .drop_nulls()
+                .unique()
+                .alias("exposureOutcomeNotes"),
+                pl.col("reference").drop_nulls().unique().alias("references"),
+                pl.col("associated_study_titles")
+                .drop_nulls()
+                .unique()
+                .alias("associatedStudyTitles"),
+                pl.col("enrollment_start_year")
+                .drop_nulls()
+                .unique()
+                .alias("enrollmentStartYears"),
+                pl.col("enrollment_end_year")
+                .drop_nulls()
+                .unique()
+                .alias("enrollmentEndYears"),
+                pl.col("study_factors")
+                .str.split("|")
+                .explode()
+                .drop_nulls()
+                .str.strip_chars()
+                .unique()
+                .alias("studyFactors"),
+            ]
+        )
+        .select(
+            [
+                pl.col("from"),
+                pl.col("to"),
+                pl.lit("exposure_protein").alias("relation"),
+                pl.lit(False).alias("undirected"),
+                pl.struct(
+                    [
+                        pl.lit(["CTD", "opentargets"]).alias("sources"),
+                        pl.lit("interacts with").alias(
+                            "relationType"
+                        ),  # NOTE: this is the same relation type used in PrimeKG, but we need to validate if this is consistent with the ontology tree.
+                        pl.col("evidenceCount"),
+                        pl.col("numberOfReceptors"),
+                        pl.col("receptors"),
+                        pl.col("receptorNotes"),
+                        pl.col("smokingStatuses"),
+                        pl.col("ageEntries"),
+                        pl.col("ageRangeValues"),
+                        pl.col("ageMeanValues"),
+                        pl.col("ageMedianValues"),
+                        pl.col("agePointValues"),
+                        pl.col("ageOpenRangeValues"),
+                        pl.col("sexes"),
+                        pl.col("races"),
+                        pl.col("methods"),
+                        pl.col("detectionLimit"),
+                        pl.col("detectionLimitUom"),
+                        pl.col("detectionFrequency"),
+                        pl.col("mediums"),
+                        pl.col("assayNotes"),
+                        pl.col("studyCountries"),
+                        pl.col("statesOrProvinces"),
+                        pl.col("cityTownRegionAreas"),
+                        pl.col("exposureEventNotes"),
+                        pl.col("outcomeRelationships"),
+                        pl.col("exposureOutcomeNotes"),
+                        pl.col("references"),
+                        pl.col("associatedStudyTitles"),
+                        pl.col("enrollmentStartYears"),
+                        pl.col("enrollmentEndYears"),
+                        pl.col("studyFactors"),
+                    ]
+                ).alias("properties"),
+            ]
+        )
+        .unique(subset=["from", "to"])
+        .sort(by=["from", "to"])
     )
-
-    df_exp_prot = df_exp_prot.filter(pl.col("exposure_marker_id").is_not_null())
-
-    df_exp_prot = df_exp_prot.filter(
-        pl.col("exposure_marker_id").str.contains(r"^MESH:\d+$")
-    )
-
-    # Replace "MESH:" with "NCBIGene:" prefix to join with protein names,
-    # this can be done since exposure_marker_id is a MeSH or a NCBI Gene identifier (when the ID is only a number).
-    # see: https://ctdbase.org/downloads/#exposureevents
-    df_exp_prot = df_exp_prot.with_columns(
-        pl.col("exposure_marker_id").str.replace("MESH:", "NCBIGene:")
-    )
-
-    df_exp_prot = df_exp_prot.join(
-        protein_names, left_on="exposure_marker_id", right_on="ncbi_id", how="left"
-    )
-
-    df_exp_prot = df_exp_prot.rename(
-        {
-            "exposure_stressor_id": "x_id",
-            "exposure_stressor_name": "x_name",
-            "exposure_marker_id": "y_id",
-            "symbol": "y_name",
-        }
-    )
-
-    df_exp_prot = df_exp_prot.with_columns(
-        [
-            pl.lit("exposure").alias("x_type"),
-            pl.lit("CTD").alias("x_source"),
-            pl.lit("gene").alias("y_type"),
-            pl.lit("NCBI").alias("y_source"),
-            pl.lit("exposure_protein").alias("relation"),
-            pl.lit("interacts with").alias("relation_type"),
-        ]
-    ).drop(["exposure_marker"])
-
-    df_exp_prot = df_exp_prot.select(
-        [
-            "relation",
-            "relation_type",
-            "x_id",
-            "x_type",
-            "x_name",
-            "x_source",
-            "y_id",
-            "y_type",
-            "y_name",
-            "y_source",
-        ]
-    )
-
-    return df_exp_prot
 
 
 exposure_protein_node = node(
     run,
     inputs={
         "ctd_exposure_events": "bronze.ctd.ctd_exposure_events",
-        "protein_names": "bronze.gene_names.protein_names",
+        "target": "bronze.opentargets.target",
     },
     outputs="exposure_protein",
     name="exposure_protein",

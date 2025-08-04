@@ -6,48 +6,35 @@ def run(
     go_relations: pl.DataFrame,
     go_terms: pl.DataFrame,
 ) -> pl.DataFrame:
-    cc = go_terms.filter(pl.col("type") == "molecular_function")
-
-    df_go_edges = go_relations.rename({"tail": "x_id", "head": "y_id"})
+    molecular_function = go_terms.filter(pl.col("type") == "molecular_function")
 
     return (
-        df_go_edges.join(
-            cc.select(["id", "name"]), left_on="x_id", right_on="id", how="inner"
+        go_relations.filter(
+            pl.col("edge_type") == "is_a"
+        )  # TODO: keep all relations (not just is_a)
+        .join(
+            molecular_function.select("id"), left_on="tail", right_on="id", how="inner"
         )
-        .rename({"name": "x_name"})
-        .join(cc.select(["id", "name"]), left_on="y_id", right_on="id", how="inner")
-        .rename({"name": "y_name"})
-        .with_columns(
-            [
-                pl.lit("molecular_function").alias("x_type"),
-                pl.lit("GO").alias("x_source"),
-                pl.lit("molecular_function").alias("y_type"),
-                pl.lit("GO").alias("y_source"),
-                pl.lit("molecular_function_molecular_function").alias("relation"),
-                pl.lit("parent-child").alias("relation_type"),
-            ]
+        .join(
+            molecular_function.select("id"), left_on="head", right_on="id", how="inner"
         )
-        .with_columns(
-            pl.concat_list([pl.col("x_id"), pl.col("y_id")])
-            .list.sort()
-            .alias("sorted_ids")
-        )
-        .unique("sorted_ids", keep="first")
-        .drop("sorted_ids")
         .select(
             [
-                "relation",
-                "relation_type",
-                "x_id",
-                "x_type",
-                "x_name",
-                "x_source",
-                "y_id",
-                "y_type",
-                "y_name",
-                "y_source",
+                # NOTE: go_relations head-tail columns are for "is_a" (i.e. child) relations but we represent the inverse (i.e. parent) relations.
+                pl.col("head").alias("to"),
+                pl.col("tail").alias("from"),
+                pl.lit("molecular_function_molecular_function").alias("relation"),
+                pl.lit(False).alias("undirected"),
+                pl.struct(
+                    [
+                        pl.col("edge_type").alias("relationType"),
+                        pl.lit(["GO"]).alias("sources"),
+                    ]
+                ).alias("properties"),
             ]
         )
+        .unique(subset=["from", "to"])
+        .sort(by=["from", "to"])
     )
 
 

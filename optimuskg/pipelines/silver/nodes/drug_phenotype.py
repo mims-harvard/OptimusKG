@@ -4,40 +4,56 @@ from kedro.pipeline import node
 
 def run(
     high_confidence: pl.DataFrame,
+    drug_indication: pl.DataFrame,
 ) -> pl.DataFrame:
-    return (
-        high_confidence.rename(
-            {
-                "ingredient_id": "x_id",
-                "effect_meddra_id": "y_id",
-                "rxnorm_name": "x_name",
-                "meddra_name": "y_name",
-            }
-        )
-        .with_columns(
+    high_confidence = high_confidence.select(
+        pl.col("ingredient_id").alias("from"),
+        pl.col("effect_meddra_id").alias("to"),
+        pl.lit("drug_phenotype").alias("relation"),
+        pl.lit(True).alias("undirected"),
+        pl.struct(
             [
-                pl.lit("drug").alias("x_type"),
-                pl.lit("OnSIDES").alias("x_source"),
-                pl.lit("phenotype").alias("y_type"),
-                pl.lit("OnSIDES").alias("y_source"),
-                pl.lit("drug_phenotype").alias("relation"),
-                pl.lit("adverse_drug_reaction").alias("relation_type"),
+                pl.lit("OnSIDES").alias("source"),
+                pl.lit(None, dtype=pl.List(pl.Utf8)).alias("referenceIds"),
+                pl.lit(None, dtype=pl.Float64).alias("highestClinicalTrialPhase"),
+                pl.lit("adverse drug reaction").alias("relationType"),
             ]
+        ).alias("properties"),
+    ).unique(subset=["from", "to"])
+
+    phenotype_indication = (
+        drug_indication.with_columns(
+            pl.col("id").alias("drug_id"),
+            pl.col("metadata").struct.field("indications"),
         )
+        .explode("indications")
+        .unnest("indications")
+        .explode("references")
+        .unnest("references")
+        .filter(pl.col("disease").str.contains("HP"))
         .select(
-            [
-                "relation",
-                "relation_type",
-                "x_id",
-                "x_type",
-                "x_name",
-                "x_source",
-                "y_id",
-                "y_type",
-                "y_name",
-                "y_source",
-            ]
+            pl.col("drug_id").alias("from"),
+            pl.col("disease").alias("to"),
+            pl.lit("drug_phenotype").alias("relation"),
+            pl.lit(True).alias("undirected"),
+            pl.struct(
+                [
+                    pl.col("source"),
+                    pl.col("ids").alias("referenceIds"),
+                    pl.col("maxPhaseForIndication").alias(
+                        "highestClinicalTrialPhase"
+                    ),  # TODO: convert opentargets number to actual string
+                    pl.lit("associated with").alias("relationType"),
+                ]
+            ).alias("properties"),
         )
+        .unique(subset=["from", "to"])
+    )
+
+    return (
+        pl.concat([high_confidence, phenotype_indication])
+        .unique(subset=["from", "to"])
+        .sort(by=["from", "to"])
     )
 
 
@@ -45,8 +61,9 @@ drug_phenotype_node = node(
     run,
     inputs={
         "high_confidence": "bronze.onsides.high_confidence",
+        "drug_indication": "bronze.opentargets.drug_indication",
     },
     outputs="drug_phenotype",
-    name="onsides",
+    name="drug_phenotype",
     tags=["silver"],
 )

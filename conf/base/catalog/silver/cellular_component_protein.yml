@@ -1,0 +1,7 @@
+silver.cellular_component_protein:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: "data/silver/cellular_component_protein.parquet"
+  metadata:
+    checksum: "839d579d0be9c4ee6c7b9ab2a4539861"
+    kedro-viz:
+      layer: silver

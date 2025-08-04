@@ -1,7 +1,6 @@
 import logging
 
 from kedro.framework.hooks import hook_impl
-from kedro_datasets.partitions.partitioned_dataset import PartitionedDataset
 
 from optimuskg.utils import (
     calculate_checksum,
@@ -37,9 +36,7 @@ class ChecksumHooks:
         path = get_dataset_path(ds_name)
 
         try:
-            actual_checksum = calculate_checksum(
-                path, process_directory=isinstance(ds, PartitionedDataset)
-            )
+            actual_checksum = calculate_checksum(path)
 
             if expected_checksum != actual_checksum:
                 logger.error(
@@ -57,18 +54,6 @@ class ChecksumHooks:
         except FileNotFoundError:
             logger.exception(
                 f"Path not found during checksum calculation for {get_dataset_display_name(ds_name)}: {path}",
-                extra={"markup": True},
-            )
-            raise
-        except IsADirectoryError:
-            logger.exception(
-                f"Expected a file but found a directory for {get_dataset_display_name(ds_name)}: {path}",
-                extra={"markup": True},
-            )
-            raise
-        except NotADirectoryError:
-            logger.exception(
-                f"Expected a directory but found a file for {get_dataset_display_name(ds_name)}: {path}",
                 extra={"markup": True},
             )
             raise

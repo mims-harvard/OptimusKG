@@ -4,80 +4,153 @@ from kedro.pipeline import node
 
 def run(
     drug_drug: pl.DataFrame,
-    vocabulary: pl.DataFrame,
+    drug_molecule: pl.DataFrame,
 ) -> pl.DataFrame:
-    # Join with vocabulary to get drug names for head drug
-    df_drug_drug = drug_drug.join(
-        vocabulary, left_on="head_drug_id", right_on="drugbank_id", how="inner"
-    )
-    df_drug_drug = df_drug_drug.rename(
-        {"head_drug_id": "x_id", "common_name": "x_name"}
-    )
-
-    # Join with vocabulary to get drug names for tail drug
-    df_drug_drug = df_drug_drug.join(
-        vocabulary, left_on="tail_drug_id", right_on="drugbank_id", how="inner"
-    )
-    df_drug_drug = df_drug_drug.rename(
-        {"tail_drug_id": "y_id", "common_name": "y_name"}
-    )
-
-    # Add type and source columns
-    df_drug_drug = df_drug_drug.with_columns(
-        [
-            pl.lit("drug").alias("x_type"),
-            pl.lit("DrugBank").alias("x_source"),
-            pl.lit("drug").alias("y_type"),
-            pl.lit("DrugBank").alias("y_source"),
-            pl.lit("drug_drug").alias("relation"),
-            pl.lit("synergistic interaction").alias("relation_type"),
-            pl.col("accession_numbers").alias("x_accession_numbers"),
-            pl.col("cas").alias("x_cas"),
-            pl.col("unii").alias("x_unii"),
-            pl.col("synonyms").alias("x_synonyms"),
-            pl.col("standard_inchi_key").alias("x_standard_inchi_key"),
-            pl.col("accession_numbers_right").alias("y_accession_numbers"),
-            pl.col("cas_right").alias("y_cas"),
-            pl.col("unii_right").alias("y_unii"),
-            pl.col("synonyms_right").alias("y_synonyms"),
-            pl.col("standard_inchi_key_right").alias("y_standard_inchi_key"),
-        ]
+    chembl_drugbank_mapping = (  # TODO: this should be a bronze dataset since is also used in drug_protein
+        drug_molecule.unnest("metadata")
+        .explode("crossReferences")
+        .unnest("crossReferences")
+        .filter(pl.col("source") == "drugbank")
+        .explode("ids")
+        .unique("id")
+        .select(
+            [
+                pl.col("id").alias("chembl_id"),
+                ("DRUGBANK:" + pl.col("ids")).alias("drugbank_id"),
+            ]
+        )
     )
 
-    df_drug_drug = df_drug_drug.select(
-        [
-            "relation",
-            "relation_type",
-            "description",
-            "x_id",
-            "x_type",
-            "x_name",
-            "x_source",
-            "x_accession_numbers",
-            "x_cas",
-            "x_unii",
-            "x_synonyms",
-            "x_standard_inchi_key",
-            "y_id",
-            "y_type",
-            "y_name",
-            "y_source",
-            "y_accession_numbers",
-            "y_cas",
-            "y_unii",
-            "y_synonyms",
-            "y_standard_inchi_key",
-        ]
+    drugbank_drug_drug = (
+        drug_drug.join(
+            chembl_drugbank_mapping,
+            left_on="tail_drug_id",
+            right_on="drugbank_id",
+            how="left",
+        )
+        .rename({"chembl_id": "tail_chembl_id"})
+        .join(
+            chembl_drugbank_mapping,
+            left_on="head_drug_id",
+            right_on="drugbank_id",
+            how="left",
+        )
+        .rename({"chembl_id": "head_chembl_id"})
+        .sort(by=["tail_chembl_id", "head_chembl_id"])
+        .select(
+            [
+                pl.when(pl.col("tail_chembl_id").is_not_null())
+                .then(pl.col("tail_chembl_id"))
+                .otherwise(pl.col("tail_drug_id"))
+                .alias("from"),
+                pl.when(pl.col("head_chembl_id").is_not_null())
+                .then(pl.col("head_chembl_id"))
+                .otherwise(pl.col("head_drug_id"))
+                .alias("to"),
+                pl.lit(False).alias("undirected"),
+                pl.lit("drug_drug").alias("relation"),
+                pl.struct(
+                    [
+                        pl.lit(["synergistic interaction"]).alias("relationType"),
+                        pl.lit(["drugbank"]).alias("sources"),
+                        pl.col("description").alias("interactionDescription"),
+                    ]
+                ).alias("drugbank_properties"),
+            ]
+        )
     )
 
-    return df_drug_drug
+    opentargets_drug_drug = (
+        drug_molecule.unnest("metadata")
+        .explode("childChemblIds")
+        .filter(pl.col("childChemblIds").is_not_null())
+        .select(
+            [
+                pl.col("id").alias("from"),
+                pl.col("childChemblIds").alias("to"),
+                pl.lit(False).alias("undirected"),
+                pl.lit("drug_drug").alias("relation"),
+                pl.struct(
+                    [
+                        pl.lit(["parent"]).alias("relationType"),
+                        pl.lit(["opentargets"]).alias("sources"),
+                    ]
+                ).alias("opentargets_properties"),
+            ]
+        )
+    )
+
+    return (
+        drugbank_drug_drug.join(opentargets_drug_drug, on=["from", "to"], how="full")
+        .select(
+            [
+                pl.coalesce([pl.col("from"), pl.col("from_right")]).alias("from"),
+                pl.coalesce([pl.col("to"), pl.col("to_right")]).alias("to"),
+                pl.coalesce([pl.col("undirected"), pl.col("undirected_right")]).alias(
+                    "undirected"
+                ),
+                pl.coalesce([pl.col("relation"), pl.col("relation_right")]).alias(
+                    "relation"
+                ),
+                pl.struct(
+                    [
+                        pl.concat_list(
+                            [
+                                pl.coalesce(
+                                    [
+                                        pl.col("drugbank_properties").struct.field(
+                                            "relationType"
+                                        ),
+                                        pl.lit([], dtype=pl.List(pl.Utf8)),
+                                    ]
+                                ),
+                                pl.coalesce(
+                                    [
+                                        pl.col("opentargets_properties").struct.field(
+                                            "relationType"
+                                        ),
+                                        pl.lit([], dtype=pl.List(pl.Utf8)),
+                                    ]
+                                ),
+                            ]
+                        ).alias("relationType"),
+                        pl.concat_list(
+                            [
+                                pl.coalesce(
+                                    [
+                                        pl.col("drugbank_properties").struct.field(
+                                            "sources"
+                                        ),
+                                        pl.lit([], dtype=pl.List(pl.Utf8)),
+                                    ]
+                                ),
+                                pl.coalesce(
+                                    [
+                                        pl.col("opentargets_properties").struct.field(
+                                            "sources"
+                                        ),
+                                        pl.lit([], dtype=pl.List(pl.Utf8)),
+                                    ]
+                                ),
+                            ]
+                        ).alias("sources"),
+                        pl.col("drugbank_properties")
+                        .struct.field("interactionDescription")
+                        .alias("interactionDescription"),
+                    ]
+                ).alias("properties"),
+            ]
+        )
+        .unique(subset=["from", "to"])
+        .sort(by=["from", "to"])
+    )
 
 
-drug_drug_node = node(
+drug_drug_node = node(  # TODO: replace this with opentargets drug_molecule dataset
     run,
     inputs={
         "drug_drug": "bronze.drug_drug",
-        "vocabulary": "bronze.drugbank.vocabulary",
+        "drug_molecule": "bronze.opentargets.drug_molecule",
     },
     outputs="drug_drug",
     name="drug_drug",
