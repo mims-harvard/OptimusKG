@@ -20,7 +20,10 @@ def run(
                     .then(pl.lit("expression present"))
                     .otherwise(pl.lit("expression absent"))
                     .alias("relationType"),
-                    pl.col("expression_rank").alias("expressionRank"),
+                    pl.col("expression_rank")
+                    .cast(pl.Float64)
+                    .cast(pl.Int32)
+                    .alias("expressionRank"),
                     pl.col("call_quality").alias("callQuality"),
                     pl.lit(["BGEE"]).alias("sources"),
                 ]

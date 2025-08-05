@@ -13,7 +13,7 @@ def run(
         .filter(
             pl.col("parents").is_not_null(),
             ~pl.col("id").str.contains("HP"),
-            ~pl.col("id").str.contains("Orphanet"),  # TODO: why im filtering this?
+            ~pl.col("id").str.contains("Orphanet"),  # TODO: why filter for Orphanet?
         )
         .with_columns(
             pl.col("parents").alias("from"),

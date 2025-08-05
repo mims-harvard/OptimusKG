@@ -136,7 +136,9 @@ def run(
                         ).alias("sources"),
                         pl.col("drugbank_properties")
                         .struct.field("interactionDescription")
-                        .alias("interactionDescription"),
+                        .alias(
+                            "interactionDescription"
+                        ),  # TODO: change this column name to relationDescription and add the column to the opentargets_properties with something like "this drug is the parent of the other drug in the ontology"
                     ]
                 ).alias("properties"),
             ]

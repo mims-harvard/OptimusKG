@@ -137,6 +137,8 @@ def run(
                 .unique()
                 .alias("statesOrProvinces"),
                 pl.col("city_town_region_area")
+                .str.split("|")
+                .explode()
                 .drop_nulls()
                 .unique()
                 .alias("cityTownRegionAreas"),

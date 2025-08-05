@@ -20,6 +20,9 @@ def run(
                     pl.col("metadata")
                     .struct.field("evidenceCount")
                     .alias("evidenceCount"),
+                    pl.lit("associated with").alias(
+                        "relationType"
+                    ),  # TODO: change this literal to "associated with" using the evidenceScore/evidenceCount columns.
                 ]
             ).alias("opentargets_properties"),
         )
@@ -52,6 +55,9 @@ def run(
                     .str.split(";")
                     .cast(pl.List(pl.Utf8))
                     .alias("sources"),
+                    pl.lit("associated with").alias(
+                        "relationType"
+                    ),  # TODO: change this literal to "associated with" using the disgenetScore/evidenceIndex column.
                 ]
             ).alias("disgenet_properties"),
         )
@@ -66,7 +72,7 @@ def run(
                 pl.col("from"),
                 pl.col("to"),
                 pl.lit(False).alias("undirected"),
-                pl.lit("drug_phenotype").alias("relation"),
+                pl.lit("phenotype_protein").alias("relation"),
                 pl.when(pl.col("disgenet_properties").is_not_null())
                 .then(
                     pl.struct(
@@ -100,9 +106,7 @@ def run(
                             )
                             .list.unique()
                             .alias("sources"),
-                            pl.lit("associated with").alias(
-                                "relationType"
-                            ),  # TODO: change the literal with strong/weak evidence using the disgenetScore/evidenceScore columns.
+                            pl.col("disgenet_properties").struct.field("relationType"),
                         ]
                     )
                 )

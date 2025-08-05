@@ -37,6 +37,9 @@ def run(  # noqa: PLR0913
                     pl.lit(["opentargets"]).alias("sources"),
                     pl.col("metadata").struct.field("score").alias("evidenceScore"),
                     pl.col("metadata").struct.field("evidenceCount"),
+                    pl.lit("associated with").alias(
+                        "relationType"
+                    ),  # TODO: change this literal to "associated with" using the evidenceScore/evidenceCount columns.
                 ]
             ).alias("opentargets_properties"),
         )
@@ -63,6 +66,9 @@ def run(  # noqa: PLR0913
                     .str.split(";")
                     .cast(pl.List(pl.Utf8))
                     .alias("sources"),
+                    pl.lit("associated with").alias(
+                        "relationType"
+                    ),  # TODO: change this literal to "associated with" using the disgenetScore/evidenceIndex column.
                 ]
             ).alias("disgenet_properties"),
         )
@@ -112,9 +118,6 @@ def run(  # noqa: PLR0913
                                     "numberOfSnps",
                                 ]
                             ],
-                            pl.lit("associated with").alias(
-                                "relationType"
-                            ),  # TODO: change the literal with strong/weak evidence using the score/evidenceCount columns.
                             pl.concat_list(
                                 [
                                     pl.col("opentargets_properties").struct.field(
@@ -127,6 +130,7 @@ def run(  # noqa: PLR0913
                             )
                             .list.unique()
                             .alias("sources"),
+                            pl.col("disgenet_properties").struct.field("relationType"),
                         ]
                     )
                 )

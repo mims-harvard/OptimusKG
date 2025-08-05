@@ -18,45 +18,52 @@ def run(
         .group_by(["from", "to"])
         .agg(
             [
-                pl.lit("disease_phenotype").alias("relation"),
-                pl.lit(True).alias("undirected"),
-                pl.col("aspect").unique().alias("aspect"),
-                pl.col("bioCuration").unique().alias("bioCuration"),
-                pl.col("evidenceType").unique().alias("evidenceType"),
-                pl.col("frequency").unique().alias("frequency"),
-                pl.concat_list("modifiers").flatten().unique().alias("modifiers"),
-                pl.concat_list("onset").flatten().unique().alias("onset"),
+                pl.col("aspect").drop_nulls().unique().alias("aspect"),
+                pl.col("bioCuration").drop_nulls().unique().alias("bioCuration"),
+                pl.col("evidenceType").drop_nulls().unique().alias("evidenceType"),
+                pl.col("frequency").drop_nulls().unique().alias("frequency"),
+                pl.concat_list("modifiers")
+                .flatten()
+                .drop_nulls()
+                .unique()
+                .alias("modifiers"),
+                pl.concat_list("onset").flatten().drop_nulls().unique().alias("onset"),
                 pl.col("qualifierNot").any().alias("qualifierNot"),
                 pl.when(~pl.col("qualifierNot"))
                 .then(pl.lit("phenotype present"))
                 .otherwise(pl.lit("phenotype absent"))
                 .unique()
                 .alias("relationType"),
-                pl.concat_list("references").flatten().unique().alias("references"),
-                pl.col("sex").unique().alias("sex"),
-                pl.col("resource").unique().alias("source"),
+                pl.concat_list("references")
+                .flatten()
+                .drop_nulls()
+                .unique()
+                .alias("references"),
+                pl.col("sex").drop_nulls().unique().alias("sexes"),
+                pl.col("resource").drop_nulls().unique().alias("sources"),
             ]
         )
-        .with_columns(
-            [
-                pl.struct(
-                    [
-                        pl.col("aspect"),
-                        pl.col("bioCuration"),
-                        pl.col("evidenceType"),
-                        pl.col("frequency"),
-                        pl.col("modifiers"),
-                        pl.col("onset"),
-                        pl.col("qualifierNot"),
-                        pl.col("relationType"),
-                        pl.col("references"),
-                        pl.col("sex"),
-                        pl.col("source"),
-                    ]
-                ).alias("properties")
-            ]
+        .select(
+            pl.col("from"),
+            pl.col("to"),
+            pl.lit("disease_phenotype").alias("relation"),
+            pl.lit(True).alias("undirected"),
+            pl.struct(
+                [
+                    pl.col("aspect"),
+                    pl.col("bioCuration"),
+                    pl.col("evidenceType"),
+                    pl.col("frequency"),
+                    pl.col("modifiers"),
+                    pl.col("onset"),
+                    pl.col("qualifierNot"),
+                    pl.col("relationType"),
+                    pl.col("references"),
+                    pl.col("sexes"),
+                    pl.col("sources"),
+                ]
+            ).alias("properties"),
         )
-        .select(["from", "to", "relation", "undirected", "properties"])
         .unique(subset=["from", "to"])
         .sort(by=["from", "to"])
     )
