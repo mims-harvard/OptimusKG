@@ -1,7 +1,0 @@
-silver.drug_disease:
-  type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/silver/drug_disease.parquet"
-  metadata:
-    checksum: "faa89ea4cc06c2e5b19ef61b10650d43"
-    kedro-viz:
-      layer: silver

@@ -1,0 +1,7 @@
+silver.edges.phenotype_phenotype:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: "data/silver/edges/phenotype_phenotype.parquet"
+  metadata:
+    checksum: ""
+    kedro-viz:
+      layer: silver

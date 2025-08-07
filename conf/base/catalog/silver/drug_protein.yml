@@ -1,7 +1,0 @@
-silver.drug_protein:
-  type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/silver/drug_protein.parquet"
-  metadata:
-    checksum: "fc6f8f0840062bb16766088f82da0984"
-    kedro-viz:
-      layer: silver
