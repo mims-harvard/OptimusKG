@@ -22,7 +22,7 @@ def run(
         .rename({col: to_snake_case(col) for col in key_cols})
         .unique(
             subset=["name"]
-        )  # NOTE: There are diseases from different ontologies that refer to the same disease, like MONDO_0019402 and Orphanet_848.
+        )  # TODO: There are diseases from different ontologies that refer to the same disease, like MONDO_0019402 and Orphanet_848.
         .sort(by=["id", "name"])
     )
 

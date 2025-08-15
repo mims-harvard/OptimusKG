@@ -6,7 +6,6 @@ import typer
 from cli.commands import (
     get_primekg_metrics_command,
     neo4j_import_command,
-    neo4j_to_pg_command,
     write_metrics_command,
     write_metrics_report_command,
 )
@@ -55,22 +54,6 @@ def checksum(  # noqa: PLR0913
         logger.error(e)
     except Exception as e:
         logger.error(f"An unexpected error occurred: {e}")
-
-
-@app.command(help="Convert a Neo4j export JSONL file into a PG-JSONL representation.")
-def neo4j_to_pg(
-    in_path: Path = typer.Option(
-        "data/export/optimuskg.jsonl",
-        "--in",
-        help="The path to read the input file from.",
-    ),
-    out_path: Path = typer.Option(
-        "data/export/optimuskg.pg.jsonl",
-        "--out",
-        help="The path to write the output file to.",
-    ),
-):
-    neo4j_to_pg_command(in_path, out_path)
 
 
 @app.command(help="Get statistics about a PG-JSONL knowledge graph.")

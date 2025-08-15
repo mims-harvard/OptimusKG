@@ -14,6 +14,7 @@ def run(
             ),
             pl.col("exposure_marker_id").is_not_null(),
         )
+        .unique()
         .with_columns(
             [
                 pl.col("exposure_stressor_id").alias("from"),
@@ -40,7 +41,24 @@ def run(
                 .alias("age_value_years"),
             ]
         )
-        .group_by(["from", "to"])
+        # NOTE: Canonicalize edges to resolve bi-directionality. The source data may contain
+        # separate entries for `A -> B` and `B -> A`. To merge these into a single edge,
+        # we enforce a consistent direction by ordering `from` and `to` lexicographically
+        # (`from` < `to`). This allows grouping by the canonical `(from, to)` pair to
+        # aggregate metadata from both directions.
+        .with_columns(
+            [
+                pl.when(pl.col("from") < pl.col("to"))
+                .then(pl.col("from"))
+                .otherwise(pl.col("to"))
+                .alias("canonical_from"),
+                pl.when(pl.col("from") < pl.col("to"))
+                .then(pl.col("to"))
+                .otherwise(pl.col("from"))
+                .alias("canonical_to"),
+            ]
+        )
+        .group_by(["canonical_from", "canonical_to"])
         .agg(
             [
                 pl.len().alias("evidenceCount"),
@@ -176,6 +194,7 @@ def run(
                 .alias("studyFactors"),
             ]
         )
+        .rename({"canonical_from": "from", "canonical_to": "to"})
         .select(
             [
                 pl.col("from"),
@@ -222,6 +241,7 @@ def run(
                 ).alias("properties"),
             ]
         )
+        .filter(pl.col("from") != pl.col("to"))  # Drop self-loops
         .unique(subset=["from", "to"])
         .sort(by=["from", "to"])
     )

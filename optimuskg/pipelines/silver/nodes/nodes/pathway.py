@@ -37,7 +37,7 @@ def run(  # noqa: PLR0913
                         pl.col("reactome_name").alias("name"),
                         pl.col("species"),
                     ]
-                ),
+                ).alias("properties"),
             ]
         )
         .sort(by="id")

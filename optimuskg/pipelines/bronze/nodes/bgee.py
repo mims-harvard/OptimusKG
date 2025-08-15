@@ -15,7 +15,7 @@ def run(
         pl.col("Anatomical entity ID").str.starts_with("UBERON")
     )
 
-    df = df.select(
+    df = df.select(  # TODO: add more metadata with more columns from the landing version of gene_expressions_in_anatomy
         [
             pl.col("Gene ID").alias("gene_id"),
             pl.col("Gene name").alias("gene_name"),

@@ -4,6 +4,7 @@ from kedro.pipeline import node
 
 def run(  # noqa: PLR0913
     disease: pl.DataFrame,
+    mondo_terms: pl.DataFrame,
     disease_disease: pl.DataFrame,
     exposure_disease: pl.DataFrame,
     drug_disease: pl.DataFrame,
@@ -23,10 +24,23 @@ def run(  # noqa: PLR0913
             ]
         )
         .unique(subset="id")
-        .join(disease, left_on="id", right_on="id", how="inner")
+        .join(disease, left_on="id", right_on="id", how="left")
         .unnest("metadata")
         .unnest("synonyms")
         .unnest("ontology")
+        .join(  # NOTE: there are some MONDO diseases that are not present in the opentargets.disease table, so we join with the mondo_terms table
+            mondo_terms.select(
+                pl.col("id"),
+                pl.col("name"),
+                pl.col("definition").alias("description"),
+                pl.col("xrefs"),
+                pl.col("synonyms"),
+            ),
+            left_on="id",
+            right_on="id",
+            how="left",
+        )
+        .unique(subset="id")
         .select(
             pl.col("id"),
             pl.lit("disease").alias("node_type"),
@@ -37,12 +51,16 @@ def run(  # noqa: PLR0913
                     .alias(
                         "source"
                     ),  # NOTE: We keep disease from different ontologies, so we extract the source from the id
-                    pl.col("name"),
-                    pl.col("description"),
+                    pl.coalesce([pl.col("name"), pl.col("name_right")]).alias("name"),
+                    pl.coalesce(
+                        [pl.col("description"), pl.col("description_right")]
+                    ).alias("description"),
                     pl.col("code"),
-                    pl.col("dbXRefs").alias("xrefs"),
+                    pl.coalesce([pl.col("xrefs"), pl.col("dbXRefs")]).alias("xrefs"),
                     pl.col("parents"),
-                    pl.col("hasExactSynonym").alias("exactSynonyms"),
+                    pl.coalesce([pl.col("hasExactSynonym"), pl.col("synonyms")]).alias(
+                        "exactSynonyms"
+                    ),
                     pl.col("hasRelatedSynonym").alias("relatedSynonyms"),
                     pl.col("hasNarrowSynonym").alias("narrowSynonyms"),
                     pl.col("hasBroadSynonym").alias("broadSynonyms"),
@@ -63,6 +81,7 @@ disease_node = node(
     run,
     inputs={
         "disease": "bronze.opentargets.disease",
+        "mondo_terms": "bronze.ontology.mondo_terms",
         "disease_disease": "silver.edges.disease_disease",
         "exposure_disease": "silver.edges.exposure_disease",
         "drug_disease": "silver.edges.drug_disease",

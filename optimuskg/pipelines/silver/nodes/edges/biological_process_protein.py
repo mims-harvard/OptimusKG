@@ -17,11 +17,11 @@ def run(
             [
                 pl.lit("biological_process_protein").alias("relation"),
                 pl.lit(True).alias("undirected"),
-                pl.col("source").unique().alias("sources"),
-                pl.col("evidence").unique(),
-                pl.col("aspect").unique().alias("aspect"),
-                pl.col("geneProduct").unique(),
-                pl.col("ecoId").unique().alias("ecoIds"),
+                pl.col("source").drop_nulls().unique().alias("sources"),
+                pl.col("evidence").drop_nulls().unique(),
+                pl.col("aspect").drop_nulls().unique().alias("aspect"),
+                pl.col("geneProduct").drop_nulls().unique(),
+                pl.col("ecoId").drop_nulls().unique().alias("ecoIds"),
             ]
         )
         .filter(pl.col("aspect") == ["P"])

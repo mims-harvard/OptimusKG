@@ -21,7 +21,7 @@ def run(
                 pl.col("evidence").unique(),
                 pl.col("aspect").unique().alias("aspect"),
                 pl.col("geneProduct").unique(),
-                pl.col("ecoId").unique().alias("ecoIds"),
+                pl.col("ecoId").drop_nulls().unique().alias("ecoIds"),
             ]
         )
         .filter(

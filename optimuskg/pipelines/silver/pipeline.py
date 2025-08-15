@@ -15,6 +15,7 @@ def create_pipeline(**kwargs):
             "bronze.ontology.go_terms",
             "bronze.ontology.go_relations",
             "bronze.ontology.mondo_xrefs",
+            "bronze.ontology.mondo_terms",
             "bronze.ontology.hp_terms",
             "bronze.ontology.hp_xrefs",
             "bronze.ontology.hp_relations",

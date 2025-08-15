@@ -77,9 +77,17 @@ def run(
                 .unique()
                 .alias("mechanismsOfAction"),
                 pl.col("source").drop_nulls().unique().alias("sources"),
-                pl.concat_list("ids").flatten().unique().alias("sourceIds"),
-                pl.concat_list("urls").flatten().unique().alias("sourceUrls"),
-                pl.col("actionType").unique().alias("actionType"),
+                pl.concat_list("ids")
+                .flatten()
+                .drop_nulls()
+                .unique()
+                .alias("sourceIds"),
+                pl.concat_list("urls")
+                .flatten()
+                .drop_nulls()
+                .unique()
+                .alias("sourceUrls"),
+                pl.col("actionType").drop_nulls().unique().alias("actionType"),
             ]
         )
         .select(
