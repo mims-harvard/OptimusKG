@@ -109,7 +109,7 @@ def run(  # noqa: PLR0913
             ).unique(subset="gene_id"),
             left_on="id",
             right_on="gene_id",
-            how="inner",
+            how="left",
         )
         .select(
             [
