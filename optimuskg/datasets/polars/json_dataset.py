@@ -1,4 +1,4 @@
-"""``JSONDataset`` loads/saves data from/to a JSON file using an underlying
+"""``JsonDataset`` loads/saves data from/to a JSON file using an underlying
 filesystem (e.g.: local, S3, GCS). It uses polars to handle the JSON file.
 """
 
@@ -23,8 +23,8 @@ from kedro.io.core import (
 logger = logging.getLogger(__name__)
 
 
-class JSONDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
-    """``JSONDataset`` loads/saves data from/to a JSON file using an underlying
+class JsonDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
+    """``JsonDataset`` loads/saves data from/to a JSON file using an underlying
     filesystem (e.g.: local, S3, GCS). It uses polars to handle the JSON file.
 
     Example usage for the `YAML API <https://docs.kedro.org/en/stable/data/\
@@ -33,7 +33,7 @@ class JSONDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
     .. code-block:: yaml
 
         cars:
-          type: polars.JSONDataset
+          type: polars.JsonDataset
           filepath: data/01_raw/company/cars.json
           load_args:
             schema: null
@@ -41,7 +41,7 @@ class JSONDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
             row_oriented: true
 
         motorbikes:
-          type: polars.JSONDataset
+          type: polars.JsonDataset
           filepath: s3://your_bucket/data/02_intermediate/company/motorbikes.json
           credentials: dev_s3
 
@@ -55,14 +55,14 @@ class JSONDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
         >>>
         >>> import polars as pl
         >>> import pytest
-        >>> from kedro_datasets.polars import JSONDataset
+        >>> from kedro_datasets.polars import JsonDataset
         >>>
         >>> if sys.platform.startswith("win"):
         ...     pytest.skip("this doctest fails on Windows CI runner")
         ...
         >>> data = pl.DataFrame({"col1": [1, 2], "col2": [4, 5], "col3": [5, 6]})
         >>>
-        >>> dataset = JSONDataset(filepath=tmp_path / "test.json")
+        >>> dataset = JsonDataset(filepath=tmp_path / "test.json")
         >>> dataset.save(data)
         >>> reloaded = dataset.load()
         >>> assert data.equals(reloaded)
@@ -86,7 +86,7 @@ class JSONDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
         fs_args: dict[str, Any] | None = None,
         metadata: dict[str, Any] | None = None,
     ) -> None:
-        """Creates a new instance of ``JSONDataset`` pointing to a concrete JSON file
+        """Creates a new instance of ``JsonDataset`` pointing to a concrete JSON file
         on a specific filesystem.
 
         Args:
@@ -171,21 +171,35 @@ class JSONDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
 
     def load(self) -> pl.DataFrame:
         load_path = str(self._get_load_path())
+        use_ndjson = self._load_args.pop("lines", False)
+
         if self._protocol == "file":
             # file:// protocol seems to misbehave on Windows
             # (<urlopen error file not on local host>),
             # so we don't join that back to the filepath;
             # storage_options also don't work with local paths
-            return pl.read_json(load_path, **self._load_args)
+            return (
+                pl.read_ndjson(load_path, **self._load_args)
+                if use_ndjson
+                else pl.read_json(load_path, **self._load_args)
+            )
 
         load_path = f"{self._protocol}{PROTOCOL_DELIMITER}{load_path}"
-        return pl.read_json(load_path, **self._load_args)
+        return (
+            pl.read_ndjson(load_path, **self._load_args)
+            if use_ndjson
+            else pl.read_json(load_path, **self._load_args)
+        )
 
     def save(self, data: pl.DataFrame) -> None:
         save_path = get_filepath_str(self._get_save_path(), self._protocol)
+        use_ndjson = self._save_args.pop("lines", False)
 
         with self._fs.open(save_path, **self._fs_open_args_save) as fs_file:
-            data.write_json(file=fs_file, **self._save_args)
+            if use_ndjson:
+                data.write_ndjson(file=fs_file, **self._save_args)
+            else:
+                data.write_json(file=fs_file, **self._save_args)
 
         self._invalidate_cache()
 

@@ -89,7 +89,7 @@ drug_protein_node = node(
         "df_transporter": "landing.drugbank.transporter",
         "df_vocabulary": "bronze.drugbank.vocabulary",
     },
-    outputs="drugbank.drug_protein",
+    outputs="drug_protein",
     name="drug_protein",
     tags=["bronze"],
 )

@@ -1,5 +1,5 @@
 landing.ontology.hp:
-  type: optimuskg.datasets.polars.JSONDataset
+  type: optimuskg.datasets.polars.JsonDataset
   filepath: "data/landing/ontology/hp.json"
   metadata:
     checksum: "8f713ce3d940895c6b2cdd7916301e96"

@@ -1,12 +1,6 @@
 bronze.ontology.go_relations:
-  type: polars.CSVDataset
-  filepath: "data/bronze/ontology/go_relations.csv"
-  load_args:
-    infer_schema: false
-    schema:
-      "tail": "${pl:Utf8}"
-      "edge_type": "${pl:Utf8}"
-      "head": "${pl:Utf8}"
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: "data/bronze/ontology/go_relations.parquet"
   metadata:
     checksum: "da24d9e916f3f3ad274da8884e50ce70"
     kedro-viz:

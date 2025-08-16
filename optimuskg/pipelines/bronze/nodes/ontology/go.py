@@ -52,12 +52,10 @@ def run(  # noqa: PLR0913
             pl.col("meta")
             .struct.field("definition")
             .struct.field("xrefs")
-            .list.join("|")
             .alias("xrefs"),
             pl.col("meta")
             .struct.field("synonyms")
             .list.eval(pl.element().struct.field("val"))
-            .list.join("|")
             .alias("synonyms"),
         )
         .with_columns(pl.col("type").fill_null("CLASS"))

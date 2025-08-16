@@ -31,7 +31,9 @@ def run(full_database: etree._ElementTree) -> pl.DataFrame:
             tail_drug_id_text = interaction.find(f"{ns}drugbank-id").text  # type: ignore
             tail_drug_id = f"DRUGBANK:{tail_drug_id_text}"
             interaction_description = interaction.find(f"{ns}description").text  # type: ignore
-            interactions.append((tail_drug_id, head_drug_id, interaction_description))
+
+            id1, id2 = sorted([tail_drug_id, head_drug_id])
+            interactions.append((id1, id2, interaction_description))
 
     return pl.DataFrame(
         interactions,
@@ -45,7 +47,7 @@ drug_drug_node = node(
     inputs={
         "full_database": "landing.drugbank.full_database",
     },
-    outputs="drugbank.drug_drug",
+    outputs="drug_drug",
     name="drug_drug",
     tags=["bronze"],
 )

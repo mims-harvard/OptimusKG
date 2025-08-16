@@ -1,3 +1,4 @@
-from .json_dataset import JSONDataset
+from .json_dataset import JsonDataset
+from .parquet_dataset import ParquetDataset
 
-__all__ = ["JSONDataset"]
+__all__ = ["JsonDataset", "ParquetDataset"]

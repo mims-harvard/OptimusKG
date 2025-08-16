@@ -4,7 +4,6 @@ import re
 from functools import lru_cache
 from pathlib import Path
 
-import polars as pl
 from kedro.framework.session import KedroSession
 from kedro.io.core import AbstractDataset, CatalogProtocol, DatasetNotFoundError
 from kedro.logging import _format_rich
@@ -16,7 +15,7 @@ from kedro_datasets.partitions.partitioned_dataset import (
 logger = logging.getLogger(__name__)
 
 
-def _to_snake_case(text: str) -> str:
+def to_snake_case(text: str) -> str:
     """
     Convert a string to valid snake_case following Python naming conventions.
 
@@ -114,23 +113,10 @@ def is_snake_case(text: str) -> bool:
     )
 
 
-def convert_columns_to_snake_case(df: pl.DataFrame) -> pl.DataFrame:
-    """Return a new DataFrame with all column names converted to snake_case.
-
-    Args:
-        df (pl.DataFrame): The DataFrame to convert
-
-    Returns:
-        pl.DataFrame: A new DataFrame with all column names converted to snake_case
-    """
-    return df.rename({col: _to_snake_case(col) for col in df.columns})
-
-
 def calculate_checksum(
     path: Path,
     chunk_size: int = 8192,
     digest_size: int = 16,
-    process_directory: bool = False,
 ) -> str:
     """Calculate the checksum of a file or directory.
 
@@ -138,24 +124,17 @@ def calculate_checksum(
         path: The path to the file or directory.
         chunk_size: The size of chunks to read from files.
         digest_size: The size of the digest for the hash.
-        process_directory: If True and path is a directory, calculate a combined checksum
-                           for all files within it.
 
     Returns:
         The calculated checksum as a hexadecimal string.
 
     Raises:
         FileNotFoundError: If the path does not exist.
-        IsADirectoryError: If path is a directory and process_directory is False.
-        NotADirectoryError: If path is not a directory and process_directory is True.
     """
     if not path.exists():
         raise FileNotFoundError(f"Path does not exist: {path}")
 
-    if process_directory:
-        if not path.is_dir():
-            raise NotADirectoryError(f"Path is not a directory: {path}")
-
+    if path.is_dir():
         combined_hash = hashlib.blake2b(digest_size=digest_size)
         files = sorted(path.glob("**/*"))
         for file_path in files:
@@ -168,11 +147,6 @@ def calculate_checksum(
                 combined_hash.update(str(relative_path).encode())
         return combined_hash.hexdigest()
     else:
-        if path.is_dir():
-            raise IsADirectoryError(
-                f"Path is a directory, use process_directory=True: {path}"
-            )
-
         with open(path, "rb") as f:
             file_hash = hashlib.blake2b(digest_size=digest_size)
             while chunk := f.read(chunk_size):

@@ -66,12 +66,10 @@ def run(
             pl.col("meta")
             .struct.field("definition")
             .struct.field("xrefs")
-            .list.join("|")
             .alias("xrefs"),
             pl.col("meta")
             .struct.field("synonyms")
             .list.eval(pl.element().struct.field("val"))
-            .list.join("|")
             .alias("synonyms"),
             *[
                 pl.col("meta_bpv")

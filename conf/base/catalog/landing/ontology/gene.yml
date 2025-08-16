@@ -1,5 +1,5 @@
 landing.ontology.go_plus:
-  type: optimuskg.datasets.polars.JSONDataset
+  type: optimuskg.datasets.polars.JsonDataset
   filepath: "data/landing/ontology/go_plus.json"
   metadata:
     checksum: "da24d9e916f3f3ad274da8884e50ce70"

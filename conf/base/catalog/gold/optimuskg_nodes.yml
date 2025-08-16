@@ -1,8 +1,0 @@
-gold.optimuskg_nodes:
-  type: polars.CSVDataset
-  filepath: "data/export/optimuskg_nodes.csv"
-  # TODO: add schema
-  metadata:
-    checksum: "8076de699b6a489937178a6378c8ab8e"
-    kedro-viz:
-      layer: gold

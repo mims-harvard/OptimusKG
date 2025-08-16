@@ -2,60 +2,128 @@
 # Nodes
 # ---
 
-gene: # A region (or regions) that includes all of the sequence elements necessary to encode a functional transcript. (https://biolink.github.io/biolink-model/Gene/)                   
+gene:
   represented_as: node
   input_label: gene
   properties:
+    sources: str[]
+    symbol: str
+    biotype: str
+    transcriptIds: str[]
+    canonicalTranscriptEncoded: str
+    canonicalExons: str[]
+    genomicLocationEncoded: str
+    alternativeGenes: str[]
     name: str
-    source: str
+    hallmarksAttributesEncoded: str[]
+    cancerHallmarksEncoded: str[]
+    synonymsEncoded: str[]
+    symbolSynonymsEncoded: str[]
+    nameSynonymsEncoded: str[]
+    functionDescriptions: str[]
+    subcellularLocationsEncoded: str[]
+    targetClassEncoded: str[]
+    obsoleteSymbolsEncoded: str[]
+    obsoleteNamesEncoded: str[]
+    constraintScoresEncoded: str[]
+    targetEnablingPackageEncoded: str
+    associatedProteinsEncoded: str[]
+    xrefsEncoded: str[]
+    chemicalProbesEncoded: str[]
+    homologuesEncoded: str[]
+    tractabilityEncoded: str[]
+    safetyLiabilitiesEncoded: str[]
+    transcriptionStartSite: int
 
-anatomy: # Biological entity that is either an individual member of a biological species or constitutes the structural organization of an individual member of a biological species. (http://purl.obolibrary.org/obo/UBERON_0001062)
+anatomy:
   is_a: anatomical entity
   represented_as: node
   input_label: anatomy
   properties:
-    name: str
     source: str
+    name: str
     definition: str
     xrefs: str[]
-    synonyms: str[]
-    ontology_description: str
-    ontology_title: str
-    ontology_license: str
-    ontology_version: str
+    synonyms: str
+    ontologyDescription: str
+    ontologyTitle: str
+    ontologyLicense: str
+    ontologyVersion: str
 
-exposure: # A environmental exposure is a factor relating to abiotic processes in the environment including sunlight (UV-B), atmospheric (heat, cold, general pollution) and water-born contaminants. (https://biolink.github.io/biolink-model/EnvironmentalExposure/)
+exposure:
   is_a: environmental exposure
   represented_as: node
   input_label: exposure
   properties:
+    sources: str[]
     name: str
-    source: str
+    sourceCategories: str[]
+    sourceDetails: str
 
-drug: # A substance that is used to treat, prevent, or diagnose a disease or condition (https://biolink.github.io/biolink-model/Drug/)
+drug:
   represented_as: node
   input_label: drug
   properties:
     name: str
-    source: str
+    inchiKey: str
+    type: str
+    synonyms: str[]
+    description: str
+    accessionNumbers: str[]
+    canonicalSmiles: str
+    chemicalAbstractsServiceNumber: str
+    uniqueIngredientIdentifier: str
+    blackBoxWarning: bool
+    yearOfFirstApproval: int
+    maximumClinicalTrialPhase: float
+    hasBeenWithdrawn: bool
+    isApproved: bool
+    tradeNames: str[]
+    sources: str[]
+    sourceIds: str[]
 
-disease: # A disease or phenotypic feature (https://biolink.github.io/biolink-model/Disease/)
+disease:
   represented_as: node
   input_label: disease
   properties:
-    name: str
     source: str
+    name: str
+    description: str
+    code: str
+    xrefs: str[]
+    parents: str[]
+    exactSynonyms: str[]
+    relatedSynonyms: str[]
+    narrowSynonyms: str[]
+    broadSynonyms: str[]
+    obsoleteTerms: str[]
+    obsoleteXRefs: str[]
+    children: str[]
+    ancestors: str[]
+    descendants: str[]
+    therapeuticAreas: str[]
 
-phenotype: # A phenotypic feature (https://biolink.github.io/biolink-model/PhenotypicFeature/)
+phenotype:
   is_a: phenotypic feature
   represented_as: node
   input_label: phenotype
   properties:
+    sources: str[]
     name: str
-    source: str
-    definition: str
+    description: str
+    code: str
     xrefs: str[]
-    synonyms: str[]
+    parents: str[]
+    exactSynonyms: str[]
+    relatedSynonyms: str[]
+    narrowSynonyms: str[]
+    broadSynonyms: str[]
+    obsoleteTerms: str[]
+    obsoleteXRefs: str[]
+    children: str[]
+    ancestors: str[]
+    descendants: str[]
+    type: str
     ontology_description: str
     ontology_title: str
     ontology_license: str
@@ -65,50 +133,51 @@ biological process:
   represented_as: node
   input_label: biological_process
   properties:
-    name: str
     source: str
+    name: str
     definition: str
     xrefs: str[]
-    synonyms: str[]
-    ontology_description: str
-    ontology_title: str
-    ontology_license: str
-    ontology_version: str
+    synonyms: str
+    ontologyDescription: str
+    ontologyTitle: str
+    ontologyLicense: str
+    ontologyVersion: str
 
 cellular component:
   represented_as: node
   input_label: cellular_component
   properties:
-    name: str
     source: str
+    name: str
     definition: str
     xrefs: str[]
-    synonyms: str[]
-    ontology_description: str
-    ontology_title: str
-    ontology_license: str
-    ontology_version: str
+    synonyms: str
+    ontologyDescription: str
+    ontologyTitle: str
+    ontologyLicense: str
+    ontologyVersion: str
 
 molecular function:
   represented_as: node
   input_label: molecular_function
   properties:
-    name: str
     source: str
+    name: str
     definition: str
     xrefs: str[]
-    synonyms: str[]
-    ontology_description: str
-    ontology_title: str
-    ontology_license: str
-    ontology_version: str
+    synonyms: str
+    ontologyDescription: str
+    ontologyTitle: str
+    ontologyLicense: str
+    ontologyVersion: str
 
 pathway:
   represented_as: node
-  input_label: pathway # Biolink’s Pathway class (https://biolink.github.io/biolink-model/Pathway/)
+  input_label: pathway
   properties:
     name: str
-    source: str
+    sources: str[]
+    species: str
 
 # ---
 # Edges
@@ -119,197 +188,434 @@ anatomy protein:
   represented_as: edge
   input_label: anatomy_protein
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    expressionRank: int
+    callQuality: str
+    sources: str[]
 
 anatomy anatomy:
-  is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
+  is_a: related to
   represented_as: edge
   input_label: anatomy_anatomy
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
 
 exposure disease:
-  is_a: linked to # holds between a disease and an environmental exposure (https://biolink.github.io/biolink-model/linked_to/)
+  is_a: linked to
   represented_as: edge
   input_label: exposure_disease
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
+    evidenceCount: int
+    numberOfReceptors: int
+    receptors: str[]
+    receptorNotes: str[]
+    smokingStatuses: str[]
+    ageEntries: int
+    ageRangeValues: str[]
+    ageMeanValues: str[]
+    agePointValues: str[]
+    ageOpenRangeValues: str[]
+    sexes: str[]
+    races: str[]
+    methods: str[]
+    detectionLimit: str[]
+    detectionLimitUom: str[]
+    detectionFrequency: str[]
+    mediums: str[]
+    assayNotes: str[]
+    studyCountries: str[]
+    statesOrProvinces: str[]
+    cityTownRegionAreas: str[]
+    exposureEventNotes: str[]
+    outcomeRelationships: str[]
+    exposureOutcomeNotes: str[]
+    references: str[]
+    associatedStudyTitles: str[]
+    enrollmentStartYears: str[]
+    enrollmentEndYears: str[]
+    studyFactors: str[]
 
 exposure exposure:
-  is_a: has_part # holds between a part and its whole (https://biolink.github.io/biolink-model/has_part/)
+  is_a: has_part
   represented_as: edge
   input_label: exposure_exposure
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
+    evidenceCount: int
+    numberOfReceptors: int
+    receptors: str[]
+    receptorNotes: str[]
+    smokingStatuses: str[]
+    ageEntries: int
+    ageRangeValues: str[]
+    ageMeanValues: str[]
+    agePointValues: str[]
+    ageOpenRangeValues: str[]
+    sexes: str[]
+    races: str[]
+    methods: str[]
+    detectionLimit: str[]
+    detectionLimitUom: str[]
+    detectionFrequency: str[]
+    mediums: str[]
+    assayNotes: str[]
+    studyCountries: str[]
+    statesOrProvinces: str[]
+    cityTownRegionAreas: str[]
+    exposureEventNotes: str[]
+    outcomeRelationships: str[]
+    exposureOutcomeNotes: str[]
+    references: str[]
+    associatedStudyTitles: str[]
+    enrollmentStartYears: str[]
+    enrollmentEndYears: str[]
+    studyFactors: str[]
 
 exposure protein:
-  is_a: interacts_with # holds between a gene or gene product and an environmental exposure (https://biolink.github.io/biolink-model/interacts_with/)
+  is_a: interacts_with
   represented_as: edge
   input_label: exposure_protein
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
+    evidenceCount: int
+    numberOfReceptors: int
+    receptors: str[]
+    receptorNotes: str[]
+    smokingStatuses: str[]
+    ageEntries: int
+    ageRangeValues: str[]
+    ageMeanValues: str[]
+    agePointValues: str[]
+    ageOpenRangeValues: str[]
+    sexes: str[]
+    races: str[]
+    methods: str[]
+    detectionLimit: str[]
+    detectionLimitUom: str[]
+    detectionFrequency: str[]
+    mediums: str[]
+    assayNotes: str[]
+    studyCountries: str[]
+    statesOrProvinces: str[]
+    cityTownRegionAreas: str[]
+    exposureEventNotes: str[]
+    outcomeRelationships: str[]
+    exposureOutcomeNotes: str[]
+    references: str[]
+    associatedStudyTitles: str[]
+    enrollmentStartYears: str[]
+    enrollmentEndYears: str[]
+    studyFactors: str[]
 
 disease protein:
-  is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
+  is_a: related to
   represented_as: edge
   input_label: disease_protein
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
 
 disease disease:
-  is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
+  is_a: related to
   represented_as: edge
   input_label: disease_disease
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
 
 phenotype protein:
-  is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
+  is_a: related to
   represented_as: edge
   input_label: phenotype_protein
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    evidenceScore: float
+    evidenceCount: int
+    diseaseSpecificityIndex: float
+    diseasePleiotropyIndex: float
+    evidenceIndex: float
+    disgenetScore: float
+    yearInitial: str
+    yearFinal: str
+    numberOfPmids: int
+    numberOfSnps: int
+    sources: str[]
 
 drug protein:
-  is_a: physically interacts with # holds between two entities that make physical contact as part of some interaction (https://biolink.github.io/biolink-model/physically_interacts_with/)
+  is_a: physically interacts with
   represented_as: edge
   input_label: drug_protein
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str[]
+    sourceIds: str[]
+    sourceUrls: str[]
+    mechanismsOfAction: str[]
+    sources: str[]
 
 drug drug:
-  is_a: physically interacts with # holds between two entities that make physical contact as part of some interaction (https://biolink.github.io/biolink-model/physically_interacts_with/)
+  is_a: physically interacts with
   represented_as: edge
   input_label: drug_drug
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str[]
+    sources: str[]
+    interactionDescription: str
 
 drug disease:
-  is_a: related to # A relationship that is asserted between two named things (https://biolink.github.io/biolink-model/related_to/)
+  is_a: related to
   represented_as: edge
   input_label: drug_disease
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    referenceIds: str[]
+    sources: str[]
+    highestClinicalTrialPhase: float
 
 drug phenotype:
   is_a: related to
   represented_as: edge
   input_label: drug_phenotype
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
+    referenceIds: str[]
+    highestClinicalTrialPhase: float
 
 biological process protein:
-  is_a: regulates # holds between a gene or gene product and a biological process (https://biolink.github.io/biolink-model/regulates/)
+  is_a: regulates
   represented_as: edge
   input_label: biological_process_protein
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
+    evidence: str[]
+    geneProduct: str[]
+    ecoIds: str[]
 
 cellular component protein:
-  is_a: regulates # holds between a gene or gene product and a cellular component (https://biolink.github.io/biolink-model/regulates/)
+  is_a: regulates
   represented_as: edge
   input_label: cellular_component_protein
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
+    evidence: str[]
+    geneProduct: str[]
+    ecoIds: str[]
 
 molecular function protein:
-  is_a: regulates # holds between a gene or gene product and a molecular function (https://biolink.github.io/biolink-model/regulates/)
+  is_a: regulates
   represented_as: edge
   input_label: molecular_function_protein
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
+    evidence: str[]
+    geneProduct: str[]
+    ecoIds: str[]
 
 pathway pathway:
-  is_a: has_part # holds between a part and its whole (https://biolink.github.io/biolink-model/has_part/)
+  is_a: has_part
   represented_as: edge
   input_label: pathway_pathway
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
 
 pathway protein:
-  is_a: has_part # holds between a part and its whole (https://biolink.github.io/biolink-model/has_part/)
+  is_a: has_part
   represented_as: edge
   input_label: pathway_protein
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
 
 exposure biological process:
   is_a: related to
   represented_as: edge
   input_label: exposure_biological_process
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
+    evidenceCount: int
+    numberOfReceptors: int
+    receptors: str[]
+    receptorNotes: str[]
+    smokingStatuses: str[]
+    ageEntries: int
+    ageRangeValues: str[]
+    ageMeanValues: str[]
+    agePointValues: str[]
+    ageOpenRangeValues: str[]
+    sexes: str[]
+    races: str[]
+    methods: str[]
+    detectionLimit: str[]
+    detectionLimitUom: str[]
+    detectionFrequency: str[]
+    mediums: str[]
+    assayNotes: str[]
+    studyCountries: str[]
+    statesOrProvinces: str[]
+    cityTownRegionAreas: str[]
+    exposureEventNotes: str[]
+    outcomeRelationships: str[]
+    exposureOutcomeNotes: str[]
+    references: str[]
+    associatedStudyTitles: str[]
+    enrollmentStartYears: str[]
+    enrollmentEndYears: str[]
+    studyFactors: str[]
 
 exposure molecular function:
   is_a: related to
   represented_as: edge
   input_label: exposure_molecular_function
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
+    evidenceCount: int
+    numberOfReceptors: int
+    receptors: str[]
+    receptorNotes: str[]
+    smokingStatuses: str[]
+    ageEntries: int
+    ageRangeValues: str[]
+    ageMeanValues: str[]
+    agePointValues: str[]
+    ageOpenRangeValues: str[]
+    sexes: str[]
+    races: str[]
+    methods: str[]
+    detectionLimit: str[]
+    detectionLimitUom: str[]
+    detectionFrequency: str[]
+    mediums: str[]
+    assayNotes: str[]
+    studyCountries: str[]
+    statesOrProvinces: str[]
+    cityTownRegionAreas: str[]
+    exposureEventNotes: str[]
+    outcomeRelationships: str[]
+    exposureOutcomeNotes: str[]
+    references: str[]
+    associatedStudyTitles: str[]
+    enrollmentStartYears: str[]
+    enrollmentEndYears: str[]
+    studyFactors: str[]
     
 exposure cellular component:
   is_a: related to
   represented_as: edge
   input_label: exposure_cellular_component
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
+    evidenceCount: int
+    numberOfReceptors: int
+    receptors: str[]
+    receptorNotes: str[]
+    smokingStatuses: str[]
+    ageEntries: int
+    ageRangeValues: str[]
+    ageMeanValues: str[]
+    agePointValues: str[]
+    ageOpenRangeValues: str[]
+    sexes: str[]
+    races: str[]
+    methods: str[]
+    detectionLimit: str[]
+    detectionLimitUom: str[]
+    detectionFrequency: str[]
+    mediums: str[]
+    assayNotes: str[]
+    studyCountries: str[]
+    statesOrProvinces: str[]
+    cityTownRegionAreas: str[]
+    exposureEventNotes: str[]
+    outcomeRelationships: str[]
+    exposureOutcomeNotes: str[]
+    references: str[]
+    associatedStudyTitles: str[]
+    enrollmentStartYears: str[]
+    enrollmentEndYears: str[]
+    studyFactors: str[]
+
 
 cellular component cellular component:
   is_a: has_part
   represented_as: edge
   input_label: cellular_component_cellular_component
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
 
 biological process biological process:
   is_a: has_part
   represented_as: edge
   input_label: biological_process_biological_process
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
 
 molecular function molecular function:
   is_a: has_part
   represented_as: edge
   input_label: molecular_function_molecular_function
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]
 
 disease phenotype:
   is_a: related to
   represented_as: edge
   input_label: disease_phenotype
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str[]
+    aspect: str[]
+    bioCuration: str[]
+    evidenceType: str[]
+    frequency: str[]
+    modifiers: str[]
+    onset: str[]
+    quilifierNot: bool
+    references: str[]
+    sexes: str[]
+    sources: str[]
 
 phenotype phenotype:
   is_a: has_part
   represented_as: edge
   input_label: phenotype_phenotype
   properties:
-    relation_type: str
-    undirected: str
+    undirected: bool
+    relationType: str
+    sources: str[]

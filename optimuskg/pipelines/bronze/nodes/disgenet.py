@@ -54,10 +54,10 @@ def run(
     disgenet_phenotypes = curated_gene_disease_associations.filter(
         pl.col("disease_type") == "phenotype"
     )
-    disgenet_diseases = curated_gene_disease_associations.filter(
+    diseases = curated_gene_disease_associations.filter(
         pl.col("disease_type") == "disease"
     )
-    return disgenet_phenotypes, disgenet_diseases
+    return disgenet_phenotypes, diseases
 
 
 disgenet_node = node(
@@ -65,7 +65,7 @@ disgenet_node = node(
     inputs={
         "curated_gene_disease_associations": "landing.disgenet.curated_gene_disease_associations",
     },
-    outputs=["disgenet.disgenet_phenotypes", "disgenet.disgenet_diseases"],
+    outputs=["disgenet.disgenet_phenotypes", "disgenet.diseases"],
     name="disgenet",
     tags=["bronze"],
 )

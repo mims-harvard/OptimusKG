@@ -1,4 +1,4 @@
-bronze.drugbank.drug_protein:
+bronze.drug_protein:
   type: polars.CSVDataset
   filepath: "data/bronze/drugbank/drug_protein.csv"
   load_args:

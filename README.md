@@ -188,7 +188,7 @@ To export the entire database to a JSONL file, run:
 $ make neo4j-export
 ```
 
-The data will be saved in `data/neo4j/export/optimuskg.jsonl`.
+The data will be saved in `data/export/optimuskg.jsonl`.
 
 To export the results of a specific Cypher query, run:
 
@@ -196,7 +196,7 @@ To export the results of a specific Cypher query, run:
 $ CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export
 ```
 
-The results will be saved to a file in `data/neo4j/export/` with a name derived from the query.
+The results will be saved to a file in `data/export/` with a name derived from the query.
 
 ## Post-processing
 
@@ -210,7 +210,7 @@ To convert the Neo4j JSONL export into a Property Graph (PG) compatible format, 
 $ uv run cli neo4j-to-pg
 ```
 
-This command reads the file from `data/neo4j/export/optimuskg.jsonl` and writes the PG-JSONL version to `data/export/optimuskg.pg.jsonl`. You can specify different input and output paths using the `--in` and `--out` options.
+This command reads the file from `data/export/optimuskg.jsonl` and writes the PG-JSONL version to `data/export/optimuskg.pg.jsonl`. You can specify different input and output paths using the `--in` and `--out` options.
 
 ### Knowledge Graph Metrics
 

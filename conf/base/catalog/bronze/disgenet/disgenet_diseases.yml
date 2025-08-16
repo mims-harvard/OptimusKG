@@ -1,6 +1,6 @@
-bronze.disgenet.disgenet_diseases:
+bronze.disgenet.diseases:
   type: polars.CSVDataset
-  filepath: "data/bronze/disgenet/disgenet_diseases.csv"
+  filepath: "data/bronze/disgenet/diseases.csv"
   load_args:
     infer_schema: false
     schema:

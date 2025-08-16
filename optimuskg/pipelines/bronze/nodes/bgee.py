@@ -15,7 +15,7 @@ def run(
         pl.col("Anatomical entity ID").str.starts_with("UBERON")
     )
 
-    df = df.select(
+    df = df.select(  # TODO: add more metadata with more columns from the landing version of gene_expressions_in_anatomy
         [
             pl.col("Gene ID").alias("gene_id"),
             pl.col("Gene name").alias("gene_name"),
@@ -28,11 +28,13 @@ def run(
     )
 
     df = df.filter(
-        (pl.col("call_quality") == call_quality)
-        & (pl.col("expression_rank") < expression_rank_threshold)
-        & (
-            ~pl.col("anatomy_id").str.contains("∩")
-        )  # NOTE: New versions of the dataset include measurements with an intersection of tissues. We want to remove this measurements.
+        # TODO: filtering for expression rank/call quality should have a
+        # parameter to enable/disable it (to have large/small versions of the final KG)
+        # (pl.col("call_quality") == call_quality)
+        # & (pl.col("expression_rank") < expression_rank_threshold)
+        # & (
+        ~pl.col("anatomy_id").str.contains("∩")
+        # )  # NOTE: New versions of the dataset include measurements with an intersection of tissues. We want to remove this measurements.
     )
 
     logger.debug(f"Wrote {len(df)} anatomy-gene pairs")

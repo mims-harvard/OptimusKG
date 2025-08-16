@@ -11,7 +11,7 @@ services:
     volumes:
       - ./data/neo4j/import:/var/lib/neo4j/import/
       - ./data/neo4j/data:/var/lib/neo4j/data/
-      - ./data/neo4j/export:/var/lib/neo4j/export/
+      - ./data/export:/var/lib/neo4j/export/
       - ./scripts/neo4j_entrypoint.sh:/startup/neo4j_entrypoint.sh
     environment:
       NEO4J_AUTH: none # no need for auth for local development

@@ -1,0 +1,6 @@
+silver.edges.disease_protein:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: "data/silver/edges/disease_protein.parquet"
+  metadata:
+    kedro-viz:
+      layer: silver 

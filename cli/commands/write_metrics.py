@@ -391,20 +391,29 @@ def _get_edge_topology_metrics(all_edges: list[Edge]) -> EdgeTopologyMetrics:
 
     for edge in all_edges:
         key_suffix = (
-            f"_{_join_labels(edge.labels)}_{edge.properties.get('relation_type', '')}"
+            f"_{_join_labels(edge.labels)}_{edge.properties.get('relationType', '')}"
         )
         key = f"{edge.from_node}_{edge.to_node}{key_suffix}"
         reverse_key = f"{edge.to_node}_{edge.from_node}{key_suffix}"
 
         if edge.from_node == edge.to_node:
+            logger.warning(
+                f"Loop edge found: {edge.from_node} -> {edge.to_node} with labels {edge.labels}"
+            )
             metrics.loops += 1
         elif key in edge_keys:
+            logger.warning(
+                f"Duplicated edge found: {edge.from_node} -> {edge.to_node} with labels {edge.labels}"
+            )
             metrics.duplicated += 1
         elif edge.undirected:
             metrics.undirected += 1
         else:
             metrics.directed += 1
             if reverse_key in edge_keys:
+                logger.warning(
+                    f"Bidirectional edge found: {edge.from_node} -> {edge.to_node} with labels {edge.labels}"
+                )
                 metrics.bidirectional += 1
 
         edge_keys.add(key)
