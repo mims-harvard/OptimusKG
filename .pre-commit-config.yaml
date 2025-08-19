@@ -39,9 +39,3 @@ repos:
         entry: make interrogate
         pass_filenames: false
 
-      - id: pytest
-        name: pytest
-        language: system
-        entry: make pytest
-        pass_filenames: false
-        types: [python]

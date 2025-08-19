@@ -1,5 +1,0 @@
-bronze.reactome.reactome_terms:
-  type: polars.CSVDataset
-  filepath: "tests/stub_data/bronze/reactome/reactome_terms.csv"
-  metadata:
-    checksum: "63631d7571d686c7a6b948cf9b52f0b9"

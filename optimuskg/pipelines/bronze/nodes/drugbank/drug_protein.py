@@ -3,25 +3,25 @@ from kedro.pipeline import node
 
 
 def run(  # noqa: PLR0913
-    df_gene_map: pl.DataFrame,
-    df_carrier: pl.DataFrame,
-    df_enzyme: pl.DataFrame,
-    df_target: pl.DataFrame,
-    df_transporter: pl.DataFrame,
-    df_vocabulary: pl.DataFrame,
+    gene_map: pl.DataFrame,
+    carrier: pl.DataFrame,
+    enzyme: pl.DataFrame,
+    target: pl.DataFrame,
+    transporter: pl.DataFrame,
+    vocabulary: pl.DataFrame,
 ) -> pl.DataFrame:
     # Prepare gene map for joining
-    df_gene_map = df_gene_map.select(
+    gene_map = gene_map.select(
         pl.col("UniProt ID(supplied by UniProt)").alias("uniprot_id"),
         pl.col("NCBI Gene ID(supplied by NCBI)").alias("ncbi_gene_id"),
     ).drop_nulls()
 
     all_edge_dfs = []
     dataframes_info = [
-        (df_carrier, "carrier"),
-        (df_enzyme, "enzyme"),
-        (df_target, "target"),
-        (df_transporter, "transporter"),
+        (carrier, "carrier"),
+        (enzyme, "enzyme"),
+        (target, "target"),
+        (transporter, "transporter"),
     ]
 
     for df, relation_name in dataframes_info:
@@ -29,7 +29,7 @@ def run(  # noqa: PLR0913
 
         # Add NCBIGeneID using a left join
         df_with_ncbi = df_filtered.join(
-            df_gene_map,
+            gene_map,
             left_on="UniProt ID",
             right_on="uniprot_id",
             how="left",
@@ -53,7 +53,7 @@ def run(  # noqa: PLR0913
     df_prot_drug = pl.concat(all_edge_dfs, how="diagonal")
 
     # Prepare vocabulary for joining
-    df_vocabulary_join_prep = df_vocabulary.select(
+    df_vocabulary_join_prep = vocabulary.select(
         pl.col("drugbank_id"),
         pl.col("common_name").alias("drug_bank_name"),
     ).drop_nulls()
@@ -82,12 +82,12 @@ def run(  # noqa: PLR0913
 drug_protein_node = node(
     run,
     inputs={
-        "df_gene_map": "landing.drugbank.gene_map",
-        "df_carrier": "landing.drugbank.carrier",
-        "df_enzyme": "landing.drugbank.enzyme",
-        "df_target": "landing.drugbank.target",
-        "df_transporter": "landing.drugbank.transporter",
-        "df_vocabulary": "bronze.drugbank.vocabulary",
+        "gene_map": "landing.drugbank.gene_map",
+        "carrier": "landing.drugbank.carrier",
+        "enzyme": "landing.drugbank.enzyme",
+        "target": "landing.drugbank.target",
+        "transporter": "landing.drugbank.transporter",
+        "vocabulary": "bronze.drugbank.vocabulary",
     },
     outputs="drug_protein",
     name="drug_protein",

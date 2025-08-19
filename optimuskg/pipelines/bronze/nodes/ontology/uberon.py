@@ -1,9 +1,5 @@
-import logging
-
 import polars as pl
 from kedro.pipeline import node
-
-logger = logging.getLogger(__name__)
 
 
 def run(

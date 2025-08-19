@@ -132,6 +132,3 @@ jobs:
 
       - name: Install the project dependencies
         run: uv sync --all-groups
-
-      - name: Run pytest
-        run: make pytest

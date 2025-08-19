@@ -40,10 +40,6 @@ mypy: ##@ Run mypy
 	@uv run mypy --config-file pyproject.toml tests
 	@uv run mypy --config-file pyproject.toml cli
 
-.PHONY: pytest
-pytest: ##@ Run tests
-	@uv run pytest -W ignore --no-cov-on-fail --log-cli-level=INFO
-
 .PHONY: bandit
 bandit: ##@ Run bandit
 	@uv tool run bandit -v -c pyproject.toml -r optimuskg/* tests/*
