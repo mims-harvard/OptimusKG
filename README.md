@@ -1,8 +1,8 @@
 --------------------------------------------------------------------------------
 
-**Documentation**: <a href="https://grence.ai/docs/optimuskg target="_blank">https://grence.ai/docs/optimuskg</a>
+**Documentation**: [https://grence.ai/docs/optimuskg](https://grence.ai/docs/optimuskg)
 
-**Source Code**: <a href="https://github.com/mims-harvard/optimuskg" target="_blank">https://github.com/mims-harvard/optimuskg</a>
+**Source Code**: [https://github.com/mims-harvard/optimuskg](https://github.com/mims-harvard/optimuskg)
 
 --------------------------------------------------------------------------------
 
