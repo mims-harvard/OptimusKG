@@ -38,9 +38,7 @@ optimuskg/
         |   └── drugbank_all_target_polypeptide_ids.csv
         |   └── drugbank_all_transporter_polypeptide_ids.csv
         └── disgenet/
-        |   └── curated_gene_disease_associations.tsv
-        └── umls/
-            └── MRCONSO.RRF
+            └── curated_gene_disease_associations.tsv
 ```
 
 ### Set up Neo4j volume permissions

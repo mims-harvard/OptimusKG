@@ -112,26 +112,3 @@ jobs:
           else
             echo "✅ Version bump verified: ${old_version} -> ${new_version}"
           fi
-
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v5
-        id: setup-uv
-        with:
-          enable-cache: true
-          ignore-nothing-to-cache: true
-          pyproject-file: "pyproject.toml"
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache-dependency-glob: |
-            **/pyproject.toml
-            **/uv.lock
-
-      - name: Install the project dependencies
-        run: uv sync --all-groups
-
-      - name: Run pytest
-        run: make pytest

@@ -1,0 +1,12 @@
+landing.ontology.go_plus:
+  type: optimuskg.datasets.polars.JsonDataset
+  filepath: "data/landing/ontology/go_plus.json"
+  metadata:
+    checksum: "da24d9e916f3f3ad274da8884e50ce70"
+    title: "Gene Ontology"
+    description: "The GO is designed to be species-agnostic to enable the annotation of gene products across the entire tree of life. The computational framework of the GO enables consistent gene annotation, comparison of functions across organisms, and integration of knowledge across diverse biological databases."
+    origin:
+      provider: http
+      url: "https://purl.obolibrary.org/obo/go/extensions/go-plus.json"
+    kedro-viz:
+      layer: landing

@@ -1,7 +1,0 @@
-bronze.ctd.ctd_exposure_events:
-  type: polars.CSVDataset
-  filepath: "tests/stub_data/bronze/ctd/ctd_exposure_events.csv"
-  load_args:
-    infer_schema: false
-  metadata:
-    checksum: "6e171cf4d03d70b08ddc510d3c8abd1e"
