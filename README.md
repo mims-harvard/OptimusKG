@@ -33,7 +33,7 @@ At an architectural level, Optimus consists of the following components:
 | [**conf**]() | A mechanism that separates _code_ from _settings_, defining the catalog, parameters, logging configuration, and ontology harmonization across different environments (base, local, prod, etc.). |
 
 > [!NOTE]
-> We leverage additional features of the Kedro framework, such as namespaces, kedro-viz, and catalog injection in Jupyter notebooks.
+> We leverage additional features of the Kedro framework, such as [namespaces](https://docs.kedro.org/en/latest/build/namespaces/), [kedro-viz](https://docs.kedro.org/projects/kedro-viz/en/latest/), [kedro-datasets](https://docs.kedro.org/projects/kedro-datasets/en/latest/) and catalog injection in [Jupyter notebooks](https://docs.kedro.org/en/latest/integrations-and-plugins/notebooks_and_ipython/kedro_and_notebooks/#exploring-the-kedro-project-in-a-notebook).
 > Optimus also comes with a command-line interface and quality-of-life tooling for spinning up Neo4j, exporting slices of the graph, etc.
 
 ## Releases and Contributing
