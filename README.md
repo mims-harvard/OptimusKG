@@ -23,7 +23,7 @@ At an architectural level, Optimus consists of the following components:
 | [**catalog**](https://grence.ai/docs/optimuskg/the-catalog) | The single source of truth of all datasets, their schemas, their format, and their metadata. |
 | [**dataset**](https://docs.kedro.org/en/unreleased/extend/how_to_create_a_custom_dataset/) | An abstraction layer that handles file formats, storage locations, and persistence logic. |
 | [**nodes**](https://docs.kedro.org/en/unreleased/getting-started/kedro_concepts/#node) | A pure Python function whose output value follows solely from its input values. |
-| [**pipelines**](https://docs.kedro.org/en/unreleased/getting-started/kedro_concepts/#pipeline) | Used to combine nodes to build workflows while resolving dependencies to determine the node execution order. |
+| [**pipelines**](https://docs.kedro.org/en/unreleased/getting-started/kedro_concepts/#pipeline) | DAG-based orchestration layer that ties together nodes into a reproducible, and modular workflow. |
 | [**layers**]() | Follows the medallion architecture data design pattern to logically organize the data. There are 4 layers: landing, bronze, silver, and gold.|
 | [**parameters**](https://docs.kedro.org/en/unreleased/configure/parameters/) | Used to define constants for filtering the data across the construction process. |
 | [**providers**]() | An abstraction that provides versioned, automatic data downloads from different data sources. |
