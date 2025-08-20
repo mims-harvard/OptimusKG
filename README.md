@@ -42,8 +42,16 @@ OptimusKG is a biomedical Labeled Property Graph built using the Optimus pipelin
 | **Parquet** | `nodes-parquet.zip` and `edges-parquet.zip` | Provide all the nodes and edges as separate [Apache Parquet](https://parquet.apache.org/) files. As a columnar storage format, Parquet is highly efficient for large-scale data analysis and is recommended for data science and machine learning workflows with tools like [Apache Spark](https://spark.apache.org/) and [Polars](https://pola.rs/). |
 | **Diamond** | `optimuskg.diamond` | A custom, compressed binary format of the full graph. It offers the smallest file size, making it ideal for efficient storage and network transfer. Diamond is developed by the same authors of Optimus. |
 
+Each release includes a comprehensive graph report that contains:
+
+- **Overview**: Total elements, number of non-null properties, number of nodes, and number of edges.
+- **Node metrics by type**: Number of nodes, their percentage, average number of properties and standard deviation, average degree and standard deviation.
+- **Edge metrics by type**: Number of edges, their percentage, average number of properties and standard deviation.
+- **Graph topology**: Number of directed, undirected, bi-directional, duplicated, and loop edges.
 
 ## Using OptimusKG
+
+## Running the Optimus pipeline
 
 
 
