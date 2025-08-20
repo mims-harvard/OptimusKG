@@ -30,4 +30,11 @@ At an architectural level, Optimus consists of the following components:
 | [**hook**](https://docs.kedro.org/en/unreleased/extend/hooks/introduction/) | Mechanism that allows injection of custom behavior into the core execution flow, such as before a node runs (for example, for checksum checks). |
 | [**conf**]() | A mechanism that separates _code_ from _settings_, defining the catalog, parameters, logging configuration, and ontology harmonization across different environments (base, local, prod, etc.). |
 
+## Releases and Contributing
 
+## Citation
+
+
+## License
+
+Optimus is released under the [MIT LICENSE](LICENSE).
