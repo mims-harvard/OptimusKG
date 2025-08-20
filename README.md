@@ -32,6 +32,10 @@ At an architectural level, Optimus consists of the following components:
 | [**hook**](https://docs.kedro.org/en/unreleased/extend/hooks/introduction/) | Mechanism that allows injection of custom behavior into the core execution flow, such as before a node runs (for example, for checksum checks). |
 | [**conf**]() | A mechanism that separates _code_ from _settings_, defining the catalog, parameters, logging configuration, and ontology harmonization across different environments (base, local, prod, etc.). |
 
+> [!NOTE]
+> We leverage additional features of the Kedro framework, such as namespaces, kedro-viz, and catalog injection in Jupyter notebooks.
+> Optimus also comes with a command-line interface and quality-of-life tooling for spinning up Neo4j, exporting slices of the graph, etc.
+
 ## Releases and Contributing
 
 OptimusKG is a biomedical Labeled Property Graph built using the Optimus pipeline. Each release provides the graph data in several formats, each tailored for different use cases:
