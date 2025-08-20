@@ -16,6 +16,8 @@ Optimus is grounded in three foundational principles:
 
 ## More about Optimus
 
+[Learn the basics of Optimus](https://grence.ai/docs/optimuskg)
+
 At an architectural level, Optimus consists of the following components:
 
 | Component | Description |
@@ -49,9 +51,14 @@ Each release includes a comprehensive graph report that contains:
 - **Edge metrics by type**: Number of edges, their percentage, average number of properties and standard deviation.
 - **Graph topology**: Number of directed, undirected, bi-directional, duplicated, and loop edges.
 
+> [!NOTE]:
+> Distributed OptimusKG data files contain only publicly available data.
+> If you want to have the full OptimusKG data, you'll need to run the Optimus 
+> pipeline manually with the required private data at hand. See [using private data]().
+
 ## Using OptimusKG
 
-## Running the Optimus pipeline
+## Running Optimus
 
 
 
