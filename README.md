@@ -32,13 +32,15 @@ At an architectural level, Optimus consists of the following components:
 
 ## Releases and Contributing
 
-OptimusKG is a biomedical Labeled Property Graph built using the Optimus pipeline. Each release provides the OptimusKG data in several formats, each tailored for different use cases:
+OptimusKG is a biomedical Labeled Property Graph built using the Optimus pipeline. Each release provides the graph data in several formats, each tailored for different use cases:
 
-- **CSV**: The `optimuskg.csv.zip` contains the set header and partitioned data files for each node and edge type. This is useful for bulk-importing the graph into a into a Neo4j database.
-- **PG-JSONL**: The `optimuskg.pg.jsonl` file is a single file representing the graph in the standardized [Property Graph Exchange Format (PG)](https://pg-format.github.io/specification/). This human-readable format is well-suited for data exchange, and situations where self-contained graph representation is needed.
-- **Neo4j-JSONL**: The `optimuskg.jsonl` file is a direct JSON lines export from a Neo4j instance of OptimusKG. This format is useful for interoperability with other tools in the Neo4j ecosystem, but is much large in size than the PG-JSONL format.
-- **Parquet**: The `nodes-parquet.zip` and `edges-parquet.zip` archives provide all the nodes and edges as separate Apache Parquet files. As a columnar storage format, Parquet is highly efficient for large-scale data analysis and is recommended for data science and machine learning workflows with tools like Apache Spark and Polars.
-- **Diamond**: The `optimuskg.diamond` file is a custom, compressed binary format of the full graph. It offers the smallest file size, making it ideal for efficient storage and network transfer.Diamond is developed by the same authors of Optimus.
+| Format | File | Description |
+| ---- | --- | --- |
+| **CSV** | `optimuskg.csv.zip` | Contains the set header and partitioned data files for each node and edge type. This is useful for bulk-importing the graph into a into a Neo4j database. |
+| **PG-JSONL** | `optimuskg.pg.jsonl` | A single file representing the graph in the standardized [Property Graph Exchange Format (PG)](https://pg-format.github.io/specification/). This human-readable format is well-suited for data exchange, and situations where self-contained graph representation is needed. |
+| **Neo4j-JSONL** | `optimuskg.jsonl` | A direct JSON lines export from a Neo4j instance of OptimusKG. This format is useful for interoperability with other tools in the Neo4j ecosystem, but is much large in size than the PG-JSONL format. |
+| **Parquet** | `nodes-parquet.zip` and `edges-parquet.zip` | Archives provide all the nodes and edges as separate Apache Parquet files. As a columnar storage format, Parquet is highly efficient for large-scale data analysis and is recommended for data science and machine learning workflows with tools like Apache Spark and Polars. |
+| **Diamond** | `optimuskg.diamond` | A custom, compressed binary format of the full graph. It offers the smallest file size, making it ideal for efficient storage and network transfer. Diamond is developed by the same authors of Optimus. |
 
 
 ## Using OptimusKG
