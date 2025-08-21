@@ -1,3 +1,5 @@
+# OptimusKG
+
 --------------------------------------------------------------------------------
 
 **Documentation**: [https://grence.ai/docs/optimuskg](https://grence.ai/docs/optimuskg)
@@ -61,32 +63,56 @@ Each release includes a comprehensive graph report that contains:
 > 
 > If you do not have access, the [`Origin Hook`](https://github.com/mims-harvard/optimuskg/blob/main/optimuskg/hooks/origin/origin_hooks.pya) will generate empty placeholder datasets in their place. This allows pipeline nodes that depend on both public and private data to run, even if the private data is missing. As a result, you can still execute the pipeline and work with the public portions of the data without interruption.
 
-## Using OptimusKG
+<!-- ## Using OptimusKG TODO: maybe we'll need to create a basic library to download the parquet data and load it in-memory as polars dataframes.-->
 
 ## Running Optimus
 
+### Installing dependencies
+
+Optimus uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as the project manager and [`docker`](https://docs.docker.com/engine/install/) to spin up the Neo4j database. 
+
+> [!NOTE]
+> Docker is not required to be installed if you don't need to export the graph in Neo4j-JSONL format.
+
+### Generating the graph
+
+Optimus is designed to generate a full knowledge graph in one command:
+
+```bash
+$ uv run kedro run --to-nodes gold.pg_export --runner=ParallelRunner --async
+
+[01/28/25 19:29:07] INFO     Using 'conf/logging.yml' as logging configuration. You can change this by setting the KEDRO_LOGGING_CONFIG environment variable accordingly.
+[01/28/25 19:29:08] INFO     Kedro project optimuskg
+[01/28/25 19:29:09] INFO     Using synchronous mode for loading and saving data. Use the --async flag for potential performance gains.
+```
+
+This will automatically download all the necessary data, store it in the `landing` layer, and execute the `bronze`, `silver`, and `gold` layers
+to finally export the graph inside the `data/export/` folder.
+
+> [!NOTE]
+> It is recommended to use the [ParallelRunner](https://docs.kedro.org/en/latest/build/run_a_pipeline/#parallelrunner) 
+> to run the nodes within a pipeline concurrently, and the [async](https://docs.kedro.org/en/latest/build/run_a_pipeline/#load-and-save-asynchronously) flag to reduce load and save time by using asynchronous mode.
+
+This will not only export the knowledge graph, but also all the intermediate datasets used to generate it. The location of each dataset and their format is specified in the catalog.
 
 ```bash
 uv sync
 ```
 
-```bash
-uv run kedro run --to-nodes gold.pg_export --runner=ParallelRunner
-```
-
-```
-```
-
-```
-```
-```
-```
-```
-
-
-
 ## Citation
 
+The Optimus paper has been peer-reviewed in [Nature Biotechnology](). Before it was available as a pre-print at [arXiv]().
+
+```
+@article{vittor2025optimus,
+  title={Building OptimusKG using the Optimus framework},
+  author={Vittor, Lucas and Arango, Inaki and and Poloneur, Joaquin, and Noori, Ayush and Zitnik, Marinka},
+  journal={Nature Scientific Data},
+  doi={https://doi.org/<XXX>/<XXX>},
+  URL={https://www.nature.com/articles/<XXX>},
+  year={2025}
+}
+```
 
 ## License
 

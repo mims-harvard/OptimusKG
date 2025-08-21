@@ -231,7 +231,7 @@ def _get_node_label_metrics(  # noqa: PLR0913
 
 def _get_ontology_prefix(node_id: str) -> str:
     """Returns the ontology prefix of a node ID."""
-    # TODO: Maybe this can be less hardcoded when we switch to indentifiers.og for the IDs
+    # TODO: Maybe this can be less hardcoded when we switch to identifiers.org for the IDs
     if ":" in node_id:
         return node_id.split(":", 1)[0]
     elif "_" in node_id:

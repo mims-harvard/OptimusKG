@@ -5,7 +5,6 @@ import typer
 
 from cli.commands import (
     get_primekg_metrics_command,
-    neo4j_import_command,
     write_metrics_command,
     write_metrics_report_command,
 )
@@ -92,23 +91,6 @@ def primekg_metrics(
     ),
 ):
     get_primekg_metrics_command(in_path, out_path)
-
-
-@app.command(help="Dynamically import data into Neo4j from CSV files.")
-def neo4j_import(
-    import_path: Path = typer.Option(
-        "data/neo4j/import",
-        "--import-path",
-        help="The path to the directory containing the import files.",
-    ),
-    schema_config_path: Path = typer.Option(
-        "conf/base/biocypher/schema_config.yaml",
-        "--schema-config-path",
-        help="The path to the schema configuration file.",
-    ),
-):
-    neo4j_import_command(import_path, schema_config_path)
-
 
 if __name__ == "__main__":
     app()
