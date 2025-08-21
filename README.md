@@ -72,13 +72,17 @@ Each release includes a comprehensive graph report that contains:
 Optimus uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as the project manager and [`docker`](https://docs.docker.com/engine/install/) to spin up the Neo4j database. 
 
 > [!NOTE]
-> Docker is not required to be installed if you don't need to export the graph in Neo4j-JSONL format.
+> Docker is not required if you don't need to export the graph in Neo4j-JSONL format.
 
 Before running Optimus, you should sync the its dependencies:
 
 ```console
 uv sync
 ```
+
+> [!NOTE]
+> The are some commands that leverage [GNU Make](https://www.gnu.org/software/make/). 
+> The command line reference documentation can be viewed with `make help`.
 
 ### Generating the graph
 
@@ -102,6 +106,22 @@ to finally export the graph inside the `data/export/` folder.
 > [!NOTE] 
 > This will not only export the knowledge graph, but also all the intermediate datasets used to generate it. 
 > The location of each dataset and their format is specified in the catalog.
+
+Similarly, you can export the Neo4j-JSONL format with:
+
+```console
+$ uv run kedro run --to-nodes gold.neo4j_export --runner=ParallelRunner --async
+
+[01/28/25 19:29:07] INFO     Using 'conf/logging.yml' as logging configuration. You can change this by setting the KEDRO_LOGGING_CONFIG environment variable accordingly.
+[01/28/25 19:29:08] INFO     Kedro project optimuskg
+[01/28/25 19:29:09] INFO     Using synchronous mode for loading and saving data. Use the --async flag for potential performance gains.
+```
+
+Then, you can spin up a Neo4j database with the graph data simply by running:
+
+```console
+make neo4j
+```
 
 ## Citation
 
