@@ -59,7 +59,7 @@ Each release includes a comprehensive graph report that contains:
 > Distributed OptimusKG data files contain only publicly available data.
 > If you have access to private datasets, place them in the appropriate subdirectories under `data/landing/`. The pipeline will automatically use them if present.
 > 
-> If you do not have access, the Origin Hook will generate empty placeholder datasets in their place (see the [`OriginHook`](https://github.com/mims-harvard/optimuskg/blob/main/optimuskg/hooks/origin/origin_hooks.py)). This allows pipeline nodes that depend on both public and private data to run, even if the private data is missing. As a result, you can still execute the pipeline and work with the public portions of the data without interruption.
+> If you do not have access, the [`Origin Hook`](https://github.com/mims-harvard/optimuskg/blob/main/optimuskg/hooks/origin/origin_hooks.pya) will generate empty placeholder datasets in their place. This allows pipeline nodes that depend on both public and private data to run, even if the private data is missing. As a result, you can still execute the pipeline and work with the public portions of the data without interruption.
 
 ## Using OptimusKG
 
