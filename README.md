@@ -126,8 +126,8 @@ Then, you can spin up a Neo4j database with the graph data simply by running:
 $ make neo4j
 
 [+] Running 2/2
- ✔ Network optimuskg_default Created                                                                                                                              0.1s 
- ✔ Container neo4j            Started 
+ ✔ Network optimuskg_default Created 
+ ✔ Container neo4j           Started 
 ```
 
 ## Citation
