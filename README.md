@@ -123,7 +123,11 @@ $ uv run kedro run --to-nodes gold.neo4j_export --runner=ParallelRunner --async
 Then, you can spin up a Neo4j database with the graph data simply by running:
 
 ```console
-make neo4j
+$ make neo4j
+
+[+] Running 2/2
+ ✔ Network optimuskg_default Created                                                                                                                              0.1s 
+ ✔ Container neo4j            Started 
 ```
 
 ## Citation
