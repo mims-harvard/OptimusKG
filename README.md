@@ -78,7 +78,7 @@ Optimus uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as 
 
 Optimus is designed to generate a full knowledge graph in one command:
 
-```bash
+```console
 $ uv run kedro run --to-nodes gold.pg_export --runner=ParallelRunner --async
 
 [01/28/25 19:29:07] INFO     Using 'conf/logging.yml' as logging configuration. You can change this by setting the KEDRO_LOGGING_CONFIG environment variable accordingly.
