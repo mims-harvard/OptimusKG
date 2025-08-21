@@ -74,6 +74,12 @@ Optimus uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as 
 > [!NOTE]
 > Docker is not required to be installed if you don't need to export the graph in Neo4j-JSONL format.
 
+Before running Optimus, you should sync the its dependencies:
+
+```console
+uv sync
+```
+
 ### Generating the graph
 
 Optimus is designed to generate a full knowledge graph in one command:
@@ -93,11 +99,9 @@ to finally export the graph inside the `data/export/` folder.
 > It is recommended to use the [ParallelRunner](https://docs.kedro.org/en/latest/build/run_a_pipeline/#parallelrunner) 
 > to run the nodes within a pipeline concurrently, and the [async](https://docs.kedro.org/en/latest/build/run_a_pipeline/#load-and-save-asynchronously) flag to reduce load and save time by using asynchronous mode.
 
-This will not only export the knowledge graph, but also all the intermediate datasets used to generate it. The location of each dataset and their format is specified in the catalog.
-
-```bash
-uv sync
-```
+> [!NOTE] 
+> This will not only export the knowledge graph, but also all the intermediate datasets used to generate it. 
+> The location of each dataset and their format is specified in the catalog.
 
 ## Citation
 
