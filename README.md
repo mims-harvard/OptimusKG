@@ -131,7 +131,7 @@ $ make neo4j
 ```
 
 > [!NOTE]
-> This will start a Neo4j container in the background. You can access the Neo4j Browser at `http://localhost:7474`.
+> This will start a Neo4j container in the background. You can access the Neo4j Browser at [http://localhost:7474](http://localhost:7474).
 
 You can export the entire database or the results of a specific query once the container is running.
 
