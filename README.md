@@ -74,7 +74,7 @@ Optimus uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as 
 > [!NOTE]
 > Docker is not required if you don't need to export the graph in Neo4j-JSONL format.
 
-Before running Optimus, you should sync the its dependencies:
+Before running Optimus, you should sync its dependencies:
 
 ```console
 $ uv sync
