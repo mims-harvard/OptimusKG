@@ -12,7 +12,7 @@ Optimus is an opinionated, production-ready data pipeline designed to construct,
 
 Optimus is grounded in three foundational principles:
 
-- **Ready-to-use**: Optimus comes with a set of pre-built processing nodes that unify many biomedical data sources into a single knowledge graph (OptimusKG).
+- **Ready-to-use**: Optimus comes with a set of pre-built processing nodes that unify many biomedical data sources into a single knowledge graph named OptimusKG.
 - **Reproducible**: All data transformations are deterministic, validated through checksum checks, and infra-agnostic.
 - **Extensible**: Optimus is a superset of the [Kedro framework](https://kedro.org/) (hosted by the [Linux Foundation](https://lfaidata.foundation/)), providing a uniform project template, dataset abstraction, configuration management, and pipeline assembly.
 
