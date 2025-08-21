@@ -22,6 +22,6 @@ landing.disgenet.curated_gene_disease_associations:
       "NofSnps": "${pl:Utf8}"
       "source": "${pl:Utf8}"
   metadata:
-    checksum: "281090c34eb94f80c4b959dd1cf35be0"
+    checksum: "132b5f1cc77db4877c2be0b555c17e94"
     kedro-viz:
       layer: landing
