@@ -130,6 +130,27 @@ $ make neo4j
  ✔ Container neo4j           Started 
 ```
 
+> [!NOTE]
+> This will start a Neo4j container in the background. You can access the Neo4j Browser at `http://localhost:7474`.
+
+You can export the entire database or the results of a specific query once the container is running.
+
+To export the entire database to a Neo4j-JSONL file, run:
+
+```console
+$ make neo4j-export
+```
+
+The data will be saved in `data/export/optimuskg.jsonl`.
+
+To export the results of a specific Cypher query, run:
+
+```console
+$ CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export
+```
+
+The results will be saved to a file in `data/export/` with a name derived from the query.
+
 ## Citation
 
 The Optimus paper has been peer-reviewed in [Nature Biotechnology](). Before it was available as a pre-print at [arXiv]().
