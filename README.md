@@ -67,7 +67,7 @@ Each release includes a comprehensive graph report that contains:
 
 ## Running Optimus
 
-### Installing dependencies
+### Install dependencies
 
 Optimus uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as the project manager and [`docker`](https://docs.docker.com/engine/install/) to spin up the Neo4j database. 
 
