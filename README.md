@@ -77,7 +77,10 @@ Optimus uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as 
 Before running Optimus, you should sync the its dependencies:
 
 ```console
-uv sync
+$ uv sync
+
+Resolved 234 packages in 1ms
+Audited 225 packages in 0.42ms
 ```
 
 > [!NOTE]
