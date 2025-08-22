@@ -131,7 +131,7 @@ $ make neo4j
 ```
 
 > [!NOTE]
-> This will start a Neo4j container in the background. You can access the Neo4j Browser at [http://localhost:7474](http://localhost:7474).
+> This will start a Neo4j container in the background. You can access the Neo4j Browser at [http://localhost:7474/browser/preview/](http://localhost:7474/browser/preview/).
 
 You can export the entire database or the results of a specific query once the container is running.
 
@@ -141,7 +141,7 @@ To export the entire database to a Neo4j-JSONL file, run:
 $ make neo4j-export
 ```
 
-The data will be saved in `data/export/optimuskg.jsonl`.
+The data will be saved to `data/export/optimuskg.jsonl`.
 
 To export the results of a specific Cypher query, run:
 
@@ -149,7 +149,7 @@ To export the results of a specific Cypher query, run:
 $ CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export
 ```
 
-The results will be saved to a file in `data/export/` with a name derived from the query.
+The results will be saved to a file in `data/export/` with a filename derived from the query.
 
 ## Citation
 
