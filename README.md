@@ -158,7 +158,7 @@ The Optimus paper has been peer-reviewed in [Nature Biotechnology](). Before it 
 ```
 @article{vittor2025optimus,
   title={Building OptimusKG using the Optimus framework},
-  author={Vittor, Lucas and Arango, Inaki and and Poloneur, Joaquin, and Noori, Ayush and Zitnik, Marinka},
+  author={Vittor, Lucas and Arango, Inaki and Poloneur, Joaquin, and Noori, Ayush and Zitnik, Marinka},
   journal={Nature Scientific Data},
   doi={https://doi.org/<XXX>/<XXX>},
   URL={https://www.nature.com/articles/<XXX>},
@@ -168,4 +168,4 @@ The Optimus paper has been peer-reviewed in [Nature Biotechnology](). Before it 
 
 ## License
 
-Optimus is released under the [MIT LICENSE](LICENSE).
+Optimus is released under the [MIT License](LICENSE).

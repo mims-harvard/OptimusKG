@@ -25,7 +25,7 @@ def run(  # noqa: PLR0913
             ),
             left_on="id",
             right_on="id",
-            how="inner",
+            how="left",  # TODO: there are 2 ids that are not in the reactome_pathways table
         )
         .select(
             [
