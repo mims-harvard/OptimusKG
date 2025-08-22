@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.12"
 
 [[package]]
@@ -1997,7 +1997,7 @@ wheels = [
 
 [[package]]
 name = "optimuskg"
-version = "0.32.0"
+version = "0.34.0"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },
@@ -3319,7 +3319,7 @@ name = "strawberry-graphql"
 version = "0.268.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "graphql-core", marker = "python_full_version < '4.0'" },
+    { name = "graphql-core", marker = "python_full_version < '4'" },
     { name = "packaging" },
     { name = "python-dateutil" },
     { name = "typing-extensions" },

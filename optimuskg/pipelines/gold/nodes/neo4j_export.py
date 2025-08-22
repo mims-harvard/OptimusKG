@@ -1,4 +1,5 @@
 import logging
+from pathlib import Path
 
 import polars as pl
 from biocypher import BioCypher
@@ -7,7 +8,7 @@ from more_itertools import peekable
 
 from optimuskg.utils import format_rich
 
-from .utils import yield_edges, yield_nodes
+from .utils import csv_to_neo4j, yield_edges, yield_nodes
 
 logger = logging.getLogger(__name__)
 
@@ -130,6 +131,16 @@ def run(  # noqa: PLR0913
                     bc.write_edges(edges_p)
                 else:
                     logger.warning("No edges found.")
+    except Exception as e:
+        logger.exception(f"Error writing graph data to disk: {e}")
+        raise
+
+    try:
+        logger.info("Bulk-importing graph data from CSV files to Neo4j database...")
+        csv_to_neo4j(
+            import_path=Path("data/neo4j/import"),
+            schema_config_path=Path("conf/base/biocypher/schema_config.yaml"),
+        )
     except Exception as e:
         logger.exception(f"Error writing graph data to disk: {e}")
         raise
