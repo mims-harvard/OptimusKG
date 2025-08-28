@@ -47,6 +47,7 @@ dev = [
   "typer>=0.15.1",
   "types-cachetools>=5.5.0.20240820",
   "scienceplots>=2.1.1",
+  "asv>=0.6.4",
 ]
 
 [project.scripts]
