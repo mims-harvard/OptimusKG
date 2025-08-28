@@ -1,5 +1,12 @@
+import warnings
+
 import polars as pl
-from kedro.io import KedroDataCatalog
+
+warnings.filterwarnings(
+    "ignore",
+    message="Dataset name '.*' contains '.' characters.*",
+    category=UserWarning,
+)
 
 from optimuskg.hooks import ChecksumHooks, OriginHooks, QualityChecksHooks
 
@@ -40,6 +47,3 @@ CONFIG_LOADER_ARGS = {
 # Class that manages Kedro's library components.
 # from kedro.framework.context import KedroContext
 # CONTEXT_CLASS = KedroContext
-
-# Class that manages the Data Catalog.
-DATA_CATALOG_CLASS = KedroDataCatalog

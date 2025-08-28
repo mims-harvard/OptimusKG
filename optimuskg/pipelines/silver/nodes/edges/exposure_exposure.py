@@ -10,7 +10,7 @@ def run(
     return (
         ctd_exposure_events.filter(
             pl.col("exposure_marker_id").is_in(
-                ctd_exposure_events.select("exposure_stressor_id").unique()
+                ctd_exposure_events.get_column("exposure_stressor_id").unique()
             ),
             pl.col("exposure_marker_id").is_not_null(),
         )

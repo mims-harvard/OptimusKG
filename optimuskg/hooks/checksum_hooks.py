@@ -44,7 +44,6 @@ class ChecksumHooks:
                     f"Expected: {self._checksum_display_str(expected_checksum)}, Got: {self._checksum_display_str(actual_checksum)}",
                     extra={"markup": True},
                 )
-                # raise DatasetError(f"Checksum mismatch for {ds_name}") # TODO: Uncomment this once we have a way to handle this error
             else:
                 logger.debug(
                     f"Checksum validated successfully for {get_dataset_display_name(ds_name)}",

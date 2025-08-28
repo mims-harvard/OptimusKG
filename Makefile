@@ -66,6 +66,8 @@ clean: ##@ Clean up the project
 	@rm -rf htmlcov
 	@rm -f .coverage*
 	@rm -rf target
+	@rm -rf .viz
+	@rm -rf build
 
 .PHONY: rm-data
 rm-data: ##@ Remove the data directory

@@ -165,7 +165,7 @@ def get_dataset_by_name(ds_name: str) -> AbstractDataset:
     with KedroSession.create() as session:
         catalog: CatalogProtocol = session.load_context().catalog
         try:
-            dataset: AbstractDataset = catalog._get_dataset(ds_name)
+            dataset: AbstractDataset = catalog.get(ds_name)
         except DatasetNotFoundError:
             logger.exception(
                 f"Dataset {format_rich(ds_name, 'dark_red')} not found in catalog",

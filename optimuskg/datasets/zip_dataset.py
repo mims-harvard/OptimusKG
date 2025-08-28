@@ -11,8 +11,8 @@ import fsspec
 import polars as pl
 from cachetools import Cache
 from kedro.io import AbstractDataset, DatasetError
+from kedro.io.catalog_config_resolver import CREDENTIALS_KEY
 from kedro.io.core import parse_dataset_definition
-from kedro.io.data_catalog import CREDENTIALS_KEY
 
 KEY_PROPAGATION_WARNING = (
     "Top-level %(keys)s will not propagate into the %(target)s since "
@@ -122,9 +122,7 @@ class ZipDataset(AbstractDataset[zipfile.ZipFile, pl.DataFrame]):
 
             with zipped.open(target_filename) as zipped_file:
                 with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-                    temp_file.write(
-                        zipped_file.read()
-                    )  # TODO: Maybe this is too slow for large files?
+                    temp_file.write(zipped_file.read())
                     temp_filepath = temp_file.name
 
                 try:

@@ -2,8 +2,6 @@
 filesystem (e.g.: local, S3, GCS). It uses pandas to handle the XML file.
 """
 
-# TODO: Adapt comments
-
 from __future__ import annotations
 
 import logging
