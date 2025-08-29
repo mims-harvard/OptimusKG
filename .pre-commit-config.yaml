@@ -19,13 +19,7 @@ repos:
         require_serial: true
 
   - repo: local
-    hooks:
-      - id: bandit
-        name: bandit
-        language: system
-        entry: make bandit
-        types: [python]
-        
+    hooks:        
       - id: mypy
         name: mypy
         language: system

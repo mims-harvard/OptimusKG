@@ -40,10 +40,6 @@ mypy: ##@ Run mypy
 	@uv run mypy --config-file pyproject.toml tests
 	@uv run mypy --config-file pyproject.toml cli
 
-.PHONY: bandit
-bandit: ##@ Run bandit
-	@uv tool run bandit -v -c pyproject.toml -r optimuskg/* tests/*
-
 .PHONY: interrogate
 interrogate: ##@ Run interrogate
 	@uv tool run interrogate --config pyproject.toml

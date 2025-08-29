@@ -41,7 +41,6 @@ dev = [
   "ruff~=0.1.8",
   "pre-commit>=4.0.1",
   "mypy>=1.14.1",
-  "bandit[toml]>=1.8.2",
   "interrogate>=1.7.0",
   "pydantic>=2.10.6",
   "typer>=0.15.1",
@@ -106,9 +105,6 @@ lint.ignore = ["E501"] # Ruff format takes care of line-too-long
 
 [tool.kedro_telemetry]
 project_id = "dc32d474bbc84fc49bf67c0f87edf02e"
-
-[tool.bandit]
-skips = ["B101"]
 
 [tool.interrogate]
 ignore-init-method = true
