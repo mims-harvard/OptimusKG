@@ -5,8 +5,10 @@ import typer
 
 from cli.commands import (
     get_primekg_metrics_command,
-    write_metrics_command,
-    write_metrics_report_command,
+    metrics_command,
+    plot_benchmark_command,
+    plot_normalized_time,
+    unify_benchmark_files_command,
 )
 from optimuskg.utils import calculate_checksum
 
@@ -55,28 +57,6 @@ def checksum(  # noqa: PLR0913
         logger.error(f"An unexpected error occurred: {e}")
 
 
-@app.command(help="Get statistics about a PG-JSONL knowledge graph.")
-def write_metrics(
-    in_path: Path = typer.Option(
-        "data/export/optimuskg.pg.jsonl",
-        "--in",
-        help="The path to read the input file from.",
-    ),
-    data_out_path: Path = typer.Option(
-        "data/export/metrics.json",
-        "--out",
-        help="The path to write the output file to.",
-    ),
-    report_out_path: Path = typer.Option(
-        "data/export/metrics_report.md",
-        "--report-out",
-        help="The path to write the markdown report to.",
-    ),
-):
-    write_metrics_command(in_path, data_out_path)
-    write_metrics_report_command(data_out_path, report_out_path)
-
-
 @app.command(help="Get statistics about a PrimeKG knowledge graph.")
 def primekg_metrics(
     in_path: Path = typer.Option(
@@ -91,6 +71,58 @@ def primekg_metrics(
     ),
 ):
     get_primekg_metrics_command(in_path, out_path)
+
+
+@app.command(help="Generate metrics report from OptimusKG parquet files.")
+def metrics(
+    nodes_dir: Path = typer.Option(
+        "data/silver/nodes",
+        "--nodes",
+        help="The path to read the nodes from.",
+    ),
+    edges_dir: Path = typer.Option(
+        "data/silver/edges",
+        "--edges",
+        help="The path to read the edges from.",
+    ),
+    out_dir: Path = typer.Option(
+        "data/export/metrics",
+        "--out",
+        help="The path to write the output file to.",
+    ),
+):
+    metrics_command(nodes_dir, edges_dir, out_dir)
+
+
+@app.command(help="Plot benchmark results.")
+def plot_benchmark(
+    results_path: Path = typer.Option(
+        "data/benchmarks/results.json",
+        "--results",
+        help="The path to read the results from.",
+    ),
+    out_dir: Path = typer.Option(
+        "data/benchmarks/plots",
+        "--out",
+        help="The path to write the output file to.",
+    ),
+):
+    plot_benchmark_command(results_path, out_dir)
+    plot_normalized_time(
+        "data/benchmarks/normalized_time/unified_benchmarks.json", out_dir
+    )
+
+
+@app.command(help="Unify benchmark files.")
+def unify_benchmark_files(
+    benchmarks_dir: Path = typer.Option(
+        "data/benchmarks/normalized_time",
+        "--benchmarks",
+        help="The path to read the benchmarks from.",
+    ),
+):
+    unify_benchmark_files_command(benchmarks_dir)
+
 
 if __name__ == "__main__":
     app()

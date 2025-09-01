@@ -13,7 +13,7 @@ from .utils import csv_to_neo4j, yield_edges, yield_nodes
 logger = logging.getLogger(__name__)
 
 
-def run(  # noqa: PLR0913
+def run(  # noqa: PLR0913, PLR0912
     # Nodes
     gene: pl.DataFrame,
     anatomy: pl.DataFrame,

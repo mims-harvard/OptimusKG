@@ -93,6 +93,7 @@ def yield_edges(df: pl.DataFrame) -> Iterator[BiocypherEdge]:
             properties=not_null_properties,
         )
 
+
 def csv_to_neo4j(import_path: Path, schema_config_path: Path) -> None:
     """
     Import data into Neo4j from CSV files.
@@ -112,7 +113,9 @@ def csv_to_neo4j(import_path: Path, schema_config_path: Path) -> None:
             logger.warning(f"'{name}' is missing 'input_label' in schema, skipping.")
             continue
 
-        pascal_case_label = "".join(word.capitalize() for word in input_label.split("_"))
+        pascal_case_label = "".join(
+            word.capitalize() for word in input_label.split("_")
+        )
         header_file = f"{pascal_case_label}-header.csv"
 
         if represented_as == "node":
