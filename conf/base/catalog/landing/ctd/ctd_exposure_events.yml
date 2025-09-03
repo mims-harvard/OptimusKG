@@ -51,7 +51,7 @@ landing.ctd.ctd_exposure_events:
       ]
     infer_schema: false
     comment_prefix: "#"
-    schema_overrides: # TODO: Change schema_overrides to schema if possible
+    schema_overrides:
       "exposurestressorname": "${pl:String}"
       "exposurestressorid": "${pl:String}"
       "stressorsourcecategory": "${pl:String}"

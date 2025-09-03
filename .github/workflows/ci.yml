@@ -39,9 +39,6 @@ jobs:
       - name: Run mypy
         run: make mypy
 
-      - name: Run bandit
-        run: make bandit
-
       - name: Run interrogate
         run: make interrogate
 

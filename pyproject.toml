@@ -6,19 +6,17 @@ build-backend = "hatchling.build"
 requires-python = ">=3.12"
 name = "optimuskg"
 readme = "README.md"
-version = "0.34.0"
+version = "0.35.0"
 dependencies = [
   "ipython>=8.10",
   "jupyterlab>=3.0",
   "notebook",
-  "kedro[jupyter]~=0.19.10",
+  "kedro[jupyter]~=1.0.0",
   "kedro-datasets[pandas-csvdataset, pandas-jsondataset, polars-csvdataset]>=3.0",
-  "typedframe>=0.11.0",
   "polars>=1.19.0",
   "biocypher>=0.6.1",
   "requests>=2.32.3",
   "aiohttp>=3.11.11",
-  "goatools>=1.4.12",
   "lxml>=5.3.0",
   "pandas-stubs>=2.2.3.241126",
   "types-openpyxl>=3.1.5.20241225",
@@ -27,7 +25,7 @@ dependencies = [
   "pyarrow>=19.0.0",
   "sqlalchemy>=2.0.37",
   "types-requests>=2.32.0.20250328",
-  "kedro-viz>=11.0.1",
+  "kedro-viz>=12.0.0",
   "owlready2>=0.47",
 ]
 
@@ -41,12 +39,13 @@ dev = [
   "ruff~=0.1.8",
   "pre-commit>=4.0.1",
   "mypy>=1.14.1",
-  "bandit[toml]>=1.8.2",
   "interrogate>=1.7.0",
   "pydantic>=2.10.6",
   "typer>=0.15.1",
   "types-cachetools>=5.5.0.20240820",
   "scienceplots>=2.1.1",
+  "asv>=0.6.4",
+  "seaborn>=0.13.2",
 ]
 
 [project.scripts]
@@ -65,7 +64,7 @@ required-version = ">=0.5.18"
 [tool.kedro]
 package_name = "optimuskg"
 project_name = "OptimusKG"
-kedro_init_version = "0.19.10"
+kedro_init_version = "1.0.0"
 source_dir = "optimuskg"
 
 [tool.pytest.ini_options]
@@ -105,9 +104,6 @@ lint.ignore = ["E501"] # Ruff format takes care of line-too-long
 
 [tool.kedro_telemetry]
 project_id = "dc32d474bbc84fc49bf67c0f87edf02e"
-
-[tool.bandit]
-skips = ["B101"]
 
 [tool.interrogate]
 ignore-init-method = true

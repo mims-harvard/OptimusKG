@@ -1,21 +1,19 @@
+import warnings
+
 import polars as pl
-from kedro.io import KedroDataCatalog
 
 from optimuskg.hooks import ChecksumHooks, OriginHooks, QualityChecksHooks
 
+# Ignore warnings about dataset names containing '.' characters.
+# We use '.' in dataset names to indicate a hierarchy of datasets.
+warnings.filterwarnings(
+    "ignore",
+    message="Dataset name '.*' contains '.' characters.*",
+    category=UserWarning,
+)
+
 # Hooks are executed in a Last-In-First-Out (LIFO) order.
 HOOKS = (QualityChecksHooks(), ChecksumHooks(), OriginHooks())
-
-# Installed plugins for which to disable hook auto-registration.
-# DISABLE_HOOKS_FOR_PLUGINS = ("kedro-viz",)
-
-# Class that manages storing KedroSession data.
-# from kedro.framework.session.store import BaseSessionStore
-# SESSION_STORE_CLASS = BaseSessionStore
-# Keyword arguments to pass to the `SESSION_STORE_CLASS` constructor.
-# SESSION_STORE_ARGS = {
-#     "path": "./sessions"
-# }
 
 # Directory that holds configuration.
 CONF_SOURCE = "conf"
@@ -35,11 +33,3 @@ CONFIG_LOADER_ARGS = {
         "local": "soft",
     },
 }
-
-
-# Class that manages Kedro's library components.
-# from kedro.framework.context import KedroContext
-# CONTEXT_CLASS = KedroContext
-
-# Class that manages the Data Catalog.
-DATA_CATALOG_CLASS = KedroDataCatalog

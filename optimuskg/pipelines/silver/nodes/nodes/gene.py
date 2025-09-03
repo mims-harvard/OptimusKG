@@ -117,7 +117,7 @@ def run(  # noqa: PLR0913
                 pl.lit("gene").alias("node_type"),
                 pl.struct(
                     [
-                        pl.lit(["opentarges", "BGEE"]).alias("sources"),
+                        pl.lit(["opentargets", "BGEE"]).alias("sources"),
                         pl.coalesce([pl.col("symbol"), pl.col("gene_symbol")]).alias(
                             "symbol"
                         ),

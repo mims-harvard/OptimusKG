@@ -1,11 +1,11 @@
-from kedro.pipeline import pipeline
+from kedro.pipeline import Pipeline
 
 from . import nodes
 
 
-def create_pipeline(**kwargs):
-    return pipeline(
-        [getattr(nodes, name) for name in nodes.__all__],
+def create_pipeline(**kwargs) -> Pipeline:
+    return Pipeline(
+        nodes=[getattr(nodes, name) for name in nodes.__all__],
         namespace="silver",
         inputs={
             # landing
