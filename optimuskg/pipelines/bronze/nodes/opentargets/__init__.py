@@ -1,4 +1,6 @@
+from .chembl_drugbank_mapping import chembl_drugbank_mapping_node
 from .disease import disease_node
+from .disease_mappings import umls_disease_mappings_node
 from .disease_phenotype import disease_phenotype_node
 from .drug_indication import drug_indication_node
 from .drug_mechanism_of_action import drug_mechanism_of_action_node
@@ -14,4 +16,6 @@ __all__ = [
     "disease_node",
     "disease_phenotype_node",
     "drug_mechanism_of_action_node",
+    "umls_disease_mappings_node",
+    "chembl_drugbank_mapping_node",
 ]

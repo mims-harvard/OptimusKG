@@ -5,22 +5,8 @@ from kedro.pipeline import node
 def run(
     drug_drug: pl.DataFrame,
     drug_molecule: pl.DataFrame,
+    chembl_drugbank_mapping: pl.DataFrame,
 ) -> pl.DataFrame:
-    chembl_drugbank_mapping = (  # TODO: this should be a bronze dataset since is also used in drug_protein
-        drug_molecule.unnest("metadata")
-        .explode("crossReferences")
-        .unnest("crossReferences")
-        .filter(pl.col("source") == "drugbank")
-        .explode("ids")
-        .unique("id")
-        .select(
-            [
-                pl.col("id").alias("chembl_id"),
-                ("DRUGBANK:" + pl.col("ids")).alias("drugbank_id"),
-            ]
-        )
-    )
-
     drugbank_drug_drug = (
         drug_drug.join(
             chembl_drugbank_mapping,
@@ -153,6 +139,7 @@ drug_drug_node = node(
     inputs={
         "drug_drug": "bronze.drug_drug",
         "drug_molecule": "bronze.opentargets.drug_molecule",
+        "chembl_drugbank_mapping": "bronze.opentargets.chembl_drugbank_mapping",
     },
     outputs="edges.drug_drug",
     name="drug_drug",

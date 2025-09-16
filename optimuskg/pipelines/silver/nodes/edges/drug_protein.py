@@ -4,30 +4,15 @@ from kedro.pipeline import node
 
 def run(
     drug_protein: pl.DataFrame,
-    drug_molecule: pl.DataFrame,
     protein_names: pl.DataFrame,
     target: pl.DataFrame,
     drug_mechanism_of_action: pl.DataFrame,
+    chembl_drugbank_mapping: pl.DataFrame,
 ) -> pl.DataFrame:
     ensembl_ncbi_mapping = (
         target.select("id", "approved_symbol")
         .join(protein_names, left_on="approved_symbol", right_on="symbol", how="inner")
         .select(pl.col("id").alias("ensembl_id"), pl.col("ncbi_id"))
-    )
-
-    chembl_drugbank_mapping = (
-        drug_molecule.unnest("metadata")
-        .explode("crossReferences")
-        .unnest("crossReferences")
-        .filter(pl.col("source") == "drugbank")
-        .explode("ids")
-        .unique("id")
-        .select(
-            [
-                pl.col("id").alias("chembl_id"),
-                ("DRUGBANK:" + pl.col("ids")).alias("drugbank_id"),
-            ]
-        )
     )
 
     drugbank_drug_protein = (
@@ -170,10 +155,10 @@ drug_protein_node = node(
     run,
     inputs={
         "drug_protein": "bronze.drug_protein",
-        "drug_molecule": "bronze.opentargets.drug_molecule",
         "protein_names": "bronze.gene_names.protein_names",
         "target": "bronze.opentargets.target",
         "drug_mechanism_of_action": "bronze.opentargets.drug_mechanism_of_action",
+        "chembl_drugbank_mapping": "bronze.opentargets.chembl_drugbank_mapping",
     },
     outputs="edges.drug_protein",
     name="drug_protein",

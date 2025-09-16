@@ -81,6 +81,32 @@ drug:
     tradeNames: str[]
     sources: str[]
     sourceIds: str[]
+    cdId: str
+    cdFormula: str
+    cdMolWeight: float
+    calculatedLogP: float
+    alogs: float
+    tpsa: float
+    lipinski: float
+    numberOfFormulations: int
+    molFileBase64: str
+    molImageBase64: str
+    mrdef: str
+    enhancedStereo: bool
+    aromaticCarbons: int
+    sp3Count: int
+    sp2Count: int
+    spCount: int
+    halogenCount: int
+    heteroSp2Count: int
+    rotatableBonds: int
+    ON: int
+    OHNH: int
+    inchi: str
+    rgb: float
+    fdaLabels: int
+    status: str
+    structID: str
 
 disease:
   represented_as: node
@@ -102,6 +128,13 @@ disease:
     ancestors: str[]
     descendants: str[]
     therapeuticAreas: str[]
+    isLeaf: bool
+    conceptIds: str[]
+    conceptNames: str[]
+    umlsCUI: str
+    snomedFullNames: str[]
+    cuiSemanticType: str
+    snomedConceptIds: str[]
 
 phenotype:
   is_a: phenotypic feature
@@ -124,10 +157,16 @@ phenotype:
     ancestors: str[]
     descendants: str[]
     type: str
-    ontology_description: str
-    ontology_title: str
-    ontology_license: str
-    ontology_version: str
+    ontologyDescription: str
+    ontologyTitle: str
+    ontologyLicense: str
+    ontologyVersion: str
+    conceptIds: str[]
+    conceptNames: str[]
+    umlsCUI: str
+    snomedFullNames: str[]
+    cuiSemanticType: str
+    snomedConceptIds: str[]
 
 biological process:
   represented_as: node
@@ -364,6 +403,8 @@ drug protein:
     sourceUrls: str[]
     mechanismsOfAction: str[]
     sources: str[]
+    structureId: str
+    drugDiseaseId: str
 
 drug drug:
   is_a: physically interacts with
@@ -396,6 +437,8 @@ drug phenotype:
     sources: str[]
     referenceIds: str[]
     highestClinicalTrialPhase: float
+    structureId: str
+    drugDiseaseId: str
 
 biological process protein:
   is_a: regulates

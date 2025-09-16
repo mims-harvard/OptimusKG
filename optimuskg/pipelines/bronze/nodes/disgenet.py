@@ -44,7 +44,7 @@ def run(
             pl.col("gene_id")
             .cast(pl.Utf8)
             .map_elements(
-                lambda x: f"NCBIGene:{x}",  # Add NCBIGene prefix to match biolink schema
+                lambda x: f"NCBIGene:{x}",
                 return_dtype=pl.Utf8,
             )
             .alias("gene_id"),
