@@ -8,7 +8,7 @@ def run(  # noqa: PLR0913
     vocabulary = vocabulary.rename(
         {
             "DrugBank ID": "drugbank_id",
-            "Accession Numbers": "accession_numbers",
+            "Accession Numbers": "accession_numbers",  # TODO: accession_numbers should be a list of strings
             "Common name": "common_name",
             "CAS": "cas",
             "UNII": "unii",

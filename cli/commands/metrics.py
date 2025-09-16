@@ -11,6 +11,7 @@ logger = logging.getLogger("cli")
 class Statistics(BaseModel):
     avg: float | None
     std: float | None
+    total: int
 
 
 class DataOverview(BaseModel):
@@ -28,6 +29,7 @@ class NodeMetrics(BaseModel):
     degree: Statistics
     sources: dict[str, int]
     ontologies: dict[str, int]
+    degree_counts: list[int]
 
 
 class EdgeMetrics(BaseModel):
@@ -120,7 +122,9 @@ def get_node_metrics(
         ).to_series()
 
         avg_properties = Statistics(
-            avg=properties_count.mean(), std=properties_count.std()
+            avg=properties_count.mean(),
+            std=properties_count.std(),
+            total=properties_count.sum(),
         )
 
         # Collect sources from both 'sources' list and 'source' string columns
@@ -155,7 +159,7 @@ def get_node_metrics(
         node_ids_in_df = df["id"].to_list()
         degrees_for_label = [node_degrees.get(node_id, 0) for node_id in node_ids_in_df]
 
-        degree_stats = Statistics(avg=None, std=None)
+        degree_stats = Statistics(avg=None, std=None, total=0)
         if degrees_for_label and node_degrees:  # Only calculate if we have edge data
             mean_degree = sum(degrees_for_label) / len(degrees_for_label)
             if len(degrees_for_label) > 1:
@@ -165,7 +169,9 @@ def get_node_metrics(
                 std_degree = variance**0.5
             else:
                 std_degree = 0.0
-            degree_stats = Statistics(avg=mean_degree, std=std_degree)
+            degree_stats = Statistics(
+                avg=mean_degree, std=std_degree, total=sum(degrees_for_label)
+            )
 
         node_metrics.append(
             NodeMetrics(
@@ -181,6 +187,7 @@ def get_node_metrics(
                     .value_counts()
                     .iter_rows()
                 ),
+                degree_counts=degrees_for_label,
             )
         )
     # Sort by count in descending order (bigger to smaller)
@@ -207,7 +214,9 @@ def get_edge_metrics(edges: list[pl.DataFrame]) -> list[EdgeMetrics]:
         ).to_series()
 
         avg_properties = Statistics(
-            avg=properties_count.mean(), std=properties_count.std()
+            avg=properties_count.mean(),
+            std=properties_count.std(),
+            total=properties_count.sum(),
         )
 
         # Collect sources from 'sources' list column only (edges don't have 'source' string column)

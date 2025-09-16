@@ -40,10 +40,10 @@ def plot_benchmark_command(results_path: Path, out_dir: Path):
     # Create DataFrame
     df = pl.DataFrame(
         {
-            "Execution time": parallel_times + thread_times + sequential_times,
-            "Runner": ["ParallelRunner"] * len(parallel_times)
+            "Execution time": sequential_times + thread_times + parallel_times,
+            "Runner": ["SequentialRunner"] * len(sequential_times)
             + ["ThreadRunner"] * len(thread_times)
-            + ["SequentialRunner"] * len(sequential_times),
+            + ["ParallelRunner"] * len(parallel_times),
         }
     )
 

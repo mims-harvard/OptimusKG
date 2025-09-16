@@ -38,6 +38,12 @@ def create_pipeline(**kwargs) -> Pipeline:
             "bronze.opentargets.disease_phenotype",
             "bronze.opentargets.drug_mechanism_of_action",
             "bronze.opentargets.drug_molecule",
+            "bronze.opentargets.chembl_drugbank_mapping",
+            "bronze.drugcentral.drug_disease",
+            "bronze.drugcentral.drug",
+            "bronze.drugcentral.drug_phenotype",
+            "bronze.drugcentral.disease",
+            "bronze.drugcentral.phenotype",
             # silver
             "silver.edges.anatomy_protein",
             "silver.edges.anatomy_anatomy",

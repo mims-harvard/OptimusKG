@@ -10,6 +10,7 @@ def run(  # noqa: PLR0913
     drug_phenotype: pl.DataFrame,
     hp_terms: pl.DataFrame,
     vocab_meddra_adverse_effect: pl.DataFrame,
+    drugcentral_phenotype: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
         pl.concat(
@@ -41,6 +42,7 @@ def run(  # noqa: PLR0913
             right_on="id",
             how="left",
         )
+        .join(drugcentral_phenotype, left_on="id", right_on="id", how="left")
         .select(
             pl.col("id"),
             pl.lit("phenotype").alias("node_type"),
@@ -74,13 +76,20 @@ def run(  # noqa: PLR0913
                     pl.coalesce(
                         [pl.col("meddra_term_type"), pl.lit("phenotype")]
                     ).alias("type"),
-                    pl.col("ontology_description"),
-                    pl.col("ontology_title"),
-                    pl.col("ontology_license"),
-                    pl.col("ontology_version"),
+                    pl.col("ontology_description").alias("ontologyDescription"),
+                    pl.col("ontology_title").alias("ontologyTitle"),
+                    pl.col("ontology_license").alias("ontologyLicense"),
+                    pl.col("ontology_version").alias("ontologyVersion"),
+                    pl.col("concept_ids").alias("conceptIds"),
+                    pl.col("concept_names").alias("conceptNames"),
+                    pl.col("umls_cui").alias("umlsCUI"),
+                    pl.col("snomed_full_names").alias("snomedFullNames"),
+                    pl.col("cui_semantic_type").alias("cuiSemanticType"),
+                    pl.col("snomed_conceptids").alias("snomedConceptIds"),
                 ]
             ).alias("properties"),
         )
+        .unique(subset="id")
         .sort(by="id")
     )
 
@@ -94,7 +103,8 @@ phenotype_node = node(
         "phenotype_phenotype": "silver.edges.phenotype_phenotype",
         "drug_phenotype": "silver.edges.drug_phenotype",
         "hp_terms": "bronze.ontology.hp_terms",
-        "vocab_meddra_adverse_effect": "landing.onsides.vocab_meddra_adverse_effect",  # TODO: transform this into a more-processedbronze dataset (e.g. change the "type" to an expanded text)
+        "vocab_meddra_adverse_effect": "landing.onsides.vocab_meddra_adverse_effect",  # TODO: transform this into a more-processed bronze dataset (e.g. change the "type" to an expanded text)
+        "drugcentral_phenotype": "bronze.drugcentral.phenotype",
     },
     outputs="nodes.phenotype",
     name="phenotype",

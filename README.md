@@ -63,8 +63,6 @@ Each release includes a comprehensive graph report that contains:
 > 
 > If you do not have access, the [`Origin Hook`](https://github.com/mims-harvard/optimuskg/blob/main/optimuskg/hooks/origin/origin_hooks.pya) will generate empty placeholder datasets in their place. This allows pipeline nodes that depend on both public and private data to run, even if the private data is missing. As a result, you can still execute the pipeline and work with the public portions of the data without interruption.
 
-<!-- ## Using OptimusKG TODO: maybe we'll need to create a basic library to download the parquet data and load it in-memory as polars dataframes.-->
-
 ## Running Optimus
 
 ### Install dependencies

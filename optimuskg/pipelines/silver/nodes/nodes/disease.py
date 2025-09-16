@@ -3,15 +3,16 @@ from kedro.pipeline import node
 
 
 def run(  # noqa: PLR0913
-    disease: pl.DataFrame,
+    opentargets_disease: pl.DataFrame,
     mondo_terms: pl.DataFrame,
+    drugcentral_disease: pl.DataFrame,
     disease_disease: pl.DataFrame,
     exposure_disease: pl.DataFrame,
     drug_disease: pl.DataFrame,
     disease_protein: pl.DataFrame,
     disease_phenotype: pl.DataFrame,
 ) -> pl.DataFrame:
-    return (
+    return (  # TODO: there are 77 HP_ rows treated as diseases, but they should be phenotypes.
         pl.concat(
             [
                 disease_disease.select(
@@ -24,7 +25,7 @@ def run(  # noqa: PLR0913
             ]
         )
         .unique(subset="id")
-        .join(disease, left_on="id", right_on="id", how="left")
+        .join(opentargets_disease, left_on="id", right_on="id", how="left")
         .unnest("metadata")
         .unnest("synonyms")
         .unnest("ontology")
@@ -40,6 +41,7 @@ def run(  # noqa: PLR0913
             right_on="id",
             how="left",
         )
+        .join(drugcentral_disease, left_on="id", right_on="id", how="left")
         .unique(subset="id")
         .select(
             pl.col("id"),
@@ -50,17 +52,21 @@ def run(  # noqa: PLR0913
                     .str.extract(r"^([A-Za-z]+)_")
                     .alias(
                         "source"
-                    ),  # NOTE: We keep disease from different ontologies, so we extract the source from the id
+                    ),  # TODO: We define the source as it's ontology, but the actual sources (opentargets, drugcentral, etc) should be used instead
                     pl.coalesce([pl.col("name"), pl.col("name_right")]).alias("name"),
                     pl.coalesce(
                         [pl.col("description"), pl.col("description_right")]
                     ).alias("description"),
                     pl.col("code"),
-                    pl.coalesce([pl.col("xrefs"), pl.col("dbXRefs")]).alias("xrefs"),
+                    pl.concat_list([pl.col("xrefs"), pl.col("dbXRefs")])
+                    .list.drop_nulls()
+                    .list.unique()
+                    .alias("xrefs"),
                     pl.col("parents"),
-                    pl.coalesce([pl.col("hasExactSynonym"), pl.col("synonyms")]).alias(
-                        "exactSynonyms"
-                    ),
+                    pl.concat_list([pl.col("hasExactSynonym"), pl.col("synonyms")])
+                    .list.drop_nulls()
+                    .list.unique()
+                    .alias("exactSynonyms"),
                     pl.col("hasRelatedSynonym").alias("relatedSynonyms"),
                     pl.col("hasNarrowSynonym").alias("narrowSynonyms"),
                     pl.col("hasBroadSynonym").alias("broadSynonyms"),
@@ -70,18 +76,25 @@ def run(  # noqa: PLR0913
                     pl.col("ancestors"),
                     pl.col("descendants"),
                     pl.col("therapeuticAreas"),
+                    pl.col("leaf").alias("isLeaf"),
+                    pl.col("concept_ids").alias("conceptIds"),
+                    pl.col("concept_names").alias("conceptNames"),
+                    pl.col("umls_cui").alias("umlsCUI"),
+                    pl.col("snomed_full_names").alias("snomedFullNames"),
+                    pl.col("cui_semantic_type").alias("cuiSemanticType"),
+                    pl.col("snomed_conceptids").alias("snomedConceptIds"),
                 ]
             ).alias("properties"),
         )
-        .sort(by="id")
-    )
+    ).sort(by="id")
 
 
 disease_node = node(
     run,
     inputs={
-        "disease": "bronze.opentargets.disease",
+        "opentargets_disease": "bronze.opentargets.disease",
         "mondo_terms": "bronze.ontology.mondo_terms",
+        "drugcentral_disease": "bronze.drugcentral.disease",
         "disease_disease": "silver.edges.disease_disease",
         "exposure_disease": "silver.edges.exposure_disease",
         "drug_disease": "silver.edges.drug_disease",
