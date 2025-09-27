@@ -1,0 +1,41 @@
+import polars as pl
+from kedro.pipeline import node
+
+
+def run(
+    protein_protein: pl.DataFrame,
+    ensembl_ncbi_mapping: pl.DataFrame,
+) -> pl.DataFrame:
+    return (
+        protein_protein.join(
+            ensembl_ncbi_mapping, left_on="from", right_on="ncbi_id", how="left"
+        )
+        .join(ensembl_ncbi_mapping, left_on="to", right_on="ncbi_id", how="left")
+        .unique(subset=["from", "to"])
+        .select(
+            pl.coalesce("ensembl_id", "from").alias("from"),
+            pl.coalesce("ensembl_id_right", "to").alias("to"),
+            pl.lit("protein_protein").alias("relation"),
+            pl.lit(False).alias("undirected"),
+            pl.struct(
+                [
+                    pl.col("databases").alias("sources"),
+                    pl.lit("interacts with").alias("relationType"),
+                ]
+            ).alias("properties"),
+        )
+        .unique(subset=["from", "to"])
+        .sort(by=["from", "to"])   
+    )
+
+
+protein_protein_node = node(
+    run,
+    inputs={
+        "protein_protein": "bronze.ppi.protein_protein",
+        "ensembl_ncbi_mapping": "bronze.opentargets.ensembl_ncbi_mapping",
+    },
+    outputs="edges.protein_protein",
+    name="protein_protein",
+    tags=["silver"],
+)

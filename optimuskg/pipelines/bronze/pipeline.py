@@ -37,11 +37,14 @@ def create_pipeline(**kwargs) -> Pipeline:
             "landing.onsides.vocab_rxnorm_ingredient",
             "landing.onsides.vocab_meddra_adverse_effect",
             "landing.drugcentral.psql_dump",
+            "landing.ppi.protein_protein",
             # bronze
             "bronze.drugbank.vocabulary",
+            "bronze.gene_names.protein_names",
             "bronze.opentargets.disease",
             "bronze.opentargets.drug_molecule",
             "bronze.opentargets.umls_disease_mappings",
             "bronze.opentargets.chembl_drugbank_mapping",
+            "bronze.opentargets.target",
         },
     )

@@ -29,6 +29,7 @@ from .pathway_pathway import pathway_pathway_node
 from .pathway_protein import pathway_protein_node
 from .phenotype_phenotype import phenotype_phenotype_node
 from .phenotype_protein import phenotype_protein_node
+from .protein_protein import protein_protein_node
 
 __all__ = [
     "anatomy_anatomy_node",
@@ -56,4 +57,5 @@ __all__ = [
     "pathway_protein_node",
     "phenotype_phenotype_node",
     "phenotype_protein_node",
+    "protein_protein_node",
 ]

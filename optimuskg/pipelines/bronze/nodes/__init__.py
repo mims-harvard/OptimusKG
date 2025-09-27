@@ -13,10 +13,12 @@ from .opentargets import (
     drug_indication_node,
     drug_mechanism_of_action_node,
     drug_molecule_node,
+    ensembl_ncbi_mapping_node,
     target_disease_associations_node,
     target_node,
     umls_disease_mappings_node,
 )
+from .ppi import ppi_node
 from .reactome import reactome_pathways_node
 
 __all__ = [
@@ -34,6 +36,7 @@ __all__ = [
     "disgenet_node",
     "onsides_node",
     "drugcentral_node",
+    "ppi_node",
     # opentargets
     "target_disease_associations_node",
     "drug_mechanism_of_action_node",
@@ -44,4 +47,5 @@ __all__ = [
     "disease_phenotype_node",
     "umls_disease_mappings_node",
     "chembl_drugbank_mapping_node",
+    "ensembl_ncbi_mapping_node",
 ]

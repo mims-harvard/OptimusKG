@@ -14,6 +14,7 @@ def run(  # noqa: PLR0913
     phenotype_protein: pl.DataFrame,
     gene_expressions_in_anatomy: pl.DataFrame,
     target: pl.DataFrame,
+    protein_protein: pl.DataFrame,
 ) -> pl.DataFrame:
     flattened_target = target.unnest(
         "metadata"
@@ -99,6 +100,8 @@ def run(  # noqa: PLR0913
                 molecular_function_protein.select(pl.col("to").alias("id")),
                 pathway_protein.select(pl.col("to").alias("id")),
                 phenotype_protein.select(pl.col("to").alias("id")),
+                protein_protein.select(pl.col("to").alias("id")),
+                protein_protein.select(pl.col("from").alias("id")),
             ]
         )
         .unique(subset="id")
@@ -117,7 +120,10 @@ def run(  # noqa: PLR0913
                 pl.lit("gene").alias("node_type"),
                 pl.struct(
                     [
-                        pl.lit(["opentargets", "BGEE"]).alias("sources"),
+                        pl.when(pl.col("id").str.starts_with("NCBIGene"))
+                        .then(pl.lit(["UMLS"]))
+                        .otherwise(pl.lit(["opentargets", "BGEE"]))
+                        .alias("sources"),
                         pl.coalesce([pl.col("symbol"), pl.col("gene_symbol")]).alias(
                             "symbol"
                         ),
@@ -169,6 +175,7 @@ gene_node = node(
         "phenotype_protein": "silver.edges.phenotype_protein",
         "gene_expressions_in_anatomy": "bronze.bgee.gene_expressions_in_anatomy",
         "target": "bronze.opentargets.target",
+        "protein_protein": "silver.edges.protein_protein",
     },
     outputs="nodes.gene",
     name="gene",

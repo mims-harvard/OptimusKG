@@ -50,7 +50,7 @@ def run(  # noqa: PLR0913
         )
         all_edge_dfs.append(edge_df)
 
-    df_prot_drug = pl.concat(all_edge_dfs, how="diagonal")
+    drug_protein = pl.concat(all_edge_dfs, how="diagonal")
 
     # Prepare vocabulary for joining
     df_vocabulary_join_prep = vocabulary.select(
@@ -59,11 +59,11 @@ def run(  # noqa: PLR0913
     ).drop_nulls()
 
     # Add DrugBankName using a left join
-    df_prot_drug = df_prot_drug.with_columns(
+    drug_protein = drug_protein.with_columns(
         (pl.lit("DRUGBANK:") + pl.col("drug_bank_id")).alias("drug_bank_id")
     )
 
-    df_prot_drug = df_prot_drug.join(
+    drug_protein = drug_protein.join(
         df_vocabulary_join_prep,
         left_on="drug_bank_id",
         right_on="drugbank_id",
@@ -71,12 +71,12 @@ def run(  # noqa: PLR0913
     ).with_columns(pl.col("drug_bank_name").cast(pl.Utf8).fill_null(""))
 
     # Add prefixes
-    df_prot_drug = df_prot_drug.with_columns(
+    drug_protein = drug_protein.with_columns(
         (pl.lit("NCBIGene:") + pl.col("ncbi_gene_id")).alias("ncbi_gene_id"),
         (pl.lit("UniProtKB:") + pl.col("uniprot_id")).alias("uniprot_id"),
     )
 
-    return df_prot_drug
+    return drug_protein
 
 
 drug_protein_node = node(

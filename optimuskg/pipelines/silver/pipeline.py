@@ -23,7 +23,6 @@ def create_pipeline(**kwargs) -> Pipeline:
             "bronze.ontology.uberon_relations",
             "bronze.bgee.gene_expressions_in_anatomy",
             "bronze.ctd.ctd_exposure_events",
-            "bronze.gene_names.protein_names",
             "bronze.reactome.reactome_relations",
             "bronze.drug_drug",
             "bronze.drug_protein",
@@ -44,6 +43,8 @@ def create_pipeline(**kwargs) -> Pipeline:
             "bronze.drugcentral.drug_phenotype",
             "bronze.drugcentral.disease",
             "bronze.drugcentral.phenotype",
+            "bronze.opentargets.ensembl_ncbi_mapping",
+            "bronze.ppi.protein_protein",
             # silver
             "silver.edges.anatomy_protein",
             "silver.edges.anatomy_anatomy",
@@ -70,5 +71,6 @@ def create_pipeline(**kwargs) -> Pipeline:
             "silver.edges.molecular_function_molecular_function",
             "silver.edges.pathway_pathway",
             "silver.edges.phenotype_phenotype",
+            "silver.edges.protein_protein",
         },
     )
