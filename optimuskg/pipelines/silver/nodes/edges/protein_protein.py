@@ -25,7 +25,7 @@ def run(
             ).alias("properties"),
         )
         .unique(subset=["from", "to"])
-        .sort(by=["from", "to"])   
+        .sort(by=["from", "to"])
     )
 
 
