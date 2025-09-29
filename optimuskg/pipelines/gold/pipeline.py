@@ -45,5 +45,6 @@ def create_pipeline(**kwargs) -> Pipeline:
             "silver.edges.molecular_function_molecular_function",
             "silver.edges.pathway_pathway",
             "silver.edges.phenotype_phenotype",
+            "silver.edges.protein_protein",
         },
     )
