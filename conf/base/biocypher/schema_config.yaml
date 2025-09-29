@@ -662,3 +662,12 @@ phenotype phenotype:
     undirected: bool
     relationType: str
     sources: str[]
+
+protein protein:
+  is_a: related to
+  represented_as: edge
+  input_label: protein_protein
+  properties:
+    undirected: bool
+    relationType: str
+    sources: str[]

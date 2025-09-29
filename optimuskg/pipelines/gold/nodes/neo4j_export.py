@@ -51,6 +51,7 @@ def run(  # noqa: PLR0913, PLR0912
     phenotype_phenotype: pl.DataFrame,
     anatomy_anatomy: pl.DataFrame,
     drug_phenotype: pl.DataFrame,
+    protein_protein: pl.DataFrame,
 ) -> None:
     bc = BioCypher(biocypher_config_path="conf/base/biocypher/biocypher_config.yaml")
 
@@ -98,6 +99,7 @@ def run(  # noqa: PLR0913, PLR0912
             phenotype_phenotype,
             anatomy_anatomy,
             drug_phenotype,
+            protein_protein,
         ]
     ]
 
@@ -186,6 +188,7 @@ neo4j_export_node = node(
         "phenotype_phenotype": "silver.edges.phenotype_phenotype",
         "anatomy_anatomy": "silver.edges.anatomy_anatomy",
         "drug_phenotype": "silver.edges.drug_phenotype",
+        "protein_protein": "silver.edges.protein_protein",
     },
     outputs=None,
     tags=["gold"],
