@@ -15,7 +15,7 @@ def run(
             .map_elements(
                 lambda x: f"NCBIGene:{x}",
                 return_dtype=pl.Utf8,
-            )  # Add "NCBIGene:" prefix to ncbi_id column to match biolink schema
+            )
             .alias("ncbi_id")
         )
         .select(["ncbi_id", "symbol"])

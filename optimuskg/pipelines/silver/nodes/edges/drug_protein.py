@@ -4,17 +4,10 @@ from kedro.pipeline import node
 
 def run(
     drug_protein: pl.DataFrame,
-    protein_names: pl.DataFrame,
-    target: pl.DataFrame,
     drug_mechanism_of_action: pl.DataFrame,
     chembl_drugbank_mapping: pl.DataFrame,
+    ensembl_ncbi_mapping: pl.DataFrame,
 ) -> pl.DataFrame:
-    ensembl_ncbi_mapping = (
-        target.select("id", "approved_symbol")
-        .join(protein_names, left_on="approved_symbol", right_on="symbol", how="inner")
-        .select(pl.col("id").alias("ensembl_id"), pl.col("ncbi_id"))
-    )
-
     drugbank_drug_protein = (
         drug_protein.join(
             chembl_drugbank_mapping,
@@ -155,10 +148,9 @@ drug_protein_node = node(
     run,
     inputs={
         "drug_protein": "bronze.drug_protein",
-        "protein_names": "bronze.gene_names.protein_names",
-        "target": "bronze.opentargets.target",
         "drug_mechanism_of_action": "bronze.opentargets.drug_mechanism_of_action",
         "chembl_drugbank_mapping": "bronze.opentargets.chembl_drugbank_mapping",
+        "ensembl_ncbi_mapping": "bronze.opentargets.ensembl_ncbi_mapping",
     },
     outputs="edges.drug_protein",
     name="drug_protein",

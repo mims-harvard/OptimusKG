@@ -24,6 +24,7 @@ from .edges import (
     pathway_protein_node,
     phenotype_phenotype_node,
     phenotype_protein_node,
+    protein_protein_node,
 )
 from .nodes import (
     anatomy_node,
@@ -76,4 +77,5 @@ __all__ = [
     "phenotype_protein_node",
     "anatomy_anatomy_node",
     "drug_phenotype_node",
+    "protein_protein_node",
 ]

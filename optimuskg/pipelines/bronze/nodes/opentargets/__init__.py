@@ -5,6 +5,7 @@ from .disease_phenotype import disease_phenotype_node
 from .drug_indication import drug_indication_node
 from .drug_mechanism_of_action import drug_mechanism_of_action_node
 from .drug_molecule import drug_molecule_node
+from .ensembl_ncbi_mapping import ensembl_ncbi_mapping_node
 from .target import target_node
 from .target_disease_associations import target_disease_associations_node
 
@@ -18,4 +19,5 @@ __all__ = [
     "drug_mechanism_of_action_node",
     "umls_disease_mappings_node",
     "chembl_drugbank_mapping_node",
+    "ensembl_ncbi_mapping_node",
 ]
