@@ -6,11 +6,7 @@ build-backend = "hatchling.build"
 requires-python = ">=3.12"
 name = "optimuskg"
 readme = "README.md"
-<<<<<<< HEAD
 version = "0.37.1"
-=======
-version = "0.37.0"
->>>>>>> main
 dependencies = [
   "ipython>=8.10",
   "jupyterlab>=3.0",
