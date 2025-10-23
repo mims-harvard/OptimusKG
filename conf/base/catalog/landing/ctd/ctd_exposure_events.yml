@@ -99,6 +99,6 @@ landing.ctd.ctd_exposure_events:
     checksum: "2db0ed29739ee5bd554a2e050204a794"
     origin:
       provider: http
-      url: "https://ctdbase.org/reports/CTD_exposure_events.csv.gz" # NOTE: polars can handle gzip files
+      url: "https://ctdbase.org/reports/CTD_exposure_events.csv.gz"
     kedro-viz:
       layer: landing

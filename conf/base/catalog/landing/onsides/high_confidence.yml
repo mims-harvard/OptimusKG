@@ -1,7 +1,7 @@
 landing.onsides.high_confidence:
   type: optimuskg.datasets.ZipDataset
   zipped_filename: "csv/high_confidence.csv"
-  filepath: "data/landing/onsides/onsides.zip" # NOTE: polars can handle zip files
+  filepath: "data/landing/onsides/onsides.zip"
   dataset: 
     type: polars.CSVDataset
     load_args:

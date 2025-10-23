@@ -1,7 +1,7 @@
 landing.drugbank.vocabulary:
   type: optimuskg.datasets.ZipDataset
   zipped_filename: "drugbank vocabulary.csv"
-  filepath: "data/landing/drugbank/all_drugbank_vocabulary.csv.zip" # NOTE: polars can handle zip files
+  filepath: "data/landing/drugbank/all_drugbank_vocabulary.csv.zip"
   dataset: 
     type: polars.CSVDataset
     load_args:

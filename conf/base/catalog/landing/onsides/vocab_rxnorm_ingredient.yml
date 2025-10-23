@@ -1,7 +1,7 @@
 landing.onsides.vocab_rxnorm_ingredient:
   type: optimuskg.datasets.ZipDataset
   zipped_filename: "csv/vocab_rxnorm_ingredient.csv"
-  filepath: "data/landing/onsides/onsides.zip" # NOTE: polars can handle zip files
+  filepath: "data/landing/onsides/onsides.zip"
   dataset: 
     type: polars.CSVDataset
     load_args:
