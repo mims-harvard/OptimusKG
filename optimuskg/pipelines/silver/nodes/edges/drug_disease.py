@@ -71,11 +71,11 @@ def run(
             [
                 pl.coalesce([pl.col("from"), pl.col("from_right")]).alias("from"),
                 pl.coalesce([pl.col("to"), pl.col("to_right")]).alias("to"),
-                pl.coalesce([pl.col("undirected"), pl.col("undirected_right")]).alias(
-                    "undirected"
-                ),
                 pl.coalesce([pl.col("relation"), pl.col("relation_right")]).alias(
                     "relation"
+                ),
+                pl.coalesce([pl.col("undirected"), pl.col("undirected_right")]).alias(
+                    "undirected"
                 ),
                 pl.struct(
                     [

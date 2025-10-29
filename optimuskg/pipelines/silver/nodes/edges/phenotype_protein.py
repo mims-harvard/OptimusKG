@@ -71,8 +71,8 @@ def run(
             [
                 pl.col("from"),
                 pl.col("to"),
-                pl.lit(False).alias("undirected"),
                 pl.lit("phenotype_protein").alias("relation"),
+                pl.lit(False).alias("undirected"),
                 pl.when(pl.col("disgenet_properties").is_not_null())
                 .then(
                     pl.struct(

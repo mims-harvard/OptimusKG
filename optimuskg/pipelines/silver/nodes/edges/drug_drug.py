@@ -33,8 +33,8 @@ def run(
                 .then(pl.col("head_chembl_id"))
                 .otherwise(pl.col("head_drug_id"))
                 .alias("to"),
-                pl.lit(False).alias("undirected"),
                 pl.lit("drug_drug").alias("relation"),
+                pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
                         pl.lit(["synergistic interaction"]).alias("relationType"),
@@ -54,8 +54,8 @@ def run(
             [
                 pl.col("id").alias("from"),
                 pl.col("childChemblIds").alias("to"),
-                pl.lit(False).alias("undirected"),
                 pl.lit("drug_drug").alias("relation"),
+                pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
                         pl.lit(["parent"]).alias("relationType"),
@@ -72,11 +72,11 @@ def run(
             [
                 pl.coalesce([pl.col("from"), pl.col("from_right")]).alias("from"),
                 pl.coalesce([pl.col("to"), pl.col("to_right")]).alias("to"),
-                pl.coalesce([pl.col("undirected"), pl.col("undirected_right")]).alias(
-                    "undirected"
-                ),
                 pl.coalesce([pl.col("relation"), pl.col("relation_right")]).alias(
                     "relation"
+                ),
+                pl.coalesce([pl.col("undirected"), pl.col("undirected_right")]).alias(
+                    "undirected"
                 ),
                 pl.struct(
                     [
