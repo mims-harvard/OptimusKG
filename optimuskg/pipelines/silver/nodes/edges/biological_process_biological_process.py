@@ -21,8 +21,8 @@ def run(
         .select(
             [
                 # NOTE: go_relations head-tail columns are for "is_a" (i.e. child) relations but we represent the inverse (i.e. parent) relations.
-                pl.col("head").alias("to"),
                 pl.col("tail").alias("from"),
+                pl.col("head").alias("to"),
                 pl.lit("biological_process_biological_process").alias("relation"),
                 pl.lit(False).alias("undirected"),
                 pl.struct(

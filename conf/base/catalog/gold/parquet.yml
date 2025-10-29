@@ -1,0 +1,11 @@
+gold.parquet.meta:
+  type: optimuskg.datasets.zip_dataset.ZipDataset
+  filepath: data/gold/optimuskg-full-meta-parquet.zip
+  dataset:
+    type: optimuskg.datasets.polars.ParquetDataset
+
+gold.parquet.no_meta:
+  type: optimuskg.datasets.zip_dataset.ZipDataset
+  filepath: data/gold/optimuskg-full-parquet.zip
+  dataset:
+    type: optimuskg.datasets.polars.ParquetDataset

@@ -4,6 +4,7 @@ import os
 import tempfile
 import zipfile
 from copy import deepcopy
+from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
@@ -133,8 +134,30 @@ class ZipDataset(AbstractDataset[zipfile.ZipFile, pl.DataFrame]):
                 finally:
                     os.unlink(temp_filepath)
 
-    def _save(self, data: Any) -> None:
-        raise DatasetError("Saving is unsupported")
+    def _save(self, data: dict[str, Any]) -> None:
+        if not isinstance(data, dict):
+            raise DatasetError(
+                f"Saving data of type {type(data).__name__} is not supported. "
+                "Please provide a dictionary of file paths and data."
+            )
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_dir_path = Path(temp_dir)
+
+            for relative_path, file_data in data.items():
+                absolute_path = temp_dir_path / relative_path
+                absolute_path.parent.mkdir(parents=True, exist_ok=True)
+
+                kwargs = deepcopy(self._dataset_config)
+                kwargs[self._filepath_arg] = str(absolute_path)
+                dataset = self._dataset_type(**kwargs)
+                dataset.save(file_data)
+
+            with self._filesystem.open(self._normalized_path, "wb") as file_obj:
+                with zipfile.ZipFile(file_obj, "w") as zip_file:
+                    for file_path in temp_dir_path.rglob("*"):
+                        arcname = file_path.relative_to(temp_dir_path)
+                        zip_file.write(file_path, arcname=arcname)
 
     def _describe(self) -> dict[str, Any]:
         return {

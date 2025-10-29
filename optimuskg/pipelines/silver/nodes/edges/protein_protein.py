@@ -24,6 +24,7 @@ def run(
                 ]
             ).alias("properties"),
         )
+        .filter(pl.col("from").is_not_null() & pl.col("to").is_not_null())
         .unique(subset=["from", "to"])
         .sort(by=["from", "to"])
     )
