@@ -1,19 +1,27 @@
 import logging
-from pathlib import Path
 
 import polars as pl
-from biocypher import BioCypher
 from kedro.pipeline import node
-from more_itertools import peekable
 
-from optimuskg.utils import format_rich
-
-from .utils import csv_to_neo4j, yield_edges, yield_nodes
+from optimuskg.pipelines.gold.export_formats import (
+    csv_export,
+    neo4j_export,
+    parquet_export,
+    pg_export,
+)
 
 logger = logging.getLogger(__name__)
 
+_EXPORT_FORMATS_DICT = {
+    "csv": csv_export,
+    "parquet": parquet_export,
+    "pg": pg_export,
+    "neo4j": neo4j_export,
+}
 
-def run(  # noqa: PLR0913, PLR0912
+
+def export_kg(  # noqa: PLR0913
+    export_formats: list[str],
     # Nodes
     gene: pl.DataFrame,
     anatomy: pl.DataFrame,
@@ -42,6 +50,7 @@ def run(  # noqa: PLR0913, PLR0912
     pathway_pathway: pl.DataFrame,
     pathway_protein: pl.DataFrame,
     phenotype_protein: pl.DataFrame,
+    protein_protein: pl.DataFrame,
     exposure_biological_process: pl.DataFrame,
     exposure_molecular_function: pl.DataFrame,
     exposure_cellular_component: pl.DataFrame,
@@ -51,106 +60,89 @@ def run(  # noqa: PLR0913, PLR0912
     phenotype_phenotype: pl.DataFrame,
     anatomy_anatomy: pl.DataFrame,
     drug_phenotype: pl.DataFrame,
-    protein_protein: pl.DataFrame,
-) -> None:
-    bc = BioCypher(biocypher_config_path="conf/base/biocypher/biocypher_config.yaml")
+) -> tuple[
+    dict[str, pl.DataFrame],
+    dict[str, pl.DataFrame],
+    dict[str, pl.DataFrame],
+    dict[str, pl.DataFrame],
+]:
+    nodes_dict = {
+        "gene": gene,
+        "anatomy": anatomy,
+        "exposure": exposure,
+        "drug": drug,
+        "disease": disease,
+        "phenotype": phenotype,
+        "biological_process": biological_process,
+        "cellular_component": cellular_component,
+        "molecular_function": molecular_function,
+        "pathway": pathway,
+    }
 
-    node_adapters = [
-        yield_nodes(df)
-        for df in [
-            gene,
-            anatomy,
-            exposure,
-            drug,
-            disease,
-            phenotype,
-            biological_process,
-            cellular_component,
-            molecular_function,
-            pathway,
-        ]
-    ]
+    edges_dict = {
+        "anatomy_protein": anatomy_protein,
+        "biological_process_protein": biological_process_protein,
+        "cellular_component_protein": cellular_component_protein,
+        "disease_protein": disease_protein,
+        "disease_disease": disease_disease,
+        "disease_phenotype": disease_phenotype,
+        "drug_drug": drug_drug,
+        "drug_protein": drug_protein,
+        "drug_disease": drug_disease,
+        "exposure_exposure": exposure_exposure,
+        "exposure_protein": exposure_protein,
+        "exposure_disease": exposure_disease,
+        "molecular_function_protein": molecular_function_protein,
+        "pathway_pathway": pathway_pathway,
+        "pathway_protein": pathway_protein,
+        "phenotype_protein": phenotype_protein,
+        "protein_protein": protein_protein,
+        "exposure_biological_process": exposure_biological_process,
+        "exposure_molecular_function": exposure_molecular_function,
+        "exposure_cellular_component": exposure_cellular_component,
+        "cellular_component_cellular_component": cellular_component_cellular_component,
+        "biological_process_biological_process": biological_process_biological_process,
+        "molecular_function_molecular_function": molecular_function_molecular_function,
+        "phenotype_phenotype": phenotype_phenotype,
+        "anatomy_anatomy": anatomy_anatomy,
+        "drug_phenotype": drug_phenotype,
+    }
 
-    edge_adapters = [
-        yield_edges(df)
-        for df in [
-            anatomy_protein,
-            biological_process_protein,
-            cellular_component_protein,
-            disease_protein,
-            disease_disease,
-            disease_phenotype,
-            drug_drug,
-            drug_protein,
-            drug_disease,
-            exposure_exposure,
-            exposure_protein,
-            exposure_disease,
-            molecular_function_protein,
-            pathway_pathway,
-            pathway_protein,
-            phenotype_protein,
-            exposure_biological_process,
-            exposure_molecular_function,
-            exposure_cellular_component,
-            cellular_component_cellular_component,
-            biological_process_biological_process,
-            molecular_function_molecular_function,
-            phenotype_phenotype,
-            anatomy_anatomy,
-            drug_phenotype,
-            protein_protein,
-        ]
-    ]
+    logger.info(f"Exporting knowledge graph to formats: {', '.join(export_formats)}")
 
-    try:
-        if not node_adapters:
-            logger.error("There are no nodes to process.")
+    outputs = {
+        "csv_meta": {},
+        "csv_no_meta": {},
+        "parquet_meta": {},
+        "parquet_no_meta": {},
+    }
+
+    for format_name in export_formats:
+        export_func = _EXPORT_FORMATS_DICT.get(format_name)
+        if not export_func:
+            logger.warning(f"Unknown export format: {format_name}")
+            continue
+
+        logger.info(f"Exporting to {format_name}...")
+        if format_name in ["csv", "parquet"]:
+            meta, no_meta = export_func(nodes_dict, edges_dict)
+            outputs[f"{format_name}_meta"] = meta
+            outputs[f"{format_name}_no_meta"] = no_meta
         else:
-            for i, nodes_iterable in enumerate(node_adapters):
-                logger.info(
-                    f"Processing node adapter {format_rich(str(i + 1), 'dark_orange')}/{format_rich(str(len(node_adapters)), 'dark_orange')}."
-                )
+            export_func(nodes_dict, edges_dict)
 
-                nodes_p = peekable(nodes_iterable)
-                if nodes_p.peek(None) is not None:
-                    logger.info("Writing nodes...")
-                    bc.write_nodes(nodes_p)
-                else:
-                    logger.warning("No nodes found.")
-
-        if not edge_adapters:
-            logger.error("There are no edges to process.")
-        else:
-            for i, edges_iterable in enumerate(edge_adapters):
-                logger.info(
-                    f"Processing edge adapter {format_rich(str(i + 1), 'dark_orange')}/{format_rich(str(len(edge_adapters)), 'dark_orange')}."
-                )
-
-                edges_p = peekable(edges_iterable)
-                if edges_p.peek(None) is not None:
-                    logger.info("Writing edges...")
-                    bc.write_edges(edges_p)
-                else:
-                    logger.warning("No edges found.")
-    except Exception as e:
-        logger.exception(f"Error writing graph data to disk: {e}")
-        raise
-
-    try:
-        logger.info("Bulk-importing graph data from CSV files to Neo4j database...")
-        csv_to_neo4j(
-            import_path=Path("data/neo4j/import"),
-            schema_config_path=Path("conf/base/biocypher/schema_config.yaml"),
-        )
-    except Exception as e:
-        logger.exception(f"Error writing graph data to disk: {e}")
-        raise
+    return (
+        outputs["csv_meta"],
+        outputs["csv_no_meta"],
+        outputs["parquet_meta"],
+        outputs["parquet_no_meta"],
+    )
 
 
-neo4j_export_node = node(
-    run,
+export_kg_node = node(
+    export_kg,
     inputs={
+        "export_formats": "params:export_formats",
         # Nodes
         "gene": "silver.nodes.gene",
         "anatomy": "silver.nodes.anatomy",
@@ -179,6 +171,7 @@ neo4j_export_node = node(
         "pathway_pathway": "silver.edges.pathway_pathway",
         "pathway_protein": "silver.edges.pathway_protein",
         "phenotype_protein": "silver.edges.phenotype_protein",
+        "protein_protein": "silver.edges.protein_protein",
         "exposure_biological_process": "silver.edges.exposure_biological_process",
         "exposure_molecular_function": "silver.edges.exposure_molecular_function",
         "exposure_cellular_component": "silver.edges.exposure_cellular_component",
@@ -188,9 +181,13 @@ neo4j_export_node = node(
         "phenotype_phenotype": "silver.edges.phenotype_phenotype",
         "anatomy_anatomy": "silver.edges.anatomy_anatomy",
         "drug_phenotype": "silver.edges.drug_phenotype",
-        "protein_protein": "silver.edges.protein_protein",
     },
-    outputs=None,
+    outputs=[
+        "csv.meta",
+        "csv.no_meta",
+        "parquet.meta",
+        "parquet.no_meta",
+    ],
     tags=["gold"],
-    name="neo4j_export",
+    name="export_kg",
 )
