@@ -11,7 +11,7 @@ silver.chembl_score_threshold: 0.05
 # Gold parameters
 gold.export_formats:
   #- "csv"
-  #- "parquet"
+  - "parquet"
   # - "pg"
-  - "neo4j"
+  # - "neo4j"
 
