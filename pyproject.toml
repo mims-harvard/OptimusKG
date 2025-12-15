@@ -30,7 +30,6 @@ dependencies = [
 ]
 
 [dependency-groups]
-tests = ["pytest-cov~=3.0", "pytest-mock>=1.7.1, <2.0", "pytest~=7.2"]
 dev = [
   "ruff~=0.1.8",
   "pre-commit>=4.0.1",
@@ -62,16 +61,6 @@ package_name = "optimuskg"
 project_name = "OptimusKG"
 kedro_init_version = "1.0.0"
 source_dir = "optimuskg"
-
-[tool.pytest.ini_options]
-addopts = """
---cov-report term-missing \
---cov optimuskg -ra"""
-
-[tool.coverage.report]
-fail_under = 0
-show_missing = true
-exclude_lines = ["pragma: no cover", "raise NotImplementedError"]
 
 [tool.pyright]
 venvPath = "."
