@@ -70,6 +70,11 @@ rm-data: ##@ Remove the data directory
 	@find data/ -type f -not -name ".gitkeep" -delete
 	@find data/ -type d -empty -not -name ".gitkeep" -delete
 
+.PHONY: download-landing
+download-landing: ##@ Clean data directory, and download the landing layer into disk. Example: URL="https://example-blob.com/landing.zip" [DEST=<optional-dir>] make landing
+	@$(MAKE) rm-data
+	@./scripts/download_landing.sh
+
 .PHONY: neo4j
 neo4j: ##@ Run the Neo4j container
 	@docker compose up -d 

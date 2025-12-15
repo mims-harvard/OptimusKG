@@ -1,0 +1,12 @@
+gold.csv.meta:
+  type: optimuskg.datasets.zip_dataset.ZipDataset
+  filepath: data/gold/optimuskg-full-meta-csv.zip
+  dataset:
+    type: polars.CSVDataset
+
+gold.csv.no_meta:
+  type: optimuskg.datasets.zip_dataset.ZipDataset
+  filepath: data/gold/optimuskg-full-csv.zip
+  dataset:
+    type: polars.CSVDataset
+

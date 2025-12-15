@@ -30,11 +30,7 @@ dependencies = [
 ]
 
 [dependency-groups]
-tests = [
-  "pytest-cov~=3.0",
-  "pytest-mock>=1.7.1, <2.0",
-  "pytest~=7.2",
-]
+tests = ["pytest-cov~=3.0", "pytest-mock>=1.7.1, <2.0", "pytest~=7.2"]
 dev = [
   "ruff~=0.1.8",
   "pre-commit>=4.0.1",
@@ -129,13 +125,13 @@ show_error_codes = true
 [[tool.mypy.overrides]]
 ignore_missing_imports = true
 module = [
-    "fsspec.*",
-    "goatools.*",
-    "biocypher.*",
-    "typedframe.*",
-    "pytest.*",
-    "pydantic.*",
-    "kedro_datasets.partitions.partitioned_dataset.*",
+  "fsspec.*",
+  "goatools.*",
+  "biocypher.*",
+  "typedframe.*",
+  "pytest.*",
+  "pydantic.*",
+  "kedro_datasets.partitions.partitioned_dataset.*",
 ]
 
 [[tool.mypy.overrides]]
@@ -143,4 +139,4 @@ module = ["optimuskg.datasets.*"]
 disable_error_code = ["attr-defined"]
 
 [tool.typos.files]
-extend-exclude = ["tests/stub_data/*", "Makefile", "notebooks/*"]
+extend-exclude = ["Makefile", "notebooks/*"]

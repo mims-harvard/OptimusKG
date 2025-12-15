@@ -27,6 +27,12 @@ class ZipDataset(AbstractDataset[zipfile.ZipFile, pl.DataFrame]):
     DEFAULT_LOAD_ARGS: dict[str, Any] = {}
     DEFAULT_FS_ARGS: dict[str, Any] = {}
     DEFAULT_CREDENTIALS: dict[str, str] = {}
+    COMPRESSION_MAP = {
+        "stored": zipfile.ZIP_STORED,
+        "deflated": zipfile.ZIP_DEFLATED,
+        "bzip2": zipfile.ZIP_BZIP2,
+        "lzma": zipfile.ZIP_LZMA,
+    }
 
     def __init__(  # noqa: PLR0913
         self,
@@ -41,6 +47,7 @@ class ZipDataset(AbstractDataset[zipfile.ZipFile, pl.DataFrame]):
         fs_args: dict[str, Any] | None = None,
         metadata: dict[str, Any] | None = None,
         filepath_arg: str = "filepath",
+        compression: str = "deflated",
     ) -> None:
         from fsspec.utils import infer_storage_options
 
@@ -90,6 +97,15 @@ class ZipDataset(AbstractDataset[zipfile.ZipFile, pl.DataFrame]):
         self._zipped_filename = zipped_filename
         self._ignored_prefixes = ignored_prefixes or ["_", "."]
         self._ignored_suffixes = (ignored_suffixes or []) + ["/"]
+
+        compression_str = compression.lower()
+        if compression_str not in self.COMPRESSION_MAP:
+            raise DatasetError(
+                f"Unsupported compression method: {compression_str}. "
+                f"Supported methods are: {list(self.COMPRESSION_MAP.keys())}"
+            )
+        self._compression = self.COMPRESSION_MAP[compression_str]
+
 
     @property
     def _filesystem(self):
@@ -154,17 +170,22 @@ class ZipDataset(AbstractDataset[zipfile.ZipFile, pl.DataFrame]):
                 dataset.save(file_data)
 
             with self._filesystem.open(self._normalized_path, "wb") as file_obj:
-                with zipfile.ZipFile(file_obj, "w") as zip_file:
+                with zipfile.ZipFile(file_obj, "w", compression=self._compression) as zip_file:
                     for file_path in temp_dir_path.rglob("*"):
                         arcname = file_path.relative_to(temp_dir_path)
                         zip_file.write(file_path, arcname=arcname)
 
     def _describe(self) -> dict[str, Any]:
+        compression_str = next(
+            (k for k, v in self.COMPRESSION_MAP.items() if v == self._compression),
+            "unknown",
+        )
         return {
             "filepath": self._filepath,
             "zipped_filename": self._zipped_filename,
             "ignored_prefixes": self._ignored_prefixes,
             "ignored_suffixes": self._ignored_suffixes,
+            "compression": compression_str,
         }
 
     def _invalidate_caches(self) -> None:
