@@ -106,7 +106,6 @@ class ZipDataset(AbstractDataset[zipfile.ZipFile, pl.DataFrame]):
             )
         self._compression = self.COMPRESSION_MAP[compression_str]
 
-
     @property
     def _filesystem(self):
         protocol = "s3" if self._protocol in S3_PROTOCOLS else self._protocol
@@ -170,7 +169,9 @@ class ZipDataset(AbstractDataset[zipfile.ZipFile, pl.DataFrame]):
                 dataset.save(file_data)
 
             with self._filesystem.open(self._normalized_path, "wb") as file_obj:
-                with zipfile.ZipFile(file_obj, "w", compression=self._compression) as zip_file:
+                with zipfile.ZipFile(
+                    file_obj, "w", compression=self._compression
+                ) as zip_file:
                     for file_path in temp_dir_path.rglob("*"):
                         arcname = file_path.relative_to(temp_dir_path)
                         zip_file.write(file_path, arcname=arcname)

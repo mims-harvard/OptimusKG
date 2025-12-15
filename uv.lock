@@ -2168,7 +2168,6 @@ dev = [
     { name = "typer", specifier = ">=0.15.1" },
     { name = "types-cachetools", specifier = ">=5.5.0.20240820" },
 ]
-tests = []
 
 [[package]]
 name = "orjson"

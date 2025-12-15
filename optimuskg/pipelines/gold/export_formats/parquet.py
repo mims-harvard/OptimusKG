@@ -28,8 +28,12 @@ def parquet_export(
     }
 
     no_meta = {
-        "nodes.parquet": pl.concat([df.drop("properties") for _, df in nodes_dict.items()]),
-        "edges.parquet": pl.concat([df.drop("properties") for _, df in edges_dict.items()]),
+        "nodes.parquet": pl.concat(
+            [df.drop("properties") for _, df in nodes_dict.items()]
+        ),
+        "edges.parquet": pl.concat(
+            [df.drop("properties") for _, df in edges_dict.items()]
+        ),
         **{
             f"nodes/{name}.parquet": df.drop("properties")
             for name, df in nodes_dict.items()
