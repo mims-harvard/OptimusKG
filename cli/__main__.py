@@ -86,7 +86,7 @@ def metrics(
         help="The path to read the edges from.",
     ),
     out_dir: Path = typer.Option(
-        "data/export/metrics",
+        "data/gold/metrics",
         "--out",
         help="The path to write the output file to.",
     ),
