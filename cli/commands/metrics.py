@@ -97,7 +97,7 @@ def get_node_metrics(
             # Skip empty dataframes
             if edge_df.height == 0:
                 continue
-            
+
             # Count degrees for each node from "from" and "to" columns
             from_degrees = edge_df["from"].value_counts()
             to_degrees = edge_df["to"].value_counts()
