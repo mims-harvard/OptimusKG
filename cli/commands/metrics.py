@@ -85,7 +85,7 @@ def _get_ontology_prefix(id: str) -> str:
     return ""
 
 
-def get_node_metrics(
+def get_node_metrics(  # noqa: PLR0912
     nodes: list[pl.DataFrame], edges: list[pl.DataFrame] = None
 ) -> list[NodeMetrics]:
     node_metrics = []
@@ -184,7 +184,9 @@ def get_node_metrics(
             NodeMetrics(
                 label=node_label,
                 count=df.height,
-                percentage=df.height / sum(df.height for df in nodes) if sum(df.height for df in nodes) > 0 else 0,
+                percentage=df.height / sum(df.height for df in nodes)
+                if sum(df.height for df in nodes) > 0
+                else 0,
                 properties=avg_properties,
                 degree=degree_stats,
                 sources=sources_counts,
@@ -284,7 +286,9 @@ def get_edge_metrics(edges: list[pl.DataFrame]) -> list[EdgeMetrics]:
             EdgeMetrics(
                 label=df["relation"].unique().item(),
                 count=df.height,
-                percentage=df.height / sum(df.height for df in edges) if sum(df.height for df in edges) > 0 else 0,
+                percentage=df.height / sum(df.height for df in edges)
+                if sum(df.height for df in edges) > 0
+                else 0,
                 properties=avg_properties,
                 sources=sources_counts,
                 ontologies=combined_ontologies,
