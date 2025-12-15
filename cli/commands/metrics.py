@@ -94,6 +94,10 @@ def get_node_metrics(
     node_degrees = {}
     if edges:
         for edge_df in edges:
+            # Skip empty dataframes
+            if edge_df.height == 0:
+                continue
+            
             # Count degrees for each node from "from" and "to" columns
             from_degrees = edge_df["from"].value_counts()
             to_degrees = edge_df["to"].value_counts()
@@ -105,6 +109,9 @@ def get_node_metrics(
                 node_degrees[node_id] = node_degrees.get(node_id, 0) + count
 
     for df in nodes:
+        # Skip empty dataframes
+        if df.height == 0:
+            continue
         df_unnested = df.unnest("properties")
 
         # Calculate properties statistics based on the number of non-null fields in properties
@@ -177,7 +184,7 @@ def get_node_metrics(
             NodeMetrics(
                 label=node_label,
                 count=df.height,
-                percentage=df.height / sum(df.height for df in nodes),
+                percentage=df.height / sum(df.height for df in nodes) if sum(df.height for df in nodes) > 0 else 0,
                 properties=avg_properties,
                 degree=degree_stats,
                 sources=sources_counts,
@@ -197,6 +204,9 @@ def get_node_metrics(
 def get_edge_metrics(edges: list[pl.DataFrame]) -> list[EdgeMetrics]:
     edge_metrics = []
     for df in edges:
+        # Skip empty dataframes
+        if df.height == 0:
+            continue
         df_unnested = df.unnest("properties")
 
         # Calculate properties statistics based on the number of non-null fields in properties
@@ -274,7 +284,7 @@ def get_edge_metrics(edges: list[pl.DataFrame]) -> list[EdgeMetrics]:
             EdgeMetrics(
                 label=df["relation"].unique().item(),
                 count=df.height,
-                percentage=df.height / sum(df.height for df in edges),
+                percentage=df.height / sum(df.height for df in edges) if sum(df.height for df in edges) > 0 else 0,
                 properties=avg_properties,
                 sources=sources_counts,
                 ontologies=combined_ontologies,
