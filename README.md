@@ -70,7 +70,7 @@ Each release includes a comprehensive graph report that contains:
 Optimus uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as the project manager and [`docker`](https://docs.docker.com/engine/install/) to spin up the Neo4j database. 
 
 > [!NOTE]
-> Docker is not required if you don't need to export the graph in Neo4j-JSONL format or use the SQL dump query dataset. Ohterwise, make sure Docker Desktop (on macOS/Windows) or the Docker daemon (on Linux) is started before running the pipeline. You can verify Docker is running with `docker ps`.
+> Docker is not required if you don't need to export the graph in Neo4j-JSONL format or use the SQL dump query dataset. Otherwise, make sure Docker Desktop (on macOS/Windows) or the Docker daemon (on Linux) is started before running the pipeline. You can verify Docker is running with `docker ps`.
 
 Before running Optimus, you should sync its dependencies:
 
