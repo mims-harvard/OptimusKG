@@ -95,7 +95,7 @@ class SQLDumpQueryDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
 
     def _run_subprocess(
         self, cmd: list[str], **kwargs: Any
-    ) -> subprocess.CompletedProcess[bytes] | None:
+    ) -> subprocess.CompletedProcess[bytes]:
         """Safely execute a subprocess command."""
         try:
             # Use absolute paths for executables
@@ -104,11 +104,15 @@ class SQLDumpQueryDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
                 cmd, check=True, capture_output=True, **kwargs
             )
         except subprocess.CalledProcessError as e:
-            logger.exception(f"Subprocess command failed: {e}")
-            return None
+            error_msg = f"Subprocess command failed: {e}"
+            if e.stderr:
+                error_msg += f"\nError output: {e.stderr.decode('utf-8', errors='replace')}"
+            logger.exception(error_msg)
+            raise DatasetError(error_msg) from e
         except Exception as e:
-            logger.exception(f"Failed to execute command: {e}")
-            return None
+            error_msg = f"Failed to execute command: {e}"
+            logger.exception(error_msg)
+            raise DatasetError(error_msg) from e
 
     @override
     def _describe(self) -> dict[str, Any]:
