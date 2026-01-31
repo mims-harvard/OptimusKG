@@ -129,6 +129,7 @@ def run(  # noqa: PLR0913
                                 ]
                             )
                             .list.unique()
+                            .list.sort()
                             .alias("sources"),
                             pl.col("disgenet_properties").struct.field("relationType"),
                         ]

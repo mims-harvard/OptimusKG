@@ -17,11 +17,11 @@ def run(
             [
                 pl.lit("molecular_function_protein").alias("relation"),
                 pl.lit(True).alias("undirected"),
-                pl.col("source").unique().alias("sources"),
-                pl.col("evidence").unique(),
-                pl.col("aspect").unique().alias("aspect"),
-                pl.col("geneProduct").unique(),
-                pl.col("ecoId").drop_nulls().unique().alias("ecoIds"),
+                pl.col("source").unique().sort().alias("sources"),
+                pl.col("evidence").unique().sort(),
+                pl.col("aspect").unique().sort().alias("aspect"),
+                pl.col("geneProduct").unique().sort(),
+                pl.col("ecoId").drop_nulls().unique().sort().alias("ecoIds"),
             ]
         )
         .filter(

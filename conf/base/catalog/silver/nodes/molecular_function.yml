@@ -2,6 +2,6 @@ silver.nodes.molecular_function:
   type: optimuskg.datasets.polars.ParquetDataset
   filepath: "data/silver/nodes/molecular_function.parquet"
   metadata:
-    checksum: "d1b49f787a7050a9a7a70c7a1398b180"
+    checksum: "79117b056de3ab077f38ab5eb09b9cc5"
     kedro-viz:
       layer: silver

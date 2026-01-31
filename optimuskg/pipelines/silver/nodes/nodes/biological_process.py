@@ -39,6 +39,7 @@ def run(
                 ]
             ).alias("properties"),
         )
+        .sort(by="id")
     )
 
 

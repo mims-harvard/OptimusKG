@@ -11,6 +11,6 @@ bronze.drug_protein:
       "uniprot_id": "${pl:Utf8}"
       "drug_bank_name": "${pl:Utf8}"
   metadata:
-    checksum: "5c138c3450286d38a113fbf2530e0a18"
+    checksum: "88b7bcbd5369c2b0b4a3fe37f38846e0"
     kedro-viz:
       layer: bronze

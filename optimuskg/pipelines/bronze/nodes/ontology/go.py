@@ -74,6 +74,7 @@ def run(  # noqa: PLR0913
         )
         .drop(["meta_bpv", "meta"])
         .unique()
+        .sort("id")
         .select(
             [
                 "id",
@@ -111,6 +112,7 @@ def run(  # noqa: PLR0913
             ]
         )
         .filter(pl.col("tail").str.contains("GO_") & pl.col("head").str.contains("GO_"))
+        .sort(["tail", "head"])
     )
 
     return go_terms, go_relations

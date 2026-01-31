@@ -2,6 +2,6 @@ bronze.ppi.protein_protein:
   filepath: "data/bronze/ppi/protein_protein.parquet"
   type: optimuskg.datasets.polars.ParquetDataset
   metadata:
-    checksum: "44150070848198245156620716408455"
+    checksum: "d19feda309063156dee68037cc2d037e"
     kedro-viz:
       layer: bronze

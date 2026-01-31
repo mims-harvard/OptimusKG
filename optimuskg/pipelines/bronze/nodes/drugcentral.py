@@ -137,12 +137,12 @@ def run(
         )
         .group_by("id")
         .agg(
-            pl.col("concept_id").drop_nulls().unique().alias("concept_ids"),
-            pl.col("concept_name").drop_nulls().unique().alias("concept_names"),
+            pl.col("concept_id").drop_nulls().unique().sort().alias("concept_ids"),
+            pl.col("concept_name").drop_nulls().unique().sort().alias("concept_names"),
             pl.col("umls_cui").first(),
-            pl.col("snomed_full_name").drop_nulls().unique().alias("snomed_full_names"),
+            pl.col("snomed_full_name").drop_nulls().unique().sort().alias("snomed_full_names"),
             pl.col("cui_semantic_type").first(),
-            pl.col("snomed_conceptid").drop_nulls().unique().alias("snomed_conceptids"),
+            pl.col("snomed_conceptid").drop_nulls().unique().sort().alias("snomed_conceptids"),
         )
         .unique(subset="id")
         .sort(by="id")

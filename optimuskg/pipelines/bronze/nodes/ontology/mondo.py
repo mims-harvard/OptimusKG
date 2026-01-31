@@ -85,6 +85,7 @@ def run(
         )
         .drop(["meta_bpv", "meta"])
         .unique()
+        .sort("id")
         .select(
             [
                 "id",
@@ -138,6 +139,7 @@ def run(
             .alias("xref_id")
         )
         .unique()
+        .sort(["id", "xref_id"])
     )
 
     mondo_relations = (
@@ -155,6 +157,7 @@ def run(
             & pl.col("head").str.contains("MONDO_")
             & (pl.col("edge_type") == "is_a")
         )
+        .sort(["tail", "head"])
     )
     return mondo_terms, mondo_relations, mondo_xrefs
 

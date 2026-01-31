@@ -2,6 +2,6 @@ bronze.ontology.go_relations:
   type: optimuskg.datasets.polars.ParquetDataset
   filepath: "data/bronze/ontology/go_relations.parquet"
   metadata:
-    checksum: "da24d9e916f3f3ad274da8884e50ce70"
+    checksum: "ebf7a557691f1742920ace586bd55ef2"
     kedro-viz:
       layer: bronze

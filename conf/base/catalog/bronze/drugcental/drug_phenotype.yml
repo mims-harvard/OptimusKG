@@ -2,6 +2,6 @@ bronze.drugcentral.drug_phenotype:
   type: optimuskg.datasets.polars.ParquetDataset
   filepath: "data/bronze/drugcentral/drug_phenotype.parquet"
   metadata:
-    checksum: "03b249e597ce160dc8d3ec3ac41c91bf"
+    checksum: "3267def1531905839c2cedad0766d941"
     kedro-viz:
       layer: bronze

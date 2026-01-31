@@ -105,6 +105,7 @@ def run(
                                 ]
                             )
                             .list.unique()
+                            .list.sort()
                             .alias("sources"),
                             pl.col("disgenet_properties").struct.field("relationType"),
                         ]

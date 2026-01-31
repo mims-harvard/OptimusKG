@@ -8,6 +8,6 @@ bronze.drug_drug:
       "head_drug_id": "${pl:Utf8}"
       "description": "${pl:Utf8}"
   metadata:
-    checksum: "88e346e8462b167494dbcdc40fcb4a1e"
+    checksum: "24714e16cc20f1cc7d7de9ec9343be11"
     kedro-viz:
       layer: bronze

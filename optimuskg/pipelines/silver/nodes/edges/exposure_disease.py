@@ -45,14 +45,15 @@ def run(
                 .cast(pl.Int64)
                 .sum()
                 .alias("numberOfReceptors"),
-                pl.col("receptors").drop_nulls().unique().alias("receptors"),
-                pl.col("receptor_notes").drop_nulls().unique().alias("receptorNotes"),
+                pl.col("receptors").drop_nulls().unique().sort().alias("receptors"),
+                pl.col("receptor_notes").drop_nulls().unique().sort().alias("receptorNotes"),
                 pl.col("smoking_status")
                 .str.split("|")
                 .explode()
                 .drop_nulls()
                 .str.strip_chars()
                 .unique()
+                .sort()
                 .alias("smokingStatuses"),
                 pl.col("age_type")
                 .filter(pl.col("age_type") != "null")
@@ -62,26 +63,31 @@ def run(
                 .then(pl.col("age"))
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("ageRangeValues"),
                 pl.when(pl.col("age_type") == "mean")
                 .then(pl.col("age"))
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("ageMeanValues"),
                 pl.when(pl.col("age_type") == "median")
                 .then(pl.col("age"))
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("ageMedianValues"),
                 pl.when(pl.col("age_type") == "point")
                 .then(pl.col("age"))
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("agePointValues"),
                 pl.when(pl.col("age_type") == "open_range")
                 .then(pl.col("age"))
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("ageOpenRangeValues"),
                 pl.col("sex")
                 .str.split("|")
@@ -89,6 +95,7 @@ def run(
                 .drop_nulls()
                 .str.strip_chars()
                 .unique()
+                .sort()
                 .alias("sexes"),
                 pl.col("race")
                 .str.split("|")
@@ -96,6 +103,7 @@ def run(
                 .drop_nulls()
                 .str.strip_chars()
                 .unique()
+                .sort()
                 .alias("races"),
                 pl.col("methods")
                 .str.split("|")
@@ -103,63 +111,76 @@ def run(
                 .drop_nulls()
                 .str.strip_chars()
                 .unique()
+                .sort()
                 .alias("methods"),
-                pl.col("detection_limit").drop_nulls().unique().alias("detectionLimit"),
+                pl.col("detection_limit").drop_nulls().unique().sort().alias("detectionLimit"),
                 pl.col("detection_limit_uom")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("detectionLimitUom"),
                 pl.col("detection_frequency")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("detectionFrequency"),
-                pl.col("medium").drop_nulls().unique().alias("mediums"),
+                pl.col("medium").drop_nulls().unique().sort().alias("mediums"),
                 pl.col("assay_notes")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("assayNotes"),  # this column is new
                 pl.col("study_countries")
                 .str.split("|")
                 .explode()
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("studyCountries"),
                 pl.col("state_or_province")
                 .str.split("|")
                 .explode()
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("statesOrProvinces"),
                 pl.col("city_town_region_area")
                 .str.split("|")
                 .explode()
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("cityTownRegionAreas"),
                 pl.col("exposure_event_notes")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("exposureEventNotes"),
                 pl.col("outcome_relationship")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("outcomeRelationships"),
                 pl.col("exposure_outcome_notes")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("exposureOutcomeNotes"),
-                pl.col("reference").drop_nulls().unique().alias("references"),
+                pl.col("reference").drop_nulls().unique().sort().alias("references"),
                 pl.col("associated_study_titles")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("associatedStudyTitles"),
                 pl.col("enrollment_start_year")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("enrollmentStartYears"),
                 pl.col("enrollment_end_year")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("enrollmentEndYears"),
                 pl.col("study_factors")
                 .str.split("|")
@@ -167,6 +188,7 @@ def run(
                 .drop_nulls()
                 .str.strip_chars()
                 .unique()
+                .sort()
                 .alias("studyFactors"),
             ]
         )

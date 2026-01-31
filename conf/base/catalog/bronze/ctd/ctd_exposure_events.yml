@@ -48,6 +48,6 @@ bronze.ctd.ctd_exposure_events:
       "enrollment_end_year": "${pl:Utf8}"
       "study_factors": "${pl:Utf8}"
   metadata:
-    checksum: "77b23041f8ea7fc4950c11381e8c3ec3"
+    checksum: "2c4c049aae84f5b6e25c7557a18dbb92"
     kedro-viz:
       layer: bronze

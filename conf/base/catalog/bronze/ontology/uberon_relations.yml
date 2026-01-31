@@ -8,6 +8,6 @@ bronze.ontology.uberon_relations:
       "relation_type": "${pl:Utf8}"
       "relation_id": "${pl:Utf8}"
   metadata:
-    checksum: "da24d9e916f3f3ad274da8884e50ce70"
+    checksum: "5b9ad1993f3d2eb3a7a47885f58aceba"
     kedro-viz:
       layer: bronze

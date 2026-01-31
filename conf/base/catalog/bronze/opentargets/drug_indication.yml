@@ -2,6 +2,6 @@ bronze.opentargets.drug_indication:
   filepath: "data/bronze/opentargets/drug_indication.parquet"
   type: optimuskg.datasets.polars.ParquetDataset
   metadata:
-    checksum: "0dc00d77ff5e42a35ba51c33dd4b78ea"
+    checksum: "0bc839fef2fdd1b1612a0987d83c6bfb"
     kedro-viz:
       layer: bronze

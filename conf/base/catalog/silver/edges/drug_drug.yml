@@ -2,6 +2,6 @@ silver.edges.drug_drug:
   type: optimuskg.datasets.polars.ParquetDataset
   filepath: "data/silver/edges/drug_drug.parquet"
   metadata:
-    checksum: "88e346e8462b167494dbcdc40fcb4a1e"
+    checksum: "a9fc772af0796ff1052efb5fb4da4d2e"
     kedro-viz:
       layer: silver

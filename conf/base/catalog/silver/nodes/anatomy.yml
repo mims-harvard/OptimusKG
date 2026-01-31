@@ -2,6 +2,6 @@ silver.nodes.anatomy:
   type: optimuskg.datasets.polars.ParquetDataset
   filepath: "data/silver/nodes/anatomy.parquet"
   metadata:
-    checksum: "d1b49f787a7050a9a7a70c7a1398b180"
+    checksum: "03a6fe21713c4f5d953974896d0eadee"
     kedro-viz:
       layer: silver

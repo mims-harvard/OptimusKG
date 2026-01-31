@@ -15,6 +15,6 @@ bronze.ontology.uberon_terms:
       "ontology_license": "${pl:Utf8}"
       "ontology_version": "${pl:Utf8}"
   metadata:
-    checksum: "da24d9e916f3f3ad274da8884e50ce70"
+    checksum: "62468cdf3eb5e16711eaa2fd74f86b82"
     kedro-viz:
       layer: bronze

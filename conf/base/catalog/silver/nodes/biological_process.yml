@@ -2,6 +2,6 @@ silver.nodes.biological_process:
   type: optimuskg.datasets.polars.ParquetDataset
   filepath: "data/silver/nodes/biological_process.parquet"
   metadata:
-    checksum: "d1b49f787a7050a9a7a70c7a1398b180"
+    checksum: "3eb7d4357384143702d2308926ae5883"
     kedro-viz:
       layer: silver

@@ -8,7 +8,7 @@ landing.drugbank.gene_map:
       "NCBI Gene ID(supplied by NCBI)": "${pl:Utf8}"
       "UniProt ID(supplied by UniProt)": "${pl:Utf8}"
   metadata:
-    checksum: "281090c34eb94f80c4b959dd1cf35be0"
+    checksum: "157f15d3a43c2d943a207db38c7fd619"
     origin:
       provider: "http"
       url: "https://www.genenames.org/cgi-bin/download/custom?col=md_eg_id&col=md_prot_id&status=Approved&hgnc_dbtag=on&order_by=gd_app_sym_sort&format=text&submit=submit"

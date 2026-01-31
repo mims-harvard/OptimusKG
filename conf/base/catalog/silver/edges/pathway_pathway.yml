@@ -2,6 +2,6 @@ silver.edges.pathway_pathway:
   type: optimuskg.datasets.polars.ParquetDataset
   filepath: "data/silver/edges/pathway_pathway.parquet"
   metadata:
-    checksum: "55c501c89a1515c5748131f501c41d58"
+    checksum: "a1a54f8f37e8448daaba3b079b202c3d"
     kedro-viz:
       layer: silver

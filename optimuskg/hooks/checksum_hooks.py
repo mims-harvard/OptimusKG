@@ -39,7 +39,7 @@ class ChecksumHooks:
             actual_checksum = calculate_checksum(path)
 
             if expected_checksum != actual_checksum:
-                logger.error(
+                logger.warning(
                     f"Checksum mismatch for {get_dataset_display_name(ds_name)}. "
                     f"Expected: {self._checksum_display_str(expected_checksum)}, Got: {self._checksum_display_str(actual_checksum)}",
                     extra={"markup": True},

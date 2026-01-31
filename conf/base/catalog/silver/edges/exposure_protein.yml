@@ -2,6 +2,6 @@ silver.edges.exposure_protein:
   type: optimuskg.datasets.polars.ParquetDataset
   filepath: "data/silver/edges/exposure_protein.parquet"
   metadata:
-    checksum: "d1b49f787a7050a9a7a70c7a1398b180"
+    checksum: "8fed5b7ef5ddc167db4ae56d30367334"
     kedro-viz:
       layer: silver

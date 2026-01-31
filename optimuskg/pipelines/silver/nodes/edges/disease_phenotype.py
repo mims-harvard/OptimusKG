@@ -18,29 +18,32 @@ def run(
         .group_by(["from", "to"])
         .agg(
             [
-                pl.col("aspect").drop_nulls().unique().alias("aspect"),
-                pl.col("bioCuration").drop_nulls().unique().alias("bioCuration"),
-                pl.col("evidenceType").drop_nulls().unique().alias("evidenceType"),
-                pl.col("frequency").drop_nulls().unique().alias("frequency"),
+                pl.col("aspect").drop_nulls().unique().sort().alias("aspect"),
+                pl.col("bioCuration").drop_nulls().unique().sort().alias("bioCuration"),
+                pl.col("evidenceType").drop_nulls().unique().sort().alias("evidenceType"),
+                pl.col("frequency").drop_nulls().unique().sort().alias("frequency"),
                 pl.concat_list("modifiers")
                 .flatten()
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("modifiers"),
-                pl.concat_list("onset").flatten().drop_nulls().unique().alias("onset"),
+                pl.concat_list("onset").flatten().drop_nulls().unique().sort().alias("onset"),
                 pl.col("qualifierNot").any().alias("qualifierNot"),
                 pl.when(~pl.col("qualifierNot"))
                 .then(pl.lit("phenotype present"))
                 .otherwise(pl.lit("phenotype absent"))
                 .unique()
+                .sort()
                 .alias("relationType"),
                 pl.concat_list("references")
                 .flatten()
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("references"),
-                pl.col("sex").drop_nulls().unique().alias("sexes"),
-                pl.col("resource").drop_nulls().unique().alias("sources"),
+                pl.col("sex").drop_nulls().unique().sort().alias("sexes"),
+                pl.col("resource").drop_nulls().unique().sort().alias("sources"),
             ]
         )
         .select(

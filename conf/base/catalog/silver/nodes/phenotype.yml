@@ -2,6 +2,6 @@ silver.nodes.phenotype:
   type: optimuskg.datasets.polars.ParquetDataset
   filepath: "data/silver/nodes/phenotype.parquet"
   metadata:
-    checksum: "d1b49f787a7050a9a7a70c7a1398b180"
+    checksum: "1991a6617e1c076cc98a23ade888f9aa"
     kedro-viz:
       layer: silver

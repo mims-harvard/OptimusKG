@@ -22,7 +22,7 @@ def run(
             how="inner",
         )
         .group_by(["chembl_id", "ensembl_id"])
-        .agg([pl.col("relation").unique().alias("relationType")])
+        .agg([pl.col("relation").unique().sort().alias("relationType")])
         .select(
             pl.col("chembl_id").alias("from"),
             pl.col("ensembl_id").alias("to"),
@@ -53,19 +53,22 @@ def run(
                 pl.col("mechanism_of_action")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("mechanismsOfAction"),
-                pl.col("source").drop_nulls().unique().alias("sources"),
+                pl.col("source").drop_nulls().unique().sort().alias("sources"),
                 pl.concat_list("ids")
                 .flatten()
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("sourceIds"),
                 pl.concat_list("urls")
                 .flatten()
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("sourceUrls"),
-                pl.col("actionType").drop_nulls().unique().alias("actionType"),
+                pl.col("actionType").drop_nulls().unique().sort().alias("actionType"),
             ]
         )
         .select(
@@ -118,6 +121,7 @@ def run(
                                 ]
                             )
                             .list.unique()
+                            .list.sort()
                             .alias("sources"),
                             pl.concat_list(
                                 [
@@ -130,6 +134,7 @@ def run(
                                 ]
                             )
                             .list.unique()
+                            .list.sort()
                             .alias("relationType"),
                         ]
                     )
