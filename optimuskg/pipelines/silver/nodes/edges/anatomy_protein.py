@@ -21,12 +21,12 @@ def run(
                     pl.when(pl.col("expression") == "present")
                     .then(pl.lit("expression present"))
                     .otherwise(pl.lit("expression absent"))
-                    .alias("relationType"),
+                    .alias("relation_type"),
                     pl.col("expression_rank")
                     .cast(pl.Float64)
                     .cast(pl.Int32)
-                    .alias("expressionRank"),
-                    pl.col("call_quality").alias("callQuality"),
+                    .alias("expression_rank"),
+                    pl.col("call_quality").alias("call_quality"),
                     pl.lit(["BGEE"]).alias("sources"),
                 ]
             ).alias("properties"),

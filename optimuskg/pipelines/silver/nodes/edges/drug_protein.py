@@ -22,7 +22,7 @@ def run(
             how="inner",
         )
         .group_by(["chembl_id", "ensembl_id"])
-        .agg([pl.col("relation").unique().alias("relationType")])
+        .agg([pl.col("relation").unique().alias("relation_type")])
         .select(
             pl.col("chembl_id").alias("from"),
             pl.col("ensembl_id").alias("to"),
@@ -31,16 +31,16 @@ def run(
             pl.struct(
                 [
                     pl.lit(["drugbank", "opentargets"]).alias("sources"),
-                    pl.col("relationType"),
+                    pl.col("relation_type"),
                 ]
-            ).alias("drugbank_properties"),
+            ).alias("drugbank_props"),
         )
     )
 
     opentargets_drug_protein = (
         drug_mechanism_of_action.with_columns(
             pl.col("metadata").struct.field("references"),
-            pl.col("metadata").struct.field("actionType"),
+            pl.col("metadata").struct.field("action_type"),
         )
         .explode("targets")
         .explode("chembl_ids")
@@ -53,19 +53,19 @@ def run(
                 pl.col("mechanism_of_action")
                 .drop_nulls()
                 .unique()
-                .alias("mechanismsOfAction"),
+                .alias("mechanisms_of_action"),
                 pl.col("source").drop_nulls().unique().alias("sources"),
                 pl.concat_list("ids")
                 .flatten()
                 .drop_nulls()
                 .unique()
-                .alias("sourceIds"),
+                .alias("source_ids"),
                 pl.concat_list("urls")
                 .flatten()
                 .drop_nulls()
                 .unique()
-                .alias("sourceUrls"),
-                pl.col("actionType").drop_nulls().unique().alias("actionType"),
+                .alias("source_urls"),
+                pl.col("action_type").drop_nulls().unique().alias("action_type"),
             ]
         )
         .select(
@@ -77,12 +77,12 @@ def run(
                 pl.struct(
                     [
                         pl.col("sources"),
-                        pl.col("sourceIds"),
-                        pl.col("sourceUrls"),
-                        pl.col("mechanismsOfAction"),
-                        pl.col("actionType").alias("relationType"),
+                        pl.col("source_ids"),
+                        pl.col("source_urls"),
+                        pl.col("mechanisms_of_action"),
+                        pl.col("action_type").alias("relation_type"),
                     ]
-                ).alias("opentargets_properties"),
+                ).alias("opentargets_props"),
             ]
         )
         .unique(subset=["from", "to"])
@@ -95,24 +95,24 @@ def run(
         )
         .with_columns(
             [
-                pl.when(pl.col("opentargets_properties").is_not_null())
+                pl.when(pl.col("opentargets_props").is_not_null())
                 .then(
                     pl.struct(
                         [
                             *[
-                                pl.col("opentargets_properties").struct.field(f)
+                                pl.col("opentargets_props").struct.field(f)
                                 for f in [
-                                    "sourceIds",
-                                    "sourceUrls",
-                                    "mechanismsOfAction",
+                                    "source_ids",
+                                    "source_urls",
+                                    "mechanisms_of_action",
                                 ]
                             ],
                             pl.concat_list(
                                 [
-                                    pl.col("opentargets_properties").struct.field(
+                                    pl.col("opentargets_props").struct.field(
                                         "sources"
                                     ),
-                                    pl.col("drugbank_properties").struct.field(
+                                    pl.col("drugbank_props").struct.field(
                                         "sources"
                                     ),
                                 ]
@@ -121,20 +121,20 @@ def run(
                             .alias("sources"),
                             pl.concat_list(
                                 [
-                                    pl.col("opentargets_properties").struct.field(
-                                        "relationType"
+                                    pl.col("opentargets_props").struct.field(
+                                        "relation_type"
                                     ),
-                                    pl.col("drugbank_properties").struct.field(
-                                        "relationType"
+                                    pl.col("drugbank_props").struct.field(
+                                        "relation_type"
                                     ),
                                 ]
                             )
                             .list.unique()
-                            .alias("relationType"),
+                            .alias("relation_type"),
                         ]
                     )
                 )
-                .otherwise(pl.col("drugbank_properties"))
+                .otherwise(pl.col("drugbank_props"))
                 .alias("properties")
             ]
         )

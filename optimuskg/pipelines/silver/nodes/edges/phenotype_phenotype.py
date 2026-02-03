@@ -14,7 +14,7 @@ def run(
             pl.struct(  # TODO: we can add more metadata merging with opentargets disease_phenotype and disease dataset
                 [
                     pl.lit(["HP"]).alias("sources"),
-                    pl.lit("parent").alias("relationType"),
+                    pl.lit("parent").alias("relation_type"),
                 ]
             ).alias("properties"),
         )

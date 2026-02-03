@@ -3,23 +3,32 @@ import logging
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.utils import to_snake_case
-
 logger = logging.getLogger(__name__)
 
 
 def run(
     drug_indication: pl.DataFrame,
 ) -> pl.DataFrame:
-    key_cols = ["id", "approvedIndications"]
     return (
-        drug_indication.with_columns(
-            pl.struct([c for c in drug_indication.columns if c not in key_cols]).alias(
-                "metadata"
-            )
+        drug_indication.select(
+            pl.col("id"),
+            pl.col("approvedIndications").alias("approved_indications"),
+            pl.struct(
+                pl.col("indications")
+                .list.eval(
+                    pl.struct(
+                        pl.element().struct.field("disease"),
+                        pl.element().struct.field("efoName").alias("efo_name"),
+                        pl.element()
+                        .struct.field("maxPhaseForIndication")
+                        .alias("max_phase_for_indication"),
+                        pl.element().struct.field("references"),
+                    )
+                )
+                .alias("indications"),
+                pl.col("indicationCount").alias("indication_count"),
+            ).alias("metadata"),
         )
-        .select([*key_cols, "metadata"])
-        .rename({col: to_snake_case(col) for col in key_cols})
         .unique(subset="id")
         .sort(by="id")
     )

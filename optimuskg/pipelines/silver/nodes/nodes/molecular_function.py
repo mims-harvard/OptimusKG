@@ -32,10 +32,10 @@ def run(
                     pl.col("definition"),
                     pl.col("xrefs"),  # TODO: cast to a proper list
                     pl.col("synonyms"),  # TODO: cast to a proper list
-                    pl.col("ontology_description").alias("ontologyDescription"),
-                    pl.col("ontology_title").alias("ontologyTitle"),
-                    pl.col("ontology_license").alias("ontologyLicense"),
-                    pl.col("ontology_version").alias("ontologyVersion"),
+                    pl.col("ontology_description").alias("ontology_description"),
+                    pl.col("ontology_title").alias("ontology_title"),
+                    pl.col("ontology_license").alias("ontology_license"),
+                    pl.col("ontology_version").alias("ontology_version"),
                 ]
             ).alias("properties"),
         )

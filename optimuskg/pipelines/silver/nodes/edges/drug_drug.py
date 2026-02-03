@@ -37,31 +37,31 @@ def run(
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
-                        pl.lit(["synergistic interaction"]).alias("relationType"),
+                        pl.lit(["synergistic interaction"]).alias("relation_type"),
                         pl.lit(["drugbank"]).alias("sources"),
-                        pl.col("description").alias("interactionDescription"),
+                        pl.col("description").alias("interaction_description"),
                     ]
-                ).alias("drugbank_properties"),
+                ).alias("drugbank_props"),
             ]
         )
     )
 
     opentargets_drug_drug = (
         drug_molecule.unnest("metadata")
-        .explode("childChemblIds")
-        .filter(pl.col("childChemblIds").is_not_null())
+        .explode("child_chembl_ids")
+        .filter(pl.col("child_chembl_ids").is_not_null())
         .select(
             [
                 pl.col("id").alias("from"),
-                pl.col("childChemblIds").alias("to"),
+                pl.col("child_chembl_ids").alias("to"),
                 pl.lit("drug_drug").alias("relation"),
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
-                        pl.lit(["parent"]).alias("relationType"),
+                        pl.lit(["parent"]).alias("relation_type"),
                         pl.lit(["opentargets"]).alias("sources"),
                     ]
-                ).alias("opentargets_properties"),
+                ).alias("opentargets_props"),
             ]
         )
     )
@@ -84,27 +84,27 @@ def run(
                             [
                                 pl.coalesce(
                                     [
-                                        pl.col("drugbank_properties").struct.field(
-                                            "relationType"
+                                        pl.col("drugbank_props").struct.field(
+                                            "relation_type"
                                         ),
                                         pl.lit([], dtype=pl.List(pl.Utf8)),
                                     ]
                                 ),
                                 pl.coalesce(
                                     [
-                                        pl.col("opentargets_properties").struct.field(
-                                            "relationType"
+                                        pl.col("opentargets_props").struct.field(
+                                            "relation_type"
                                         ),
                                         pl.lit([], dtype=pl.List(pl.Utf8)),
                                     ]
                                 ),
                             ]
-                        ).alias("relationType"),
+                        ).alias("relation_type"),
                         pl.concat_list(
                             [
                                 pl.coalesce(
                                     [
-                                        pl.col("drugbank_properties").struct.field(
+                                        pl.col("drugbank_props").struct.field(
                                             "sources"
                                         ),
                                         pl.lit([], dtype=pl.List(pl.Utf8)),
@@ -112,7 +112,7 @@ def run(
                                 ),
                                 pl.coalesce(
                                     [
-                                        pl.col("opentargets_properties").struct.field(
+                                        pl.col("opentargets_props").struct.field(
                                             "sources"
                                         ),
                                         pl.lit([], dtype=pl.List(pl.Utf8)),
@@ -120,11 +120,11 @@ def run(
                                 ),
                             ]
                         ).alias("sources"),
-                        pl.col("drugbank_properties")
-                        .struct.field("interactionDescription")
+                        pl.col("drugbank_props")
+                        .struct.field("interaction_description")
                         .alias(
-                            "interactionDescription"
-                        ),  # TODO: change this column name to relationDescription and add the column to the opentargets_properties with something like "this drug is the parent of the other drug in the ontology"
+                            "interaction_description"
+                        ),  # TODO: change this column name to relation_description and add the column to the opentargets_props with something like "this drug is the parent of the other drug in the ontology"
                     ]
                 ).alias("properties"),
             ]

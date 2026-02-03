@@ -16,13 +16,13 @@ def run(  # noqa: PLR0913
 ) -> pl.DataFrame:
     diesase_id_umls_map = (
         disease.select(
-            [pl.col("id"), pl.col("metadata").struct.field("dbXRefs").alias("dbXRefs")]
+            [pl.col("id"), pl.col("metadata").struct.field("db_xrefs").alias("db_xrefs")]
         )
-        .explode("dbXRefs")
-        .filter(pl.col("dbXRefs").is_not_null())
-        .filter(pl.col("dbXRefs").str.starts_with("UMLS"))
+        .explode("db_xrefs")
+        .filter(pl.col("db_xrefs").is_not_null())
+        .filter(pl.col("db_xrefs").str.starts_with("UMLS"))
         .group_by("id")
-        .agg([pl.col("dbXRefs").first().str.replace("UMLS:", "").alias("umls_id")])
+        .agg([pl.col("db_xrefs").first().str.replace("UMLS:", "").alias("umls_id")])
         .sort("umls_id")
     )
     opentargets_disease_protein = (
@@ -35,15 +35,15 @@ def run(  # noqa: PLR0913
             pl.struct(
                 [
                     pl.lit(["opentargets"]).alias("sources"),
-                    pl.col("metadata").struct.field("score").alias("evidenceScore"),
-                    pl.col("metadata").struct.field("evidenceCount"),
+                    pl.col("metadata").struct.field("score").alias("evidence_score"),
+                    pl.col("metadata").struct.field("evidence_count").alias("evidence_count"),
                     pl.lit("associated with").alias(
-                        "relationType"
-                    ),  # TODO: change this literal to "associated with" using the evidenceScore/evidenceCount columns.
+                        "relation_type"
+                    ),  # TODO: change this literal to "associated with" using the evidence_score/evidence_count columns.
                 ]
-            ).alias("opentargets_properties"),
+            ).alias("opentargets_props"),
         )
-        .select(["from", "to", "relation", "undirected", "opentargets_properties"])
+        .select(["from", "to", "relation", "undirected", "opentargets_props"])
         .unique(subset=["from", "to"])
         .sort(by=["from", "to"])
     )
@@ -54,23 +54,23 @@ def run(  # noqa: PLR0913
             "disease_id",
             pl.struct(
                 [
-                    pl.col("dsi").cast(pl.Float64).alias("diseaseSpecificityIndex"),
-                    pl.col("dpi").cast(pl.Float64).alias("diseasePleiotropyIndex"),
-                    pl.col("ei").cast(pl.Float64).alias("evidenceIndex"),
-                    pl.col("score").alias("disgenetScore"),
-                    pl.col("year_initial").alias("yearInitial"),
-                    pl.col("year_final").alias("yearFinal"),
-                    pl.col("nof_pmids").cast(pl.Int16).alias("numberOfPmids"),
-                    pl.col("nof_snps").cast(pl.Int16).alias("numberOfSnps"),
+                    pl.col("dsi").cast(pl.Float64).alias("disease_specificity_index"),
+                    pl.col("dpi").cast(pl.Float64).alias("disease_pleiotropy_index"),
+                    pl.col("ei").cast(pl.Float64).alias("evidence_index"),
+                    pl.col("score").alias("disgenet_score"),
+                    pl.col("year_initial").alias("year_initial"),
+                    pl.col("year_final").alias("year_final"),
+                    pl.col("nof_pmids").cast(pl.Int16).alias("number_of_pmids"),
+                    pl.col("nof_snps").cast(pl.Int16).alias("number_of_snps"),
                     pl.col("source")
                     .str.split(";")
                     .cast(pl.List(pl.Utf8))
                     .alias("sources"),
                     pl.lit("associated with").alias(
-                        "relationType"
-                    ),  # TODO: change this literal to "associated with" using the disgenetScore/evidenceIndex column.
+                        "relation_type"
+                    ),  # TODO: change this literal to "associated with" using the disgenet_score/evidence_index column.
                 ]
-            ).alias("disgenet_properties"),
+            ).alias("disgenet_props"),
         )
         .join(
             diesase_id_umls_map, left_on="disease_id", right_on="umls_id", how="inner"
@@ -84,7 +84,7 @@ def run(  # noqa: PLR0913
         .select(
             pl.col("id").alias("from"),
             pl.col("target_id").alias("to"),
-            pl.col("disgenet_properties"),
+            pl.col("disgenet_props"),
         )
         .sort(by=["from", "to"])
         .unique(subset=["from", "to"])
@@ -97,48 +97,48 @@ def run(  # noqa: PLR0913
         )
         .with_columns(
             [
-                pl.when(pl.col("disgenet_properties").is_not_null())
+                pl.when(pl.col("disgenet_props").is_not_null())
                 .then(
                     pl.struct(
                         [
                             *[
-                                pl.col("opentargets_properties").struct.field(f)
-                                for f in ["evidenceScore", "evidenceCount"]
+                                pl.col("opentargets_props").struct.field(f)
+                                for f in ["evidence_score", "evidence_count"]
                             ],
                             *[
-                                pl.col("disgenet_properties").struct.field(f).alias(f)
+                                pl.col("disgenet_props").struct.field(f).alias(f)
                                 for f in [
-                                    "diseaseSpecificityIndex",
-                                    "diseasePleiotropyIndex",
-                                    "evidenceIndex",
-                                    "disgenetScore",
-                                    "yearInitial",
-                                    "yearFinal",
-                                    "numberOfPmids",
-                                    "numberOfSnps",
+                                    "disease_specificity_index",
+                                    "disease_pleiotropy_index",
+                                    "evidence_index",
+                                    "disgenet_score",
+                                    "year_initial",
+                                    "year_final",
+                                    "number_of_pmids",
+                                    "number_of_snps",
                                 ]
                             ],
                             pl.concat_list(
                                 [
-                                    pl.col("opentargets_properties").struct.field(
+                                    pl.col("opentargets_props").struct.field(
                                         "sources"
                                     ),
-                                    pl.col("disgenet_properties").struct.field(
+                                    pl.col("disgenet_props").struct.field(
                                         "sources"
                                     ),
                                 ]
                             )
                             .list.unique()
                             .alias("sources"),
-                            pl.col("disgenet_properties").struct.field("relationType"),
+                            pl.col("disgenet_props").struct.field("relation_type"),
                         ]
                     )
                 )
-                .otherwise(pl.col("opentargets_properties"))
+                .otherwise(pl.col("opentargets_props"))
                 .alias("properties")
             ]
         )
-        .drop("disgenet_properties", "opentargets_properties")
+        .drop("disgenet_props", "opentargets_props")
         .unique(subset=["from", "to"])
         .sort(["from", "to"])
     )

@@ -9,10 +9,10 @@ def run(
         target.select([pl.col("id"), pl.col("metadata").struct.field("pathways")])
         .explode("pathways")
         .unnest("pathways")
-        .filter(pl.col("pathwayId").is_not_null())
+        .filter(pl.col("pathway_id").is_not_null())
         .select(
             [
-                ("REACT:" + pl.col("pathwayId")).alias(
+                ("REACT:" + pl.col("pathway_id")).alias(
                     "from"
                 ),  # NOTE: we need to add the REACT prefix for biolink mapping
                 pl.col("id").alias("to"),
@@ -21,7 +21,7 @@ def run(
                 pl.struct(
                     [
                         pl.lit(["opentargets"]).alias("sources"),
-                        pl.lit("interacts with").alias("relationType"),
+                        pl.lit("interacts with").alias("relation_type"),
                     ]
                 ).alias("properties"),
             ]

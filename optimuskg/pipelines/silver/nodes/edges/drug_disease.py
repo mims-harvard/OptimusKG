@@ -27,16 +27,16 @@ def run(
             pl.lit(True).alias("undirected"),
             pl.struct(
                 [
-                    pl.col("ids").alias("referenceIds"),
+                    pl.col("ids").alias("reference_ids"),
                     pl.concat_list([pl.col("source")]).alias(
                         "sources"
                     ),  # transform source to list
-                    pl.col("maxPhaseForIndication").alias("highestClinicalTrialPhase"),
+                    pl.col("max_phase_for_indication").alias("highest_clinical_trial_phase"),
                     pl.lit(["indication"]).alias(
-                        "relationType"
-                    ),  # TODO: replace this with strong/weak clinical evidence derived from highestClinicalTrialPhase
+                        "relation_type"
+                    ),  # TODO: replace this with strong/weak clinical evidence derived from highest_clinical_trial_phase
                 ]
-            ).alias("opentargets_properties"),
+            ).alias("opentargets_props"),
         )
         .unique(subset=["from", "to"])
         .sort(by=["from", "to"])
@@ -53,11 +53,11 @@ def run(
                     pl.lit(["drugcentral", "drugbank"]).alias("sources"),
                     pl.col("relationship_name")
                     .cast(pl.List(pl.Utf8))
-                    .alias("relationType"),
-                    pl.col("structure_id").alias("structureId"),
-                    pl.col("drug_disease_id").alias("drugDiseaseId"),
+                    .alias("relation_type"),
+                    pl.col("structure_id").alias("structure_id"),
+                    pl.col("drug_disease_id").alias("drug_disease_id"),
                 ]
-            ).alias("drugcentral_properties"),
+            ).alias("drugcentral_props"),
         )
         .unique(subset=["from", "to"])
         .sort(by=["from", "to"])
@@ -83,27 +83,27 @@ def run(
                             [
                                 pl.coalesce(
                                     [
-                                        pl.col("drugcentral_properties").struct.field(
-                                            "relationType"
+                                        pl.col("drugcentral_props").struct.field(
+                                            "relation_type"
                                         ),
                                         pl.lit([], dtype=pl.List(pl.Utf8)),
                                     ]
                                 ),
                                 pl.coalesce(
                                     [
-                                        pl.col("opentargets_properties").struct.field(
-                                            "relationType"
+                                        pl.col("opentargets_props").struct.field(
+                                            "relation_type"
                                         ),
                                         pl.lit([], dtype=pl.List(pl.Utf8)),
                                     ]
                                 ),
                             ]
-                        ).alias("relationType"),
+                        ).alias("relation_type"),
                         pl.concat_list(
                             [
                                 pl.coalesce(
                                     [
-                                        pl.col("drugcentral_properties").struct.field(
+                                        pl.col("drugcentral_props").struct.field(
                                             "sources"
                                         ),
                                         pl.lit([], dtype=pl.List(pl.Utf8)),
@@ -111,7 +111,7 @@ def run(
                                 ),
                                 pl.coalesce(
                                     [
-                                        pl.col("opentargets_properties").struct.field(
+                                        pl.col("opentargets_props").struct.field(
                                             "sources"
                                         ),
                                         pl.lit([], dtype=pl.List(pl.Utf8)),
@@ -119,11 +119,11 @@ def run(
                                 ),
                             ]
                         ).alias("sources"),
-                        pl.col("drugcentral_properties").struct.field("structureId"),
-                        pl.col("drugcentral_properties").struct.field("drugDiseaseId"),
-                        pl.col("opentargets_properties").struct.field("referenceIds"),
-                        pl.col("opentargets_properties").struct.field(
-                            "highestClinicalTrialPhase"
+                        pl.col("drugcentral_props").struct.field("structure_id"),
+                        pl.col("drugcentral_props").struct.field("drug_disease_id"),
+                        pl.col("opentargets_props").struct.field("reference_ids"),
+                        pl.col("opentargets_props").struct.field(
+                            "highest_clinical_trial_phase"
                         ),
                     ]
                 ).alias("properties"),

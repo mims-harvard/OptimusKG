@@ -25,7 +25,7 @@ def run(
             pl.lit(False).alias("undirected"),
             pl.struct(
                 [
-                    pl.lit("parent").alias("relationType"),
+                    pl.lit("parent").alias("relation_type"),
                     pl.lit(["UBERON"]).alias("sources"),
                 ]
             ).alias("properties"),

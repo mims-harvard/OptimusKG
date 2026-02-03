@@ -15,11 +15,11 @@ def run(
         pl.struct(
             [
                 pl.lit(["OnSIDES"]).alias("sources"),
-                pl.lit(None, dtype=pl.List(pl.Utf8)).alias("referenceIds"),
-                pl.lit(None, dtype=pl.Float64).alias("highestClinicalTrialPhase"),
-                pl.lit("adverse drug reaction").alias("relationType"),
-                pl.lit(None, dtype=pl.Utf8).alias("structureId"),
-                pl.lit(None, dtype=pl.Utf8).alias("drugDiseaseId"),
+                pl.lit(None, dtype=pl.List(pl.Utf8)).alias("reference_ids"),
+                pl.lit(None, dtype=pl.Float64).alias("highest_clinical_trial_phase"),
+                pl.lit("adverse drug reaction").alias("relation_type"),
+                pl.lit(None, dtype=pl.Utf8).alias("structure_id"),
+                pl.lit(None, dtype=pl.Utf8).alias("drug_disease_id"),
             ]
         ).alias("properties"),
     ).unique(subset=["from", "to"])
@@ -44,15 +44,15 @@ def run(
                     pl.concat_list([pl.col("source")]).alias(
                         "sources"
                     ),  # transform source to list
-                    pl.col("ids").alias("referenceIds"),
-                    pl.col("maxPhaseForIndication").alias(
-                        "highestClinicalTrialPhase"
+                    pl.col("ids").alias("reference_ids"),
+                    pl.col("max_phase_for_indication").alias(
+                        "highest_clinical_trial_phase"
                     ),  # TODO: convert opentargets number to actual string
                     pl.lit("associated with").alias(
-                        "relationType"
-                    ),  # TODO: the relationType should be inferred from the highestClinicalTrialPhase number
-                    pl.lit(None, dtype=pl.Utf8).alias("structureId"),
-                    pl.lit(None, dtype=pl.Utf8).alias("drugDiseaseId"),
+                        "relation_type"
+                    ),  # TODO: the relation_type should be inferred from the highest_clinical_trial_phase number
+                    pl.lit(None, dtype=pl.Utf8).alias("structure_id"),
+                    pl.lit(None, dtype=pl.Utf8).alias("drug_disease_id"),
                 ]
             ).alias("properties"),
         )
@@ -67,11 +67,11 @@ def run(
         pl.struct(
             [
                 pl.lit(["drugcentral"]).alias("sources"),
-                pl.lit(None, dtype=pl.List(pl.Utf8)).alias("referenceIds"),
-                pl.lit(None, dtype=pl.Float64).alias("highestClinicalTrialPhase"),
-                pl.col("relationship_name").alias("relationType"),
-                pl.col("structure_id").alias("structureId"),
-                pl.col("drug_disease_id").alias("drugDiseaseId"),
+                pl.lit(None, dtype=pl.List(pl.Utf8)).alias("reference_ids"),
+                pl.lit(None, dtype=pl.Float64).alias("highest_clinical_trial_phase"),
+                pl.col("relationship_name").alias("relation_type"),
+                pl.col("structure_id").alias("structure_id"),
+                pl.col("drug_disease_id").alias("drug_disease_id"),
             ]
         ).alias("properties"),
     ).unique(subset=["from", "to"])

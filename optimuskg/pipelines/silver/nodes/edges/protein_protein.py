@@ -20,7 +20,7 @@ def run(
             pl.struct(
                 [
                     pl.col("databases").alias("sources"),
-                    pl.lit("interacts with").alias("relationType"),
+                    pl.lit("interacts with").alias("relation_type"),
                 ]
             ).alias("properties"),
         )

@@ -46,8 +46,8 @@ def run(  # noqa: PLR0913
                         pl.col("exposure_stressor_name").alias("name"),
                         pl.col("stressor_source_category")
                         .str.split("|")
-                        .alias("sourceCategories"),
-                        pl.col("stressor_source_details").alias("sourceDetails"),
+                        .alias("source_categories"),
+                        pl.col("stressor_source_details").alias("source_details"),
                     ]
                 ).alias("properties"),
             ]

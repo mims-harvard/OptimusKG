@@ -9,31 +9,31 @@ gene:
     sources: str[]
     symbol: str
     biotype: str
-    transcriptIds: str[]
-    canonicalTranscriptEncoded: str
-    canonicalExons: str[]
-    genomicLocationEncoded: str
-    alternativeGenes: str[]
+    transcript_ids: str[]
+    canonical_transcript_encoded: str
+    canonical_exons: str[]
+    genomic_location_encoded: str
+    alternative_genes: str[]
     name: str
-    hallmarksAttributesEncoded: str[]
-    cancerHallmarksEncoded: str[]
-    synonymsEncoded: str[]
-    symbolSynonymsEncoded: str[]
-    nameSynonymsEncoded: str[]
-    functionDescriptions: str[]
-    subcellularLocationsEncoded: str[]
-    targetClassEncoded: str[]
-    obsoleteSymbolsEncoded: str[]
-    obsoleteNamesEncoded: str[]
-    constraintScoresEncoded: str[]
-    targetEnablingPackageEncoded: str
-    associatedProteinsEncoded: str[]
-    xrefsEncoded: str[]
-    chemicalProbesEncoded: str[]
-    homologuesEncoded: str[]
-    tractabilityEncoded: str[]
-    safetyLiabilitiesEncoded: str[]
-    transcriptionStartSite: int
+    hallmarks_attributes_encoded: str[]
+    cancer_hallmarks_encoded: str[]
+    synonyms_encoded: str[]
+    symbol_synonyms_encoded: str[]
+    name_synonyms_encoded: str[]
+    function_descriptions: str[]
+    subcellular_locations_encoded: str[]
+    target_class_encoded: str[]
+    obsolete_symbols_encoded: str[]
+    obsolete_names_encoded: str[]
+    constraint_scores_encoded: str[]
+    target_enabling_package_encoded: str
+    associated_proteins_encoded: str[]
+    xrefs_encoded: str[]
+    chemical_probes_encoded: str[]
+    homologues_encoded: str[]
+    tractability_encoded: str[]
+    safety_liabilities_encoded: str[]
+    transcription_start_site: int
 
 anatomy:
   is_a: anatomical entity
@@ -45,10 +45,10 @@ anatomy:
     definition: str
     xrefs: str[]
     synonyms: str
-    ontologyDescription: str
-    ontologyTitle: str
-    ontologyLicense: str
-    ontologyVersion: str
+    ontology_description: str
+    ontology_title: str
+    ontology_license: str
+    ontology_version: str
 
 exposure:
   is_a: environmental exposure
@@ -57,56 +57,56 @@ exposure:
   properties:
     sources: str[]
     name: str
-    sourceCategories: str[]
-    sourceDetails: str
+    source_categories: str[]
+    source_details: str
 
 drug:
   represented_as: node
   input_label: drug
   properties:
     name: str
-    inchiKey: str
+    inchi_key: str
     type: str
     synonyms: str[]
     description: str
-    accessionNumbers: str[]
-    canonicalSmiles: str
-    chemicalAbstractsServiceNumber: str
-    uniqueIngredientIdentifier: str
-    blackBoxWarning: bool
-    yearOfFirstApproval: int
-    maximumClinicalTrialPhase: float
-    hasBeenWithdrawn: bool
-    isApproved: bool
-    tradeNames: str[]
+    accession_numbers: str[]
+    canonical_smiles: str
+    chemical_abstracts_service_number: str
+    unique_ingredient_identifier: str
+    black_box_warning: bool
+    year_of_first_approval: int
+    maximum_clinical_trial_phase: float
+    has_been_withdrawn: bool
+    is_approved: bool
+    trade_names: str[]
     sources: str[]
-    sourceIds: str[]
-    cdId: str
-    cdFormula: str
-    cdMolWeight: float
-    calculatedLogP: float
+    source_ids: str[]
+    cd_id: str
+    cd_formula: str
+    cd_mol_weight: float
+    calculated_log_p: float
     alogs: float
     tpsa: float
     lipinski: float
-    numberOfFormulations: int
-    molFileBase64: str
-    molImageBase64: str
+    number_of_formulations: int
+    mol_file_base64: str
+    mol_image_base64: str
     mrdef: str
-    enhancedStereo: bool
-    aromaticCarbons: int
-    sp3Count: int
-    sp2Count: int
-    spCount: int
-    halogenCount: int
-    heteroSp2Count: int
-    rotatableBonds: int
-    ON: int
-    OHNH: int
+    enhanced_stereo: bool
+    aromatic_carbons: int
+    sp3_count: int
+    sp2_count: int
+    sp_count: int
+    halogen_count: int
+    hetero_sp2_count: int
+    rotatable_bonds: int
+    o_n: int
+    oh_nh: int
     inchi: str
     rgb: float
-    fdaLabels: int
+    fda_labels: int
     status: str
-    structID: str
+    struct_id: str
 
 disease:
   represented_as: node
@@ -118,23 +118,23 @@ disease:
     code: str
     xrefs: str[]
     parents: str[]
-    exactSynonyms: str[]
-    relatedSynonyms: str[]
-    narrowSynonyms: str[]
-    broadSynonyms: str[]
-    obsoleteTerms: str[]
-    obsoleteXRefs: str[]
+    exact_synonyms: str[]
+    related_synonyms: str[]
+    narrow_synonyms: str[]
+    broad_synonyms: str[]
+    obsolete_terms: str[]
+    obsolete_xrefs: str[]
     children: str[]
     ancestors: str[]
     descendants: str[]
-    therapeuticAreas: str[]
-    isLeaf: bool
-    conceptIds: str[]
-    conceptNames: str[]
-    umlsCUI: str
-    snomedFullNames: str[]
-    cuiSemanticType: str
-    snomedConceptIds: str[]
+    therapeutic_areas: str[]
+    is_leaf: bool
+    concept_ids: str[]
+    concept_names: str[]
+    umls_cui: str
+    snomed_full_names: str[]
+    cui_semantic_type: str
+    snomed_concept_ids: str[]
 
 phenotype:
   is_a: phenotypic feature
@@ -147,26 +147,26 @@ phenotype:
     code: str
     xrefs: str[]
     parents: str[]
-    exactSynonyms: str[]
-    relatedSynonyms: str[]
-    narrowSynonyms: str[]
-    broadSynonyms: str[]
-    obsoleteTerms: str[]
-    obsoleteXRefs: str[]
+    exact_synonyms: str[]
+    related_synonyms: str[]
+    narrow_synonyms: str[]
+    broad_synonyms: str[]
+    obsolete_terms: str[]
+    obsolete_xrefs: str[]
     children: str[]
     ancestors: str[]
     descendants: str[]
     type: str
-    ontologyDescription: str
-    ontologyTitle: str
-    ontologyLicense: str
-    ontologyVersion: str
-    conceptIds: str[]
-    conceptNames: str[]
-    umlsCUI: str
-    snomedFullNames: str[]
-    cuiSemanticType: str
-    snomedConceptIds: str[]
+    ontology_description: str
+    ontology_title: str
+    ontology_license: str
+    ontology_version: str
+    concept_ids: str[]
+    concept_names: str[]
+    umls_cui: str
+    snomed_full_names: str[]
+    cui_semantic_type: str
+    snomed_concept_ids: str[]
 
 biological process:
   represented_as: node
@@ -177,10 +177,10 @@ biological process:
     definition: str
     xrefs: str[]
     synonyms: str
-    ontologyDescription: str
-    ontologyTitle: str
-    ontologyLicense: str
-    ontologyVersion: str
+    ontology_description: str
+    ontology_title: str
+    ontology_license: str
+    ontology_version: str
 
 cellular component:
   represented_as: node
@@ -191,10 +191,10 @@ cellular component:
     definition: str
     xrefs: str[]
     synonyms: str
-    ontologyDescription: str
-    ontologyTitle: str
-    ontologyLicense: str
-    ontologyVersion: str
+    ontology_description: str
+    ontology_title: str
+    ontology_license: str
+    ontology_version: str
 
 molecular function:
   represented_as: node
@@ -205,10 +205,10 @@ molecular function:
     definition: str
     xrefs: str[]
     synonyms: str
-    ontologyDescription: str
-    ontologyTitle: str
-    ontologyLicense: str
-    ontologyVersion: str
+    ontology_description: str
+    ontology_title: str
+    ontology_license: str
+    ontology_version: str
 
 pathway:
   represented_as: node
@@ -228,9 +228,9 @@ anatomy protein:
   input_label: anatomy_protein
   properties:
     undirected: bool
-    relationType: str
-    expressionRank: int
-    callQuality: str
+    relation_type: str
+    expression_rank: int
+    call_quality: str
     sources: str[]
 
 anatomy anatomy:
@@ -239,7 +239,7 @@ anatomy anatomy:
   input_label: anatomy_anatomy
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
 
 exposure disease:
@@ -248,37 +248,37 @@ exposure disease:
   input_label: exposure_disease
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
-    evidenceCount: int
-    numberOfReceptors: int
+    evidence_count: int
+    number_of_receptors: int
     receptors: str[]
-    receptorNotes: str[]
-    smokingStatuses: str[]
-    ageEntries: int
-    ageRangeValues: str[]
-    ageMeanValues: str[]
-    agePointValues: str[]
-    ageOpenRangeValues: str[]
+    receptor_notes: str[]
+    smoking_statuses: str[]
+    age_entries: int
+    age_range_values: str[]
+    age_mean_values: str[]
+    age_point_values: str[]
+    age_open_range_values: str[]
     sexes: str[]
     races: str[]
     methods: str[]
-    detectionLimit: str[]
-    detectionLimitUom: str[]
-    detectionFrequency: str[]
+    detection_limit: str[]
+    detection_limit_uom: str[]
+    detection_frequency: str[]
     mediums: str[]
-    assayNotes: str[]
-    studyCountries: str[]
-    statesOrProvinces: str[]
-    cityTownRegionAreas: str[]
-    exposureEventNotes: str[]
-    outcomeRelationships: str[]
-    exposureOutcomeNotes: str[]
+    assay_notes: str[]
+    study_countries: str[]
+    states_or_provinces: str[]
+    city_town_region_areas: str[]
+    exposure_event_notes: str[]
+    outcome_relationships: str[]
+    exposure_outcome_notes: str[]
     references: str[]
-    associatedStudyTitles: str[]
-    enrollmentStartYears: str[]
-    enrollmentEndYears: str[]
-    studyFactors: str[]
+    associated_study_titles: str[]
+    enrollment_start_years: str[]
+    enrollment_end_years: str[]
+    study_factors: str[]
 
 exposure exposure:
   is_a: has_part
@@ -286,37 +286,37 @@ exposure exposure:
   input_label: exposure_exposure
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
-    evidenceCount: int
-    numberOfReceptors: int
+    evidence_count: int
+    number_of_receptors: int
     receptors: str[]
-    receptorNotes: str[]
-    smokingStatuses: str[]
-    ageEntries: int
-    ageRangeValues: str[]
-    ageMeanValues: str[]
-    agePointValues: str[]
-    ageOpenRangeValues: str[]
+    receptor_notes: str[]
+    smoking_statuses: str[]
+    age_entries: int
+    age_range_values: str[]
+    age_mean_values: str[]
+    age_point_values: str[]
+    age_open_range_values: str[]
     sexes: str[]
     races: str[]
     methods: str[]
-    detectionLimit: str[]
-    detectionLimitUom: str[]
-    detectionFrequency: str[]
+    detection_limit: str[]
+    detection_limit_uom: str[]
+    detection_frequency: str[]
     mediums: str[]
-    assayNotes: str[]
-    studyCountries: str[]
-    statesOrProvinces: str[]
-    cityTownRegionAreas: str[]
-    exposureEventNotes: str[]
-    outcomeRelationships: str[]
-    exposureOutcomeNotes: str[]
+    assay_notes: str[]
+    study_countries: str[]
+    states_or_provinces: str[]
+    city_town_region_areas: str[]
+    exposure_event_notes: str[]
+    outcome_relationships: str[]
+    exposure_outcome_notes: str[]
     references: str[]
-    associatedStudyTitles: str[]
-    enrollmentStartYears: str[]
-    enrollmentEndYears: str[]
-    studyFactors: str[]
+    associated_study_titles: str[]
+    enrollment_start_years: str[]
+    enrollment_end_years: str[]
+    study_factors: str[]
 
 exposure protein:
   is_a: interacts_with
@@ -324,37 +324,37 @@ exposure protein:
   input_label: exposure_protein
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
-    evidenceCount: int
-    numberOfReceptors: int
+    evidence_count: int
+    number_of_receptors: int
     receptors: str[]
-    receptorNotes: str[]
-    smokingStatuses: str[]
-    ageEntries: int
-    ageRangeValues: str[]
-    ageMeanValues: str[]
-    agePointValues: str[]
-    ageOpenRangeValues: str[]
+    receptor_notes: str[]
+    smoking_statuses: str[]
+    age_entries: int
+    age_range_values: str[]
+    age_mean_values: str[]
+    age_point_values: str[]
+    age_open_range_values: str[]
     sexes: str[]
     races: str[]
     methods: str[]
-    detectionLimit: str[]
-    detectionLimitUom: str[]
-    detectionFrequency: str[]
+    detection_limit: str[]
+    detection_limit_uom: str[]
+    detection_frequency: str[]
     mediums: str[]
-    assayNotes: str[]
-    studyCountries: str[]
-    statesOrProvinces: str[]
-    cityTownRegionAreas: str[]
-    exposureEventNotes: str[]
-    outcomeRelationships: str[]
-    exposureOutcomeNotes: str[]
+    assay_notes: str[]
+    study_countries: str[]
+    states_or_provinces: str[]
+    city_town_region_areas: str[]
+    exposure_event_notes: str[]
+    outcome_relationships: str[]
+    exposure_outcome_notes: str[]
     references: str[]
-    associatedStudyTitles: str[]
-    enrollmentStartYears: str[]
-    enrollmentEndYears: str[]
-    studyFactors: str[]
+    associated_study_titles: str[]
+    enrollment_start_years: str[]
+    enrollment_end_years: str[]
+    study_factors: str[]
 
 disease protein:
   is_a: related to
@@ -362,7 +362,7 @@ disease protein:
   input_label: disease_protein
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
 
 disease disease:
   is_a: related to
@@ -370,7 +370,7 @@ disease disease:
   input_label: disease_disease
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
 
 phenotype protein:
@@ -379,17 +379,17 @@ phenotype protein:
   input_label: phenotype_protein
   properties:
     undirected: bool
-    relationType: str
-    evidenceScore: float
-    evidenceCount: int
-    diseaseSpecificityIndex: float
-    diseasePleiotropyIndex: float
-    evidenceIndex: float
-    disgenetScore: float
-    yearInitial: str
-    yearFinal: str
-    numberOfPmids: int
-    numberOfSnps: int
+    relation_type: str
+    evidence_score: float
+    evidence_count: int
+    disease_specificity_index: float
+    disease_pleiotropy_index: float
+    evidence_index: float
+    disgenet_score: float
+    year_initial: str
+    year_final: str
+    number_of_pmids: int
+    number_of_snps: int
     sources: str[]
 
 drug protein:
@@ -398,13 +398,13 @@ drug protein:
   input_label: drug_protein
   properties:
     undirected: bool
-    relationType: str[]
-    sourceIds: str[]
-    sourceUrls: str[]
-    mechanismsOfAction: str[]
+    relation_type: str[]
+    source_ids: str[]
+    source_urls: str[]
+    mechanisms_of_action: str[]
     sources: str[]
-    structureId: str
-    drugDiseaseId: str
+    structure_id: str
+    drug_disease_id: str
 
 drug drug:
   is_a: physically interacts with
@@ -412,9 +412,9 @@ drug drug:
   input_label: drug_drug
   properties:
     undirected: bool
-    relationType: str[]
+    relation_type: str[]
     sources: str[]
-    interactionDescription: str
+    interaction_description: str
 
 drug disease:
   is_a: related to
@@ -422,10 +422,10 @@ drug disease:
   input_label: drug_disease
   properties:
     undirected: bool
-    relationType: str
-    referenceIds: str[]
+    relation_type: str
+    reference_ids: str[]
     sources: str[]
-    highestClinicalTrialPhase: float
+    highest_clinical_trial_phase: float
 
 drug phenotype:
   is_a: related to
@@ -433,12 +433,12 @@ drug phenotype:
   input_label: drug_phenotype
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
-    referenceIds: str[]
-    highestClinicalTrialPhase: float
-    structureId: str
-    drugDiseaseId: str
+    reference_ids: str[]
+    highest_clinical_trial_phase: float
+    structure_id: str
+    drug_disease_id: str
 
 biological process protein:
   is_a: regulates
@@ -446,11 +446,11 @@ biological process protein:
   input_label: biological_process_protein
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
     evidence: str[]
-    geneProduct: str[]
-    ecoIds: str[]
+    gene_product: str[]
+    eco_ids: str[]
 
 cellular component protein:
   is_a: regulates
@@ -458,11 +458,11 @@ cellular component protein:
   input_label: cellular_component_protein
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
     evidence: str[]
-    geneProduct: str[]
-    ecoIds: str[]
+    gene_product: str[]
+    eco_ids: str[]
 
 molecular function protein:
   is_a: regulates
@@ -470,11 +470,11 @@ molecular function protein:
   input_label: molecular_function_protein
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
     evidence: str[]
-    geneProduct: str[]
-    ecoIds: str[]
+    gene_product: str[]
+    eco_ids: str[]
 
 pathway pathway:
   is_a: has_part
@@ -482,7 +482,7 @@ pathway pathway:
   input_label: pathway_pathway
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
 
 pathway protein:
@@ -491,7 +491,7 @@ pathway protein:
   input_label: pathway_protein
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
 
 exposure biological process:
@@ -500,37 +500,37 @@ exposure biological process:
   input_label: exposure_biological_process
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
-    evidenceCount: int
-    numberOfReceptors: int
+    evidence_count: int
+    number_of_receptors: int
     receptors: str[]
-    receptorNotes: str[]
-    smokingStatuses: str[]
-    ageEntries: int
-    ageRangeValues: str[]
-    ageMeanValues: str[]
-    agePointValues: str[]
-    ageOpenRangeValues: str[]
+    receptor_notes: str[]
+    smoking_statuses: str[]
+    age_entries: int
+    age_range_values: str[]
+    age_mean_values: str[]
+    age_point_values: str[]
+    age_open_range_values: str[]
     sexes: str[]
     races: str[]
     methods: str[]
-    detectionLimit: str[]
-    detectionLimitUom: str[]
-    detectionFrequency: str[]
+    detection_limit: str[]
+    detection_limit_uom: str[]
+    detection_frequency: str[]
     mediums: str[]
-    assayNotes: str[]
-    studyCountries: str[]
-    statesOrProvinces: str[]
-    cityTownRegionAreas: str[]
-    exposureEventNotes: str[]
-    outcomeRelationships: str[]
-    exposureOutcomeNotes: str[]
+    assay_notes: str[]
+    study_countries: str[]
+    states_or_provinces: str[]
+    city_town_region_areas: str[]
+    exposure_event_notes: str[]
+    outcome_relationships: str[]
+    exposure_outcome_notes: str[]
     references: str[]
-    associatedStudyTitles: str[]
-    enrollmentStartYears: str[]
-    enrollmentEndYears: str[]
-    studyFactors: str[]
+    associated_study_titles: str[]
+    enrollment_start_years: str[]
+    enrollment_end_years: str[]
+    study_factors: str[]
 
 exposure molecular function:
   is_a: related to
@@ -538,37 +538,37 @@ exposure molecular function:
   input_label: exposure_molecular_function
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
-    evidenceCount: int
-    numberOfReceptors: int
+    evidence_count: int
+    number_of_receptors: int
     receptors: str[]
-    receptorNotes: str[]
-    smokingStatuses: str[]
-    ageEntries: int
-    ageRangeValues: str[]
-    ageMeanValues: str[]
-    agePointValues: str[]
-    ageOpenRangeValues: str[]
+    receptor_notes: str[]
+    smoking_statuses: str[]
+    age_entries: int
+    age_range_values: str[]
+    age_mean_values: str[]
+    age_point_values: str[]
+    age_open_range_values: str[]
     sexes: str[]
     races: str[]
     methods: str[]
-    detectionLimit: str[]
-    detectionLimitUom: str[]
-    detectionFrequency: str[]
+    detection_limit: str[]
+    detection_limit_uom: str[]
+    detection_frequency: str[]
     mediums: str[]
-    assayNotes: str[]
-    studyCountries: str[]
-    statesOrProvinces: str[]
-    cityTownRegionAreas: str[]
-    exposureEventNotes: str[]
-    outcomeRelationships: str[]
-    exposureOutcomeNotes: str[]
+    assay_notes: str[]
+    study_countries: str[]
+    states_or_provinces: str[]
+    city_town_region_areas: str[]
+    exposure_event_notes: str[]
+    outcome_relationships: str[]
+    exposure_outcome_notes: str[]
     references: str[]
-    associatedStudyTitles: str[]
-    enrollmentStartYears: str[]
-    enrollmentEndYears: str[]
-    studyFactors: str[]
+    associated_study_titles: str[]
+    enrollment_start_years: str[]
+    enrollment_end_years: str[]
+    study_factors: str[]
     
 exposure cellular component:
   is_a: related to
@@ -576,37 +576,37 @@ exposure cellular component:
   input_label: exposure_cellular_component
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
-    evidenceCount: int
-    numberOfReceptors: int
+    evidence_count: int
+    number_of_receptors: int
     receptors: str[]
-    receptorNotes: str[]
-    smokingStatuses: str[]
-    ageEntries: int
-    ageRangeValues: str[]
-    ageMeanValues: str[]
-    agePointValues: str[]
-    ageOpenRangeValues: str[]
+    receptor_notes: str[]
+    smoking_statuses: str[]
+    age_entries: int
+    age_range_values: str[]
+    age_mean_values: str[]
+    age_point_values: str[]
+    age_open_range_values: str[]
     sexes: str[]
     races: str[]
     methods: str[]
-    detectionLimit: str[]
-    detectionLimitUom: str[]
-    detectionFrequency: str[]
+    detection_limit: str[]
+    detection_limit_uom: str[]
+    detection_frequency: str[]
     mediums: str[]
-    assayNotes: str[]
-    studyCountries: str[]
-    statesOrProvinces: str[]
-    cityTownRegionAreas: str[]
-    exposureEventNotes: str[]
-    outcomeRelationships: str[]
-    exposureOutcomeNotes: str[]
+    assay_notes: str[]
+    study_countries: str[]
+    states_or_provinces: str[]
+    city_town_region_areas: str[]
+    exposure_event_notes: str[]
+    outcome_relationships: str[]
+    exposure_outcome_notes: str[]
     references: str[]
-    associatedStudyTitles: str[]
-    enrollmentStartYears: str[]
-    enrollmentEndYears: str[]
-    studyFactors: str[]
+    associated_study_titles: str[]
+    enrollment_start_years: str[]
+    enrollment_end_years: str[]
+    study_factors: str[]
 
 
 cellular component cellular component:
@@ -615,7 +615,7 @@ cellular component cellular component:
   input_label: cellular_component_cellular_component
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
 
 biological process biological process:
@@ -624,7 +624,7 @@ biological process biological process:
   input_label: biological_process_biological_process
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
 
 molecular function molecular function:
@@ -633,7 +633,7 @@ molecular function molecular function:
   input_label: molecular_function_molecular_function
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
 
 disease phenotype:
@@ -642,14 +642,14 @@ disease phenotype:
   input_label: disease_phenotype
   properties:
     undirected: bool
-    relationType: str[]
+    relation_type: str[]
     aspect: str[]
-    bioCuration: str[]
-    evidenceType: str[]
+    bio_curation: str[]
+    evidence_type: str[]
     frequency: str[]
     modifiers: str[]
     onset: str[]
-    quilifierNot: bool
+    qualifier_not: bool
     references: str[]
     sexes: str[]
     sources: str[]
@@ -660,7 +660,7 @@ phenotype phenotype:
   input_label: phenotype_phenotype
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]
 
 protein protein:
@@ -669,5 +669,5 @@ protein protein:
   input_label: protein_protein
   properties:
     undirected: bool
-    relationType: str
+    relation_type: str
     sources: str[]

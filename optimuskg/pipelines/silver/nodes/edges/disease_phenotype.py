@@ -19,8 +19,8 @@ def run(
         .agg(
             [
                 pl.col("aspect").drop_nulls().unique().alias("aspect"),
-                pl.col("bioCuration").drop_nulls().unique().alias("bioCuration"),
-                pl.col("evidenceType").drop_nulls().unique().alias("evidenceType"),
+                pl.col("bio_curation").drop_nulls().unique().alias("bio_curation"),
+                pl.col("evidence_type").drop_nulls().unique().alias("evidence_type"),
                 pl.col("frequency").drop_nulls().unique().alias("frequency"),
                 pl.concat_list("modifiers")
                 .flatten()
@@ -28,12 +28,12 @@ def run(
                 .unique()
                 .alias("modifiers"),
                 pl.concat_list("onset").flatten().drop_nulls().unique().alias("onset"),
-                pl.col("qualifierNot").any().alias("qualifierNot"),
-                pl.when(~pl.col("qualifierNot"))
+                pl.col("qualifier_not").any().alias("qualifier_not"),
+                pl.when(~pl.col("qualifier_not"))
                 .then(pl.lit("phenotype present"))
                 .otherwise(pl.lit("phenotype absent"))
                 .unique()
-                .alias("relationType"),
+                .alias("relation_type"),
                 pl.concat_list("references")
                 .flatten()
                 .drop_nulls()
@@ -51,13 +51,13 @@ def run(
             pl.struct(
                 [
                     pl.col("aspect"),
-                    pl.col("bioCuration"),
-                    pl.col("evidenceType"),
+                    pl.col("bio_curation"),
+                    pl.col("evidence_type"),
                     pl.col("frequency"),
                     pl.col("modifiers"),
                     pl.col("onset"),
-                    pl.col("qualifierNot"),
-                    pl.col("relationType"),
+                    pl.col("qualifier_not"),
+                    pl.col("relation_type"),
                     pl.col("references"),
                     pl.col("sexes"),
                     pl.col("sources"),

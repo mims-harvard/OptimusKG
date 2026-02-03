@@ -49,54 +49,54 @@ def run(
         .group_by(["from", "to"])
         .agg(
             [
-                pl.len().alias("evidenceCount"),
+                pl.len().alias("evidence_count"),
                 pl.col("number_of_stressor_samples")
                 .cast(pl.Int64)
                 .sum()
-                .alias("numberOfStressorSamples"),
+                .alias("number_of_stressor_samples"),
                 # TODO: we could add the stressor_notes column
                 pl.col("number_of_receptors")
                 .cast(pl.Int64)
                 .sum()
-                .alias("numberOfReceptors"),
+                .alias("number_of_receptors"),
                 pl.col("receptors").drop_nulls().unique().alias("receptors"),
-                pl.col("receptor_notes").drop_nulls().unique().alias("receptorNotes"),
+                pl.col("receptor_notes").drop_nulls().unique().alias("receptor_notes"),
                 pl.col("smoking_status")
                 .str.split("|")
                 .explode()
                 .drop_nulls()
                 .str.strip_chars()
                 .unique()
-                .alias("smokingStatuses"),
+                .alias("smoking_statuses"),
                 pl.col("age_type")
                 .filter(pl.col("age_type") != "null")
                 .len()
-                .alias("ageEntries"),
+                .alias("age_entries"),
                 pl.when(pl.col("age_type") == "closed_range")
                 .then(pl.col("age"))
                 .drop_nulls()
                 .unique()
-                .alias("ageRangeValues"),
+                .alias("age_range_values"),
                 pl.when(pl.col("age_type") == "mean")
                 .then(pl.col("age"))
                 .drop_nulls()
                 .unique()
-                .alias("ageMeanValues"),
+                .alias("age_mean_values"),
                 pl.when(pl.col("age_type") == "median")
                 .then(pl.col("age"))
                 .drop_nulls()
                 .unique()
-                .alias("ageMedianValues"),
+                .alias("age_median_values"),
                 pl.when(pl.col("age_type") == "point")
                 .then(pl.col("age"))
                 .drop_nulls()
                 .unique()
-                .alias("agePointValues"),
+                .alias("age_point_values"),
                 pl.when(pl.col("age_type") == "open_range")
                 .then(pl.col("age"))
                 .drop_nulls()
                 .unique()
-                .alias("ageOpenRangeValues"),
+                .alias("age_open_range_values"),
                 pl.col("sex")
                 .str.split("|")
                 .explode()
@@ -118,68 +118,68 @@ def run(
                 .str.strip_chars()
                 .unique()
                 .alias("methods"),
-                pl.col("detection_limit").drop_nulls().unique().alias("detectionLimit"),
+                pl.col("detection_limit").drop_nulls().unique().alias("detection_limit"),
                 pl.col("detection_limit_uom")
                 .drop_nulls()
                 .unique()
-                .alias("detectionLimitUom"),
+                .alias("detection_limit_uom"),
                 pl.col("detection_frequency")
                 .drop_nulls()
                 .unique()
-                .alias("detectionFrequency"),
+                .alias("detection_frequency"),
                 pl.col("medium").drop_nulls().unique().alias("mediums"),
-                pl.col("assay_notes").drop_nulls().unique().alias("assayNotes"),
+                pl.col("assay_notes").drop_nulls().unique().alias("assay_notes"),
                 # TODO: we can add this columns with a similar approach of the ages columns: marker_level, marker_units_of_measurement, marker_measurement_statistic
                 pl.col("study_countries")
                 .str.split("|")
                 .explode()
                 .drop_nulls()
                 .unique()
-                .alias("studyCountries"),
+                .alias("study_countries"),
                 pl.col("state_or_province")
                 .str.split("|")
                 .explode()
                 .drop_nulls()
                 .unique()
-                .alias("statesOrProvinces"),
+                .alias("states_or_provinces"),
                 pl.col("city_town_region_area")
                 .str.split("|")
                 .explode()
                 .drop_nulls()
                 .unique()
-                .alias("cityTownRegionAreas"),
+                .alias("city_town_region_areas"),
                 pl.col("exposure_event_notes")
                 .drop_nulls()
                 .unique()
-                .alias("exposureEventNotes"),
+                .alias("exposure_event_notes"),
                 pl.col("outcome_relationship")
                 .drop_nulls()
                 .unique()
-                .alias("outcomeRelationships"),
+                .alias("outcome_relationships"),
                 pl.col("exposure_outcome_notes")
                 .drop_nulls()
                 .unique()
-                .alias("exposureOutcomeNotes"),
+                .alias("exposure_outcome_notes"),
                 pl.col("reference").drop_nulls().unique().alias("references"),
                 pl.col("associated_study_titles")
                 .drop_nulls()
                 .unique()
-                .alias("associatedStudyTitles"),
+                .alias("associated_study_titles"),
                 pl.col("enrollment_start_year")
                 .drop_nulls()
                 .unique()
-                .alias("enrollmentStartYears"),
+                .alias("enrollment_start_years"),
                 pl.col("enrollment_end_year")
                 .drop_nulls()
                 .unique()
-                .alias("enrollmentEndYears"),
+                .alias("enrollment_end_years"),
                 pl.col("study_factors")
                 .str.split("|")
                 .explode()
                 .drop_nulls()
                 .str.strip_chars()
                 .unique()
-                .alias("studyFactors"),
+                .alias("study_factors"),
             ]
         )
         .select(
@@ -192,38 +192,38 @@ def run(
                     [
                         pl.lit(["CTD", "opentargets"]).alias("sources"),
                         pl.lit("interacts with").alias(
-                            "relationType"
+                            "relation_type"
                         ),  # NOTE: this is the same relation type used in PrimeKG, but we need to validate if this is consistent with the ontology tree.
-                        pl.col("evidenceCount"),
-                        pl.col("numberOfReceptors"),
+                        pl.col("evidence_count"),
+                        pl.col("number_of_receptors"),
                         pl.col("receptors"),
-                        pl.col("receptorNotes"),
-                        pl.col("smokingStatuses"),
-                        pl.col("ageEntries"),
-                        pl.col("ageRangeValues"),
-                        pl.col("ageMeanValues"),
-                        pl.col("ageMedianValues"),
-                        pl.col("agePointValues"),
-                        pl.col("ageOpenRangeValues"),
+                        pl.col("receptor_notes"),
+                        pl.col("smoking_statuses"),
+                        pl.col("age_entries"),
+                        pl.col("age_range_values"),
+                        pl.col("age_mean_values"),
+                        pl.col("age_median_values"),
+                        pl.col("age_point_values"),
+                        pl.col("age_open_range_values"),
                         pl.col("sexes"),
                         pl.col("races"),
                         pl.col("methods"),
-                        pl.col("detectionLimit"),
-                        pl.col("detectionLimitUom"),
-                        pl.col("detectionFrequency"),
+                        pl.col("detection_limit"),
+                        pl.col("detection_limit_uom"),
+                        pl.col("detection_frequency"),
                         pl.col("mediums"),
-                        pl.col("assayNotes"),
-                        pl.col("studyCountries"),
-                        pl.col("statesOrProvinces"),
-                        pl.col("cityTownRegionAreas"),
-                        pl.col("exposureEventNotes"),
-                        pl.col("outcomeRelationships"),
-                        pl.col("exposureOutcomeNotes"),
+                        pl.col("assay_notes"),
+                        pl.col("study_countries"),
+                        pl.col("states_or_provinces"),
+                        pl.col("city_town_region_areas"),
+                        pl.col("exposure_event_notes"),
+                        pl.col("outcome_relationships"),
+                        pl.col("exposure_outcome_notes"),
                         pl.col("references"),
-                        pl.col("associatedStudyTitles"),
-                        pl.col("enrollmentStartYears"),
-                        pl.col("enrollmentEndYears"),
-                        pl.col("studyFactors"),
+                        pl.col("associated_study_titles"),
+                        pl.col("enrollment_start_years"),
+                        pl.col("enrollment_end_years"),
+                        pl.col("study_factors"),
                     ]
                 ).alias("properties"),
             ]

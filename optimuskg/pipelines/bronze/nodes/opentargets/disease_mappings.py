@@ -7,13 +7,13 @@ def run(
 ) -> pl.DataFrame:
     return (
         disease.select(
-            [pl.col("id"), pl.col("metadata").struct.field("dbXRefs").alias("dbXRefs")]
+            [pl.col("id"), pl.col("metadata").struct.field("db_xrefs").alias("db_xrefs")]
         )
-        .explode("dbXRefs")
-        .filter(pl.col("dbXRefs").is_not_null())
-        .filter(pl.col("dbXRefs").str.starts_with("UMLS"))
+        .explode("db_xrefs")
+        .filter(pl.col("db_xrefs").is_not_null())
+        .filter(pl.col("db_xrefs").str.starts_with("UMLS"))
         .group_by("id")
-        .agg([pl.col("dbXRefs").first().str.replace("UMLS:", "").alias("umls_id")])
+        .agg([pl.col("db_xrefs").first().str.replace("UMLS:", "").alias("umls_id")])
         .sort("umls_id")
     )
 

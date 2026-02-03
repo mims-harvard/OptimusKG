@@ -7,8 +7,8 @@ def run(
 ) -> pl.DataFrame:
     return (
         drug_molecule.unnest("metadata")
-        .explode("crossReferences")
-        .unnest("crossReferences")
+        .explode("cross_references")
+        .unnest("cross_references")
         .filter(pl.col("source") == "drugbank")
         .explode("ids")
         .unique("id")

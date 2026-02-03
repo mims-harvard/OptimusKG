@@ -77,6 +77,13 @@ download-landing: ##@ Clean data directory, and download the landing layer into 
 neo4j: ##@ Run the Neo4j container
 	@docker compose up -d 
 
+.PHONY: docker-datasets-up
+docker-datasets-up: ##@ Spin up docker for the datasets
+	@docker compose -f optimuskg/datasets/sqldump_query_dataset/docker-compose.yaml up -d
+
+.PHONY: docker-datasets-down
+docker-datasets-down: ##@ Stop docker for the datasets
+	@docker compose -f optimuskg/datasets/sqldump_query_dataset/docker-compose.yaml down
 
 .PHONY: neo4j-export
 neo4j-export: ##@ Export Neo4j database to JSONL format. Set CYPHER_QUERY env var for specific query, otherwise exports all. Example: CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export

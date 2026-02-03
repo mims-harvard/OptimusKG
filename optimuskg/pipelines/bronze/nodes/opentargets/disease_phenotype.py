@@ -3,23 +3,43 @@ import logging
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.utils import to_snake_case
-
 logger = logging.getLogger(__name__)
 
 
 def run(
     disease_phenotype: pl.DataFrame,
 ) -> pl.DataFrame:
-    key_cols = ["disease", "phenotype"]
     return (
-        disease_phenotype.with_columns(
+        disease_phenotype.select(
+            pl.col("disease"),
+            pl.col("phenotype"),
             pl.struct(
-                [c for c in disease_phenotype.columns if c not in key_cols]
-            ).alias("metadata")
+                pl.col("evidence")
+                .list.eval(
+                    pl.struct(
+                        pl.element().struct.field("aspect"),
+                        pl.element().struct.field("bioCuration").alias("bio_curation"),
+                        pl.element()
+                        .struct.field("diseaseFromSourceId")
+                        .alias("disease_from_source_id"),
+                        pl.element()
+                        .struct.field("diseaseFromSource")
+                        .alias("disease_from_source"),
+                        pl.element().struct.field("diseaseName").alias("disease_name"),
+                        pl.element().struct.field("evidenceType").alias("evidence_type"),
+                        pl.element().struct.field("frequency"),
+                        pl.element().struct.field("modifiers"),
+                        pl.element().struct.field("onset"),
+                        pl.element().struct.field("qualifier"),
+                        pl.element().struct.field("qualifierNot").alias("qualifier_not"),
+                        pl.element().struct.field("references"),
+                        pl.element().struct.field("sex"),
+                        pl.element().struct.field("resource"),
+                    )
+                )
+                .alias("evidence"),
+            ).alias("metadata"),
         )
-        .select([*key_cols, "metadata"])
-        .rename({col: to_snake_case(col) for col in key_cols})
         .unique(subset=["disease", "phenotype"])
         .sort(by=["disease", "phenotype"])
     )

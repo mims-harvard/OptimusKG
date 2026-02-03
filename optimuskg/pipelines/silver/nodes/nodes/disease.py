@@ -58,31 +58,31 @@ def run(  # noqa: PLR0913
                         [pl.col("description"), pl.col("description_right")]
                     ).alias("description"),
                     pl.col("code"),
-                    pl.concat_list([pl.col("xrefs"), pl.col("dbXRefs")])
+                    pl.concat_list([pl.col("xrefs"), pl.col("db_xrefs")])
                     .list.drop_nulls()
                     .list.unique()
                     .alias("xrefs"),
                     pl.col("parents"),
-                    pl.concat_list([pl.col("hasExactSynonym"), pl.col("synonyms")])
+                    pl.concat_list([pl.col("has_exact_synonym"), pl.col("synonyms")])
                     .list.drop_nulls()
                     .list.unique()
-                    .alias("exactSynonyms"),
-                    pl.col("hasRelatedSynonym").alias("relatedSynonyms"),
-                    pl.col("hasNarrowSynonym").alias("narrowSynonyms"),
-                    pl.col("hasBroadSynonym").alias("broadSynonyms"),
-                    pl.col("obsoleteTerms"),
-                    pl.col("obsoleteXRefs"),
+                    .alias("exact_synonyms"),
+                    pl.col("has_related_synonym").alias("related_synonyms"),
+                    pl.col("has_narrow_synonym").alias("narrow_synonyms"),
+                    pl.col("has_broad_synonym").alias("broad_synonyms"),
+                    pl.col("obsolete_terms").alias("obsolete_terms"),
+                    pl.col("obsolete_xrefs").alias("obsolete_xrefs"),
                     pl.col("children"),
                     pl.col("ancestors"),
                     pl.col("descendants"),
-                    pl.col("therapeuticAreas"),
-                    pl.col("leaf").alias("isLeaf"),
-                    pl.col("concept_ids").alias("conceptIds"),
-                    pl.col("concept_names").alias("conceptNames"),
-                    pl.col("umls_cui").alias("umlsCUI"),
-                    pl.col("snomed_full_names").alias("snomedFullNames"),
-                    pl.col("cui_semantic_type").alias("cuiSemanticType"),
-                    pl.col("snomed_conceptids").alias("snomedConceptIds"),
+                    pl.col("therapeutic_areas").alias("therapeutic_areas"),
+                    pl.col("leaf").alias("is_leaf"),
+                    pl.col("concept_ids").alias("concept_ids"),
+                    pl.col("concept_names").alias("concept_names"),
+                    pl.col("umls_cui").alias("umls_cui"),
+                    pl.col("snomed_full_names").alias("snomed_full_names"),
+                    pl.col("cui_semantic_type").alias("cui_semantic_type"),
+                    pl.col("snomed_conceptids").alias("snomed_concept_ids"),
                 ]
             ).alias("properties"),
         )

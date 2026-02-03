@@ -55,7 +55,7 @@ def run(
             pl.col("rgb"),
             pl.col("fda_labels").cast(pl.Int32),
             pl.coalesce([pl.col("standard_inchi_key"), pl.col("inchikey")]).alias(
-                "inchiKey"
+                "inchi_key"
             ),
             pl.col("status"),
             pl.col("struct_id").cast(pl.Utf8),
@@ -114,7 +114,7 @@ def run(
             pl.col("smiles"),
             pl.col("rgb"),
             pl.col("fda_labels"),
-            pl.col("inchiKey"),
+            pl.col("inchi_key"),
             pl.col("status"),
             pl.col("struct_id"),
             pl.col("accession_numbers"),

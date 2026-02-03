@@ -20,8 +20,8 @@ def run(
                 pl.col("source").unique().alias("sources"),
                 pl.col("evidence").unique(),
                 pl.col("aspect").unique().alias("aspect"),
-                pl.col("geneProduct").unique(),
-                pl.col("ecoId").drop_nulls().unique().alias("ecoIds"),
+                pl.col("gene_product").unique(),
+                pl.col("eco_id").drop_nulls().unique().alias("eco_ids"),
             ]
         )
         .filter(
@@ -39,9 +39,9 @@ def run(
                     [
                         pl.col("sources"),
                         pl.col("evidence"),
-                        pl.col("geneProduct"),
-                        pl.col("ecoIds"),
-                        pl.lit("interacts with").alias("relationType"),
+                        pl.col("gene_product"),
+                        pl.col("eco_ids"),
+                        pl.lit("interacts with").alias("relation_type"),
                     ]
                 ).alias("properties"),
             ]

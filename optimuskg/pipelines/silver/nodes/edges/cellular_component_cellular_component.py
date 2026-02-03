@@ -27,7 +27,7 @@ def run(
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
-                        pl.col("edge_type").alias("relationType"),
+                        pl.col("edge_type").alias("relation_type"),
                         pl.lit(["GO"]).alias("sources"),
                     ]
                 ).alias("properties"),

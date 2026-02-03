@@ -78,11 +78,11 @@ def run(  # noqa: PLR0913
                     pl.coalesce(
                         [
                             pl.col("standard_inchi_key"),
-                            pl.col("inchiKey"),
-                            pl.col("inchiKey_right"),
+                            pl.col("inchi_key"),
+                            pl.col("inchi_key_right"),
                         ]
-                    ).alias("inchiKey"),
-                    pl.coalesce([pl.col("rxnorm_term_type"), pl.col("drugType")]).alias(
+                    ).alias("inchi_key"),
+                    pl.coalesce([pl.col("rxnorm_term_type"), pl.col("drug_type")]).alias(
                         "type"
                     ),
                     pl.concat_list(
@@ -115,70 +115,70 @@ def run(  # noqa: PLR0913
                     .then(pl.col("accession_numbers").str.split(" | "))
                     .otherwise(None)
                     .alias(
-                        "accessionNumbers"
+                        "accession_numbers"
                     ),  # TODO: this should be a list of strings from the bronze layer
-                    pl.coalesce(pl.col("canonicalSmiles"), pl.col("smiles")).alias(
-                        "canonicalSmiles"
+                    pl.coalesce(pl.col("canonical_smiles"), pl.col("smiles")).alias(
+                        "canonical_smiles"
                     ),
                     pl.coalesce(pl.col("cas"), pl.col("cas_reg_no")).alias(
-                        "chemicalAbstractsServiceNumber"
+                        "chemical_abstracts_service_number"
                     ),
                     pl.coalesce(pl.col("unii"), pl.col("unii_right")).alias(
-                        "uniqueIngredientIdentifier"
+                        "unique_ingredient_identifier"
                     ),
-                    pl.col("blackBoxWarning"),
-                    pl.col("yearOfFirstApproval"),
-                    pl.col("maximumClinicalTrialPhase"),
-                    pl.col("hasBeenWithdrawn"),
-                    pl.col("isApproved"),
-                    pl.when(pl.col("tradeNames").list.len() > 0)
-                    .then(pl.col("tradeNames"))
+                    pl.col("black_box_warning").alias("black_box_warning"),
+                    pl.col("year_of_first_approval").alias("year_of_first_approval"),
+                    pl.col("maximum_clinical_trial_phase").alias("maximum_clinical_trial_phase"),
+                    pl.col("has_been_withdrawn").alias("has_been_withdrawn"),
+                    pl.col("is_approved").alias("is_approved"),
+                    pl.when(pl.col("trade_names").list.len() > 0)
+                    .then(pl.col("trade_names"))
                     .otherwise(None)
-                    .alias("tradeNames"),
+                    .alias("trade_names"),
                     pl.coalesce(
                         [
                             pl.col("sources"),
-                            pl.col("crossReferences").list.eval(
+                            pl.col("cross_references").list.eval(
                                 pl.element().struct.field("source")
                             ),
                         ]
                     )
                     .list.unique()
                     .alias("sources"),
-                    pl.col("crossReferences")
+                    pl.col("cross_references")
                     .list.eval(pl.element().struct.field("ids"))
                     .list.eval(pl.element().explode())
-                    .alias("sourceIds"),
-                    pl.col("cd_id").alias("cdId"),  # cd = calculated descriptor.
-                    pl.col("cd_formula").alias("cdFormula"),
-                    pl.col("cd_molweight").alias("cdMolWeight"),
-                    pl.col("clogp").alias("calculatedLogP"),
+                    .alias("source_ids"),
+                    pl.col("cd_id").alias("cd_id"),  # cd = calculated descriptor.
+                    pl.col("cd_formula").alias("cd_formula"),
+                    pl.col("cd_molweight").alias("cd_mol_weight"),
+                    pl.col("clogp").alias("calculated_log_p"),
                     pl.col("alogs").alias("alogs"),  # Predicted aqueous solubility logS
                     pl.col("tpsa"),  # Topological Polar Surface Area
                     pl.col("lipinski"),
-                    pl.col("no_formulations").alias("numberOfFormulations"),
-                    pl.col("molfile_base64").alias("molFileBase64"),
-                    pl.col("molimg_base64").alias("molImageBase64"),
+                    pl.col("no_formulations").alias("number_of_formulations"),
+                    pl.col("molfile_base64").alias("mol_file_base64"),
+                    pl.col("molimg_base64").alias("mol_image_base64"),
                     pl.col("mrdef"),
-                    pl.col("enhanced_stereo").alias("enhancedStereo"),
-                    pl.col("arom_c").alias("aromaticCarbons"),
-                    pl.col("sp3_c").alias("sp3Count"),
-                    pl.col("sp2_c").alias("sp2Count"),
-                    pl.col("sp_c").alias("spCount"),
-                    pl.col("halogen").alias("halogenCount"),  # Count of halogen atoms
+                    pl.col("enhanced_stereo").alias("enhanced_stereo"),
+                    pl.col("arom_c").alias("aromatic_carbons"),
+                    pl.col("sp3_c").alias("sp3_count"),
+                    pl.col("sp2_c").alias("sp2_count"),
+                    pl.col("sp_c").alias("sp_count"),
+                    pl.col("halogen").alias("halogen_count"),  # Count of halogen atoms
                     pl.col("hetero_sp2_c").alias(
-                        "heteroSp2Count"
+                        "hetero_sp2_count"
                     ),  # Count of sp2-hybridized hetero atoms
-                    pl.col("rotb").alias("rotatableBonds"),
-                    pl.col("o_n").alias("ON"),  # Count of oxygen + nitrogen atoms
-                    pl.col("oh_nh").alias("OHNH"),  # Count of OH/NH groups
+                    pl.col("rotb").alias("rotatable_bonds"),
+                    pl.col("o_n").alias("o_n"),  # Count of oxygen + nitrogen atoms
+                    pl.col("oh_nh").alias("oh_nh"),  # Count of OH/NH groups
                     pl.col("inchi"),
                     pl.col("rgb"),
-                    pl.col("fda_labels").alias("fdaLabels"),
+                    pl.col("fda_labels").alias("fda_labels"),
                     pl.col("status"),
                     pl.col("struct_id").alias(
-                        "structID"
-                    ),  # Primary key of the chemical structure in DrugCentral’s structures table
+                        "struct_id"
+                    ),  # Primary key of the chemical structure in DrugCentral's structures table
                 ).alias("properties"),
             ]
         )
