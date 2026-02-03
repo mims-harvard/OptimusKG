@@ -152,8 +152,8 @@ venv.bak/
 # mkdocs documentation
 /site
 
-# mypy
-.mypy_cache/
+# ty type checker
+.ty/
 
 # Docker volumes
 .volumes/

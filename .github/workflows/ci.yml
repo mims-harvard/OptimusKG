@@ -36,8 +36,8 @@ jobs:
       - name: Install the project dependencies
         run: uv sync --all-groups
 
-      - name: Run mypy
-        run: make mypy
+      - name: Run ty
+        run: make ty
 
       - name: Run interrogate
         run: make interrogate
