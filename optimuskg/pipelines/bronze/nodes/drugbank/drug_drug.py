@@ -39,7 +39,7 @@ def run(full_database: etree._ElementTree) -> pl.DataFrame:
         interactions,
         schema=["tail_drug_id", "head_drug_id", "description"],
         orient="row",
-    )
+    ).sort(by=["tail_drug_id", "head_drug_id"])
 
 
 drug_drug_node = node(

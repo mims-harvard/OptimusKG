@@ -96,7 +96,7 @@ landing.ctd.ctd_exposure_events:
       "enrollmentendyear": "${pl:String}"
       "studyfactors": "${pl:String}"
   metadata:
-    checksum: "2db0ed29739ee5bd554a2e050204a794"
+    checksum: "5d3d07c599589d520819338807fc6c07"
     origin:
       provider: http
       url: "https://ctdbase.org/reports/CTD_exposure_events.csv.gz"

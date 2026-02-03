@@ -21,7 +21,7 @@ def run(  # noqa: PLR0913
         .map_elements(lambda x: f"DRUGBANK:{x}", return_dtype=pl.Utf8)
         .alias("drugbank_id"),
     )
-    return vocabulary
+    return vocabulary.sort(by="drugbank_id")
 
 
 vocabulary_node = node(

@@ -7,6 +7,6 @@ bronze.ontology.hp_relations:
       "parent": "${pl:String}"
       "child": "${pl:String}"
   metadata:
-    checksum: "f9ed19eeb850663df363475d646250a6"
+    checksum: "08d3cd7b4969889f5809589b5965a032"
     kedro-viz:
       layer: bronze

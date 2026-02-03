@@ -7,7 +7,7 @@ def run(
     drugbank_vocabulary: pl.DataFrame,
     umls_disease_mappings: pl.DataFrame,
     chembl_drugbank_mapping: pl.DataFrame,
-) -> pl.DataFrame:
+) -> tuple[pl.DataFrame, pl.DataFrame, pl.DataFrame, pl.DataFrame, pl.DataFrame]:
     drugcentral_normalized = (
         drugcentral.filter(
             pl.col("cas_reg_no").is_not_null() & pl.col("umls_cui").is_not_null()

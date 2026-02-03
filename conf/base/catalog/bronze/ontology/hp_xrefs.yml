@@ -8,6 +8,6 @@ bronze.ontology.hp_xrefs:
       "ontology": "${pl:String}"
       "ontology_id": "${pl:String}"
   metadata:
-    checksum: "f9ed19eeb850663df363475d646250a6"
+    checksum: "2d7b4a733c2253860ea4cd64a6372187"
     kedro-viz:
       layer: bronze

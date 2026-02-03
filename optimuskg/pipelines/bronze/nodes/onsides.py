@@ -46,7 +46,7 @@ def run(
         left_on="effect_meddra_id",
         right_on="meddra_id",
         how="inner",
-    )
+    ).sort(by=["ingredient_id", "effect_meddra_id"])
 
 
 onsides_node = node(

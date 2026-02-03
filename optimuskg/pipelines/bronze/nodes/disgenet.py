@@ -53,10 +53,10 @@ def run(
 
     disgenet_phenotypes = curated_gene_disease_associations.filter(
         pl.col("disease_type") == "phenotype"
-    )
+    ).sort(by=["gene_id", "disease_id"])
     diseases = curated_gene_disease_associations.filter(
         pl.col("disease_type") == "disease"
-    )
+    ).sort(by=["gene_id", "disease_id"])
     return disgenet_phenotypes, diseases
 
 

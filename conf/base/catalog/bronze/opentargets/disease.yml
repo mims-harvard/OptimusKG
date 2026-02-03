@@ -2,6 +2,6 @@ bronze.opentargets.disease:
   filepath: "data/bronze/opentargets/disease.parquet"
   type: optimuskg.datasets.polars.ParquetDataset
   metadata:
-    checksum: "0dc00d77ff5e42a35ba51c33dd4b78ea"
+    checksum: "c703a800145c7877ca7b96835328e967"
     kedro-viz:
       layer: bronze

@@ -88,6 +88,7 @@ def run(  # noqa: PLR0913
                 "ontology_version",
             ]
         )
+        .sort(by="id")
     )
 
     go_relations = (
@@ -111,6 +112,7 @@ def run(  # noqa: PLR0913
             ]
         )
         .filter(pl.col("tail").str.contains("GO_") & pl.col("head").str.contains("GO_"))
+        .sort(by=["tail", "head"])
     )
 
     return go_terms, go_relations

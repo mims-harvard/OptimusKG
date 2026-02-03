@@ -12,6 +12,6 @@ bronze.bgee.gene_expressions_in_anatomy:
       "call_quality": "${pl:String}"
       "expression_rank": "${pl:String}"
   metadata:
-    checksum: "6dc0a4e87c2065d543c9a62f44b4e232"
+    checksum: "a3a2c2c492a946b05059982f35814544"
     kedro-viz:
       layer: bronze

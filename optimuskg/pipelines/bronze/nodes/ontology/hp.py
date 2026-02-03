@@ -92,6 +92,7 @@ def run(
         .unnest("split_cols")
         .rename({"field_0": "ontology", "field_1": "ontology_id"})
         .select(["hp_id", "ontology", "ontology_id"])
+        .sort(by=["hp_id", "ontology"])
     )
 
     hp_relations = (
@@ -113,6 +114,7 @@ def run(
         .filter(
             pl.col("parent").str.contains("HP_"), pl.col("child").str.contains("HP_")
         )
+        .sort(by=["parent", "child"])
     )
 
     return hp_terms, hp_xrefs, hp_relations

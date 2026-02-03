@@ -25,14 +25,10 @@ def run(
         ]
     )
 
-    df = df.filter(
+    return df.filter(
         ~pl.col("anatomy_id").str.contains("∩")
         # NOTE: New versions of the dataset include measurements with an intersection of tissues. We want to remove this measurements.
-    )
-
-    logger.debug(f"Wrote {len(df)} anatomy-gene pairs")
-
-    return df
+    ).sort(by=["gene_id", "anatomy_id"])
 
 
 bgee_node = node(

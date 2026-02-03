@@ -2,7 +2,7 @@ landing.opentargets.target_disease_associations:
   filepath: "data/landing/opentargets/target_disease_associations"
   type: optimuskg.datasets.polars.ParquetDataset
   metadata:
-    checksum: "0dc00d77ff5e42a35ba51c33dd4b78ea"
+    checksum: "4b8ba32c9eadce9e08ea017e3310743e"
     origin:
       provider: opentargets
       version: "25.06"
