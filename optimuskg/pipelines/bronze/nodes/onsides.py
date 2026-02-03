@@ -36,17 +36,21 @@ def run(
         ]
     )
 
-    return high_confidence.join(
-        vocab_rxnorm_ingredient,
-        left_on="ingredient_id",
-        right_on="rxnorm_id",
-        how="inner",
-    ).join(
-        vocab_meddra_adverse_effect,
-        left_on="effect_meddra_id",
-        right_on="meddra_id",
-        how="inner",
-    ).sort(by=["ingredient_id", "effect_meddra_id"])
+    return (
+        high_confidence.join(
+            vocab_rxnorm_ingredient,
+            left_on="ingredient_id",
+            right_on="rxnorm_id",
+            how="inner",
+        )
+        .join(
+            vocab_meddra_adverse_effect,
+            left_on="effect_meddra_id",
+            right_on="meddra_id",
+            how="inner",
+        )
+        .sort(by=["ingredient_id", "effect_meddra_id"])
+    )
 
 
 onsides_node = node(

@@ -2094,7 +2094,7 @@ wheels = [
 
 [[package]]
 name = "optimuskg"
-version = "0.39.2"
+version = "0.39.3"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },
