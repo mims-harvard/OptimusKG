@@ -12,7 +12,7 @@ def run(
         .select(
             pl.col("anatomy_id")
             .str.replace("UBERON:", "UBERON_")
-            .alias("from"),  # use _ to match biolink mapping
+            .alias("from"),  # NOTE: using _ to match biolink mapping
             pl.col("gene_id").alias("to"),
             pl.lit("anatomy_protein").alias("relation"),
             pl.lit(True).alias("undirected"),

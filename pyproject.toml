@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 requires-python = ">=3.12"
 name = "optimuskg"
 readme = "README.md"
-version = "0.39.2"
+version = "0.39.3"
 dependencies = [
   "ipython>=8.10",
   "jupyterlab>=3.0",
@@ -33,7 +33,7 @@ dependencies = [
 dev = [
   "ruff~=0.1.8",
   "pre-commit>=4.0.1",
-  "mypy>=1.14.1",
+  "ty",
   "interrogate>=1.7.0",
   "pydantic>=2.10.6",
   "typer>=0.15.1",
@@ -76,6 +76,7 @@ docstring-code-format = true
 [tool.ruff]
 line-length = 88
 show-fixes = true
+extend-exclude = ["*.ipynb"]
 lint.select = [
   "F",    # Pyflakes
   "W",    # pycodestyle
@@ -103,29 +104,28 @@ verbose = 2
 quiet = false
 color = true
 
-[tool.mypy]
-warn_unused_configs = true
-check_untyped_defs = true
-warn_return_any = true
-warn_unused_ignores = true
-show_error_codes = true
+[tool.ty.environment]
+python-version = "3.12"
 
+[tool.ty.src]
+exclude = ["**/*.ipynb"]
 
-[[tool.mypy.overrides]]
-ignore_missing_imports = true
-module = [
-  "fsspec.*",
-  "goatools.*",
-  "biocypher.*",
-  "typedframe.*",
-  "pytest.*",
-  "pydantic.*",
-  "kedro_datasets.partitions.partitioned_dataset.*",
+[tool.ty.analysis]
+allowed-unresolved-imports = [
+  "fsspec.**",
+  "goatools.**",
+  "biocypher.**",
+  "typedframe.**",
+  "pytest.**",
+  "pydantic.**",
+  "kedro_datasets.partitions.partitioned_dataset.**",
 ]
 
-[[tool.mypy.overrides]]
-module = ["optimuskg.datasets.*"]
-disable_error_code = ["attr-defined"]
+[[tool.ty.overrides]]
+include = ["optimuskg/datasets/**"]
+
+[tool.ty.overrides.rules]
+unresolved-attribute = "ignore"
 
 [tool.typos.files]
 extend-exclude = ["Makefile", "notebooks/*"]

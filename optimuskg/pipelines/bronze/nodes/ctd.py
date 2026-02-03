@@ -53,7 +53,6 @@ def run(
         ]
     )
 
-    # Add "MESH:" prefix to id column to match biolink schema
     ctd_exposure_events = ctd_exposure_events.with_columns(
         [
             pl.col("exposure_marker_id").map_elements(
@@ -71,7 +70,7 @@ def run(
         ]
     )
 
-    return ctd_exposure_events
+    return ctd_exposure_events.sort(by="exposure_stressor_id")
 
 
 ctd_node = node(

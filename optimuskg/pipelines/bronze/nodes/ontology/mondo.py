@@ -99,6 +99,7 @@ def run(
                 "ontology_version",
             ]
         )
+        .sort(by="id")
     )
 
     nodes_df = (
@@ -120,6 +121,7 @@ def run(
             ]
         )
         .filter(pl.col("id").str.contains("MONDO_"))
+        .sort(by="id")
     )
 
     mondo_xrefs = (
@@ -138,6 +140,7 @@ def run(
             .alias("xref_id")
         )
         .unique()
+        .sort(by=["id", "xref_id"])
     )
 
     mondo_relations = (
@@ -155,7 +158,9 @@ def run(
             & pl.col("head").str.contains("MONDO_")
             & (pl.col("edge_type") == "is_a")
         )
+        .sort(by=["tail", "head"])
     )
+
     return mondo_terms, mondo_relations, mondo_xrefs
 
 

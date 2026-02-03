@@ -34,11 +34,9 @@ lint: ##@ Lint code
 	@uv run ruff check optimuskg cli
 	@uv run ruff format --check optimuskg cli
 
-.PHONY: mypy
-mypy: ##@ Run mypy
-	@uv run mypy --install-types --config-file pyproject.toml --non-interactive --package optimuskg
-	@uv run mypy --config-file pyproject.toml tests
-	@uv run mypy --config-file pyproject.toml cli
+.PHONY: ty
+ty: ##@ Run ty type checker
+	@uv run ty check optimuskg cli
 
 .PHONY: interrogate
 interrogate: ##@ Run interrogate
@@ -55,7 +53,7 @@ clean: ##@ Clean up the project
 	@rm -rf `find . -type d -name '*.egg-info'`
 	@rm -rf .cache
 	@rm -rf dist
-	@rm -rf .mypy_cache
+	@rm -rf .ty
 	@rm -rf .venv
 	@rm -rf .pytest_cache
 	@rm -rf .ruff_cache

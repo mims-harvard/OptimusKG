@@ -76,7 +76,7 @@ def run(  # noqa: PLR0913
         (pl.lit("UniProtKB:") + pl.col("uniprot_id")).alias("uniprot_id"),
     )
 
-    return drug_protein
+    return drug_protein.sort(by=["drug_bank_id", "ncbi_gene_id"])
 
 
 drug_protein_node = node(

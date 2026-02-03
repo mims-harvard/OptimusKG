@@ -2,6 +2,6 @@ bronze.ontology.mondo_terms:
   type: optimuskg.datasets.polars.ParquetDataset
   filepath: "data/bronze/ontology/mondo_terms.parquet"
   metadata:
-    checksum: "da24d9e916f3f3ad274da8884e50ce70"
+    checksum: "dab7d2219a34a9c7439739b60c808ce5"
     kedro-viz:
       layer: bronze

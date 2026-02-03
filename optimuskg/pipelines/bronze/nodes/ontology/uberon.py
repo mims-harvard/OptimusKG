@@ -85,7 +85,7 @@ def run(
                 "ontology_version",
             ]
         )
-        .sort("id")
+        .sort(by=["id", "name"])
     )
 
     uberon_relations = (

@@ -2,6 +2,6 @@ bronze.opentargets.target:
   filepath: "data/bronze/opentargets/target.parquet"
   type: optimuskg.datasets.polars.ParquetDataset
   metadata:
-    checksum: "0dc00d77ff5e42a35ba51c33dd4b78ea"
+    checksum: "6a83e76e5f88854aa5b39cdd75c14a3c"
     kedro-viz:
       layer: bronze
