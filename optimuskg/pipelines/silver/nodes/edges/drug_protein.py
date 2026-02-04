@@ -26,12 +26,12 @@ def run(
         .select(
             pl.col("chembl_id").alias("from"),
             pl.col("ensembl_id").alias("to"),
-            pl.lit("drug_protein").alias("relation"),
+            pl.lit("drug_protein").alias("label"),
+            pl.col("relation_type").alias("relation"),
             pl.lit(False).alias("undirected"),
             pl.struct(
                 [
                     pl.lit(["drugbank", "opentargets"]).alias("sources"),
-                    pl.col("relation_type"),
                 ]
             ).alias("drugbank_props"),
         )
@@ -72,7 +72,8 @@ def run(
             [
                 pl.col("chembl_ids").alias("from"),
                 pl.col("targets").alias("to"),
-                pl.lit("drug_protein").alias("relation"),
+                pl.lit("drug_protein").alias("label"),
+                pl.col("action_type").alias("relation"),
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
@@ -80,7 +81,6 @@ def run(
                         pl.col("source_ids"),
                         pl.col("source_urls"),
                         pl.col("mechanisms_of_action"),
-                        pl.col("action_type").alias("relation_type"),
                     ]
                 ).alias("opentargets_props"),
             ]
@@ -95,6 +95,24 @@ def run(
         )
         .with_columns(
             [
+                pl.concat_list(
+                    [
+                        pl.coalesce(
+                            [
+                                pl.col("relation"),
+                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                            ]
+                        ),
+                        pl.coalesce(
+                            [
+                                pl.col("relation_right"),
+                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                            ]
+                        ),
+                    ]
+                )
+                .list.unique()
+                .alias("relation_merged"),
                 pl.when(pl.col("opentargets_props").is_not_null())
                 .then(
                     pl.struct(
@@ -119,26 +137,14 @@ def run(
                             )
                             .list.unique()
                             .alias("sources"),
-                            pl.concat_list(
-                                [
-                                    pl.col("opentargets_props").struct.field(
-                                        "relation_type"
-                                    ),
-                                    pl.col("drugbank_props").struct.field(
-                                        "relation_type"
-                                    ),
-                                ]
-                            )
-                            .list.unique()
-                            .alias("relation_type"),
                         ]
                     )
                 )
                 .otherwise(pl.col("drugbank_props"))
-                .alias("properties")
+                .alias("properties"),
             ]
         )
-        .select(["from", "to", "relation", "undirected", "properties"])
+        .select(["from", "to", "label", pl.col("relation_merged").alias("relation"), "undirected", "properties"])
         .unique(subset=["from", "to"])
         .sort(["from", "to"])
     )

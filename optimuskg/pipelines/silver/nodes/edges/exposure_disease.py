@@ -174,12 +174,12 @@ def run(
             [
                 pl.col("from"),
                 pl.col("to"),
-                pl.lit("exposure_disease").alias("relation"),
+                pl.lit("exposure_disease").alias("label"),
+                pl.lit("linked to").alias("relation"),
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
                         pl.lit(["CTD", "MONDO"]).alias("sources"),
-                        pl.lit("linked to").alias("relation_type"),
                         pl.col("evidence_count"),
                         pl.col("number_of_receptors"),
                         pl.col("receptors"),

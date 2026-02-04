@@ -14,14 +14,14 @@ def run(
             .str.replace("UBERON:", "UBERON_")
             .alias("from"),  # NOTE: using _ to match biolink mapping
             pl.col("gene_id").alias("to"),
-            pl.lit("anatomy_protein").alias("relation"),
+            pl.lit("anatomy_protein").alias("label"),
+            pl.when(pl.col("expression") == "present")
+            .then(pl.lit("expression present"))
+            .otherwise(pl.lit("expression absent"))
+            .alias("relation"),
             pl.lit(True).alias("undirected"),
             pl.struct(
                 [  # TODO: add more metadata with more columns from the landing version of gene_expressions_in_anatomy
-                    pl.when(pl.col("expression") == "present")
-                    .then(pl.lit("expression present"))
-                    .otherwise(pl.lit("expression absent"))
-                    .alias("relation_type"),
                     pl.col("expression_rank")
                     .cast(pl.Float64)
                     .cast(pl.Int32)

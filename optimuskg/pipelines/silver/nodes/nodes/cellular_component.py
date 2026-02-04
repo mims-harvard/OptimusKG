@@ -22,7 +22,7 @@ def run(
         .join(go_terms, left_on="id", right_on="id", how="inner")
         .select(
             pl.col("id"),
-            pl.lit("cellular_component").alias("node_type"),
+            pl.lit("cellular_component").alias("label"),
             pl.struct(
                 [
                     pl.lit("GO").alias("source"),

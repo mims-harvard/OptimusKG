@@ -30,7 +30,7 @@ def run(  # noqa: PLR0913
         .select(
             [
                 pl.col("id"),
-                pl.lit("pathway").alias("node_type"),
+                pl.lit("pathway").alias("label"),
                 pl.struct(
                     [
                         pl.lit(["REACTOME", "opentargets"]).alias("sources"),

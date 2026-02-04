@@ -45,7 +45,7 @@ def run(  # noqa: PLR0913
         .unique(subset="id")
         .select(
             pl.col("id"),
-            pl.lit("disease").alias("node_type"),
+            pl.lit("disease").alias("label"),
             pl.struct(
                 [
                     pl.col("id")

@@ -4,7 +4,7 @@ silver.nodes.cellular_component:
   load_args:
     schema:
       id: pl.String
-      node_type: pl.String
+      label: pl.String
       properties:
         source: pl.String
         name: pl.String

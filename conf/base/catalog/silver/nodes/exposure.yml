@@ -4,7 +4,7 @@ silver.nodes.exposure:
   load_args:
     schema:
       id: pl.String
-      node_type: pl.String
+      label: pl.String
       properties:
         sources: pl.List(pl.String)
         name: pl.String

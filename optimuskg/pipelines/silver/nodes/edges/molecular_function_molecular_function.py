@@ -23,11 +23,11 @@ def run(
                 # NOTE: go_relations head-tail columns are for "is_a" (i.e. child) relations but we represent the inverse (i.e. parent) relations.
                 pl.col("tail").alias("from"),
                 pl.col("head").alias("to"),
-                pl.lit("molecular_function_molecular_function").alias("relation"),
+                pl.lit("molecular_function_molecular_function").alias("label"),
+                pl.col("edge_type").alias("relation"),
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
-                        pl.col("edge_type").alias("relation_type"),
                         pl.lit(["GO"]).alias("sources"),
                     ]
                 ).alias("properties"),

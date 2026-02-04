@@ -46,7 +46,8 @@ def run(
         .select(
             pl.col("from"),
             pl.col("to"),
-            pl.lit("disease_phenotype").alias("relation"),
+            pl.lit("disease_phenotype").alias("label"),
+            pl.col("relation_type").alias("relation"),
             pl.lit(True).alias("undirected"),
             pl.struct(
                 [
@@ -57,7 +58,6 @@ def run(
                     pl.col("modifiers"),
                     pl.col("onset"),
                     pl.col("qualifier_not"),
-                    pl.col("relation_type"),
                     pl.col("references"),
                     pl.col("sexes"),
                     pl.col("sources"),

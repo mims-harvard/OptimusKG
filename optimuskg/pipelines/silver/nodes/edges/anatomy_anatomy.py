@@ -21,11 +21,11 @@ def run(
         .select(
             pl.col("y_id").alias("from"),
             pl.col("x_id").alias("to"),
-            pl.lit("anatomy_anatomy").alias("relation"),
+            pl.lit("anatomy_anatomy").alias("label"),
+            pl.lit("parent").alias("relation"),
             pl.lit(False).alias("undirected"),
             pl.struct(
                 [
-                    pl.lit("parent").alias("relation_type"),
                     pl.lit(["UBERON"]).alias("sources"),
                 ]
             ).alias("properties"),

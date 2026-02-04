@@ -45,7 +45,7 @@ def run(  # noqa: PLR0913
         .join(drugcentral_phenotype, left_on="id", right_on="id", how="left")
         .select(
             pl.col("id"),
-            pl.lit("phenotype").alias("node_type"),
+            pl.lit("phenotype").alias("label"),
             pl.struct(
                 [
                     pl.lit(["MedDRA", "opentargets", "HP"]).alias("sources"),

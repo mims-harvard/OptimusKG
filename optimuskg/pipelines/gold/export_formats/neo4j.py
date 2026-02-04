@@ -52,7 +52,7 @@ def _yield_nodes(df: pl.DataFrame) -> Iterator[BiocypherNode]:
                     not_null_properties[k] = v
         yield BiocypherNode(
             id=row["id"],
-            label=row["node_type"],
+            label=row["label"],
             properties=not_null_properties,
         )
 
@@ -97,7 +97,7 @@ def _yield_edges(df: pl.DataFrame) -> Iterator[BiocypherEdge]:
             id=str(uuid.uuid4()),
             from_id=row["from"],
             to_id=row["to"],
-            label=row["relation"],
+            label=row["label"],
             properties=not_null_properties,
         )
 

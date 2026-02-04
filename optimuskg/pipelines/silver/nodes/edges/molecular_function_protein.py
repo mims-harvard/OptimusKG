@@ -15,7 +15,7 @@ def run(
         .group_by(["target_id", "id"])
         .agg(
             [
-                pl.lit("molecular_function_protein").alias("relation"),
+                pl.lit("molecular_function_protein").alias("label"),
                 pl.lit(True).alias("undirected"),
                 pl.col("source").unique().alias("sources"),
                 pl.col("evidence").unique(),
@@ -33,7 +33,8 @@ def run(
                 .str.replace("GO:", "GO_")
                 .alias("from"),  # use _ to match biolink mapping
                 pl.col("target_id").alias("to"),
-                pl.col("relation"),
+                pl.col("label"),
+                pl.lit("interacts with").alias("relation"),
                 pl.col("undirected"),
                 pl.struct(
                     [
@@ -41,7 +42,6 @@ def run(
                         pl.col("evidence"),
                         pl.col("gene_product"),
                         pl.col("eco_ids"),
-                        pl.lit("interacts with").alias("relation_type"),
                     ]
                 ).alias("properties"),
             ]

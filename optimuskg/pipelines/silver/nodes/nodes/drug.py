@@ -65,7 +65,7 @@ def run(  # noqa: PLR0913
         .select(
             [
                 pl.col("id"),
-                pl.lit("drug").alias("node_type"),
+                pl.lit("drug").alias("label"),
                 pl.struct(
                     pl.coalesce(
                         [

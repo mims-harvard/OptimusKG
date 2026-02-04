@@ -13,6 +13,9 @@ def run(
         .select(
             pl.col("disease_id").alias("from"),
             pl.col("target_id").alias("to"),
+            pl.lit("associated with").alias(
+                "relation"
+            ),  # TODO: change this literal to "associated with" using the evidence_score/evidence_count columns.
             pl.struct(
                 [
                     pl.lit(["opentargets"]).alias("sources"),
@@ -20,9 +23,6 @@ def run(
                     pl.col("metadata")
                     .struct.field("evidence_count")
                     .alias("evidence_count"),
-                    pl.lit("associated with").alias(
-                        "relation_type"
-                    ),  # TODO: change this literal to "associated with" using the evidence_score/evidence_count columns.
                 ]
             ).alias("opentargets_props"),
         )
@@ -41,6 +41,9 @@ def run(
         .select(
             pl.col("hp_id").alias("from"),
             pl.col("id").alias("to"),
+            pl.lit("associated with").alias(
+                "relation"
+            ),  # TODO: change this literal to "associated with" using the disgenet_score/evidence_index column.
             pl.struct(
                 [
                     pl.col("dsi").cast(pl.Float64).alias("disease_specificity_index"),
@@ -55,9 +58,6 @@ def run(
                     .str.split(";")
                     .cast(pl.List(pl.Utf8))
                     .alias("sources"),
-                    pl.lit("associated with").alias(
-                        "relation_type"
-                    ),  # TODO: change this literal to "associated with" using the disgenet_score/evidence_index column.
                 ]
             ).alias("disgenet_props"),
         )
@@ -71,7 +71,8 @@ def run(
             [
                 pl.col("from"),
                 pl.col("to"),
-                pl.lit("phenotype_protein").alias("relation"),
+                pl.lit("phenotype_protein").alias("label"),
+                pl.col("relation"),
                 pl.lit(False).alias("undirected"),
                 pl.when(pl.col("disgenet_props").is_not_null())
                 .then(
@@ -106,7 +107,6 @@ def run(
                             )
                             .list.unique()
                             .alias("sources"),
-                            pl.col("disgenet_props").struct.field("relation_type"),
                         ]
                     )
                 )

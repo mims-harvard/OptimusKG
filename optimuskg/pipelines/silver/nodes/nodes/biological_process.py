@@ -24,7 +24,7 @@ def run(
         )  # TODO: there are 3 ids that are not in the go_terms table
         .select(
             pl.col("id"),
-            pl.lit("biological_process").alias("node_type"),
+            pl.lit("biological_process").alias("label"),
             pl.struct(
                 [
                     pl.lit("GO").alias("source"),

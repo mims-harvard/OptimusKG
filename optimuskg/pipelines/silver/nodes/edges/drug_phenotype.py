@@ -10,14 +10,14 @@ def run(
     onsides_high_confidence = high_confidence.select(
         pl.col("ingredient_id").alias("from"),
         pl.col("effect_meddra_id").alias("to"),
-        pl.lit("drug_phenotype").alias("relation"),
+        pl.lit("drug_phenotype").alias("label"),
+        pl.lit("adverse drug reaction").alias("relation"),
         pl.lit(True).alias("undirected"),
         pl.struct(
             [
                 pl.lit(["OnSIDES"]).alias("sources"),
                 pl.lit(None, dtype=pl.List(pl.Utf8)).alias("reference_ids"),
                 pl.lit(None, dtype=pl.Float64).alias("highest_clinical_trial_phase"),
-                pl.lit("adverse drug reaction").alias("relation_type"),
                 pl.lit(None, dtype=pl.Utf8).alias("structure_id"),
                 pl.lit(None, dtype=pl.Utf8).alias("drug_disease_id"),
             ]
@@ -37,7 +37,10 @@ def run(
         .select(
             pl.col("drug_id").alias("from"),
             pl.col("disease").alias("to"),
-            pl.lit("drug_phenotype").alias("relation"),
+            pl.lit("drug_phenotype").alias("label"),
+            pl.lit("associated with").alias(
+                "relation"
+            ),  # TODO: the relation_type should be inferred from the highest_clinical_trial_phase number
             pl.lit(True).alias("undirected"),
             pl.struct(
                 [
@@ -48,9 +51,6 @@ def run(
                     pl.col("max_phase_for_indication").alias(
                         "highest_clinical_trial_phase"
                     ),  # TODO: convert opentargets number to actual string
-                    pl.lit("associated with").alias(
-                        "relation_type"
-                    ),  # TODO: the relation_type should be inferred from the highest_clinical_trial_phase number
                     pl.lit(None, dtype=pl.Utf8).alias("structure_id"),
                     pl.lit(None, dtype=pl.Utf8).alias("drug_disease_id"),
                 ]
@@ -62,14 +62,14 @@ def run(
     drugcentral_drug_phenotype = drug_phenotype.select(
         pl.col("from"),
         pl.col("to"),
-        pl.lit("drug_phenotype").alias("relation"),
+        pl.lit("drug_phenotype").alias("label"),
+        pl.col("relationship_name").alias("relation"),
         pl.lit(True).alias("undirected"),
         pl.struct(
             [
                 pl.lit(["drugcentral"]).alias("sources"),
                 pl.lit(None, dtype=pl.List(pl.Utf8)).alias("reference_ids"),
                 pl.lit(None, dtype=pl.Float64).alias("highest_clinical_trial_phase"),
-                pl.col("relationship_name").alias("relation_type"),
                 pl.col("structure_id").alias("structure_id"),
                 pl.col("drug_disease_id").alias("drug_disease_id"),
             ]

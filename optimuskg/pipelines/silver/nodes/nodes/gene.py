@@ -117,7 +117,7 @@ def run(  # noqa: PLR0913
         .select(
             [
                 pl.col("id"),
-                pl.lit("gene").alias("node_type"),
+                pl.lit("gene").alias("label"),
                 pl.struct(
                     [
                         pl.when(pl.col("id").str.starts_with("NCBIGene"))

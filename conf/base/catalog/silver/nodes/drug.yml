@@ -4,7 +4,7 @@ silver.nodes.drug:
   load_args:
     schema:
       id: pl.String
-      node_type: pl.String
+      label: pl.String
       properties:
         name: pl.String
         inchi_key: pl.String

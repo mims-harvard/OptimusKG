@@ -20,7 +20,7 @@ def run(
         .join(uberon_terms, left_on="id", right_on="id", how="inner")
         .select(
             pl.col("id"),
-            pl.lit("anatomy").alias("node_type"),
+            pl.lit("anatomy").alias("label"),
             pl.struct(
                 [
                     pl.lit("UBERON").alias("source"),

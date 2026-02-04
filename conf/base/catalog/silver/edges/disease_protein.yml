@@ -5,6 +5,7 @@ silver.edges.disease_protein:
     schema:
       from: pl.String
       to: pl.String
+      label: pl.String
       relation: pl.String
       undirected: pl.Boolean
       properties:
@@ -19,7 +20,6 @@ silver.edges.disease_protein:
         number_of_pmids: pl.Int16
         number_of_snps: pl.Int16
         sources: pl.List(pl.String)
-        relation_type: pl.String
   metadata:
     kedro-viz:
       layer: silver

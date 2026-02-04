@@ -24,7 +24,7 @@ def run(
         )  # TODO: there are 2 ids that are not in the go_terms table
         .select(
             pl.col("id"),
-            pl.lit("molecular_function").alias("node_type"),
+            pl.lit("molecular_function").alias("label"),
             pl.struct(
                 [
                     pl.lit("GO").alias("source"),

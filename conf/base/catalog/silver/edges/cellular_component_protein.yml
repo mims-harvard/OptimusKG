@@ -5,6 +5,7 @@ silver.edges.cellular_component_protein:
     schema:
       from: pl.String
       to: pl.String
+      label: pl.String
       relation: pl.String
       undirected: pl.Boolean
       properties:
@@ -12,7 +13,6 @@ silver.edges.cellular_component_protein:
         evidence: pl.List(pl.String)
         gene_product: pl.List(pl.String)
         eco_ids: pl.List(pl.String)
-        relation_type: pl.String
   metadata:
     checksum: 839d579d0be9c4ee6c7b9ab2a4539861
     kedro-viz:

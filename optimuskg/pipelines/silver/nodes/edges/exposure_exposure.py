@@ -199,14 +199,14 @@ def run(
             [
                 pl.col("from"),
                 pl.col("to"),
-                pl.lit("exposure_exposure").alias("relation"),
+                pl.lit("exposure_exposure").alias("label"),
+                pl.lit("parent").alias(
+                    "relation"
+                ),  # NOTE: this is the same relation type used in PrimeKG, but we need to validate if this is consistent with the ontology tree.
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
                         pl.lit(["CTD"]).alias("sources"),
-                        pl.lit("parent").alias(
-                            "relation_type"
-                        ),  # NOTE: this is the same relation type used in PrimeKG, but we need to validate if this is consistent with the ontology tree.
                         pl.col("evidence_count"),
                         pl.col("number_of_receptors"),
                         pl.col("receptors"),

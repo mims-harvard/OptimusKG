@@ -9,11 +9,11 @@ def run(
         reactome_relations.select(
             pl.col("reactome_id_1").alias("from"),
             pl.col("reactome_id_2").alias("to"),
-            pl.lit("pathway_pathway").alias("relation"),
+            pl.lit("pathway_pathway").alias("label"),
+            pl.lit("parent").alias("relation"),
             pl.lit(False).alias("undirected"),
             pl.struct(
                 [
-                    pl.lit("parent").alias("relation_type"),
                     pl.lit(["REACTOME"]).alias("sources"),
                 ]
             ).alias("properties"),

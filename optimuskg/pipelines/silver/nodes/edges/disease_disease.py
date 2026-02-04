@@ -18,16 +18,16 @@ def run(
         .with_columns(
             pl.col("parents").alias("from"),
             pl.col("id").alias("to"),
-            pl.lit("disease_disease").alias("relation"),
+            pl.lit("disease_disease").alias("label"),
+            pl.lit("parent").alias("relation"),
             pl.lit(False).alias("undirected"),
             pl.struct(
                 [
-                    pl.lit("parent").alias("relation_type"),
                     pl.lit(["opentargets"]).alias("sources"),
                 ]
             ).alias("properties"),
         )
-        .select(["from", "to", "relation", "undirected", "properties"])
+        .select(["from", "to", "label", "relation", "undirected", "properties"])
         .unique(subset=["from", "to"])
         .sort(by=["from", "to"])
     )

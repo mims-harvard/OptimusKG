@@ -15,12 +15,12 @@ def run(
         .select(
             pl.coalesce("ensembl_id", "from").alias("from"),
             pl.coalesce("ensembl_id_right", "to").alias("to"),
-            pl.lit("protein_protein").alias("relation"),
+            pl.lit("protein_protein").alias("label"),
+            pl.lit("interacts with").alias("relation"),
             pl.lit(False).alias("undirected"),
             pl.struct(
                 [
                     pl.col("databases").alias("sources"),
-                    pl.lit("interacts with").alias("relation_type"),
                 ]
             ).alias("properties"),
         )

@@ -30,20 +30,20 @@ def run(  # noqa: PLR0913
         .with_columns(
             pl.col("disease_id").alias("from"),
             pl.col("target_id").alias("to"),
-            pl.lit("disease_protein").alias("relation"),
+            pl.lit("disease_protein").alias("label"),
+            pl.lit("associated with").alias(
+                "relation"
+            ),  # TODO: change this literal to "associated with" using the evidence_score/evidence_count columns.
             pl.lit(True).alias("undirected"),
             pl.struct(
                 [
                     pl.lit(["opentargets"]).alias("sources"),
                     pl.col("metadata").struct.field("score").alias("evidence_score"),
                     pl.col("metadata").struct.field("evidence_count").alias("evidence_count"),
-                    pl.lit("associated with").alias(
-                        "relation_type"
-                    ),  # TODO: change this literal to "associated with" using the evidence_score/evidence_count columns.
                 ]
             ).alias("opentargets_props"),
         )
-        .select(["from", "to", "relation", "undirected", "opentargets_props"])
+        .select(["from", "to", "label", "relation", "undirected", "opentargets_props"])
         .unique(subset=["from", "to"])
         .sort(by=["from", "to"])
     )
@@ -52,6 +52,9 @@ def run(  # noqa: PLR0913
         disgenet_diseases.select(
             "gene_symbol",
             "disease_id",
+            pl.lit("associated with").alias(
+                "relation"
+            ),  # TODO: change this literal to "associated with" using the disgenet_score/evidence_index column.
             pl.struct(
                 [
                     pl.col("dsi").cast(pl.Float64).alias("disease_specificity_index"),
@@ -66,9 +69,6 @@ def run(  # noqa: PLR0913
                     .str.split(";")
                     .cast(pl.List(pl.Utf8))
                     .alias("sources"),
-                    pl.lit("associated with").alias(
-                        "relation_type"
-                    ),  # TODO: change this literal to "associated with" using the disgenet_score/evidence_index column.
                 ]
             ).alias("disgenet_props"),
         )
@@ -84,6 +84,7 @@ def run(  # noqa: PLR0913
         .select(
             pl.col("id").alias("from"),
             pl.col("target_id").alias("to"),
+            pl.col("relation"),
             pl.col("disgenet_props"),
         )
         .sort(by=["from", "to"])
@@ -130,7 +131,6 @@ def run(  # noqa: PLR0913
                             )
                             .list.unique()
                             .alias("sources"),
-                            pl.col("disgenet_props").struct.field("relation_type"),
                         ]
                     )
                 )
@@ -138,7 +138,7 @@ def run(  # noqa: PLR0913
                 .alias("properties")
             ]
         )
-        .drop("disgenet_props", "opentargets_props")
+        .drop("disgenet_props", "opentargets_props", "relation_right")
         .unique(subset=["from", "to"])
         .sort(["from", "to"])
     )

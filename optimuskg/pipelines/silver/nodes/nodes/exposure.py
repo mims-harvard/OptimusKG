@@ -39,7 +39,7 @@ def run(  # noqa: PLR0913
         .select(
             [
                 pl.col("id"),
-                pl.lit("exposure").alias("node_type"),
+                pl.lit("exposure").alias("label"),
                 pl.struct(
                     [
                         pl.lit(["MESH", "CTD"]).alias("sources"),

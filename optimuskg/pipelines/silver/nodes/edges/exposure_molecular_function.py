@@ -181,14 +181,14 @@ def run(
             [
                 pl.col("from"),
                 pl.col("to"),
-                pl.lit("exposure_molecular_function").alias("relation"),
+                pl.lit("exposure_molecular_function").alias("label"),
+                pl.lit("interacts with").alias(
+                    "relation"
+                ),  # NOTE: maybe use outcome_relationships as relation_type?
                 pl.lit(True).alias("undirected"),
                 pl.struct(
                     [
                         pl.lit(["GO", "CTD"]).alias("sources"),
-                        pl.lit("interacts with").alias(
-                            "relation_type"
-                        ),  # NOTE: maybe use outcome_relationships as relation_type?
                         pl.col("evidence_count"),
                         pl.col("number_of_receptors"),
                         pl.col("receptors"),

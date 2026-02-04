@@ -77,7 +77,7 @@ def pg_export(nodes_dict: dict[str, pl.DataFrame], edges_dict: dict[str, pl.Data
                     [
                         pl.lit("node").alias("type"),
                         pl.col("id"),
-                        pl.concat_list([pl.col("node_type")]).alias("labels"),
+                        pl.concat_list([pl.col("label")]).alias("labels"),
                         pl.col("properties"),
                     ]
                 )
@@ -99,7 +99,7 @@ def pg_export(nodes_dict: dict[str, pl.DataFrame], edges_dict: dict[str, pl.Data
                         pl.lit("edge").alias("type"),
                         pl.col("from"),
                         pl.col("to"),
-                        pl.concat_list([pl.col("relation")]).alias("labels"),
+                        pl.concat_list([pl.col("label")]).alias("labels"),
                         pl.col("undirected"),
                         pl.col("properties"),
                     ]
