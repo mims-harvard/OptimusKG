@@ -3,7 +3,7 @@ import logging
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +36,9 @@ def run(
                     pl.concat_list([pl.col("source")]).alias(
                         "sources"
                     ),  # transform source to list
-                    pl.col("max_phase_for_indication").alias("highest_clinical_trial_phase"),
+                    pl.col("max_phase_for_indication").alias(
+                        "highest_clinical_trial_phase"
+                    ),
                 ]
             ).alias("opentargets_props"),
         )
@@ -49,9 +51,7 @@ def run(
             pl.col("from"),
             pl.col("to"),
             pl.lit(Edge.format_label(Node.DRUG, Node.DISEASE)).alias("label"),
-            pl.col("relationship_name")
-            .cast(pl.List(pl.Utf8))
-            .alias("relation"),
+            pl.col("relationship_name").cast(pl.List(pl.Utf8)).alias("relation"),
             pl.lit(True).alias("undirected"),
             pl.struct(
                 [
@@ -73,9 +73,7 @@ def run(
             [
                 pl.coalesce([pl.col("from"), pl.col("from_right")]).alias("from"),
                 pl.coalesce([pl.col("to"), pl.col("to_right")]).alias("to"),
-                pl.coalesce([pl.col("label"), pl.col("label_right")]).alias(
-                    "label"
-                ),
+                pl.coalesce([pl.col("label"), pl.col("label_right")]).alias("label"),
                 pl.concat_list(
                     [
                         pl.coalesce(

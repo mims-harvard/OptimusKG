@@ -3,7 +3,7 @@ import logging
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,10 @@ def run(  # noqa: PLR0913
 ) -> pl.DataFrame:
     diesase_id_umls_map = (
         disease.select(
-            [pl.col("id"), pl.col("metadata").struct.field("db_xrefs").alias("db_xrefs")]
+            [
+                pl.col("id"),
+                pl.col("metadata").struct.field("db_xrefs").alias("db_xrefs"),
+            ]
         )
         .explode("db_xrefs")
         .filter(pl.col("db_xrefs").is_not_null())
@@ -41,7 +44,9 @@ def run(  # noqa: PLR0913
                 [
                     pl.lit(["opentargets"]).alias("sources"),
                     pl.col("metadata").struct.field("score").alias("evidence_score"),
-                    pl.col("metadata").struct.field("evidence_count").alias("evidence_count"),
+                    pl.col("metadata")
+                    .struct.field("evidence_count")
+                    .alias("evidence_count"),
                 ]
             ).alias("opentargets_props"),
         )
@@ -123,12 +128,8 @@ def run(  # noqa: PLR0913
                             ],
                             pl.concat_list(
                                 [
-                                    pl.col("opentargets_props").struct.field(
-                                        "sources"
-                                    ),
-                                    pl.col("disgenet_props").struct.field(
-                                        "sources"
-                                    ),
+                                    pl.col("opentargets_props").struct.field("sources"),
+                                    pl.col("disgenet_props").struct.field("sources"),
                                 ]
                             )
                             .list.unique()

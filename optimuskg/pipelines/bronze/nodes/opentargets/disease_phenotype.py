@@ -26,12 +26,16 @@ def run(
                         .struct.field("diseaseFromSource")
                         .alias("disease_from_source"),
                         pl.element().struct.field("diseaseName").alias("disease_name"),
-                        pl.element().struct.field("evidenceType").alias("evidence_type"),
+                        pl.element()
+                        .struct.field("evidenceType")
+                        .alias("evidence_type"),
                         pl.element().struct.field("frequency"),
                         pl.element().struct.field("modifiers"),
                         pl.element().struct.field("onset"),
                         pl.element().struct.field("qualifier"),
-                        pl.element().struct.field("qualifierNot").alias("qualifier_not"),
+                        pl.element()
+                        .struct.field("qualifierNot")
+                        .alias("qualifier_not"),
                         pl.element().struct.field("references"),
                         pl.element().struct.field("sex"),
                         pl.element().struct.field("resource"),

@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node
 
 
 def run(

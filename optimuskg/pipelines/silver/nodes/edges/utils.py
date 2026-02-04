@@ -3,6 +3,7 @@ import re
 
 logger = logging.getLogger(__name__)
 
+
 def classify_age_type(age_str: str, qualifier_str: str) -> str:
     """Classify age and return type string"""
     if not age_str or age_str in ["", "null"]:

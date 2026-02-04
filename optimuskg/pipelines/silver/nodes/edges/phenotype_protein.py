@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node
 
 
 def run(
@@ -99,12 +99,8 @@ def run(
                             ],
                             pl.concat_list(
                                 [
-                                    pl.col("opentargets_props").struct.field(
-                                        "sources"
-                                    ),
-                                    pl.col("disgenet_props").struct.field(
-                                        "sources"
-                                    ),
+                                    pl.col("opentargets_props").struct.field("sources"),
+                                    pl.col("disgenet_props").struct.field("sources"),
                                 ]
                             )
                             .list.unique()

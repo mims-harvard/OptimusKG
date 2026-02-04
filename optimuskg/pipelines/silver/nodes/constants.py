@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Node(str, Enum):
     """3-letter abbreviations for node types in the knowledge graph."""
 

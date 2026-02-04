@@ -126,7 +126,7 @@ def unify_benchmark_files(
 
 
 @app.command(help="Synchronize or validate schema specifications for parquet datasets.")
-def sync_schemas(
+def sync_schemas(  # noqa: PLR0913
     layer: str = typer.Option(
         "all",
         "--layer",

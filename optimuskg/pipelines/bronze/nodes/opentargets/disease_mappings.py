@@ -7,7 +7,10 @@ def run(
 ) -> pl.DataFrame:
     return (
         disease.select(
-            [pl.col("id"), pl.col("metadata").struct.field("db_xrefs").alias("db_xrefs")]
+            [
+                pl.col("id"),
+                pl.col("metadata").struct.field("db_xrefs").alias("db_xrefs"),
+            ]
         )
         .explode("db_xrefs")
         .filter(pl.col("db_xrefs").is_not_null())

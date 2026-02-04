@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node
 
 
 def run(
@@ -129,12 +129,8 @@ def run(
                             ],
                             pl.concat_list(
                                 [
-                                    pl.col("opentargets_props").struct.field(
-                                        "sources"
-                                    ),
-                                    pl.col("drugbank_props").struct.field(
-                                        "sources"
-                                    ),
+                                    pl.col("opentargets_props").struct.field("sources"),
+                                    pl.col("drugbank_props").struct.field("sources"),
                                 ]
                             )
                             .list.unique()
@@ -146,7 +142,16 @@ def run(
                 .alias("properties"),
             ]
         )
-        .select(["from", "to", "label", pl.col("relation_merged").alias("relation"), "undirected", "properties"])
+        .select(
+            [
+                "from",
+                "to",
+                "label",
+                pl.col("relation_merged").alias("relation"),
+                "undirected",
+                "properties",
+            ]
+        )
         .unique(subset=["from", "to"])
         .sort(["from", "to"])
     )

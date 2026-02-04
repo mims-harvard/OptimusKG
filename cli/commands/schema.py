@@ -15,6 +15,7 @@ def _format_dataset_display(ds_name: str, ds_type: str) -> str:
     type_name = ds_type.split(".")[-1]
     return f"{display_name} ({type_name})"
 
+
 _SIMPLE_TYPE_MAP: dict[type, str] = {
     pl.String: "pl.String",
     pl.Utf8: "pl.String",
@@ -108,7 +109,7 @@ def _generate_schema_yaml(parquet_path: Path) -> dict[str, Any]:
     return {col: polars_dtype_to_yaml(dtype) for col, dtype in df.schema.items()}
 
 
-def _process_yaml_file(
+def _process_yaml_file(  # noqa: PLR0911
     yaml_path: Path,
     data_dir: Path,
     validate_only: bool = False,
@@ -125,7 +126,7 @@ def _process_yaml_file(
 
     ds_type = ds_config.get("type", "")
     if "ParquetDataset" not in ds_type:
-        return "skipped", f"Not a ParquetDataset", ds_name, ds_type
+        return "skipped", "Not a ParquetDataset", ds_name, ds_type
 
     filepath = ds_config.get("filepath", "")
     if not filepath:
@@ -169,7 +170,7 @@ def _process_yaml_file(
     return "updated", None, ds_name, ds_type
 
 
-def sync_catalog_schemas_command(
+def sync_catalog_schemas_command(  # noqa: PLR0913, PLR0912
     layer: str = "all",
     dataset: str | None = None,
     validate: bool = False,
@@ -229,13 +230,21 @@ def sync_catalog_schemas_command(
             status, message, ds_name, ds_type = "error", str(e), None, None
 
         stats[status] += 1
-        display = _format_dataset_display(ds_name, ds_type) if ds_name and ds_type else str(rel_path)
+        display = (
+            _format_dataset_display(ds_name, ds_type)
+            if ds_name and ds_type
+            else str(rel_path)
+        )
 
         if status == "updated":
             action = "Would update" if dry_run else "Updated"
-            logger.info(f"{action} schema configuration for {display}", extra={"markup": True})
+            logger.info(
+                f"{action} schema configuration for {display}", extra={"markup": True}
+            )
         elif status == "unchanged":
-            logger.debug(f"Unchanged schema configuration for {display}", extra={"markup": True})
+            logger.debug(
+                f"Unchanged schema configuration for {display}", extra={"markup": True}
+            )
         elif status == "skipped":
             logger.debug(f"Skipped {display} ({message})", extra={"markup": True})
         elif status == "warning":
@@ -243,7 +252,9 @@ def sync_catalog_schemas_command(
         elif status == "error":
             logger.error(f"{display} {message}", extra={"markup": True})
         elif status == "valid":
-            logger.info(f"Valid schema configuration for {display}", extra={"markup": True})
+            logger.info(
+                f"Valid schema configuration for {display}", extra={"markup": True}
+            )
         elif status == "mismatch":
             logger.warning(f"Schema mismatch for {display}", extra={"markup": True})
 

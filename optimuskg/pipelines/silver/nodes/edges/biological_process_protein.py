@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node
 
 
 def run(
@@ -17,7 +17,9 @@ def run(
         .group_by(["target_id", "id"])
         .agg(
             [
-                pl.lit(Edge.format_label(Node.BIOLOGICAL_PROCESS, Node.PROTEIN)).alias("label"),
+                pl.lit(Edge.format_label(Node.BIOLOGICAL_PROCESS, Node.PROTEIN)).alias(
+                    "label"
+                ),
                 pl.lit(True).alias("undirected"),
                 pl.col("source").drop_nulls().unique().alias("sources"),
                 pl.col("evidence").drop_nulls().unique(),

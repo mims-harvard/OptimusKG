@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node
 
 
 def run(
@@ -74,9 +74,7 @@ def run(
             [
                 pl.coalesce([pl.col("from"), pl.col("from_right")]).alias("from"),
                 pl.coalesce([pl.col("to"), pl.col("to_right")]).alias("to"),
-                pl.coalesce([pl.col("label"), pl.col("label_right")]).alias(
-                    "label"
-                ),
+                pl.coalesce([pl.col("label"), pl.col("label_right")]).alias("label"),
                 pl.concat_list(
                     [
                         pl.coalesce(
