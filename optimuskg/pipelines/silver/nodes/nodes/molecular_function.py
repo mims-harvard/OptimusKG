@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node
+
 
 def run(
     molecular_function_protein: pl.DataFrame,
@@ -24,7 +26,7 @@ def run(
         )  # TODO: there are 2 ids that are not in the go_terms table
         .select(
             pl.col("id"),
-            pl.lit("molecular_function").alias("label"),
+            pl.lit(Node.MOLECULAR_FUNCTION).alias("label"),
             pl.struct(
                 [
                     pl.lit("GO").alias("source"),

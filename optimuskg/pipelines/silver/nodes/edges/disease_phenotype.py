@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+
 
 def run(
     disease_phenotype: pl.DataFrame,
@@ -46,7 +48,7 @@ def run(
         .select(
             pl.col("from"),
             pl.col("to"),
-            pl.lit("disease_phenotype").alias("label"),
+            pl.lit(Edge.format_label(Node.DISEASE, Node.PHENOTYPE)).alias("label"),
             pl.col("relation_type").alias("relation"),
             pl.lit(True).alias("undirected"),
             pl.struct(

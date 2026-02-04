@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+
 
 def run(
     go_relations: pl.DataFrame,
@@ -23,7 +25,7 @@ def run(
                 # NOTE: go_relations head-tail columns are for "is_a" (i.e. child) relations but we represent the inverse (i.e. parent) relations.
                 pl.col("tail").alias("from"),
                 pl.col("head").alias("to"),
-                pl.lit("cellular_component_cellular_component").alias("label"),
+                pl.lit(Edge.format_label(Node.CELLULAR_COMPONENT, Node.CELLULAR_COMPONENT)).alias("label"),
                 pl.col("edge_type").alias("relation"),
                 pl.lit(False).alias("undirected"),
                 pl.struct(

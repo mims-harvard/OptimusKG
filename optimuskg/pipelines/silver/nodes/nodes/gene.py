@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node
+
 
 def run(  # noqa: PLR0913
     anatomy_protein: pl.DataFrame,
@@ -117,7 +119,7 @@ def run(  # noqa: PLR0913
         .select(
             [
                 pl.col("id"),
-                pl.lit("gene").alias("label"),
+                pl.lit(Node.GENE).alias("label"),
                 pl.struct(
                     [
                         pl.when(pl.col("id").str.starts_with("NCBIGene"))

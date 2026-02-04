@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+
 
 def run(
     high_confidence: pl.DataFrame,
@@ -10,7 +12,7 @@ def run(
     onsides_high_confidence = high_confidence.select(
         pl.col("ingredient_id").alias("from"),
         pl.col("effect_meddra_id").alias("to"),
-        pl.lit("drug_phenotype").alias("label"),
+        pl.lit(Edge.format_label(Node.DRUG, Node.PHENOTYPE)).alias("label"),
         pl.lit("adverse drug reaction").alias("relation"),
         pl.lit(True).alias("undirected"),
         pl.struct(
@@ -37,7 +39,7 @@ def run(
         .select(
             pl.col("drug_id").alias("from"),
             pl.col("disease").alias("to"),
-            pl.lit("drug_phenotype").alias("label"),
+            pl.lit(Edge.format_label(Node.DRUG, Node.PHENOTYPE)).alias("label"),
             pl.lit("associated with").alias(
                 "relation"
             ),  # TODO: the relation_type should be inferred from the highest_clinical_trial_phase number
@@ -62,7 +64,7 @@ def run(
     drugcentral_drug_phenotype = drug_phenotype.select(
         pl.col("from"),
         pl.col("to"),
-        pl.lit("drug_phenotype").alias("label"),
+        pl.lit(Edge.format_label(Node.DRUG, Node.PHENOTYPE)).alias("label"),
         pl.col("relationship_name").alias("relation"),
         pl.lit(True).alias("undirected"),
         pl.struct(

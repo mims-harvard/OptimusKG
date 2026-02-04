@@ -3,6 +3,8 @@ import logging
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+
 logger = logging.getLogger(__name__)
 
 
@@ -23,7 +25,7 @@ def run(
         .select(
             pl.col("id").alias("from"),
             pl.col("disease").alias("to"),
-            pl.lit("drug_disease").alias("label"),
+            pl.lit(Edge.format_label(Node.DRUG, Node.DISEASE)).alias("label"),
             pl.lit(["indication"]).alias(
                 "relation"
             ),  # TODO: replace this with strong/weak clinical evidence derived from highest_clinical_trial_phase
@@ -46,7 +48,7 @@ def run(
         drug_disease.select(
             pl.col("from"),
             pl.col("to"),
-            pl.lit("drug_disease").alias("label"),
+            pl.lit(Edge.format_label(Node.DRUG, Node.DISEASE)).alias("label"),
             pl.col("relationship_name")
             .cast(pl.List(pl.Utf8))
             .alias("relation"),

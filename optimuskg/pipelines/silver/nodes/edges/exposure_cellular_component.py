@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+
 from .utils import classify_age_type, extract_age_value
 
 
@@ -181,7 +183,7 @@ def run(
             [
                 pl.col("from"),
                 pl.col("to"),
-                pl.lit("exposure_cellular_component").alias("label"),
+                pl.lit(Edge.format_label(Node.EXPOSURE, Node.CELLULAR_COMPONENT)).alias("label"),
                 pl.lit("interacts with").alias(
                     "relation"
                 ),  # NOTE: maybe use outcome_relationships as relation_type?

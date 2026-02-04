@@ -3,6 +3,8 @@ import logging
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+
 logger = logging.getLogger(__name__)
 
 
@@ -30,7 +32,7 @@ def run(  # noqa: PLR0913
         .with_columns(
             pl.col("disease_id").alias("from"),
             pl.col("target_id").alias("to"),
-            pl.lit("disease_protein").alias("label"),
+            pl.lit(Edge.format_label(Node.DISEASE, Node.PROTEIN)).alias("label"),
             pl.lit("associated with").alias(
                 "relation"
             ),  # TODO: change this literal to "associated with" using the evidence_score/evidence_count columns.

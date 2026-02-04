@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+
 
 def run(
     drug_drug: pl.DataFrame,
@@ -33,7 +35,7 @@ def run(
                 .then(pl.col("head_chembl_id"))
                 .otherwise(pl.col("head_drug_id"))
                 .alias("to"),
-                pl.lit("drug_drug").alias("label"),
+                pl.lit(Edge.format_label(Node.DRUG, Node.DRUG)).alias("label"),
                 pl.lit(["synergistic interaction"]).alias("relation"),
                 pl.lit(False).alias("undirected"),
                 pl.struct(
@@ -54,7 +56,7 @@ def run(
             [
                 pl.col("id").alias("from"),
                 pl.col("child_chembl_ids").alias("to"),
-                pl.lit("drug_drug").alias("label"),
+                pl.lit(Edge.format_label(Node.DRUG, Node.DRUG)).alias("label"),
                 pl.lit(["parent"]).alias("relation"),
                 pl.lit(False).alias("undirected"),
                 pl.struct(

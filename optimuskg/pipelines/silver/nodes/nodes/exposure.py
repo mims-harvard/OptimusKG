@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node
+
 
 def run(  # noqa: PLR0913
     ctd_exposure_events: pl.DataFrame,
@@ -39,7 +41,7 @@ def run(  # noqa: PLR0913
         .select(
             [
                 pl.col("id"),
-                pl.lit("exposure").alias("label"),
+                pl.lit(Node.EXPOSURE).alias("label"),
                 pl.struct(
                     [
                         pl.lit(["MESH", "CTD"]).alias("sources"),

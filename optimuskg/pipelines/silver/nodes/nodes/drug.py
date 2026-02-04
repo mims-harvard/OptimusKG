@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node
+
 
 def run(  # noqa: PLR0913
     onsides_high_confidence: pl.DataFrame,
@@ -65,7 +67,7 @@ def run(  # noqa: PLR0913
         .select(
             [
                 pl.col("id"),
-                pl.lit("drug").alias("label"),
+                pl.lit(Node.DRUG).alias("label"),
                 pl.struct(
                     pl.coalesce(
                         [

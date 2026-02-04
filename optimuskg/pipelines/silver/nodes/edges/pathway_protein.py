@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+
 
 def run(
     target: pl.DataFrame,
@@ -16,7 +18,7 @@ def run(
                     "from"
                 ),  # NOTE: we need to add the REACT prefix for biolink mapping
                 pl.col("id").alias("to"),
-                pl.lit("pathway_protein").alias("label"),
+                pl.lit(Edge.format_label(Node.PATHWAY, Node.PROTEIN)).alias("label"),
                 pl.lit("interacts with").alias("relation"),
                 pl.lit(True).alias("undirected"),
                 pl.struct(

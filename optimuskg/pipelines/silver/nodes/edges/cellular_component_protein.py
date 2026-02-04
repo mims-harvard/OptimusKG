@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+
 
 def run(
     target: pl.DataFrame,
@@ -15,7 +17,7 @@ def run(
         .group_by(["target_id", "id"])
         .agg(
             [
-                pl.lit("cellular_component_protein").alias("label"),
+                pl.lit(Edge.format_label(Node.CELLULAR_COMPONENT, Node.PROTEIN)).alias("label"),
                 pl.lit(True).alias("undirected"),
                 pl.col("source").drop_nulls().unique().alias("sources"),
                 pl.col("evidence").drop_nulls().unique(),

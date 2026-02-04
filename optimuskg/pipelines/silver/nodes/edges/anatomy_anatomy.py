@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+
 
 def run(
     uberon_terms: pl.DataFrame,
@@ -21,7 +23,7 @@ def run(
         .select(
             pl.col("y_id").alias("from"),
             pl.col("x_id").alias("to"),
-            pl.lit("anatomy_anatomy").alias("label"),
+            pl.lit(Edge.format_label(Node.ANATOMY, Node.ANATOMY)).alias("label"),
             pl.lit("parent").alias("relation"),
             pl.lit(False).alias("undirected"),
             pl.struct(

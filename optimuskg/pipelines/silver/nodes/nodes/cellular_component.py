@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node
+
 
 def run(
     cellular_component_protein: pl.DataFrame,
@@ -22,7 +24,7 @@ def run(
         .join(go_terms, left_on="id", right_on="id", how="inner")
         .select(
             pl.col("id"),
-            pl.lit("cellular_component").alias("label"),
+            pl.lit(Node.CELLULAR_COMPONENT).alias("label"),
             pl.struct(
                 [
                     pl.lit("GO").alias("source"),

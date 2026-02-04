@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+
 
 def run(
     drug_protein: pl.DataFrame,
@@ -26,7 +28,7 @@ def run(
         .select(
             pl.col("chembl_id").alias("from"),
             pl.col("ensembl_id").alias("to"),
-            pl.lit("drug_protein").alias("label"),
+            pl.lit(Edge.format_label(Node.DRUG, Node.PROTEIN)).alias("label"),
             pl.col("relation_type").alias("relation"),
             pl.lit(False).alias("undirected"),
             pl.struct(
@@ -72,7 +74,7 @@ def run(
             [
                 pl.col("chembl_ids").alias("from"),
                 pl.col("targets").alias("to"),
-                pl.lit("drug_protein").alias("label"),
+                pl.lit(Edge.format_label(Node.DRUG, Node.PROTEIN)).alias("label"),
                 pl.col("action_type").alias("relation"),
                 pl.lit(False).alias("undirected"),
                 pl.struct(

@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node
+
 
 def run(
     anatomy_protein: pl.DataFrame,
@@ -20,7 +22,7 @@ def run(
         .join(uberon_terms, left_on="id", right_on="id", how="inner")
         .select(
             pl.col("id"),
-            pl.lit("anatomy").alias("label"),
+            pl.lit(Node.ANATOMY).alias("label"),
             pl.struct(
                 [
                     pl.lit("UBERON").alias("source"),

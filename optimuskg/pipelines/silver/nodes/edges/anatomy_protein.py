@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+
 
 def run(
     gene_expressions_in_anatomy: pl.DataFrame,
@@ -14,7 +16,7 @@ def run(
             .str.replace("UBERON:", "UBERON_")
             .alias("from"),  # NOTE: using _ to match biolink mapping
             pl.col("gene_id").alias("to"),
-            pl.lit("anatomy_protein").alias("label"),
+            pl.lit(Edge.format_label(Node.ANATOMY, Node.PROTEIN)).alias("label"),
             pl.when(pl.col("expression") == "present")
             .then(pl.lit("expression present"))
             .otherwise(pl.lit("expression absent"))

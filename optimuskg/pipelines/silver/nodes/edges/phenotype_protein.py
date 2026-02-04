@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node, Edge
+
 
 def run(
     target_disease_associations: pl.DataFrame,
@@ -71,7 +73,7 @@ def run(
             [
                 pl.col("from"),
                 pl.col("to"),
-                pl.lit("phenotype_protein").alias("label"),
+                pl.lit(Edge.format_label(Node.PHENOTYPE, Node.PROTEIN)).alias("label"),
                 pl.col("relation"),
                 pl.lit(False).alias("undirected"),
                 pl.when(pl.col("disgenet_props").is_not_null())
