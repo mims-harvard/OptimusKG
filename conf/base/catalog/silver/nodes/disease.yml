@@ -1,7 +1,35 @@
 silver.nodes.disease:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/silver/nodes/disease.parquet"
+  filepath: data/silver/nodes/disease.parquet
+  load_args:
+    schema:
+      id: pl.String
+      node_type: pl.String
+      properties:
+        source: pl.String
+        name: pl.String
+        description: pl.String
+        code: pl.String
+        xrefs: pl.List(pl.String)
+        parents: pl.List(pl.String)
+        exact_synonyms: pl.List(pl.String)
+        related_synonyms: pl.List(pl.String)
+        narrow_synonyms: pl.List(pl.String)
+        broad_synonyms: pl.List(pl.String)
+        obsolete_terms: pl.List(pl.String)
+        obsolete_xrefs: pl.List(pl.String)
+        children: pl.List(pl.String)
+        ancestors: pl.List(pl.String)
+        descendants: pl.List(pl.String)
+        therapeutic_areas: pl.List(pl.String)
+        is_leaf: pl.Boolean
+        concept_ids: pl.List(pl.String)
+        concept_names: pl.List(pl.String)
+        umls_cui: pl.String
+        snomed_full_names: pl.List(pl.String)
+        cui_semantic_type: pl.String
+        snomed_concept_ids: pl.List(pl.String)
   metadata:
-    checksum: "d1b49f787a7050a9a7a70c7a1398b180"
+    checksum: d1b49f787a7050a9a7a70c7a1398b180
     kedro-viz:
       layer: silver

@@ -1,8 +1,7 @@
 import warnings
 
-import polars as pl
-
 from optimuskg.hooks import ChecksumHooks, OriginHooks, QualityChecksHooks
+from optimuskg.utils import parse_polars_type
 
 # Ignore warnings about dataset names containing '.' characters.
 # We use '.' in dataset names to indicate a hierarchy of datasets.
@@ -26,7 +25,7 @@ CONFIG_LOADER_ARGS = {
     "base_env": "base",
     "default_run_env": "local",
     "custom_resolvers": {
-        "pl": lambda x: getattr(pl, x),  # Polars types
+        "pl": parse_polars_type,
     },
     "merge_strategy": {
         "base": "soft",

@@ -1,7 +1,16 @@
 silver.edges.disease_disease:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/silver/edges/disease_disease.parquet"
+  filepath: data/silver/edges/disease_disease.parquet
+  load_args:
+    schema:
+      from: pl.String
+      to: pl.String
+      relation: pl.String
+      undirected: pl.Boolean
+      properties:
+        relation_type: pl.String
+        sources: pl.List(pl.String)
   metadata:
-    checksum: "d1b49f787a7050a9a7a70c7a1398b180"
+    checksum: d1b49f787a7050a9a7a70c7a1398b180
     kedro-viz:
       layer: silver

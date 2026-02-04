@@ -1,7 +1,16 @@
 silver.nodes.exposure:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/silver/nodes/exposure.parquet"
+  filepath: data/silver/nodes/exposure.parquet
+  load_args:
+    schema:
+      id: pl.String
+      node_type: pl.String
+      properties:
+        sources: pl.List(pl.String)
+        name: pl.String
+        source_categories: pl.List(pl.String)
+        source_details: pl.String
   metadata:
-    checksum: "d1b49f787a7050a9a7a70c7a1398b180"
+    checksum: d1b49f787a7050a9a7a70c7a1398b180
     kedro-viz:
       layer: silver

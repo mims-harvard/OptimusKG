@@ -1,7 +1,40 @@
 silver.nodes.gene:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/silver/nodes/gene.parquet"
+  filepath: data/silver/nodes/gene.parquet
+  load_args:
+    schema:
+      id: pl.String
+      node_type: pl.String
+      properties:
+        sources: pl.List(pl.String)
+        symbol: pl.String
+        biotype: pl.String
+        transcript_ids: pl.List(pl.String)
+        canonical_transcript_encoded: pl.String
+        canonical_exons: pl.List(pl.String)
+        genomic_location_encoded: pl.String
+        alternative_genes: pl.List(pl.String)
+        name: pl.String
+        hallmarks_attributes_encoded: pl.List(pl.String)
+        cancer_hallmarks_encoded: pl.List(pl.String)
+        synonyms_encoded: pl.List(pl.String)
+        symbol_synonyms_encoded: pl.List(pl.String)
+        name_synonyms_encoded: pl.List(pl.String)
+        function_descriptions: pl.List(pl.String)
+        subcellular_locations_encoded: pl.List(pl.String)
+        target_class_encoded: pl.List(pl.String)
+        obsolete_symbols_encoded: pl.List(pl.String)
+        obsolete_names_encoded: pl.List(pl.String)
+        constraint_scores_encoded: pl.List(pl.String)
+        target_enabling_package_encoded: pl.String
+        associated_proteins_encoded: pl.List(pl.String)
+        xrefs_encoded: pl.List(pl.String)
+        chemical_probes_encoded: pl.List(pl.String)
+        homologues_encoded: pl.List(pl.String)
+        tractability_encoded: pl.List(pl.String)
+        safety_liabilities_encoded: pl.List(pl.String)
+        transcription_start_site: pl.Int64
   metadata:
-    checksum: "d1b49f787a7050a9a7a70c7a1398b180"
+    checksum: d1b49f787a7050a9a7a70c7a1398b180
     kedro-viz:
       layer: silver

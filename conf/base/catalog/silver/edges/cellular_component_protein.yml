@@ -1,7 +1,19 @@
 silver.edges.cellular_component_protein:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/silver/edges/cellular_component_protein.parquet"
+  filepath: data/silver/edges/cellular_component_protein.parquet
+  load_args:
+    schema:
+      from: pl.String
+      to: pl.String
+      relation: pl.String
+      undirected: pl.Boolean
+      properties:
+        sources: pl.List(pl.String)
+        evidence: pl.List(pl.String)
+        gene_product: pl.List(pl.String)
+        eco_ids: pl.List(pl.String)
+        relation_type: pl.String
   metadata:
-    checksum: "839d579d0be9c4ee6c7b9ab2a4539861"
+    checksum: 839d579d0be9c4ee6c7b9ab2a4539861
     kedro-viz:
       layer: silver

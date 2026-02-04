@@ -1,7 +1,11 @@
 bronze.opentargets.chembl_drugbank_mapping:
-  filepath: "data/bronze/opentargets/chembl_drugbank_mapping.parquet"
   type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/opentargets/chembl_drugbank_mapping.parquet
+  load_args:
+    schema:
+      chembl_id: pl.String
+      drugbank_id: pl.String
   metadata:
-    checksum: "c71a66269ba6c37add587a8d283c7815"
+    checksum: c71a66269ba6c37add587a8d283c7815
     kedro-viz:
       layer: bronze

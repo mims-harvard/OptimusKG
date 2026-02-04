@@ -1,7 +1,11 @@
 bronze.opentargets.ensembl_ncbi_mapping:
-  filepath: "data/bronze/opentargets/ensembl_ncbi_mapping.parquet"
   type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/opentargets/ensembl_ncbi_mapping.parquet
+  load_args:
+    schema:
+      ensembl_id: pl.String
+      ncbi_id: pl.String
   metadata:
-    checksum: "44150070848198245156620716408455"
+    checksum: '44150070848198245156620716408455'
     kedro-viz:
       layer: bronze

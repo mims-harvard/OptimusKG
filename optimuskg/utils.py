@@ -3,7 +3,9 @@ import logging
 import re
 from functools import lru_cache
 from pathlib import Path
+from typing import Any
 
+import polars as pl
 from kedro.framework.session import KedroSession
 from kedro.io.core import AbstractDataset, CatalogProtocol, DatasetNotFoundError
 from kedro.logging import _format_rich
@@ -13,6 +15,94 @@ from kedro_datasets.partitions.partitioned_dataset import (
 )
 
 logger = logging.getLogger(__name__)
+
+
+def parse_polars_type(type_expr: str) -> Any:
+    """Parse a polars type expression string into an actual polars type."""
+    type_expr = " ".join(type_expr.split()).strip()
+    return _parse_polars_type_internal(type_expr)
+
+
+def _parse_polars_type_internal(s: str) -> Any:
+    s = s.strip()
+
+    if not s:
+        raise ValueError("Empty type expression")
+
+    if s.startswith("pl."):
+        s = s[3:]
+
+    if not any(c in s for c in "({"):
+        if hasattr(pl, s):
+            return getattr(pl, s)
+        raise ValueError(f"Unknown polars type: {s}")
+
+    if s.startswith("List(") and s.endswith(")"):
+        inner = _extract_balanced_content(s, 5, "(", ")")
+        if len(inner) == len(s) - 6:
+            return pl.List(_parse_polars_type_internal(inner))
+
+    if s.startswith("Struct({") and s.endswith("})"):
+        inner = _extract_balanced_content(s, 8, "{", "}")
+        if len(inner) == len(s) - 10:
+            return pl.Struct(_parse_struct_fields(inner))
+
+    raise ValueError(f"Cannot parse polars type: {s}")
+
+
+def _extract_balanced_content(s: str, start: int, open_c: str, close_c: str) -> str:
+    depth = 1
+    i = start
+    while i < len(s) and depth > 0:
+        if s[i] == open_c:
+            depth += 1
+        elif s[i] == close_c:
+            depth -= 1
+        i += 1
+    return s[start : i - 1]
+
+
+def _parse_struct_fields(s: str) -> dict[str, Any]:
+    fields: dict[str, Any] = {}
+    current = ""
+    depth = 0
+
+    for char in s:
+        if char in "({":
+            depth += 1
+            current += char
+        elif char in ")}":
+            depth -= 1
+            current += char
+        elif char == "," and depth == 0:
+            _add_struct_field(current.strip(), fields)
+            current = ""
+        else:
+            current += char
+
+    if current.strip():
+        _add_struct_field(current.strip(), fields)
+
+    return fields
+
+
+def _add_struct_field(field_str: str, fields: dict[str, Any]) -> None:
+    if not field_str:
+        return
+
+    depth = 0
+    for i, char in enumerate(field_str):
+        if char in "({":
+            depth += 1
+        elif char in ")}":
+            depth -= 1
+        elif char == ":" and depth == 0:
+            name = field_str[:i].strip().strip("'\"")
+            type_str = field_str[i + 1 :].strip()
+            fields[name] = _parse_polars_type_internal(type_str)
+            return
+
+    raise ValueError(f"Invalid field definition (no colon found): {field_str}")
 
 
 def to_snake_case(text: str) -> str:
@@ -192,6 +282,3 @@ def get_dataset_path(ds_name: str) -> Path:
 
     path = Path(path_str)
     return path
-
-
-

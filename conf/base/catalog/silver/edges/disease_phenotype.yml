@@ -1,7 +1,25 @@
 silver.edges.disease_phenotype:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/silver/edges/disease_phenotype.parquet"
+  filepath: data/silver/edges/disease_phenotype.parquet
+  load_args:
+    schema:
+      from: pl.String
+      to: pl.String
+      relation: pl.String
+      undirected: pl.Boolean
+      properties:
+        aspect: pl.List(pl.String)
+        bio_curation: pl.List(pl.String)
+        evidence_type: pl.List(pl.String)
+        frequency: pl.List(pl.String)
+        modifiers: pl.List(pl.String)
+        onset: pl.List(pl.String)
+        qualifier_not: pl.Boolean
+        relation_type: pl.List(pl.String)
+        references: pl.List(pl.String)
+        sexes: pl.List(pl.String)
+        sources: pl.List(pl.String)
   metadata:
-    checksum: "d1b49f787a7050a9a7a70c7a1398b180"
+    checksum: d1b49f787a7050a9a7a70c7a1398b180
     kedro-viz:
       layer: silver

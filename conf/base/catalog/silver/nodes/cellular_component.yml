@@ -1,7 +1,21 @@
 silver.nodes.cellular_component:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/silver/nodes/cellular_component.parquet"
+  filepath: data/silver/nodes/cellular_component.parquet
+  load_args:
+    schema:
+      id: pl.String
+      node_type: pl.String
+      properties:
+        source: pl.String
+        name: pl.String
+        definition: pl.String
+        xrefs: pl.List(pl.String)
+        synonyms: pl.List(pl.String)
+        ontology_description: pl.String
+        ontology_title: pl.String
+        ontology_license: pl.String
+        ontology_version: pl.String
   metadata:
-    checksum: "d1b49f787a7050a9a7a70c7a1398b180"
+    checksum: d1b49f787a7050a9a7a70c7a1398b180
     kedro-viz:
       layer: silver

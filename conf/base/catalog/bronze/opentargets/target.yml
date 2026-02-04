@@ -1,7 +1,144 @@
 bronze.opentargets.target:
-  filepath: "data/bronze/opentargets/target.parquet"
   type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/opentargets/target.parquet
+  load_args:
+    schema:
+      id: pl.String
+      approved_symbol: pl.String
+      approved_name: pl.String
+      metadata:
+        biotype: pl.String
+        transcript_ids: pl.List(pl.String)
+        canonical_transcript:
+          id: pl.String
+          chromosome: pl.String
+          start: pl.Int64
+          end: pl.Int64
+          strand: pl.String
+        canonical_exons: pl.List(pl.String)
+        genomic_location:
+          chromosome: pl.String
+          start: pl.Int64
+          end: pl.Int64
+          strand: pl.Int32
+        alternative_genes: pl.List(pl.String)
+        go:
+          - id: pl.String
+            source: pl.String
+            evidence: pl.String
+            aspect: pl.String
+            gene_product: pl.String
+            eco_id: pl.String
+        hallmarks:
+          attributes:
+            - pmid: pl.Int64
+              description: pl.String
+              attribute_name: pl.String
+          cancer_hallmarks:
+            - pmid: pl.Int64
+              description: pl.String
+              impact: pl.String
+              label: pl.String
+        synonyms:
+          - label: pl.String
+            source: pl.String
+        symbol_synonyms:
+          - label: pl.String
+            source: pl.String
+        name_synonyms:
+          - label: pl.String
+            source: pl.String
+        function_descriptions: pl.List(pl.String)
+        subcellular_locations:
+          - location: pl.String
+            source: pl.String
+            term_sl: pl.String
+            label_sl: pl.String
+        target_class:
+          - id: pl.Int64
+            label: pl.String
+            level: pl.String
+        obsolete_symbols:
+          - label: pl.String
+            source: pl.String
+        obsolete_names:
+          - label: pl.String
+            source: pl.String
+        constraint:
+          - constraint_type: pl.String
+            score: pl.Float32
+            exp: pl.Float32
+            obs: pl.Int32
+            oe: pl.Float32
+            oe_lower: pl.Float32
+            oe_upper: pl.Float32
+            upper_rank: pl.Int32
+            upper_bin: pl.Int32
+            upper_bin6: pl.Int32
+        tep:
+          target_from_source_id: pl.String
+          description: pl.String
+          therapeutic_area: pl.String
+          url: pl.String
+        protein_ids:
+          - id: pl.String
+            source: pl.String
+        db_xrefs:
+          - id: pl.String
+            source: pl.String
+        chemical_probes:
+          - control: pl.String
+            drug_id: pl.String
+            id: pl.String
+            is_high_quality: pl.Boolean
+            mechanism_of_action: pl.List(pl.String)
+            origin: pl.List(pl.String)
+            probe_miner_score: pl.Int64
+            probes_drugs_score: pl.Int64
+            score_in_cells: pl.Int64
+            score_in_organisms: pl.Int64
+            target_from_source_id: pl.String
+            urls:
+              - nice_name: pl.String
+                url: pl.String
+        homologues:
+          - species_id: pl.String
+            species_name: pl.String
+            homology_type: pl.String
+            target_gene_id: pl.String
+            is_high_confidence: pl.String
+            target_gene_symbol: pl.String
+            query_percentage_identity: pl.Float64
+            target_percentage_identity: pl.Float64
+            priority: pl.Int32
+        tractability:
+          - modality: pl.String
+            id: pl.String
+            value: pl.Boolean
+        safety_liabilities:
+          - event: pl.String
+            event_id: pl.String
+            effects:
+              - direction: pl.String
+                dosing: pl.String
+            biosamples:
+              - cell_format: pl.String
+                cell_label: pl.String
+                tissue_id: pl.String
+                tissue_label: pl.String
+            datasource: pl.String
+            literature: pl.String
+            url: pl.String
+            studies:
+              - description: pl.String
+                name: pl.String
+                type: pl.String
+        pathways:
+          - pathway_id: pl.String
+            pathway: pl.String
+            top_level_term: pl.String
+        tss: pl.Int64
   metadata:
-    checksum: "6a83e76e5f88854aa5b39cdd75c14a3c"
+    checksum: 6a83e76e5f88854aa5b39cdd75c14a3c
     kedro-viz:
       layer: bronze

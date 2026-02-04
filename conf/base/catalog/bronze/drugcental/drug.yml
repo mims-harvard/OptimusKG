@@ -1,7 +1,43 @@
 bronze.drugcentral.drug:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/bronze/drugcentral/drug.parquet"
+  filepath: data/bronze/drugcentral/drug.parquet
+  load_args:
+    schema:
+      id: pl.String
+      cd_id: pl.String
+      cd_formula: pl.String
+      cd_molweight: pl.Float64
+      clogp: pl.Float64
+      alogs: pl.Float64
+      cas_reg_no: pl.String
+      tpsa: pl.Float64
+      lipinski: pl.Float64
+      name: pl.String
+      no_formulations: pl.Int32
+      molfile_base64: pl.String
+      mrdef: pl.String
+      enhanced_stereo: pl.Boolean
+      arom_c: pl.Int32
+      sp3_c: pl.Int32
+      sp2_c: pl.Int32
+      sp_c: pl.Int32
+      halogen: pl.Int32
+      hetero_sp2_c: pl.Int32
+      rotb: pl.Int32
+      molimg_base64: pl.String
+      o_n: pl.Int32
+      oh_nh: pl.Int32
+      inchi: pl.String
+      smiles: pl.String
+      rgb: pl.Float64
+      fda_labels: pl.Int32
+      inchi_key: pl.String
+      status: pl.String
+      struct_id: pl.String
+      accession_numbers: pl.String
+      unii: pl.String
+      synonyms: pl.String
   metadata:
-    checksum: "03b249e597ce160dc8d3ec3ac41c91bf"
+    checksum: 03b249e597ce160dc8d3ec3ac41c91bf
     kedro-viz:
       layer: bronze

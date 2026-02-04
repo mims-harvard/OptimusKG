@@ -1,7 +1,19 @@
 bronze.ontology.go_terms:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/bronze/ontology/go_terms.parquet"
+  filepath: data/bronze/ontology/go_terms.parquet
+  load_args:
+    schema:
+      id: pl.String
+      name: pl.String
+      type: pl.String
+      definition: pl.String
+      xrefs: pl.List(pl.String)
+      synonyms: pl.List(pl.String)
+      ontology_description: pl.String
+      ontology_title: pl.String
+      ontology_license: pl.String
+      ontology_version: pl.String
   metadata:
-    checksum: "a365417ae49638dbd82d93da6a79457a"
+    checksum: a365417ae49638dbd82d93da6a79457a
     kedro-viz:
       layer: bronze

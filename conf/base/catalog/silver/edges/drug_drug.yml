@@ -1,7 +1,17 @@
 silver.edges.drug_drug:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/silver/edges/drug_drug.parquet"
+  filepath: data/silver/edges/drug_drug.parquet
+  load_args:
+    schema:
+      from: pl.String
+      to: pl.String
+      relation: pl.String
+      undirected: pl.Boolean
+      properties:
+        relation_type: pl.List(pl.String)
+        sources: pl.List(pl.String)
+        interaction_description: pl.String
   metadata:
-    checksum: "88e346e8462b167494dbcdc40fcb4a1e"
+    checksum: 88e346e8462b167494dbcdc40fcb4a1e
     kedro-viz:
       layer: silver
