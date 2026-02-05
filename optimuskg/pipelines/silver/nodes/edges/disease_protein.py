@@ -3,7 +3,7 @@ import logging
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +36,7 @@ def run(  # noqa: PLR0913
             pl.col("disease_id").alias("from"),
             pl.col("target_id").alias("to"),
             pl.lit(Edge.format_label(Node.DISEASE, Node.PROTEIN)).alias("label"),
-            pl.lit("associated with").alias(
+            pl.lit(Relation.ASSOCIATED_WITH).alias(
                 "relation"
             ),  # TODO: change this literal to "associated with" using the evidence_score/evidence_count columns.
             pl.lit(True).alias("undirected"),
@@ -59,7 +59,7 @@ def run(  # noqa: PLR0913
         disgenet_diseases.select(
             "gene_symbol",
             "disease_id",
-            pl.lit("associated with").alias(
+            pl.lit(Relation.ASSOCIATED_WITH).alias(
                 "relation"
             ),  # TODO: change this literal to "associated with" using the disgenet_score/evidence_index column.
             pl.struct(

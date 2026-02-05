@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
 
 from .utils import classify_age_type, extract_age_value
 
@@ -192,7 +192,7 @@ def run(
                 pl.col("from"),
                 pl.col("to"),
                 pl.lit(Edge.format_label(Node.EXPOSURE, Node.PROTEIN)).alias("label"),
-                pl.lit("interacts with").alias(
+                pl.lit(Relation.INTERACTS_WITH).alias(
                     "relation"
                 ),  # NOTE: this is the same relation type used in PrimeKG, but we need to validate if this is consistent with the ontology tree.
                 pl.lit(False).alias("undirected"),

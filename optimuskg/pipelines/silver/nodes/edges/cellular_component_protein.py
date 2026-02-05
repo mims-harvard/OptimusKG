@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
 
 
 def run(
@@ -36,7 +36,7 @@ def run(
                 .alias("from"),  # use _ to match biolink mapping
                 pl.col("target_id").alias("to"),
                 pl.col("label"),
-                pl.lit("interacts with").alias("relation"),
+                pl.lit(Relation.INTERACTS_WITH).alias("relation"),
                 pl.col("undirected"),
                 pl.struct(
                     [

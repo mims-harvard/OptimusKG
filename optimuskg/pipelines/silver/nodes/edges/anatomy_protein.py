@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
 
 
 def run(
@@ -18,8 +18,8 @@ def run(
             pl.col("gene_id").alias("to"),
             pl.lit(Edge.format_label(Node.ANATOMY, Node.PROTEIN)).alias("label"),
             pl.when(pl.col("expression") == "present")
-            .then(pl.lit("expression present"))
-            .otherwise(pl.lit("expression absent"))
+            .then(pl.lit(Relation.EXPRESSION_PRESENT))
+            .otherwise(pl.lit(Relation.EXPRESSION_ABSENT))
             .alias("relation"),
             pl.lit(True).alias("undirected"),
             pl.struct(

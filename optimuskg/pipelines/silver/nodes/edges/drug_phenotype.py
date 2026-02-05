@@ -1,7 +1,14 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
+
+# DrugCentral relationship_name values
+_RELATION_MAP: dict[str, Relation] = {
+    "indication": Relation.INDICATION,
+    "off-label use": Relation.OFF_LABEL_USE,
+    "contraindication": Relation.CONTRAINDICATION,
+}
 
 
 def run(
@@ -13,7 +20,7 @@ def run(
         pl.col("ingredient_id").alias("from"),
         pl.col("effect_meddra_id").alias("to"),
         pl.lit(Edge.format_label(Node.DRUG, Node.PHENOTYPE)).alias("label"),
-        pl.lit("adverse drug reaction").alias("relation"),
+        pl.lit(Relation.ADVERSE_DRUG_REACTION).alias("relation"),
         pl.lit(True).alias("undirected"),
         pl.struct(
             [
@@ -40,7 +47,7 @@ def run(
             pl.col("drug_id").alias("from"),
             pl.col("disease").alias("to"),
             pl.lit(Edge.format_label(Node.DRUG, Node.PHENOTYPE)).alias("label"),
-            pl.lit("associated with").alias(
+            pl.lit(Relation.ASSOCIATED_WITH).alias(
                 "relation"
             ),  # TODO: the relation_type should be inferred from the highest_clinical_trial_phase number
             pl.lit(True).alias("undirected"),
@@ -65,7 +72,9 @@ def run(
         pl.col("from"),
         pl.col("to"),
         pl.lit(Edge.format_label(Node.DRUG, Node.PHENOTYPE)).alias("label"),
-        pl.col("relationship_name").alias("relation"),
+        pl.col("relationship_name")
+        .replace_strict(_RELATION_MAP, default=Relation.OTHER)
+        .alias("relation"),
         pl.lit(True).alias("undirected"),
         pl.struct(
             [

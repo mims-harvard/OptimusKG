@@ -1,7 +1,44 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node
+from optimuskg.pipelines.silver.nodes.constants import (
+    Edge,
+    Node,
+    Relation,
+    resolve_relation,
+)
+
+# DrugBank role types (lowercase)
+_DRUGBANK_RELATION_MAP: dict[str, Relation] = {
+    "target": Relation.TARGET,
+    "enzyme": Relation.ENZYME,
+    "transporter": Relation.TRANSPORTER,
+    "carrier": Relation.CARRIER,
+}
+
+# OpenTargets action types (uppercase with spaces)
+_OPENTARGETS_ACTION_MAP: dict[str, Relation] = {
+    "ACTIVATOR": Relation.ACTIVATOR,
+    "AGONIST": Relation.AGONIST,
+    "ALLOSTERIC ANTAGONIST": Relation.ALLOSTERIC_ANTAGONIST,
+    "ANTAGONIST": Relation.ANTAGONIST,
+    "BINDING AGENT": Relation.BINDING_AGENT,
+    "BLOCKER": Relation.BLOCKER,
+    "DEGRADER": Relation.DEGRADER,
+    "INHIBITOR": Relation.INHIBITOR,
+    "INVERSE AGONIST": Relation.INVERSE_AGONIST,
+    "MODULATOR": Relation.MODULATOR,
+    "NEGATIVE ALLOSTERIC MODULATOR": Relation.NEGATIVE_ALLOSTERIC_MODULATOR,
+    "NEGATIVE MODULATOR": Relation.NEGATIVE_MODULATOR,
+    "OPENER": Relation.OPENER,
+    "OTHER": Relation.OTHER,
+    "PARTIAL AGONIST": Relation.PARTIAL_AGONIST,
+    "POSITIVE ALLOSTERIC MODULATOR": Relation.POSITIVE_ALLOSTERIC_MODULATOR,
+    "POSITIVE MODULATOR": Relation.POSITIVE_MODULATOR,
+    "RELEASING AGENT": Relation.RELEASING_AGENT,
+    "STABILISER": Relation.STABILISER,
+    "SUBSTRATE": Relation.SUBSTRATE,
+}
 
 
 def run(
@@ -24,7 +61,14 @@ def run(
             how="inner",
         )
         .group_by(["chembl_id", "ensembl_id"])
-        .agg([pl.col("relation").unique().alias("relation_type")])
+        .agg(
+            [
+                pl.col("relation")
+                .replace_strict(_DRUGBANK_RELATION_MAP, default=Relation.OTHER)
+                .unique()
+                .alias("relation_type")
+            ]
+        )
         .select(
             pl.col("chembl_id").alias("from"),
             pl.col("ensembl_id").alias("to"),
@@ -67,7 +111,11 @@ def run(
                 .drop_nulls()
                 .unique()
                 .alias("source_urls"),
-                pl.col("action_type").drop_nulls().unique().alias("action_type"),
+                pl.col("action_type")
+                .replace_strict(_OPENTARGETS_ACTION_MAP, default=Relation.OTHER)
+                .drop_nulls()
+                .unique()
+                .alias("action_type"),
             ]
         )
         .select(
@@ -113,7 +161,7 @@ def run(
                         ),
                     ]
                 )
-                .list.unique()
+                .map_elements(resolve_relation, return_dtype=pl.Utf8)
                 .alias("relation_merged"),
                 pl.when(pl.col("opentargets_props").is_not_null())
                 .then(

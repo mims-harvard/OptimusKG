@@ -3,9 +3,21 @@ import logging
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node
+from optimuskg.pipelines.silver.nodes.constants import (
+    Edge,
+    Node,
+    Relation,
+    resolve_relation,
+)
 
 logger = logging.getLogger(__name__)
+
+# DrugCentral relationship_name values
+_RELATION_MAP: dict[str, Relation] = {
+    "indication": Relation.INDICATION,
+    "off-label use": Relation.OFF_LABEL_USE,
+    "contraindication": Relation.CONTRAINDICATION,
+}
 
 
 def run(
@@ -26,7 +38,7 @@ def run(
             pl.col("id").alias("from"),
             pl.col("disease").alias("to"),
             pl.lit(Edge.format_label(Node.DRUG, Node.DISEASE)).alias("label"),
-            pl.lit(["indication"]).alias(
+            pl.lit([Relation.INDICATION]).alias(
                 "relation"
             ),  # TODO: replace this with strong/weak clinical evidence derived from highest_clinical_trial_phase
             pl.lit(True).alias("undirected"),
@@ -51,7 +63,10 @@ def run(
             pl.col("from"),
             pl.col("to"),
             pl.lit(Edge.format_label(Node.DRUG, Node.DISEASE)).alias("label"),
-            pl.col("relationship_name").cast(pl.List(pl.Utf8)).alias("relation"),
+            pl.col("relationship_name")
+            .replace_strict(_RELATION_MAP, default=Relation.OTHER)
+            .cast(pl.List(pl.String))
+            .alias("relation"),
             pl.lit(True).alias("undirected"),
             pl.struct(
                 [
@@ -89,7 +104,9 @@ def run(
                             ]
                         ),
                     ]
-                ).alias("relation"),
+                )
+                .map_elements(resolve_relation, return_dtype=pl.Utf8)
+                .alias("relation"),
                 pl.coalesce([pl.col("undirected"), pl.col("undirected_right")]).alias(
                     "undirected"
                 ),

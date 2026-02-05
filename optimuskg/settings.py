@@ -1,15 +1,16 @@
 import warnings
 
-from optimuskg.hooks import ChecksumHooks, OriginHooks, QualityChecksHooks
-from optimuskg.utils import parse_polars_type
-
 # Ignore warnings about dataset names containing '.' characters.
 # We use '.' in dataset names to indicate a hierarchy of datasets.
+# NOTE: This must be set before importing hooks, which trigger node registration.
 warnings.filterwarnings(
     "ignore",
     message="Dataset name '.*' contains '.' characters.*",
     category=UserWarning,
 )
+
+from optimuskg.hooks import ChecksumHooks, OriginHooks, QualityChecksHooks  # noqa: E402
+from optimuskg.utils import parse_polars_type  # noqa: E402
 
 # Hooks are executed in a Last-In-First-Out (LIFO) order.
 HOOKS = (QualityChecksHooks(), ChecksumHooks(), OriginHooks())

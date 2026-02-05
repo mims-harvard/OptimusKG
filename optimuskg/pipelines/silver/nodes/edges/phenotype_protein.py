@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
 
 
 def run(
@@ -15,7 +15,7 @@ def run(
         .select(
             pl.col("disease_id").alias("from"),
             pl.col("target_id").alias("to"),
-            pl.lit("associated with").alias(
+            pl.lit(Relation.ASSOCIATED_WITH).alias(
                 "relation"
             ),  # TODO: change this literal to "associated with" using the evidence_score/evidence_count columns.
             pl.struct(
@@ -43,7 +43,7 @@ def run(
         .select(
             pl.col("hp_id").alias("from"),
             pl.col("id").alias("to"),
-            pl.lit("associated with").alias(
+            pl.lit(Relation.ASSOCIATED_WITH).alias(
                 "relation"
             ),  # TODO: change this literal to "associated with" using the disgenet_score/evidence_index column.
             pl.struct(

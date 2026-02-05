@@ -1,7 +1,12 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node
+from optimuskg.pipelines.silver.nodes.constants import (
+    Edge,
+    Node,
+    Relation,
+    resolve_relation,
+)
 
 
 def run(
@@ -36,7 +41,7 @@ def run(
                 .otherwise(pl.col("head_drug_id"))
                 .alias("to"),
                 pl.lit(Edge.format_label(Node.DRUG, Node.DRUG)).alias("label"),
-                pl.lit(["synergistic interaction"]).alias("relation"),
+                pl.lit([Relation.SYNERGISTIC_INTERACTION]).alias("relation"),
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
@@ -57,7 +62,7 @@ def run(
                 pl.col("id").alias("from"),
                 pl.col("child_chembl_ids").alias("to"),
                 pl.lit(Edge.format_label(Node.DRUG, Node.DRUG)).alias("label"),
-                pl.lit(["parent"]).alias("relation"),
+                pl.lit([Relation.PARENT]).alias("relation"),
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
@@ -90,7 +95,9 @@ def run(
                             ]
                         ),
                     ]
-                ).alias("relation"),
+                )
+                .map_elements(resolve_relation, return_dtype=pl.Utf8)
+                .alias("relation"),
                 pl.coalesce([pl.col("undirected"), pl.col("undirected_right")]).alias(
                     "undirected"
                 ),

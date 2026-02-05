@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
 
 
 def run(
@@ -12,7 +12,7 @@ def run(
             pl.col("reactome_id_1").alias("from"),
             pl.col("reactome_id_2").alias("to"),
             pl.lit(Edge.format_label(Node.PATHWAY, Node.PATHWAY)).alias("label"),
-            pl.lit("parent").alias("relation"),
+            pl.lit(Relation.PARENT).alias("relation"),
             pl.lit(False).alias("undirected"),
             pl.struct(
                 [

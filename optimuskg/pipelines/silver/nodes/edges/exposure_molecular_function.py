@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
 
 from .utils import classify_age_type, extract_age_value
 
@@ -189,7 +189,7 @@ def run(
                 pl.lit(Edge.format_label(Node.EXPOSURE, Node.MOLECULAR_FUNCTION)).alias(
                     "label"
                 ),
-                pl.lit("interacts with").alias(
+                pl.lit(Relation.INTERACTS_WITH).alias(
                     "relation"
                 ),  # NOTE: maybe use outcome_relationships as relation_type?
                 pl.lit(True).alias("undirected"),
