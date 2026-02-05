@@ -162,7 +162,7 @@ def get_node_metrics(  # noqa: PLR0912
             sources_counts[source] = sources_counts.get(source, 0) + 1
 
         # Calculate degree statistics for nodes of this type
-        node_label = df["node_type"].unique().item()
+        node_label = df["label"].unique().item()
         node_ids_in_df = df["id"].to_list()
         degrees_for_label = [node_degrees.get(node_id, 0) for node_id in node_ids_in_df]
 
@@ -284,7 +284,7 @@ def get_edge_metrics(edges: list[pl.DataFrame]) -> list[EdgeMetrics]:
 
         edge_metrics.append(
             EdgeMetrics(
-                label=df["relation"].unique().item(),
+                label=df["label"].unique().item(),
                 count=df.height,
                 percentage=df.height / sum(df.height for df in edges)
                 if sum(df.height for df in edges) > 0

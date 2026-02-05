@@ -42,13 +42,11 @@ At an architectural level, Optimus consists of the following components:
 
 OptimusKG is a biomedical Labeled Property Graph built using the Optimus pipeline. Each release provides the graph data in several formats, each tailored for different use cases:
 
-| Format | File | Description |
-| ---- | --- | --- |
-| **CSV** | `optimuskg.csv.zip` | Contains the headers and partitioned data files for each node and edge type. This is useful for bulk-importing the graph into a [Neo4j database](https://neo4j.com/docs/getting-started/data-import/). |
-| **PG-JSONL** | `optimuskg.pg.jsonl` | A single file representing the graph in the standardized [Property Graph Exchange Format (PG)](https://pg-format.github.io/specification/). This human-readable format is well-suited for data exchange, and situations where a self-contained graph representation is needed. |
-| **Neo4j-JSONL** | `optimuskg.jsonl` | A direct JSON lines export from a Neo4j instance of OptimusKG. This format is useful for interoperability with other tools in the Neo4j ecosystem, but is much large in size than the PG-JSONL format. |
-| **Parquet** | `nodes-parquet.zip` and `edges-parquet.zip` | Provide all the nodes and edges as separate [Apache Parquet](https://parquet.apache.org/) files. As a columnar storage format, Parquet is highly efficient for large-scale data analysis and is recommended for data science and machine learning workflows with tools like [Apache Spark](https://spark.apache.org/) and [Polars](https://pola.rs/). |
-| **Diamond** | `optimuskg.diamond` | A custom, compressed binary format of the full graph. It offers the smallest file size, making it ideal for efficient storage and network transfer. Diamond is developed by the same authors of Optimus. |
+| Format | Description |
+| ---- | --- |
+| **CSV** | Partitioned CSV files for each node and edge type, plus unified `nodes.csv` and `edges.csv` files. Useful for bulk-importing into a [Neo4j database](https://neo4j.com/docs/getting-started/data-import/). |
+| **Neo4j-JSONL** | A direct JSON lines export from a Neo4j instance of OptimusKG. Useful for interoperability with other tools in the Neo4j ecosystem. |
+| **Parquet** | Partitioned [Apache Parquet](https://parquet.apache.org/) files for each node and edge type, plus unified `nodes.parquet` and `edges.parquet` files. Recommended for data science and machine learning workflows with tools like [Apache Spark](https://spark.apache.org/) and [Polars](https://pola.rs/). |
 
 Each release includes a comprehensive graph report that contains:
 
@@ -61,13 +59,13 @@ Each release includes a comprehensive graph report that contains:
 > Distributed OptimusKG data files contain only publicly available data.
 > If you have access to private datasets, place them in the appropriate subdirectories under `data/landing/`. The pipeline will automatically use them if present.
 > 
-> If you do not have access, the [`Origin Hook`](https://github.com/mims-harvard/optimuskg/blob/main/optimuskg/hooks/origin/origin_hooks.pya) will generate empty placeholder datasets in their place. This allows pipeline nodes that depend on both public and private data to run, even if the private data is missing. As a result, you can still execute the pipeline and work with the public portions of the data without interruption.
+> If you do not have access, the [`Origin Hook`](https://github.com/mims-harvard/optimuskg/blob/main/optimuskg/hooks/origin/origin_hooks.py) will generate empty placeholder datasets in their place. This allows pipeline nodes that depend on both public and private data to run, even if the private data is missing. As a result, you can still execute the pipeline and work with the public portions of the data without interruption.
 
 ## Running Optimus
 
 ### Install dependencies
 
-Optimus uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as the project manager and [`docker`](https://docs.docker.com/engine/install/) to spin up the Neo4j database. 
+Optimus requires **Python 3.12 or higher**, and uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as the project manager and [`docker`](https://docs.docker.com/engine/install/) to spin up the Neo4j database. 
 
 > [!NOTE]
 > Docker is not required if you don't need to export the graph in Neo4j-JSONL format.
@@ -82,15 +80,18 @@ Audited 225 packages in 0.42ms
 ```
 
 > [!NOTE]
-> The are some commands that leverage [GNU Make](https://www.gnu.org/software/make/). 
+> There are some commands that leverage [GNU Make](https://www.gnu.org/software/make/). 
 > The command line reference documentation can be viewed with `make help`.
+
+> [!TIP]
+> Run `make help` for a list of available Make commands, and `uv run cli --help` for additional CLI utilities (e.g., checksum validation, metrics generation).
 
 ### Generating the graph
 
 Optimus is designed to generate a full knowledge graph in one command:
 
 ```console
-$ uv run kedro run --to-nodes gold.pg_export --runner=ParallelRunner --async
+$ uv run kedro run --to-nodes gold.export_kg --runner=ParallelRunner --async
 
 [01/28/25 19:29:07] INFO     Using 'conf/logging.yml' as logging configuration. You can change this by setting the KEDRO_LOGGING_CONFIG environment variable accordingly.
 [01/28/25 19:29:08] INFO     Kedro project optimuskg
@@ -98,7 +99,7 @@ $ uv run kedro run --to-nodes gold.pg_export --runner=ParallelRunner --async
 ```
 
 This will automatically download all the necessary data, store it in the `landing` layer, and execute the `bronze`, `silver`, and `gold` layers
-to finally export the graph inside the `data/export/` folder.
+to finally export the graph inside the `data/gold/formats/` folder.
 
 > [!NOTE]
 > It is recommended to use the [ParallelRunner](https://docs.kedro.org/en/latest/build/run_a_pipeline/#parallelrunner) 
@@ -108,15 +109,8 @@ to finally export the graph inside the `data/export/` folder.
 > This will not only export the knowledge graph, but also all the intermediate datasets used to generate it. 
 > The location of each dataset and their format is specified in the catalog.
 
-Similarly, you can export the Neo4j-JSONL format with:
-
-```console
-$ uv run kedro run --to-nodes gold.neo4j_export --runner=ParallelRunner --async
-
-[01/28/25 19:29:07] INFO     Using 'conf/logging.yml' as logging configuration. You can change this by setting the KEDRO_LOGGING_CONFIG environment variable accordingly.
-[01/28/25 19:29:08] INFO     Kedro project optimuskg
-[01/28/25 19:29:09] INFO     Using synchronous mode for loading and saving data. Use the --async flag for potential performance gains.
-```
+> [!TIP]
+> Export formats (CSV, Parquet, Neo4j) can be configured in `conf/base/parameters.yml` under `gold.export_formats`.
 
 Then, you can spin up a Neo4j database with the graph data simply by running:
 
@@ -151,15 +145,14 @@ The results will be saved to a file in `data/export/` with a filename derived fr
 
 ## Citation
 
-The Optimus paper has been peer-reviewed in [Nature Biotechnology](). Before it was available as a pre-print at [arXiv]().
+> [!NOTE]
+> Paper pending publication. Citation information will be updated upon publication.
 
 ```
 @article{vittor2025optimus,
   title={Building OptimusKG using the Optimus framework},
   author={Vittor, Lucas and Arango, Inaki and Poloneur, Joaquin, and Noori, Ayush and Zitnik, Marinka},
   journal={Nature Scientific Data},
-  doi={https://doi.org/<XXX>/<XXX>},
-  URL={https://www.nature.com/articles/<XXX>},
   year={2025}
 }
 ```

@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
+
 
 def run(
     protein_protein: pl.DataFrame,
@@ -15,12 +17,12 @@ def run(
         .select(
             pl.coalesce("ensembl_id", "from").alias("from"),
             pl.coalesce("ensembl_id_right", "to").alias("to"),
-            pl.lit("protein_protein").alias("relation"),
+            pl.lit(Edge.format_label(Node.PROTEIN, Node.PROTEIN)).alias("label"),
+            pl.lit(Relation.INTERACTS_WITH).alias("relation"),
             pl.lit(False).alias("undirected"),
             pl.struct(
                 [
                     pl.col("databases").alias("sources"),
-                    pl.lit("interacts with").alias("relation_type"),
                 ]
             ).alias("properties"),
         )

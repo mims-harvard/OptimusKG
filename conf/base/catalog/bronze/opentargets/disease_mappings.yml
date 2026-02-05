@@ -1,7 +1,11 @@
 bronze.opentargets.umls_disease_mappings:
-  filepath: "data/bronze/opentargets/umls_disease_mappings.parquet"
   type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/opentargets/umls_disease_mappings.parquet
+  load_args:
+    schema:
+      id: pl.String
+      umls_id: pl.String
   metadata:
-    checksum: "8bd08321c90e4b2ebc4fec8525568e16"
+    checksum: 8bd08321c90e4b2ebc4fec8525568e16
     kedro-viz:
       layer: bronze

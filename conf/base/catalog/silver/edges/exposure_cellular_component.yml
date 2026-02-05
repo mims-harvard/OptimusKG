@@ -1,7 +1,46 @@
 silver.edges.exposure_cellular_component:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/silver/edges/exposure_cellular_component.parquet"
+  filepath: data/silver/edges/exposure_cellular_component.parquet
+  load_args:
+    schema:
+      from: pl.String
+      to: pl.String
+      label: pl.String
+      relation: pl.String
+      undirected: pl.Boolean
+      properties:
+        sources: pl.List(pl.String)
+        evidence_count: pl.UInt32
+        number_of_receptors: pl.Int64
+        receptors: pl.List(pl.String)
+        receptor_notes: pl.List(pl.String)
+        smoking_statuses: pl.List(pl.String)
+        age_entries: pl.UInt32
+        age_range_values: pl.List(pl.String)
+        age_mean_values: pl.List(pl.String)
+        age_median_values: pl.List(pl.String)
+        age_point_values: pl.List(pl.String)
+        age_open_range_values: pl.List(pl.String)
+        sexes: pl.List(pl.String)
+        races: pl.List(pl.String)
+        methods: pl.List(pl.String)
+        detection_limit: pl.List(pl.String)
+        detection_limit_uom: pl.List(pl.String)
+        detection_frequency: pl.List(pl.String)
+        mediums: pl.List(pl.String)
+        assay_notes: pl.List(pl.String)
+        study_countries: pl.List(pl.String)
+        states_or_provinces: pl.List(pl.String)
+        city_town_region_areas: pl.List(pl.String)
+        exposure_event_notes: pl.List(pl.String)
+        outcome_relationships: pl.List(pl.String)
+        exposure_outcome_notes: pl.List(pl.String)
+        references: pl.List(pl.String)
+        associated_study_titles: pl.List(pl.String)
+        enrollment_start_years: pl.List(pl.String)
+        enrollment_end_years: pl.List(pl.String)
+        study_factors: pl.List(pl.String)
   metadata:
-    checksum: "d1b49f787a7050a9a7a70c7a1398b180"
+    checksum: d1b49f787a7050a9a7a70c7a1398b180
     kedro-viz:
       layer: silver

@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
+
 from .utils import classify_age_type, extract_age_value
 
 
@@ -130,7 +132,10 @@ def run(
                 .str.strip_chars()
                 .unique()
                 .alias("methods"),
-                pl.col("detection_limit").drop_nulls().unique().alias("detection_limit"),
+                pl.col("detection_limit")
+                .drop_nulls()
+                .unique()
+                .alias("detection_limit"),
                 pl.col("detection_limit_uom")
                 .drop_nulls()
                 .unique()
@@ -199,14 +204,14 @@ def run(
             [
                 pl.col("from"),
                 pl.col("to"),
-                pl.lit("exposure_exposure").alias("relation"),
+                pl.lit(Edge.format_label(Node.EXPOSURE, Node.EXPOSURE)).alias("label"),
+                pl.lit(Relation.PARENT).alias(
+                    "relation"
+                ),  # NOTE: this is the same relation type used in PrimeKG, but we need to validate if this is consistent with the ontology tree.
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
                         pl.lit(["CTD"]).alias("sources"),
-                        pl.lit("parent").alias(
-                            "relation_type"
-                        ),  # NOTE: this is the same relation type used in PrimeKG, but we need to validate if this is consistent with the ontology tree.
                         pl.col("evidence_count"),
                         pl.col("number_of_receptors"),
                         pl.col("receptors"),

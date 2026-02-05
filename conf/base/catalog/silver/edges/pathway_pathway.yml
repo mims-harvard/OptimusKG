@@ -1,7 +1,16 @@
 silver.edges.pathway_pathway:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/silver/edges/pathway_pathway.parquet"
+  filepath: data/silver/edges/pathway_pathway.parquet
+  load_args:
+    schema:
+      from: pl.String
+      to: pl.String
+      label: pl.String
+      relation: pl.String
+      undirected: pl.Boolean
+      properties:
+        sources: pl.List(pl.String)
   metadata:
-    checksum: "55c501c89a1515c5748131f501c41d58"
+    checksum: 55c501c89a1515c5748131f501c41d58
     kedro-viz:
       layer: silver

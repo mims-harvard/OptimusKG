@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node
+
 
 def run(
     biological_process_protein: pl.DataFrame,
@@ -24,7 +26,7 @@ def run(
         )  # TODO: there are 3 ids that are not in the go_terms table
         .select(
             pl.col("id"),
-            pl.lit("biological_process").alias("node_type"),
+            pl.lit(Node.BIOLOGICAL_PROCESS).alias("label"),
             pl.struct(
                 [
                     pl.lit("GO").alias("source"),

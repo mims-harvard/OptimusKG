@@ -1,7 +1,33 @@
 bronze.opentargets.disease:
-  filepath: "data/bronze/opentargets/disease.parquet"
   type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/opentargets/disease.parquet
+  load_args:
+    schema:
+      id: pl.String
+      name: pl.String
+      description: pl.String
+      metadata:
+        code: pl.String
+        db_xrefs: pl.List(pl.String)
+        parents: pl.List(pl.String)
+        synonyms:
+          has_exact_synonym: pl.List(pl.String)
+          has_related_synonym: pl.List(pl.String)
+          has_narrow_synonym: pl.List(pl.String)
+          has_broad_synonym: pl.List(pl.String)
+        obsolete_terms: pl.List(pl.String)
+        obsolete_xrefs: pl.List(pl.String)
+        children: pl.List(pl.String)
+        ancestors: pl.List(pl.String)
+        therapeutic_areas: pl.List(pl.String)
+        descendants: pl.List(pl.String)
+        ontology:
+          is_therapeutic_area: pl.Boolean
+          leaf: pl.Boolean
+          sources:
+            url: pl.String
+            name: pl.String
   metadata:
-    checksum: "c703a800145c7877ca7b96835328e967"
+    checksum: c703a800145c7877ca7b96835328e967
     kedro-viz:
       layer: bronze

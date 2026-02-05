@@ -1,7 +1,55 @@
 silver.nodes.drug:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/silver/nodes/drug.parquet"
+  filepath: data/silver/nodes/drug.parquet
+  load_args:
+    schema:
+      id: pl.String
+      label: pl.String
+      properties:
+        name: pl.String
+        inchi_key: pl.String
+        type: pl.String
+        synonyms: pl.List(pl.String)
+        description: pl.String
+        accession_numbers: pl.List(pl.String)
+        canonical_smiles: pl.String
+        chemical_abstracts_service_number: pl.String
+        unique_ingredient_identifier: pl.String
+        black_box_warning: pl.Boolean
+        year_of_first_approval: pl.Int64
+        maximum_clinical_trial_phase: pl.Float64
+        has_been_withdrawn: pl.Boolean
+        is_approved: pl.Boolean
+        trade_names: pl.List(pl.String)
+        sources: pl.List(pl.String)
+        source_ids: pl.List(pl.String)
+        cd_id: pl.String
+        cd_formula: pl.String
+        cd_mol_weight: pl.Float64
+        calculated_log_p: pl.Float64
+        alogs: pl.Float64
+        tpsa: pl.Float64
+        lipinski: pl.Float64
+        number_of_formulations: pl.Int32
+        mol_file_base64: pl.String
+        mol_image_base64: pl.String
+        mrdef: pl.String
+        enhanced_stereo: pl.Boolean
+        aromatic_carbons: pl.Int32
+        sp3_count: pl.Int32
+        sp2_count: pl.Int32
+        sp_count: pl.Int32
+        halogen_count: pl.Int32
+        hetero_sp2_count: pl.Int32
+        rotatable_bonds: pl.Int32
+        o_n: pl.Int32
+        oh_nh: pl.Int32
+        inchi: pl.String
+        rgb: pl.Float64
+        fda_labels: pl.Int32
+        status: pl.String
+        struct_id: pl.String
   metadata:
-    checksum: "d1b49f787a7050a9a7a70c7a1398b180"
+    checksum: d1b49f787a7050a9a7a70c7a1398b180
     kedro-viz:
       layer: silver

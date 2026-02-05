@@ -1,6 +1,45 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import (
+    Edge,
+    Node,
+    Relation,
+    resolve_relation,
+)
+
+# DrugBank role types (lowercase)
+_DRUGBANK_RELATION_MAP: dict[str, Relation] = {
+    "target": Relation.TARGET,
+    "enzyme": Relation.ENZYME,
+    "transporter": Relation.TRANSPORTER,
+    "carrier": Relation.CARRIER,
+}
+
+# OpenTargets action types (uppercase with spaces)
+_OPENTARGETS_ACTION_MAP: dict[str, Relation] = {
+    "ACTIVATOR": Relation.ACTIVATOR,
+    "AGONIST": Relation.AGONIST,
+    "ALLOSTERIC ANTAGONIST": Relation.ALLOSTERIC_ANTAGONIST,
+    "ANTAGONIST": Relation.ANTAGONIST,
+    "BINDING AGENT": Relation.BINDING_AGENT,
+    "BLOCKER": Relation.BLOCKER,
+    "DEGRADER": Relation.DEGRADER,
+    "INHIBITOR": Relation.INHIBITOR,
+    "INVERSE AGONIST": Relation.INVERSE_AGONIST,
+    "MODULATOR": Relation.MODULATOR,
+    "NEGATIVE ALLOSTERIC MODULATOR": Relation.NEGATIVE_ALLOSTERIC_MODULATOR,
+    "NEGATIVE MODULATOR": Relation.NEGATIVE_MODULATOR,
+    "OPENER": Relation.OPENER,
+    "OTHER": Relation.OTHER,
+    "PARTIAL AGONIST": Relation.PARTIAL_AGONIST,
+    "POSITIVE ALLOSTERIC MODULATOR": Relation.POSITIVE_ALLOSTERIC_MODULATOR,
+    "POSITIVE MODULATOR": Relation.POSITIVE_MODULATOR,
+    "RELEASING AGENT": Relation.RELEASING_AGENT,
+    "STABILISER": Relation.STABILISER,
+    "SUBSTRATE": Relation.SUBSTRATE,
+}
+
 
 def run(
     drug_protein: pl.DataFrame,
@@ -22,16 +61,23 @@ def run(
             how="inner",
         )
         .group_by(["chembl_id", "ensembl_id"])
-        .agg([pl.col("relation").unique().alias("relation_type")])
+        .agg(
+            [
+                pl.col("relation")
+                .replace_strict(_DRUGBANK_RELATION_MAP, default=Relation.OTHER)
+                .unique()
+                .alias("relation_type")
+            ]
+        )
         .select(
             pl.col("chembl_id").alias("from"),
             pl.col("ensembl_id").alias("to"),
-            pl.lit("drug_protein").alias("relation"),
+            pl.lit(Edge.format_label(Node.DRUG, Node.PROTEIN)).alias("label"),
+            pl.col("relation_type").alias("relation"),
             pl.lit(False).alias("undirected"),
             pl.struct(
                 [
                     pl.lit(["drugbank", "opentargets"]).alias("sources"),
-                    pl.col("relation_type"),
                 ]
             ).alias("drugbank_props"),
         )
@@ -65,14 +111,19 @@ def run(
                 .drop_nulls()
                 .unique()
                 .alias("source_urls"),
-                pl.col("action_type").drop_nulls().unique().alias("action_type"),
+                pl.col("action_type")
+                .replace_strict(_OPENTARGETS_ACTION_MAP, default=Relation.OTHER)
+                .drop_nulls()
+                .unique()
+                .alias("action_type"),
             ]
         )
         .select(
             [
                 pl.col("chembl_ids").alias("from"),
                 pl.col("targets").alias("to"),
-                pl.lit("drug_protein").alias("relation"),
+                pl.lit(Edge.format_label(Node.DRUG, Node.PROTEIN)).alias("label"),
+                pl.col("action_type").alias("relation"),
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
@@ -80,7 +131,6 @@ def run(
                         pl.col("source_ids"),
                         pl.col("source_urls"),
                         pl.col("mechanisms_of_action"),
-                        pl.col("action_type").alias("relation_type"),
                     ]
                 ).alias("opentargets_props"),
             ]
@@ -95,6 +145,24 @@ def run(
         )
         .with_columns(
             [
+                pl.concat_list(
+                    [
+                        pl.coalesce(
+                            [
+                                pl.col("relation"),
+                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                            ]
+                        ),
+                        pl.coalesce(
+                            [
+                                pl.col("relation_right"),
+                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                            ]
+                        ),
+                    ]
+                )
+                .map_elements(resolve_relation, return_dtype=pl.Utf8)
+                .alias("relation_merged"),
                 pl.when(pl.col("opentargets_props").is_not_null())
                 .then(
                     pl.struct(
@@ -109,36 +177,29 @@ def run(
                             ],
                             pl.concat_list(
                                 [
-                                    pl.col("opentargets_props").struct.field(
-                                        "sources"
-                                    ),
-                                    pl.col("drugbank_props").struct.field(
-                                        "sources"
-                                    ),
+                                    pl.col("opentargets_props").struct.field("sources"),
+                                    pl.col("drugbank_props").struct.field("sources"),
                                 ]
                             )
                             .list.unique()
                             .alias("sources"),
-                            pl.concat_list(
-                                [
-                                    pl.col("opentargets_props").struct.field(
-                                        "relation_type"
-                                    ),
-                                    pl.col("drugbank_props").struct.field(
-                                        "relation_type"
-                                    ),
-                                ]
-                            )
-                            .list.unique()
-                            .alias("relation_type"),
                         ]
                     )
                 )
                 .otherwise(pl.col("drugbank_props"))
-                .alias("properties")
+                .alias("properties"),
             ]
         )
-        .select(["from", "to", "relation", "undirected", "properties"])
+        .select(
+            [
+                "from",
+                "to",
+                "label",
+                pl.col("relation_merged").alias("relation"),
+                "undirected",
+                "properties",
+            ]
+        )
         .unique(subset=["from", "to"])
         .sort(["from", "to"])
     )

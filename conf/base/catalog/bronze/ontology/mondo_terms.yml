@@ -1,7 +1,19 @@
 bronze.ontology.mondo_terms:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/bronze/ontology/mondo_terms.parquet"
+  filepath: data/bronze/ontology/mondo_terms.parquet
+  load_args:
+    schema:
+      id: pl.String
+      name: pl.String
+      type: pl.String
+      definition: pl.String
+      xrefs: pl.List(pl.String)
+      synonyms: pl.List(pl.String)
+      ontology_description: pl.String
+      ontology_title: pl.String
+      ontology_license: pl.String
+      ontology_version: pl.String
   metadata:
-    checksum: "dab7d2219a34a9c7439739b60c808ce5"
+    checksum: dab7d2219a34a9c7439739b60c808ce5
     kedro-viz:
       layer: bronze

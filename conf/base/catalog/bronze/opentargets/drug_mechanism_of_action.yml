@@ -1,7 +1,20 @@
 bronze.opentargets.drug_mechanism_of_action:
-  filepath: "data/bronze/opentargets/drug_mechanism_of_action.parquet"
   type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/opentargets/drug_mechanism_of_action.parquet
+  load_args:
+    schema:
+      targets: pl.List(pl.String)
+      chembl_ids: pl.List(pl.String)
+      mechanism_of_action: pl.String
+      metadata:
+        action_type: pl.String
+        target_name: pl.String
+        target_type: pl.String
+        references:
+          - source: pl.String
+            ids: pl.List(pl.String)
+            urls: pl.List(pl.String)
   metadata:
-    checksum: "0dc00d77ff5e42a35ba51c33dd4b78ea"
+    checksum: 0dc00d77ff5e42a35ba51c33dd4b78ea
     kedro-viz:
       layer: bronze

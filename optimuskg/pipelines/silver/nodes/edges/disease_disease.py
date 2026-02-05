@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
+
 
 def run(
     disease: pl.DataFrame,
@@ -18,16 +20,16 @@ def run(
         .with_columns(
             pl.col("parents").alias("from"),
             pl.col("id").alias("to"),
-            pl.lit("disease_disease").alias("relation"),
+            pl.lit(Edge.format_label(Node.DISEASE, Node.DISEASE)).alias("label"),
+            pl.lit(Relation.PARENT).alias("relation"),
             pl.lit(False).alias("undirected"),
             pl.struct(
                 [
-                    pl.lit("parent").alias("relation_type"),
                     pl.lit(["opentargets"]).alias("sources"),
                 ]
             ).alias("properties"),
         )
-        .select(["from", "to", "relation", "undirected", "properties"])
+        .select(["from", "to", "label", "relation", "undirected", "properties"])
         .unique(subset=["from", "to"])
         .sort(by=["from", "to"])
     )

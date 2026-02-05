@@ -1,7 +1,16 @@
 bronze.drugcentral.phenotype:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/bronze/drugcentral/phenotype.parquet"
+  filepath: data/bronze/drugcentral/phenotype.parquet
+  load_args:
+    schema:
+      id: pl.String
+      concept_ids: pl.List(pl.String)
+      concept_names: pl.List(pl.String)
+      umls_cui: pl.String
+      snomed_full_names: pl.List(pl.String)
+      cui_semantic_type: pl.String
+      snomed_conceptids: pl.List(pl.String)
   metadata:
-    checksum: "03b249e597ce160dc8d3ec3ac41c91bf"
+    checksum: 03b249e597ce160dc8d3ec3ac41c91bf
     kedro-viz:
       layer: bronze

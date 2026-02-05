@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import logging
 from copy import deepcopy
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 from typing import Any
 
 import fsspec
@@ -18,6 +18,8 @@ from kedro.io.core import (
     get_filepath_str,
     get_protocol_and_path,
 )
+
+from optimuskg.utils import parse_polars_type
 
 logger = logging.getLogger(__name__)
 
@@ -171,9 +173,40 @@ class ParquetDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
     def load(self) -> pl.DataFrame:
         load_path = get_filepath_str(self._get_load_path(), self._protocol)
         load_args = self._load_args.copy()
+
+        schema_config = load_args.pop("schema", None)
+        if schema_config:
+            load_args["schema"] = self._parse_schema(schema_config)
+
         if self._protocol != "file":
             load_args["storage_options"] = self._storage_options
+
         return pl.read_parquet(load_path, **load_args)
+
+    def _parse_schema(self, schema: dict[str, Any]) -> dict[str, Any]:
+        parsed = {}
+        for col_name, type_spec in schema.items():
+            try:
+                parsed[col_name] = self._parse_type_spec(type_spec)
+            except ValueError as e:
+                logger.warning("Could not parse type for column '%s': %s", col_name, e)
+        return parsed
+
+    def _parse_type_spec(self, type_spec: str | dict | list) -> Any:
+        if isinstance(type_spec, str):
+            return parse_polars_type(type_spec)
+        elif isinstance(type_spec, dict):
+            fields = {
+                name: self._parse_type_spec(field_spec)
+                for name, field_spec in type_spec.items()
+            }
+            return pl.Struct(fields)
+        elif isinstance(type_spec, list):
+            if len(type_spec) != 1:
+                raise ValueError(
+                    f"List schema must have exactly one element, got {len(type_spec)}"
+                )
+            return pl.List(self._parse_type_spec(type_spec[0]))
 
     def save(self, data: pl.DataFrame) -> None:
         save_path = get_filepath_str(self._get_save_path(), self._protocol)
@@ -187,13 +220,9 @@ class ParquetDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
         self._invalidate_cache()
 
     def _ensure_parent_dir_exists(self, filepath: str) -> None:
-        """Ensure parent directory of the given filepath exists."""
         if self._protocol == "file":
-            from pathlib import Path
-
             Path(filepath).parent.mkdir(parents=True, exist_ok=True)
         else:
-            # For other filesystems, use fsspec
             self._fs.mkdirs(str(Path(filepath).parent), exist_ok=True)
 
     def _exists(self) -> bool:
@@ -209,6 +238,5 @@ class ParquetDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
         self._invalidate_cache()
 
     def _invalidate_cache(self) -> None:
-        """Invalidate underlying filesystem caches."""
         filepath = get_filepath_str(self._filepath, self._protocol)
         self._fs.invalidate_cache(filepath)

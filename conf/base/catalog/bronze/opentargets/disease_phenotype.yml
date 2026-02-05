@@ -1,7 +1,27 @@
 bronze.opentargets.disease_phenotype:
-  filepath: "data/bronze/opentargets/disease_phenotype.parquet"
   type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/opentargets/disease_phenotype.parquet
+  load_args:
+    schema:
+      disease: pl.String
+      phenotype: pl.String
+      metadata:
+        evidence:
+          - aspect: pl.String
+            bio_curation: pl.String
+            disease_from_source_id: pl.String
+            disease_from_source: pl.String
+            disease_name: pl.String
+            evidence_type: pl.String
+            frequency: pl.String
+            modifiers: pl.List(pl.String)
+            onset: pl.List(pl.String)
+            qualifier: pl.String
+            qualifier_not: pl.Boolean
+            references: pl.List(pl.String)
+            sex: pl.String
+            resource: pl.String
   metadata:
-    checksum: "0dc00d77ff5e42a35ba51c33dd4b78ea"
+    checksum: 0dc00d77ff5e42a35ba51c33dd4b78ea
     kedro-viz:
       layer: bronze

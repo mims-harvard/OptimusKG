@@ -1,7 +1,11 @@
 bronze.ontology.mondo_xrefs:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/bronze/ontology/mondo_xrefs.parquet"
+  filepath: data/bronze/ontology/mondo_xrefs.parquet
+  load_args:
+    schema:
+      id: pl.String
+      xref_id: pl.String
   metadata:
-    checksum: "a313b4911343beb7301077c5db5903f0"
+    checksum: a313b4911343beb7301077c5db5903f0
     kedro-viz:
       layer: bronze

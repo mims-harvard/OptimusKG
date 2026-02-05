@@ -19,7 +19,9 @@ def run(
                 pl.col("drugType").alias("drug_type"),
                 pl.col("blackBoxWarning").alias("black_box_warning"),
                 pl.col("yearOfFirstApproval").alias("year_of_first_approval"),
-                pl.col("maximumClinicalTrialPhase").alias("maximum_clinical_trial_phase"),
+                pl.col("maximumClinicalTrialPhase").alias(
+                    "maximum_clinical_trial_phase"
+                ),
                 pl.col("parentId").alias("parent_id"),
                 pl.col("hasBeenWithdrawn").alias("has_been_withdrawn"),
                 pl.col("isApproved").alias("is_approved"),

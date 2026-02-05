@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
+
 
 def run(
     hp_relations: pl.DataFrame,
@@ -9,12 +11,12 @@ def run(
         hp_relations.select(
             pl.col("parent").alias("from"),
             pl.col("child").alias("to"),
-            pl.lit("phenotype_phenotype").alias("relation"),
+            pl.lit(Edge.format_label(Node.PHENOTYPE, Node.PHENOTYPE)).alias("label"),
+            pl.lit(Relation.PARENT).alias("relation"),
             pl.lit(False).alias("undirected"),
             pl.struct(  # TODO: we can add more metadata merging with opentargets disease_phenotype and disease dataset
                 [
                     pl.lit(["HP"]).alias("sources"),
-                    pl.lit("parent").alias("relation_type"),
                 ]
             ).alias("properties"),
         )

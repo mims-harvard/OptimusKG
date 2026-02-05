@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node
+
 
 def run(  # noqa: PLR0913
     opentargets_disease: pl.DataFrame,
@@ -45,7 +47,7 @@ def run(  # noqa: PLR0913
         .unique(subset="id")
         .select(
             pl.col("id"),
-            pl.lit("disease").alias("node_type"),
+            pl.lit(Node.DISEASE).alias("label"),
             pl.struct(
                 [
                     pl.col("id")

@@ -1,7 +1,15 @@
 silver.nodes.pathway:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: "data/silver/nodes/pathway.parquet"
+  filepath: data/silver/nodes/pathway.parquet
+  load_args:
+    schema:
+      id: pl.String
+      label: pl.String
+      properties:
+        sources: pl.List(pl.String)
+        name: pl.String
+        species: pl.String
   metadata:
-    checksum: "d1b49f787a7050a9a7a70c7a1398b180"
+    checksum: d1b49f787a7050a9a7a70c7a1398b180
     kedro-viz:
       layer: silver

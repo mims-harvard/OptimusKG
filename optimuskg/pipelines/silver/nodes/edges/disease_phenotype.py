@@ -1,6 +1,13 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import (
+    Edge,
+    Node,
+    Relation,
+    resolve_relation,
+)
+
 
 def run(
     disease_phenotype: pl.DataFrame,
@@ -30,10 +37,10 @@ def run(
                 pl.concat_list("onset").flatten().drop_nulls().unique().alias("onset"),
                 pl.col("qualifier_not").any().alias("qualifier_not"),
                 pl.when(~pl.col("qualifier_not"))
-                .then(pl.lit("phenotype present"))
-                .otherwise(pl.lit("phenotype absent"))
+                .then(pl.lit(Relation.PHENOTYPE_PRESENT))
+                .otherwise(pl.lit(Relation.PHENOTYPE_ABSENT))
                 .unique()
-                .alias("relation_type"),
+                .alias("relation"),
                 pl.concat_list("references")
                 .flatten()
                 .drop_nulls()
@@ -46,7 +53,8 @@ def run(
         .select(
             pl.col("from"),
             pl.col("to"),
-            pl.lit("disease_phenotype").alias("relation"),
+            pl.lit(Edge.format_label(Node.DISEASE, Node.PHENOTYPE)).alias("label"),
+            pl.col("relation").map_elements(resolve_relation, return_dtype=pl.String),
             pl.lit(True).alias("undirected"),
             pl.struct(
                 [
@@ -57,7 +65,6 @@ def run(
                     pl.col("modifiers"),
                     pl.col("onset"),
                     pl.col("qualifier_not"),
-                    pl.col("relation_type"),
                     pl.col("references"),
                     pl.col("sexes"),
                     pl.col("sources"),

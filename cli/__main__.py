@@ -8,6 +8,7 @@ from cli.commands import (
     metrics_command,
     plot_benchmark_command,
     plot_normalized_time,
+    sync_catalog_schemas_command,
     unify_benchmark_files_command,
 )
 from optimuskg.utils import calculate_checksum
@@ -122,6 +123,76 @@ def unify_benchmark_files(
     ),
 ):
     unify_benchmark_files_command(benchmarks_dir)
+
+
+@app.command(help="Synchronize or validate schema specifications for parquet datasets.")
+def sync_schemas(  # noqa: PLR0913
+    layer: str = typer.Option(
+        "all",
+        "--layer",
+        "-l",
+        help="Target layer: bronze, silver, or all.",
+    ),
+    dataset: str = typer.Option(
+        None,
+        "--dataset",
+        "-d",
+        help="Specific dataset name (e.g., bronze.opentargets.disease).",
+    ),
+    validate: bool = typer.Option(
+        False,
+        "--validate",
+        "-v",
+        help="Validate schemas without updating files.",
+    ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        "-n",
+        help="Preview changes without writing files.",
+    ),
+    catalog_dir: Path = typer.Option(
+        Path("conf/base/catalog"),
+        "--catalog-dir",
+        help="Path to the catalog directory.",
+    ),
+    data_dir: Path = typer.Option(
+        Path("data"),
+        "--data-dir",
+        help="Path to the data directory.",
+    ),
+):
+    """Synchronize or validate schema specifications for parquet datasets.
+
+    This command reads parquet files and generates idiomatic YAML schema
+    specifications for the Kedro catalog files.
+
+    Examples:
+
+        # Sync all parquet schemas
+
+        python -m cli sync-catalog-schemas
+
+        # Validate without updating
+
+        python -m cli sync-catalog-schemas --validate
+
+        # Sync bronze layer only, dry-run
+
+        python -m cli sync-catalog-schemas --layer bronze --dry-run
+
+        # Sync a specific dataset
+
+        python -m cli sync-catalog-schemas --dataset bronze.opentargets.disease
+    """
+    sync_catalog_schemas_command(
+        layer=layer,
+        dataset=dataset,
+        validate=validate,
+        dry_run=dry_run,
+        catalog_dir=catalog_dir,
+        data_dir=data_dir,
+    )
 
 
 if __name__ == "__main__":

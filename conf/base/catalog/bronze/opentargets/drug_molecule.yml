@@ -1,7 +1,34 @@
 bronze.opentargets.drug_molecule:
-  filepath: "data/bronze/opentargets/drug_molecule.parquet"
   type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/opentargets/drug_molecule.parquet
+  load_args:
+    schema:
+      id: pl.String
+      name: pl.String
+      metadata:
+        canonical_smiles: pl.String
+        inchi_key: pl.String
+        drug_type: pl.String
+        black_box_warning: pl.Boolean
+        year_of_first_approval: pl.Int64
+        maximum_clinical_trial_phase: pl.Float64
+        parent_id: pl.String
+        has_been_withdrawn: pl.Boolean
+        is_approved: pl.Boolean
+        trade_names: pl.List(pl.String)
+        synonyms: pl.List(pl.String)
+        cross_references:
+          - source: pl.String
+            ids: pl.List(pl.String)
+        child_chembl_ids: pl.List(pl.String)
+        linked_diseases:
+          rows: pl.List(pl.String)
+          count: pl.Int32
+        linked_targets:
+          rows: pl.List(pl.String)
+          count: pl.Int32
+        description: pl.String
   metadata:
-    checksum: "ada9c19a9bd7133375908982ac1ccdc2"
+    checksum: ada9c19a9bd7133375908982ac1ccdc2
     kedro-viz:
       layer: bronze

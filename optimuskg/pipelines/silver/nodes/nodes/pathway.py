@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node
+
 
 def run(  # noqa: PLR0913
     pathway_pathway: pl.DataFrame,
@@ -30,7 +32,7 @@ def run(  # noqa: PLR0913
         .select(
             [
                 pl.col("id"),
-                pl.lit("pathway").alias("node_type"),
+                pl.lit(Node.PATHWAY).alias("label"),
                 pl.struct(
                     [
                         pl.lit(["REACTOME", "opentargets"]).alias("sources"),

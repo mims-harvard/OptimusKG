@@ -1,6 +1,8 @@
 import polars as pl
 from kedro.pipeline import node
 
+from optimuskg.pipelines.silver.nodes.constants import Node
+
 
 def run(  # noqa: PLR0913
     onsides_high_confidence: pl.DataFrame,
@@ -65,7 +67,7 @@ def run(  # noqa: PLR0913
         .select(
             [
                 pl.col("id"),
-                pl.lit("drug").alias("node_type"),
+                pl.lit(Node.DRUG).alias("label"),
                 pl.struct(
                     pl.coalesce(
                         [
@@ -82,9 +84,9 @@ def run(  # noqa: PLR0913
                             pl.col("inchi_key_right"),
                         ]
                     ).alias("inchi_key"),
-                    pl.coalesce([pl.col("rxnorm_term_type"), pl.col("drug_type")]).alias(
-                        "type"
-                    ),
+                    pl.coalesce(
+                        [pl.col("rxnorm_term_type"), pl.col("drug_type")]
+                    ).alias("type"),
                     pl.concat_list(
                         [
                             pl.when(
@@ -128,7 +130,9 @@ def run(  # noqa: PLR0913
                     ),
                     pl.col("black_box_warning").alias("black_box_warning"),
                     pl.col("year_of_first_approval").alias("year_of_first_approval"),
-                    pl.col("maximum_clinical_trial_phase").alias("maximum_clinical_trial_phase"),
+                    pl.col("maximum_clinical_trial_phase").alias(
+                        "maximum_clinical_trial_phase"
+                    ),
                     pl.col("has_been_withdrawn").alias("has_been_withdrawn"),
                     pl.col("is_approved").alias("is_approved"),
                     pl.when(pl.col("trade_names").list.len() > 0)

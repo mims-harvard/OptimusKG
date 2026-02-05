@@ -85,7 +85,7 @@ class Edge(BaseModel):
                 "properties": {
                     k: v if isinstance(v, list) else [v]
                     for k, v in edge.properties.items()
-                    if k == "relation_type"
+                    if k == "relation"
                 },
                 "undirected": edge.properties.get("undirected", "false").lower()
                 == "true",

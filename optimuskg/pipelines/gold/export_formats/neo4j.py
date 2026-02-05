@@ -37,22 +37,25 @@ class BiocypherNode:
         return 3
 
 
-def _yield_nodes(df: pl.DataFrame) -> Iterator[BiocypherNode]:
+def _yield_nodes(
+    df: pl.DataFrame, include_properties: bool = True
+) -> Iterator[BiocypherNode]:
     for row in df.iter_rows(named=True):
-        not_null_properties = {}
-        for k, v in row[
-            "properties"
-        ].items():  # Escape double quotes since biocypher doesn't escape them
-            if v is not None:
-                if isinstance(v, list) and all(isinstance(x, str) for x in v):
-                    not_null_properties[k] = [x.replace('"', '""') for x in v]
-                elif isinstance(v, str):
-                    not_null_properties[k] = v.replace('"', '""')
-                else:
-                    not_null_properties[k] = v
+        not_null_properties: dict[str, Any] = {}
+        if include_properties:
+            for k, v in row[
+                "properties"
+            ].items():  # Escape double quotes since biocypher doesn't escape them
+                if v is not None:
+                    if isinstance(v, list) and all(isinstance(x, str) for x in v):
+                        not_null_properties[k] = [x.replace('"', '""') for x in v]
+                    elif isinstance(v, str):
+                        not_null_properties[k] = v.replace('"', '""')
+                    else:
+                        not_null_properties[k] = v
         yield BiocypherNode(
             id=row["id"],
-            label=row["node_type"],
+            label=row["label"],
             properties=not_null_properties,
         )
 
@@ -76,28 +79,31 @@ class BiocypherEdge:
         return 5
 
 
-def _yield_edges(df: pl.DataFrame) -> Iterator[BiocypherEdge]:
+def _yield_edges(
+    df: pl.DataFrame, include_properties: bool = True
+) -> Iterator[BiocypherEdge]:
     for row in df.iter_rows(named=True):
-        properties = {**row["properties"], "undirected": row["undirected"]}
-        not_null_properties = {}
-        for (
-            k,
-            v,
-        ) in (
-            properties.items()
-        ):  # Escape double quotes since biocypher doesn't escape them
-            if v is not None:
-                if isinstance(v, list) and all(isinstance(x, str) for x in v):
-                    not_null_properties[k] = [x.replace('"', '""') for x in v]
-                elif isinstance(v, str):
-                    not_null_properties[k] = v.replace('"', '""')
-                else:
-                    not_null_properties[k] = v
+        not_null_properties: dict[str, Any] = {"undirected": row["undirected"]}
+        if include_properties:
+            properties = {**row["properties"], "undirected": row["undirected"]}
+            for (
+                k,
+                v,
+            ) in (
+                properties.items()
+            ):  # Escape double quotes since biocypher doesn't escape them
+                if v is not None:
+                    if isinstance(v, list) and all(isinstance(x, str) for x in v):
+                        not_null_properties[k] = [x.replace('"', '""') for x in v]
+                    elif isinstance(v, str):
+                        not_null_properties[k] = v.replace('"', '""')
+                    else:
+                        not_null_properties[k] = v
         yield BiocypherEdge(
             id=str(uuid.uuid4()),
             from_id=row["from"],
             to_id=row["to"],
-            label=row["relation"],
+            label=row["label"],
             properties=not_null_properties,
         )
 
@@ -189,44 +195,60 @@ def csv_to_neo4j(import_path: Path, schema_config_path: Path) -> None:
         )
 
 
-def neo4j_export(  # noqa: PLR0913, PLR0912
-    nodes_dict: dict[str, pl.DataFrame], edges_dict: dict[str, pl.DataFrame]
-) -> None:  # TODO: add meta/no-meta parameter
+def _process_adapters(
+    bc: BioCypher,
+    adapters: list[Iterator[Any]],
+    adapter_type: str,
+    write_func: Any,
+) -> None:
+    """Process and write adapters to BioCypher.
+
+    Args:
+        bc: BioCypher instance.
+        adapters: List of adapter iterators.
+        adapter_type: Type name for logging ("node" or "edge").
+        write_func: BioCypher write function (write_nodes or write_edges).
+    """
+    if not adapters:
+        logger.error(f"There are no {adapter_type}s to process.")
+        return
+
+    for i, iterable in enumerate(adapters):
+        logger.info(
+            f"Processing {adapter_type} adapter "
+            f"{format_rich(str(i + 1), 'dark_orange')}/"
+            f"{format_rich(str(len(adapters)), 'dark_orange')}."
+        )
+
+        items = peekable(iterable)
+        if items.peek(None) is not None:
+            logger.info(f"Writing {adapter_type}s...")
+            write_func(items)
+        else:
+            logger.warning(f"No {adapter_type}s found.")
+
+
+def neo4j_export(
+    nodes_dict: dict[str, pl.DataFrame],
+    edges_dict: dict[str, pl.DataFrame],
+    include_properties: bool = True,
+) -> None:
+    """Export knowledge graph to Neo4j via BioCypher.
+
+    Args:
+        nodes_dict: Dictionary of node type name to DataFrame.
+        edges_dict: Dictionary of edge type name to DataFrame.
+        include_properties: If True, include properties in exported nodes/edges.
+                           If False, export only structural data (id, label, etc.).
+    """
     bc = BioCypher(biocypher_config_path=_BIOCYPHER_CONFIG_PATH)
 
-    node_adapters = [_yield_nodes(df) for df in nodes_dict.values()]
-    edge_adapters = [_yield_edges(df) for df in edges_dict.values()]
+    node_adapters = [_yield_nodes(df, include_properties) for df in nodes_dict.values()]
+    edge_adapters = [_yield_edges(df, include_properties) for df in edges_dict.values()]
 
     try:
-        if not node_adapters:
-            logger.error("There are no nodes to process.")
-        else:
-            for i, nodes_iterable in enumerate(node_adapters):
-                logger.info(
-                    f"Processing node adapter {format_rich(str(i + 1), 'dark_orange')}/{format_rich(str(len(node_adapters)), 'dark_orange')}."
-                )
-
-                nodes_p = peekable(nodes_iterable)
-                if nodes_p.peek(None) is not None:
-                    logger.info("Writing nodes...")
-                    bc.write_nodes(nodes_p)
-                else:
-                    logger.warning("No nodes found.")
-
-        if not edge_adapters:
-            logger.error("There are no edges to process.")
-        else:
-            for i, edges_iterable in enumerate(edge_adapters):
-                logger.info(
-                    f"Processing edge adapter {format_rich(str(i + 1), 'dark_orange')}/{format_rich(str(len(edge_adapters)), 'dark_orange')}."
-                )
-
-                edges_p = peekable(edges_iterable)
-                if edges_p.peek(None) is not None:
-                    logger.info("Writing edges...")
-                    bc.write_edges(edges_p)
-                else:
-                    logger.warning("No edges found.")
+        _process_adapters(bc, node_adapters, "node", bc.write_nodes)
+        _process_adapters(bc, edge_adapters, "edge", bc.write_edges)
     except Exception as e:
         logger.exception(f"Error writing graph data to disk: {e}")
         raise
@@ -238,5 +260,5 @@ def neo4j_export(  # noqa: PLR0913, PLR0912
             schema_config_path=_BIOCYPHER_SCHEMA_CONFIG_PATH,
         )
     except Exception as e:
-        logger.exception(f"Error writing graph data to disk: {e}")
+        logger.exception(f"Error importing graph data to Neo4j: {e}")
         raise
