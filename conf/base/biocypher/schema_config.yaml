@@ -4,7 +4,7 @@
 
 gene:
   represented_as: node
-  input_label: gene
+  input_label: GEN
   properties:
     sources: str[]
     symbol: str
@@ -38,12 +38,12 @@ gene:
 anatomy:
   is_a: anatomical entity
   represented_as: node
-  input_label: anatomy
+  input_label: ANA
   properties:
     source: str
     name: str
     definition: str
-    xrefs: str[]
+    xrefs: str
     synonyms: str
     ontology_description: str
     ontology_title: str
@@ -53,7 +53,7 @@ anatomy:
 exposure:
   is_a: environmental exposure
   represented_as: node
-  input_label: exposure
+  input_label: EXP
   properties:
     sources: str[]
     name: str
@@ -62,7 +62,7 @@ exposure:
 
 drug:
   represented_as: node
-  input_label: drug
+  input_label: DRG
   properties:
     name: str
     inchi_key: str
@@ -110,7 +110,7 @@ drug:
 
 disease:
   represented_as: node
-  input_label: disease
+  input_label: DIS
   properties:
     source: str
     name: str
@@ -139,7 +139,7 @@ disease:
 phenotype:
   is_a: phenotypic feature
   represented_as: node
-  input_label: phenotype
+  input_label: PHE
   properties:
     sources: str[]
     name: str
@@ -170,13 +170,13 @@ phenotype:
 
 biological process:
   represented_as: node
-  input_label: biological_process
+  input_label: BPO
   properties:
     source: str
     name: str
     definition: str
     xrefs: str[]
-    synonyms: str
+    synonyms: str[]
     ontology_description: str
     ontology_title: str
     ontology_license: str
@@ -184,13 +184,13 @@ biological process:
 
 cellular component:
   represented_as: node
-  input_label: cellular_component
+  input_label: CCO
   properties:
     source: str
     name: str
     definition: str
     xrefs: str[]
-    synonyms: str
+    synonyms: str[]
     ontology_description: str
     ontology_title: str
     ontology_license: str
@@ -198,13 +198,13 @@ cellular component:
 
 molecular function:
   represented_as: node
-  input_label: molecular_function
+  input_label: MFN
   properties:
     source: str
     name: str
     definition: str
     xrefs: str[]
-    synonyms: str
+    synonyms: str[]
     ontology_description: str
     ontology_title: str
     ontology_license: str
@@ -212,7 +212,7 @@ molecular function:
 
 pathway:
   represented_as: node
-  input_label: pathway
+  input_label: PWY
   properties:
     name: str
     sources: str[]
@@ -225,10 +225,10 @@ pathway:
 anatomy protein:
   is_a: linked to
   represented_as: edge
-  input_label: anatomy_protein
+  input_label: ANA-PRO
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     expression_rank: int
     call_quality: str
     sources: str[]
@@ -236,19 +236,19 @@ anatomy protein:
 anatomy anatomy:
   is_a: related to
   represented_as: edge
-  input_label: anatomy_anatomy
+  input_label: ANA-ANA
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
 
 exposure disease:
   is_a: linked to
   represented_as: edge
-  input_label: exposure_disease
+  input_label: EXP-DIS
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
     evidence_count: int
     number_of_receptors: int
@@ -258,6 +258,7 @@ exposure disease:
     age_entries: int
     age_range_values: str[]
     age_mean_values: str[]
+    age_median_values: str[]
     age_point_values: str[]
     age_open_range_values: str[]
     sexes: str[]
@@ -283,10 +284,10 @@ exposure disease:
 exposure exposure:
   is_a: has_part
   represented_as: edge
-  input_label: exposure_exposure
+  input_label: EXP-EXP
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
     evidence_count: int
     number_of_receptors: int
@@ -296,6 +297,7 @@ exposure exposure:
     age_entries: int
     age_range_values: str[]
     age_mean_values: str[]
+    age_median_values: str[]
     age_point_values: str[]
     age_open_range_values: str[]
     sexes: str[]
@@ -321,10 +323,10 @@ exposure exposure:
 exposure protein:
   is_a: interacts_with
   represented_as: edge
-  input_label: exposure_protein
+  input_label: EXP-PRO
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
     evidence_count: int
     number_of_receptors: int
@@ -334,6 +336,7 @@ exposure protein:
     age_entries: int
     age_range_values: str[]
     age_mean_values: str[]
+    age_median_values: str[]
     age_point_values: str[]
     age_open_range_values: str[]
     sexes: str[]
@@ -359,27 +362,38 @@ exposure protein:
 disease protein:
   is_a: related to
   represented_as: edge
-  input_label: disease_protein
+  input_label: DIS-PRO
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
+    evidence_score: float
+    evidence_count: int
+    disease_specificity_index: float
+    disease_pleiotropy_index: float
+    evidence_index: float
+    disgenet_score: float
+    year_initial: str
+    year_final: str
+    number_of_pmids: int
+    number_of_snps: int
+    sources: str[]
 
 disease disease:
   is_a: related to
   represented_as: edge
-  input_label: disease_disease
+  input_label: DIS-DIS
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
 
 phenotype protein:
   is_a: related to
   represented_as: edge
-  input_label: phenotype_protein
+  input_label: PHE-PRO
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     evidence_score: float
     evidence_count: int
     disease_specificity_index: float
@@ -395,45 +409,45 @@ phenotype protein:
 drug protein:
   is_a: physically interacts with
   represented_as: edge
-  input_label: drug_protein
+  input_label: DRG-PRO
   properties:
     undirected: bool
-    relation_type: str[]
+    relation: str
     source_ids: str[]
     source_urls: str[]
     mechanisms_of_action: str[]
     sources: str[]
-    structure_id: str
-    drug_disease_id: str
 
 drug drug:
   is_a: physically interacts with
   represented_as: edge
-  input_label: drug_drug
+  input_label: DRG-DRG
   properties:
     undirected: bool
-    relation_type: str[]
+    relation: str
     sources: str[]
     interaction_description: str
 
 drug disease:
   is_a: related to
   represented_as: edge
-  input_label: drug_disease
+  input_label: DRG-DIS
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     reference_ids: str[]
     sources: str[]
     highest_clinical_trial_phase: float
+    structure_id: str
+    drug_disease_id: str
 
 drug phenotype:
   is_a: related to
   represented_as: edge
-  input_label: drug_phenotype
+  input_label: DRG-PHE
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
     reference_ids: str[]
     highest_clinical_trial_phase: float
@@ -443,10 +457,10 @@ drug phenotype:
 biological process protein:
   is_a: regulates
   represented_as: edge
-  input_label: biological_process_protein
+  input_label: BPO-PRO
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
     evidence: str[]
     gene_product: str[]
@@ -455,10 +469,10 @@ biological process protein:
 cellular component protein:
   is_a: regulates
   represented_as: edge
-  input_label: cellular_component_protein
+  input_label: CCO-PRO
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
     evidence: str[]
     gene_product: str[]
@@ -467,10 +481,10 @@ cellular component protein:
 molecular function protein:
   is_a: regulates
   represented_as: edge
-  input_label: molecular_function_protein
+  input_label: MFN-PRO
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
     evidence: str[]
     gene_product: str[]
@@ -479,28 +493,28 @@ molecular function protein:
 pathway pathway:
   is_a: has_part
   represented_as: edge
-  input_label: pathway_pathway
+  input_label: PWY-PWY
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
 
 pathway protein:
   is_a: has_part
   represented_as: edge
-  input_label: pathway_protein
+  input_label: PWY-PRO
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
 
 exposure biological process:
   is_a: related to
   represented_as: edge
-  input_label: exposure_biological_process
+  input_label: EXP-BPO
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
     evidence_count: int
     number_of_receptors: int
@@ -510,6 +524,7 @@ exposure biological process:
     age_entries: int
     age_range_values: str[]
     age_mean_values: str[]
+    age_median_values: str[]
     age_point_values: str[]
     age_open_range_values: str[]
     sexes: str[]
@@ -535,10 +550,10 @@ exposure biological process:
 exposure molecular function:
   is_a: related to
   represented_as: edge
-  input_label: exposure_molecular_function
+  input_label: EXP-MFN
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
     evidence_count: int
     number_of_receptors: int
@@ -548,6 +563,7 @@ exposure molecular function:
     age_entries: int
     age_range_values: str[]
     age_mean_values: str[]
+    age_median_values: str[]
     age_point_values: str[]
     age_open_range_values: str[]
     sexes: str[]
@@ -573,10 +589,10 @@ exposure molecular function:
 exposure cellular component:
   is_a: related to
   represented_as: edge
-  input_label: exposure_cellular_component
+  input_label: EXP-CCO
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
     evidence_count: int
     number_of_receptors: int
@@ -586,6 +602,7 @@ exposure cellular component:
     age_entries: int
     age_range_values: str[]
     age_mean_values: str[]
+    age_median_values: str[]
     age_point_values: str[]
     age_open_range_values: str[]
     sexes: str[]
@@ -612,37 +629,37 @@ exposure cellular component:
 cellular component cellular component:
   is_a: has_part
   represented_as: edge
-  input_label: cellular_component_cellular_component
+  input_label: CCO-CCO
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
 
 biological process biological process:
   is_a: has_part
   represented_as: edge
-  input_label: biological_process_biological_process
+  input_label: BPO-BPO
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
 
 molecular function molecular function:
   is_a: has_part
   represented_as: edge
-  input_label: molecular_function_molecular_function
+  input_label: MFN-MFN
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
 
 disease phenotype:
   is_a: related to
   represented_as: edge
-  input_label: disease_phenotype
+  input_label: DIS-PHE
   properties:
     undirected: bool
-    relation_type: str[]
+    relation: str
     aspect: str[]
     bio_curation: str[]
     evidence_type: str[]
@@ -657,17 +674,17 @@ disease phenotype:
 phenotype phenotype:
   is_a: has_part
   represented_as: edge
-  input_label: phenotype_phenotype
+  input_label: PHE-PHE
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]
 
 protein protein:
   is_a: related to
   represented_as: edge
-  input_label: protein_protein
+  input_label: PRO-PRO
   properties:
     undirected: bool
-    relation_type: str
+    relation: str
     sources: str[]

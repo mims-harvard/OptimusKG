@@ -121,15 +121,14 @@ def csv_to_neo4j(import_path: Path, schema_config_path: Path) -> None:
     edge_args = []
     for name, config in schema_config.items():
         represented_as = config.get("represented_as")
-        input_label = config.get("input_label")
 
-        if not input_label:
-            logger.warning(f"'{name}' is missing 'input_label' in schema, skipping.")
+        if not represented_as:
+            logger.debug(f"'{name}' is missing 'represented_as' in schema, skipping.")
             continue
 
-        pascal_case_label = "".join(
-            word.capitalize() for word in input_label.split("_")
-        )
+        # BioCypher names files based on the schema key (entity name), not input_label.
+        # Schema uses spaces (e.g., "biological process"), so split on whitespace.
+        pascal_case_label = "".join(word.capitalize() for word in name.split())
         header_file = f"{pascal_case_label}-header.csv"
 
         if represented_as == "node":
@@ -158,11 +157,7 @@ def csv_to_neo4j(import_path: Path, schema_config_path: Path) -> None:
     command = [
         "docker",
         "run",
-        "--interactive",
-        "--tty",
         "--rm",
-        "--publish=7474:7474",
-        "--publish=7687:7687",
         "--volume=./data/neo4j/data:/data",
         f"--volume=./{import_path}:/import",
         "--volume=./data/export:/export",
@@ -251,6 +246,29 @@ def neo4j_export(
         _process_adapters(bc, edge_adapters, "edge", bc.write_edges)
     except Exception as e:
         logger.exception(f"Error writing graph data to disk: {e}")
+        raise
+
+    # Fix permissions on import directory so host user can check file existence.
+    # BioCypher writes files via Docker as uid 7474 with mode 700, which prevents
+    # the host user from reading the directory for the csv_to_neo4j file checks.
+    try:
+        logger.info("Fixing permissions on import directory...")
+        subprocess.run(
+            [
+                "docker",
+                "run",
+                "--rm",
+                f"--volume=./{_NEO4J_IMPORT_PATH}:/import",
+                "alpine",
+                "chmod",
+                "-R",
+                "755",
+                "/import",
+            ],
+            check=True,
+        )
+    except subprocess.CalledProcessError as e:
+        logger.exception(f"Error fixing permissions on import directory: {e}")
         raise
 
     try:
