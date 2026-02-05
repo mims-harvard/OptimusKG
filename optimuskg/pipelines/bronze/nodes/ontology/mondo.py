@@ -71,19 +71,24 @@ def run(
             .struct.field("synonyms")
             .list.eval(pl.element().struct.field("val"))
             .alias("synonyms"),
-            *[
-                pl.col("meta_bpv")
-                .list.eval(
-                    pl.element()
-                    .filter(pl.element().struct.field("pred") == uri)
-                    .struct.field("val")
-                )
-                .list.get(0)
-                .alias(f"ontology_{name}")
-                for name, uri in predicates.items()
-            ],
+            pl.struct(
+                [
+                    *[
+                        pl.col("meta_bpv")
+                        .list.eval(
+                            pl.element()
+                            .filter(pl.element().struct.field("pred") == uri)
+                            .struct.field("val")
+                        )
+                        .list.get(0)
+                        .alias(name)
+                        for name, uri in predicates.items()
+                    ],
+                    pl.col("ontology_version").alias("version"),
+                ]
+            ).alias("ontology"),
         )
-        .drop(["meta_bpv", "meta"])
+        .drop(["meta_bpv", "meta", "ontology_version"])
         .unique()
         .select(
             [
@@ -93,10 +98,7 @@ def run(
                 "definition",
                 "xrefs",
                 "synonyms",
-                "ontology_description",
-                "ontology_title",
-                "ontology_license",
-                "ontology_version",
+                "ontology",
             ]
         )
         .sort(by="id")

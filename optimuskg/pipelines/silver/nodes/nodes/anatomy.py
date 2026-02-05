@@ -30,10 +30,7 @@ def run(
                     pl.col("definition"),
                     pl.col("xrefs"),
                     pl.col("synonyms"),
-                    pl.col("ontology_description").alias("ontology_description"),
-                    pl.col("ontology_title").alias("ontology_title"),
-                    pl.col("ontology_license").alias("ontology_license"),
-                    pl.col("ontology_version").alias("ontology_version"),
+                    pl.col("ontology"),
                 ]
             ).alias("properties"),
         )

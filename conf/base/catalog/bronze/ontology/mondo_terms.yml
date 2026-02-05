@@ -9,11 +9,11 @@ bronze.ontology.mondo_terms:
       definition: pl.String
       xrefs: pl.List(pl.String)
       synonyms: pl.List(pl.String)
-      ontology_description: pl.String
-      ontology_title: pl.String
-      ontology_license: pl.String
-      ontology_version: pl.String
+      ontology:
+        description: pl.String
+        title: pl.String
+        license: pl.String
+        version: pl.String
   metadata:
-    checksum: dab7d2219a34a9c7439739b60c808ce5
     kedro-viz:
       layer: bronze

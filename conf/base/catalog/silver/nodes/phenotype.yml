@@ -22,10 +22,11 @@ silver.nodes.phenotype:
         ancestors: pl.List(pl.String)
         descendants: pl.List(pl.String)
         type: pl.String
-        ontology_description: pl.String
-        ontology_title: pl.String
-        ontology_license: pl.String
-        ontology_version: pl.String
+        ontology:
+          description: pl.String
+          title: pl.String
+          license: pl.String
+          version: pl.String
         concept_ids: pl.List(pl.String)
         concept_names: pl.List(pl.String)
         umls_cui: pl.String
@@ -33,6 +34,5 @@ silver.nodes.phenotype:
         cui_semantic_type: pl.String
         snomed_concept_ids: pl.List(pl.String)
   metadata:
-    checksum: d1b49f787a7050a9a7a70c7a1398b180
     kedro-viz:
       layer: silver
