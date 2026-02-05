@@ -195,6 +195,39 @@ def csv_to_neo4j(import_path: Path, schema_config_path: Path) -> None:
         )
 
 
+def _process_adapters(
+    bc: BioCypher,
+    adapters: list[Iterator[Any]],
+    adapter_type: str,
+    write_func: Any,
+) -> None:
+    """Process and write adapters to BioCypher.
+
+    Args:
+        bc: BioCypher instance.
+        adapters: List of adapter iterators.
+        adapter_type: Type name for logging ("node" or "edge").
+        write_func: BioCypher write function (write_nodes or write_edges).
+    """
+    if not adapters:
+        logger.error(f"There are no {adapter_type}s to process.")
+        return
+
+    for i, iterable in enumerate(adapters):
+        logger.info(
+            f"Processing {adapter_type} adapter "
+            f"{format_rich(str(i + 1), 'dark_orange')}/"
+            f"{format_rich(str(len(adapters)), 'dark_orange')}."
+        )
+
+        items = peekable(iterable)
+        if items.peek(None) is not None:
+            logger.info(f"Writing {adapter_type}s...")
+            write_func(items)
+        else:
+            logger.warning(f"No {adapter_type}s found.")
+
+
 def neo4j_export(
     nodes_dict: dict[str, pl.DataFrame],
     edges_dict: dict[str, pl.DataFrame],
@@ -210,43 +243,12 @@ def neo4j_export(
     """
     bc = BioCypher(biocypher_config_path=_BIOCYPHER_CONFIG_PATH)
 
-    node_adapters = [
-        _yield_nodes(df, include_properties) for df in nodes_dict.values()
-    ]
-    edge_adapters = [
-        _yield_edges(df, include_properties) for df in edges_dict.values()
-    ]
+    node_adapters = [_yield_nodes(df, include_properties) for df in nodes_dict.values()]
+    edge_adapters = [_yield_edges(df, include_properties) for df in edges_dict.values()]
 
     try:
-        if not node_adapters:
-            logger.error("There are no nodes to process.")
-        else:
-            for i, nodes_iterable in enumerate(node_adapters):
-                logger.info(
-                    f"Processing node adapter {format_rich(str(i + 1), 'dark_orange')}/{format_rich(str(len(node_adapters)), 'dark_orange')}."
-                )
-
-                nodes_p = peekable(nodes_iterable)
-                if nodes_p.peek(None) is not None:
-                    logger.info("Writing nodes...")
-                    bc.write_nodes(nodes_p)
-                else:
-                    logger.warning("No nodes found.")
-
-        if not edge_adapters:
-            logger.error("There are no edges to process.")
-        else:
-            for i, edges_iterable in enumerate(edge_adapters):
-                logger.info(
-                    f"Processing edge adapter {format_rich(str(i + 1), 'dark_orange')}/{format_rich(str(len(edge_adapters)), 'dark_orange')}."
-                )
-
-                edges_p = peekable(edges_iterable)
-                if edges_p.peek(None) is not None:
-                    logger.info("Writing edges...")
-                    bc.write_edges(edges_p)
-                else:
-                    logger.warning("No edges found.")
+        _process_adapters(bc, node_adapters, "node", bc.write_nodes)
+        _process_adapters(bc, edge_adapters, "edge", bc.write_edges)
     except Exception as e:
         logger.exception(f"Error writing graph data to disk: {e}")
         raise
@@ -258,5 +260,5 @@ def neo4j_export(
             schema_config_path=_BIOCYPHER_SCHEMA_CONFIG_PATH,
         )
     except Exception as e:
-        logger.exception(f"Error writing graph data to disk: {e}")
+        logger.exception(f"Error importing graph data to Neo4j: {e}")
         raise

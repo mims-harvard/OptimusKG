@@ -115,7 +115,9 @@ def export_kg(  # noqa: PLR0913
         "drug_phenotype": drug_phenotype,
     }
 
-    logger.info(f"Exporting knowledge graph to formats: {', '.join(export_formats.keys())}")
+    logger.info(
+        f"Exporting knowledge graph to formats: {', '.join(export_formats.keys())}"
+    )
 
     outputs: dict[str, dict[str, pl.DataFrame]] = {
         "kg.csv": {},
