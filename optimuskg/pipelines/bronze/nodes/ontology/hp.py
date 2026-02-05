@@ -42,12 +42,10 @@ def run(
             pl.col("meta")
             .struct.field("xrefs")
             .list.eval(pl.element().struct.field("val"))
-            .list.join("|")
             .alias("xrefs"),
             pl.col("meta")
             .struct.field("synonyms")
             .list.eval(pl.element().struct.field("val"))
-            .list.join("|")
             .alias("synonyms"),
         )
         .with_columns(
@@ -86,7 +84,6 @@ def run(
         hp_terms.select(["id", "xrefs"])
         .filter(pl.col("xrefs").is_not_null())
         .rename({"id": "hp_id"})
-        .with_columns(pl.col("xrefs").str.split("|"))
         .explode("xrefs")
         .with_columns(pl.col("xrefs").str.split_exact(":", 1).alias("split_cols"))
         .unnest("split_cols")
