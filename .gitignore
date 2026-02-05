@@ -166,4 +166,4 @@ tests/stub_data/bronze/**
 notebooks/**
 !notebooks/quickstart.ipynb
 
-
+.opencode/plans
