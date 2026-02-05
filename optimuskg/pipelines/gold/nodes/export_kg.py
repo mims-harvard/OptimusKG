@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 import polars as pl
 from kedro.pipeline import node
@@ -7,7 +8,6 @@ from optimuskg.pipelines.gold.export_formats import (
     csv_export,
     neo4j_export,
     parquet_export,
-    pg_export,
 )
 
 logger = logging.getLogger(__name__)
@@ -15,13 +15,12 @@ logger = logging.getLogger(__name__)
 _EXPORT_FORMATS_DICT = {
     "csv": csv_export,
     "parquet": parquet_export,
-    "pg": pg_export,
     "neo4j": neo4j_export,
 }
 
 
 def export_kg(  # noqa: PLR0913
-    export_formats: list[str],
+    export_formats: dict[str, dict[str, Any]],
     # Nodes
     gene: pl.DataFrame,
     anatomy: pl.DataFrame,
@@ -60,12 +59,20 @@ def export_kg(  # noqa: PLR0913
     phenotype_phenotype: pl.DataFrame,
     anatomy_anatomy: pl.DataFrame,
     drug_phenotype: pl.DataFrame,
-) -> tuple[
-    dict[str, pl.DataFrame],
-    dict[str, pl.DataFrame],
-    dict[str, pl.DataFrame],
-    dict[str, pl.DataFrame],
-]:
+) -> tuple[dict[str, pl.DataFrame], dict[str, pl.DataFrame]]:
+    """Export knowledge graph to various formats.
+
+    Args:
+        export_formats: Dictionary of format name to config.
+            Each config should have an "include_properties" boolean key.
+            Example: {"csv": {"include_properties": True}, "parquet": {"include_properties": False}}
+        gene, anatomy, ...: Node DataFrames with schema (id, label, properties).
+        anatomy_protein, ...: Edge DataFrames with schema (from, to, label, relation, undirected, properties).
+
+    Returns:
+        Tuple of (csv_output, parquet_output) dictionaries.
+        Each dictionary contains keys like "nodes", "edges", "nodes/gene", "edges/disease_protein", etc.
+    """
     nodes_dict = {
         "gene": gene,
         "anatomy": anatomy,
@@ -108,34 +115,34 @@ def export_kg(  # noqa: PLR0913
         "drug_phenotype": drug_phenotype,
     }
 
-    logger.info(f"Exporting knowledge graph to formats: {', '.join(export_formats)}")
+    logger.info(f"Exporting knowledge graph to formats: {', '.join(export_formats.keys())}")
 
-    outputs = {
-        "csv_meta": {},
-        "csv_no_meta": {},
-        "parquet_meta": {},
-        "parquet_no_meta": {},
+    outputs: dict[str, dict[str, pl.DataFrame]] = {
+        "kg.csv": {},
+        "kg.parquet": {},
     }
 
-    for format_name in export_formats:
+    for format_name, config in export_formats.items():
         export_func = _EXPORT_FORMATS_DICT.get(format_name)
         if not export_func:
             logger.warning(f"Unknown export format: {format_name}")
             continue
 
-        logger.info(f"Exporting to {format_name}...")
+        include_properties = config.get("include_properties", True)
+        logger.info(
+            f"Exporting to {format_name} (include_properties={include_properties})..."
+        )
+
         if format_name in ["csv", "parquet"]:
-            meta, no_meta = export_func(nodes_dict, edges_dict)
-            outputs[f"{format_name}_meta"] = meta
-            outputs[f"{format_name}_no_meta"] = no_meta
-        else:
-            export_func(nodes_dict, edges_dict)
+            outputs[f"kg.{format_name}"] = export_func(
+                nodes_dict, edges_dict, include_properties
+            )
+        elif format_name == "neo4j":
+            export_func(nodes_dict, edges_dict, include_properties)
 
     return (
-        outputs["csv_meta"],
-        outputs["csv_no_meta"],
-        outputs["parquet_meta"],
-        outputs["parquet_no_meta"],
+        outputs["kg.csv"],
+        outputs["kg.parquet"],
     )
 
 
@@ -182,12 +189,7 @@ export_kg_node = node(
         "anatomy_anatomy": "silver.edges.anatomy_anatomy",
         "drug_phenotype": "silver.edges.drug_phenotype",
     },
-    outputs=[
-        "csv.meta",
-        "csv.no_meta",
-        "parquet.meta",
-        "parquet.no_meta",
-    ],
+    outputs=["kg.csv", "kg.parquet"],
     tags=["gold"],
     name="export_kg",
 )

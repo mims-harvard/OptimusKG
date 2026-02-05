@@ -37,19 +37,22 @@ class BiocypherNode:
         return 3
 
 
-def _yield_nodes(df: pl.DataFrame) -> Iterator[BiocypherNode]:
+def _yield_nodes(
+    df: pl.DataFrame, include_properties: bool = True
+) -> Iterator[BiocypherNode]:
     for row in df.iter_rows(named=True):
-        not_null_properties = {}
-        for k, v in row[
-            "properties"
-        ].items():  # Escape double quotes since biocypher doesn't escape them
-            if v is not None:
-                if isinstance(v, list) and all(isinstance(x, str) for x in v):
-                    not_null_properties[k] = [x.replace('"', '""') for x in v]
-                elif isinstance(v, str):
-                    not_null_properties[k] = v.replace('"', '""')
-                else:
-                    not_null_properties[k] = v
+        not_null_properties: dict[str, Any] = {}
+        if include_properties:
+            for k, v in row[
+                "properties"
+            ].items():  # Escape double quotes since biocypher doesn't escape them
+                if v is not None:
+                    if isinstance(v, list) and all(isinstance(x, str) for x in v):
+                        not_null_properties[k] = [x.replace('"', '""') for x in v]
+                    elif isinstance(v, str):
+                        not_null_properties[k] = v.replace('"', '""')
+                    else:
+                        not_null_properties[k] = v
         yield BiocypherNode(
             id=row["id"],
             label=row["label"],
@@ -76,23 +79,26 @@ class BiocypherEdge:
         return 5
 
 
-def _yield_edges(df: pl.DataFrame) -> Iterator[BiocypherEdge]:
+def _yield_edges(
+    df: pl.DataFrame, include_properties: bool = True
+) -> Iterator[BiocypherEdge]:
     for row in df.iter_rows(named=True):
-        properties = {**row["properties"], "undirected": row["undirected"]}
-        not_null_properties = {}
-        for (
-            k,
-            v,
-        ) in (
-            properties.items()
-        ):  # Escape double quotes since biocypher doesn't escape them
-            if v is not None:
-                if isinstance(v, list) and all(isinstance(x, str) for x in v):
-                    not_null_properties[k] = [x.replace('"', '""') for x in v]
-                elif isinstance(v, str):
-                    not_null_properties[k] = v.replace('"', '""')
-                else:
-                    not_null_properties[k] = v
+        not_null_properties: dict[str, Any] = {"undirected": row["undirected"]}
+        if include_properties:
+            properties = {**row["properties"], "undirected": row["undirected"]}
+            for (
+                k,
+                v,
+            ) in (
+                properties.items()
+            ):  # Escape double quotes since biocypher doesn't escape them
+                if v is not None:
+                    if isinstance(v, list) and all(isinstance(x, str) for x in v):
+                        not_null_properties[k] = [x.replace('"', '""') for x in v]
+                    elif isinstance(v, str):
+                        not_null_properties[k] = v.replace('"', '""')
+                    else:
+                        not_null_properties[k] = v
         yield BiocypherEdge(
             id=str(uuid.uuid4()),
             from_id=row["from"],
@@ -189,13 +195,27 @@ def csv_to_neo4j(import_path: Path, schema_config_path: Path) -> None:
         )
 
 
-def neo4j_export(  # noqa: PLR0913, PLR0912
-    nodes_dict: dict[str, pl.DataFrame], edges_dict: dict[str, pl.DataFrame]
-) -> None:  # TODO: add meta/no-meta parameter
+def neo4j_export(
+    nodes_dict: dict[str, pl.DataFrame],
+    edges_dict: dict[str, pl.DataFrame],
+    include_properties: bool = True,
+) -> None:
+    """Export knowledge graph to Neo4j via BioCypher.
+
+    Args:
+        nodes_dict: Dictionary of node type name to DataFrame.
+        edges_dict: Dictionary of edge type name to DataFrame.
+        include_properties: If True, include properties in exported nodes/edges.
+                           If False, export only structural data (id, label, etc.).
+    """
     bc = BioCypher(biocypher_config_path=_BIOCYPHER_CONFIG_PATH)
 
-    node_adapters = [_yield_nodes(df) for df in nodes_dict.values()]
-    edge_adapters = [_yield_edges(df) for df in edges_dict.values()]
+    node_adapters = [
+        _yield_nodes(df, include_properties) for df in nodes_dict.values()
+    ]
+    edge_adapters = [
+        _yield_edges(df, include_properties) for df in edges_dict.values()
+    ]
 
     try:
         if not node_adapters:
