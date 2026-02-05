@@ -1,20 +1,19 @@
 bronze.ontology.uberon_terms:
-  type: polars.CSVDataset
-  filepath: "data/bronze/ontology/uberon_terms.csv"
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/ontology/uberon_terms.parquet
   load_args:
-    infer_schema: false
     schema:
-      "id": "${pl:Utf8}"
-      "name": "${pl:Utf8}"
-      "type": "${pl:Utf8}"
-      "definition": "${pl:Utf8}"
-      "xrefs": "${pl:Utf8}"
-      "synonyms": "${pl:Utf8}"
-      "ontology_description": "${pl:Utf8}"
-      "ontology_title": "${pl:Utf8}"
-      "ontology_license": "${pl:Utf8}"
-      "ontology_version": "${pl:Utf8}"
+      id: pl.String
+      name: pl.String
+      type: pl.String
+      definition: pl.String
+      xrefs: pl.List(pl.String)
+      synonyms: pl.List(pl.String)
+      ontology_description: pl.String
+      ontology_title: pl.String
+      ontology_license: pl.String
+      ontology_version: pl.String
   metadata:
-    checksum: "da24d9e916f3f3ad274da8884e50ce70"
+    checksum: f266de69a1d9295daa0133cd41cce77a
     kedro-viz:
       layer: bronze
