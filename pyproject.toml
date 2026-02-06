@@ -76,7 +76,7 @@ docstring-code-format = true
 [tool.ruff]
 line-length = 88
 show-fixes = true
-extend-exclude = ["*.ipynb"]
+extend-exclude = ["*.ipynb", ".agents/**/*"]
 lint.select = [
   "F",    # Pyflakes
   "W",    # pycodestyle
