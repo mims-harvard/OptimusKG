@@ -139,6 +139,6 @@ bronze.opentargets.target:
             top_level_term: pl.String
         tss: pl.Int64
   metadata:
-    checksum: 6a83e76e5f88854aa5b39cdd75c14a3c
+    checksum: f6a721198112d100010fbf3c8543f67a
     kedro-viz:
       layer: bronze

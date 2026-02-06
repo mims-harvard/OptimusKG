@@ -10,7 +10,7 @@ landing.onsides.high_confidence:
         "ingredient_id": "${pl:String}"
         "effect_meddra_id": "${pl:String}"
   metadata:
-    checksum: "8a91cef33fd9772b3fb2494fee17b90c"
+    checksum: 8a91cef33fd9772b3fb2494fee17b90c
     origin:
       provider: http
       url: "https://github.com/tatonetti-lab/onsides/releases/download/v3.1.0/onsides-v3.1.0.zip"

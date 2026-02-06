@@ -11,6 +11,6 @@ silver.edges.disease_disease:
       properties:
         sources: pl.List(pl.String)
   metadata:
-    checksum: d1b49f787a7050a9a7a70c7a1398b180
+    checksum: 6cf05ca7ed9b9407bdb8f18ffccbe7f1
     kedro-viz:
       layer: silver

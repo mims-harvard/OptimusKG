@@ -58,13 +58,11 @@ def run(  # noqa: PLR0913
                         "description"
                     ),
                     pl.col("code"),
-                    pl.concat_list([pl.col("db_xrefs"), pl.col("xrefs").str.split("|")])
+                    pl.concat_list([pl.col("db_xrefs"), pl.col("xrefs")])
                     .list.unique()
                     .alias("xrefs"),
                     pl.col("parents"),
-                    pl.concat_list(
-                        [pl.col("has_exact_synonym"), pl.col("synonyms").str.split("|")]
-                    )
+                    pl.concat_list([pl.col("has_exact_synonym"), pl.col("synonyms")])
                     .list.unique()
                     .alias("exact_synonyms"),
                     pl.col("has_related_synonym").alias("related_synonyms"),
@@ -78,10 +76,7 @@ def run(  # noqa: PLR0913
                     pl.coalesce(
                         [pl.col("meddra_term_type"), pl.lit("phenotype")]
                     ).alias("type"),
-                    pl.col("ontology_description").alias("ontology_description"),
-                    pl.col("ontology_title").alias("ontology_title"),
-                    pl.col("ontology_license").alias("ontology_license"),
-                    pl.col("ontology_version").alias("ontology_version"),
+                    pl.col("ontology"),
                     pl.col("concept_ids").alias("concept_ids"),
                     pl.col("concept_names").alias("concept_names"),
                     pl.col("umls_cui").alias("umls_cui"),

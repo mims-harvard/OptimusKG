@@ -11,6 +11,6 @@ silver.edges.biological_process_biological_process:
       properties:
         sources: pl.List(pl.String)
   metadata:
-    checksum: d1b49f787a7050a9a7a70c7a1398b180
+    checksum: be722af7ca027a52822ff0f477cb6efc
     kedro-viz:
       layer: silver

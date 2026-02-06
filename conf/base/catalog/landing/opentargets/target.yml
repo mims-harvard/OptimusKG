@@ -2,7 +2,7 @@ landing.opentargets.target:
   filepath: "data/landing/opentargets/target"
   type: optimuskg.datasets.polars.ParquetDataset
   metadata:
-    checksum: "04fae2eb255020b16b4b981a9d788316"
+    checksum: 04fae2eb255020b16b4b981a9d788316
     origin:
       provider: opentargets
       version: "25.06"

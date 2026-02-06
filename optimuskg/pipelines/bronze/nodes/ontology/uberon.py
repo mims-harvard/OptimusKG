@@ -47,27 +47,27 @@ def run(
             pl.col("meta")
             .struct.field("xrefs")
             .list.eval(pl.element().struct.field("val"))
-            .list.join("|")
             .alias("xrefs"),
             pl.col("meta")
             .struct.field("synonyms")
             .list.eval(pl.element().struct.field("val"))
-            .list.join("|")
             .alias("synonyms"),
         )
         .with_columns(pl.col("type").fill_null("CLASS"))
         .with_columns(
-            [
-                pl.col("meta_bpv")
-                .list.eval(
-                    pl.element()
-                    .filter(pl.element().struct.field("pred") == uri)
-                    .struct.field("val")
-                )
-                .list.get(0)
-                .alias(f"ontology_{name}")
-                for name, uri in predicates.items()
-            ]
+            pl.struct(
+                [
+                    pl.col("meta_bpv")
+                    .list.eval(
+                        pl.element()
+                        .filter(pl.element().struct.field("pred") == uri)
+                        .struct.field("val")
+                    )
+                    .list.get(0)
+                    .alias(name)
+                    for name, uri in predicates.items()
+                ]
+            ).alias("ontology")
         )
         .drop(["meta_bpv", "meta"])
         .unique()
@@ -79,10 +79,7 @@ def run(
                 "definition",
                 "xrefs",
                 "synonyms",
-                "ontology_description",
-                "ontology_title",
-                "ontology_license",
-                "ontology_version",
+                "ontology",
             ]
         )
         .sort(by=["id", "name"])

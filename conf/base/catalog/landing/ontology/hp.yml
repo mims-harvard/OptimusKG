@@ -2,7 +2,7 @@ landing.ontology.hp:
   type: optimuskg.datasets.polars.JsonDataset
   filepath: "data/landing/ontology/hp.json" # TODO: filename should be hp-full.json
   metadata:
-    checksum: "611c66573227f9f240f624329652a667"
+    checksum: 611c66573227f9f240f624329652a667
     title: "Human Phenotype Ontology"
     description: "The Human Phenotype Ontology (HP) provides a standardized vocabulary of phenotypic abnormalities encountered in human disease."
     origin:

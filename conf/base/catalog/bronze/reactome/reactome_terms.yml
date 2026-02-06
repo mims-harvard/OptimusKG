@@ -2,6 +2,6 @@ bronze.reactome.reactome_terms:
   type: polars.CSVDataset
   filepath: "data/bronze/reactome/reactome_terms.csv"
   metadata:
-    checksum: "384f56a3c1100c4ff76090f611a25471"
+    checksum: 550262b77466fd269edfd1eccc226b0a
     kedro-viz:
       layer: bronze

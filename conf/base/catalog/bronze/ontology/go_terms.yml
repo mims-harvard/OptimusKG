@@ -9,11 +9,12 @@ bronze.ontology.go_terms:
       definition: pl.String
       xrefs: pl.List(pl.String)
       synonyms: pl.List(pl.String)
-      ontology_description: pl.String
-      ontology_title: pl.String
-      ontology_license: pl.String
-      ontology_version: pl.String
+      ontology:
+        description: pl.String
+        title: pl.String
+        license: pl.String
+        version: pl.String
   metadata:
-    checksum: a365417ae49638dbd82d93da6a79457a
+    checksum: e3e7da2358b3395cfc9cb7dc5bad0a65
     kedro-viz:
       layer: bronze

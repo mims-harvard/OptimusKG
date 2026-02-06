@@ -7,6 +7,6 @@ bronze.gene_names.protein_names:
       "ncbi_id": "${pl:Utf8}"
       "symbol": "${pl:Utf8}"
   metadata:
-    checksum: "215c4c66cca779c59c28906c06ab98fc"
+    checksum: 215c4c66cca779c59c28906c06ab98fc
     kedro-viz:
       layer: bronze

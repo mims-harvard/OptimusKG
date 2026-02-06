@@ -1,20 +1,20 @@
 bronze.ontology.hp_terms:
-  type: polars.CSVDataset
-  filepath: "data/bronze/ontology/hp_terms.csv"
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/ontology/hp_terms.parquet
   load_args:
-    infer_schema: false
     schema:
-      "id": "${pl:String}"
-      "name": "${pl:String}"
-      "source": "${pl:String}"
-      "definition": "${pl:String}"
-      "xrefs": "${pl:String}"
-      "synonyms": "${pl:String}"
-      "ontology_description": "${pl:String}"
-      "ontology_title": "${pl:String}"
-      "ontology_license": "${pl:String}"
-      "ontology_version": "${pl:String}"
+      id: pl.String
+      name: pl.String
+      source: pl.String
+      definition: pl.String
+      xrefs: pl.List(pl.String)
+      synonyms: pl.List(pl.String)
+      ontology:
+        description: pl.String
+        title: pl.String
+        license: pl.String
+        version: pl.String
   metadata:
-    checksum: "87377ce1b9ca94818aab49f21895725a"
+    checksum: 613a038adbf1c4ae7994a798d8601157
     kedro-viz:
       layer: bronze

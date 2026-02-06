@@ -30,6 +30,6 @@ silver.nodes.disease:
         cui_semantic_type: pl.String
         snomed_concept_ids: pl.List(pl.String)
   metadata:
-    checksum: d1b49f787a7050a9a7a70c7a1398b180
+    checksum: a3b2192e261efce5bf2c34a40d300c58
     kedro-viz:
       layer: silver

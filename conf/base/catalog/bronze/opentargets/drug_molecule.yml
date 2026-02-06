@@ -29,6 +29,6 @@ bronze.opentargets.drug_molecule:
           count: pl.Int32
         description: pl.String
   metadata:
-    checksum: ada9c19a9bd7133375908982ac1ccdc2
+    checksum: b0b0f2f2355e1c9d344ec11ecdcb5da6
     kedro-viz:
       layer: bronze

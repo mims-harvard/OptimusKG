@@ -2,7 +2,7 @@ landing.ontology.mondo:
   type: optimuskg.datasets.polars.JsonDataset
   filepath: "data/landing/ontology/mondo.json"
   metadata:
-    checksum: "7fc5616ba564fc6112933d26e99f7fb9"
+    checksum: 7fc5616ba564fc6112933d26e99f7fb9
     title: "Mondo Ontology"
     description: "The Mondo Disease Ontology (Mondo) aims to harmonize disease definitions across the world. The name Mondo comes from the Latin word 'mundus' and means 'for the world.'"
     origin:

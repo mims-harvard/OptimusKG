@@ -35,6 +35,6 @@ silver.nodes.gene:
         safety_liabilities_encoded: pl.List(pl.String)
         transcription_start_site: pl.Int64
   metadata:
-    checksum: d1b49f787a7050a9a7a70c7a1398b180
+    checksum: 46e7809eb5a693edff62dba1972348fe
     kedro-viz:
       layer: silver

@@ -2,7 +2,7 @@ landing.opentargets.drug_molecule:
   filepath: "data/landing/opentargets/drug_molecule"
   type: optimuskg.datasets.polars.ParquetDataset
   metadata:
-    checksum: "758ff4f7f171e6dc56dfb2d2f2360a17"
+    checksum: 758ff4f7f171e6dc56dfb2d2f2360a17
     origin:
       provider: opentargets
       version: "25.06"
