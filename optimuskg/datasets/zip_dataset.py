@@ -189,6 +189,14 @@ class ZipDataset(AbstractDataset[zipfile.ZipFile, pl.DataFrame]):
             "compression": compression_str,
         }
 
+    def _exists(self) -> bool:
+        """Checks if the zip file exists on the filesystem.
+
+        Returns:
+            True if the zip file exists, False otherwise.
+        """
+        return self._filesystem.exists(self._normalized_path)
+
     def _invalidate_caches(self) -> None:
         self._partition_cache.clear()
         self._filesystem.invalidate_cache(self._normalized_path)
