@@ -143,6 +143,45 @@ $ CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export
 
 The results will be saved to a file in `data/export/` with a filename derived from the query.
 
+## CLI Utilities
+
+Optimus ships a Typer-based CLI for common maintenance tasks. After installing dependencies you can run it with:
+
+```console
+$ uv run cli --help
+```
+
+### `sync-catalog` — Synchronize catalog schemas and checksums
+
+For **ParquetDataset** entries the command reads the parquet file on disk and updates the YAML schema specification.
+For any dataset with a `metadata.checksum` field it recomputes the BLAKE2b checksum and updates the catalog YAML (using regex replacement to preserve formatting, comments, and OmegaConf syntax).
+
+```console
+# Sync all schemas and checksums (landing, bronze, silver)
+$ uv run cli sync-catalog
+
+# Preview changes without writing files
+$ uv run cli sync-catalog --dry-run
+
+# Validate without updating (useful in CI)
+$ uv run cli sync-catalog --validate
+
+# Target a specific layer
+$ uv run cli sync-catalog --layer bronze
+
+# Target a specific dataset
+$ uv run cli sync-catalog --dataset bronze.opentargets.disease
+```
+
+| Option | Short | Description |
+| --- | --- | --- |
+| `--layer` | `-l` | Target layer: `landing`, `bronze`, `silver`, or `all` (default: `all`). |
+| `--dataset` | `-d` | Specific dataset name (e.g., `bronze.opentargets.disease`). |
+| `--validate` | `-v` | Validate schemas and checksums without updating files. |
+| `--dry-run` | `-n` | Preview changes without writing files. |
+| `--catalog-dir` | | Path to the catalog directory (default: `conf/base/catalog`). |
+| `--data-dir` | | Path to the data directory (default: `data`). |
+
 ## Citation
 
 > [!NOTE]
