@@ -1,11 +1,17 @@
 landing.opentargets.target_disease_associations:
-  filepath: "data/landing/opentargets/target_disease_associations"
   type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/landing/opentargets/target_disease_associations
+  load_args:
+    schema:
+      diseaseId: pl.String
+      targetId: pl.String
+      score: pl.Float64
+      evidenceCount: pl.Int64
   metadata:
     checksum: 4b8ba32c9eadce9e08ea017e3310743e
     origin:
       provider: opentargets
-      version: "25.06"
+      version: '25.06'
       dataset_name: association_by_overall_indirect
     kedro-viz:
       layer: landing

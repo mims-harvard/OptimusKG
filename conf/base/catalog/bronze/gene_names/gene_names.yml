@@ -1,12 +1,11 @@
 bronze.gene_names.protein_names:
-  type: polars.CSVDataset
-  filepath: "data/bronze/gene_names/protein_names.csv"
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/gene_names/protein_names.parquet
   load_args:
-    infer_schema: false
     schema:
-      "ncbi_id": "${pl:Utf8}"
-      "symbol": "${pl:Utf8}"
+      ncbi_id: pl.String
+      symbol: pl.String
   metadata:
-    checksum: 215c4c66cca779c59c28906c06ab98fc
+    checksum: 0e9a5847f75654453f69aed7258d381d
     kedro-viz:
       layer: bronze
