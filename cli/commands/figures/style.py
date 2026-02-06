@@ -13,7 +13,6 @@ import scienceplots  # noqa: F401
 # Apply science plot style
 plt.style.use(["science", "ieee", "no-latex"])
 
-# Set default figure parameters for publication quality
 plt.rcParams.update(
     {
         "figure.dpi": 300,
@@ -31,7 +30,6 @@ plt.rcParams.update(
     }
 )
 
-# Unified styling constants
 STYLE = {
     # Grid
     "grid_linestyle": "--",

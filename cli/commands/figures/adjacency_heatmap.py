@@ -14,8 +14,9 @@ import seaborn as sns
 
 from cli.commands.metrics.utils import load_parquet_dir
 from optimuskg.pipelines.silver.nodes.constants import Node
+from . import style  # noqa: F401
+from .style import apply_axis_styling
 
-# Ordered list of all node-type abbreviations from the enum.
 _NODE_TYPE_ORDER = [member.value for member in Node]
 
 
@@ -127,9 +128,6 @@ def _format_count(value: int) -> str:
 
 def render_plot(data: pl.DataFrame, out_path: Path) -> None:
     """Render the adjacency heatmap and save as PDF."""
-    # Import triggers style side-effects (plt.style.use, rcParams).
-    from . import style  # noqa: F401
-    from .style import apply_axis_styling
 
     row_labels: list[str] = data["node_type"].cast(pl.Utf8).to_list()
     matrix = data.drop("node_type").to_numpy()
