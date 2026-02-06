@@ -377,8 +377,7 @@ def sync_catalog_command(  # noqa: PLR0913, PLR0912
             else str(rel_path)
         )
 
-        # --- Schema sync (must run BEFORE checksum so that _write_yaml
-        #     preserves the existing metadata.checksum for the regex pass) ---
+        # The schema sync must be run before the checksum change so that the `_write_yaml` preserves the existing metadata.checksum for the regex pass.
         try:
             schema_status, schema_msg = _process_schema(
                 yaml_path, ds_name, ds_config, validate, dry_run
@@ -388,8 +387,7 @@ def sync_catalog_command(  # noqa: PLR0913, PLR0912
         schema_stats[schema_status] += 1
         _log_schema_status(schema_status, schema_msg, display, dry_run)
 
-        # --- Checksum sync (reads file from disk, so it picks up any
-        #     schema-sync writes that just happened) ---
+        # Checksum sync reads file from disk to it picks up schema sync changes.
         try:
             checksum_status, checksum_msg = _process_checksum(
                 yaml_path, ds_config, validate, dry_run
@@ -399,7 +397,6 @@ def sync_catalog_command(  # noqa: PLR0913, PLR0912
         checksum_stats[checksum_status] += 1
         _log_checksum_status(checksum_status, checksum_msg, display, dry_run)
 
-    # --- Summary ---
     if validate:
         logger.info(
             f"Schema summary:   {schema_stats['valid']} valid, "
