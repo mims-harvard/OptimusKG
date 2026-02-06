@@ -1,11 +1,36 @@
 landing.opentargets.disease:
-  filepath: "data/landing/opentargets/disease"
   type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/landing/opentargets/disease
+  load_args:
+    schema:
+      id: pl.String
+      code: pl.String
+      name: pl.String
+      description: pl.String
+      dbXRefs: pl.List(pl.String)
+      parents: pl.List(pl.String)
+      synonyms:
+        hasExactSynonym: pl.List(pl.String)
+        hasRelatedSynonym: pl.List(pl.String)
+        hasNarrowSynonym: pl.List(pl.String)
+        hasBroadSynonym: pl.List(pl.String)
+      obsoleteTerms: pl.List(pl.String)
+      obsoleteXRefs: pl.List(pl.String)
+      children: pl.List(pl.String)
+      ancestors: pl.List(pl.String)
+      therapeuticAreas: pl.List(pl.String)
+      descendants: pl.List(pl.String)
+      ontology:
+        isTherapeuticArea: pl.Boolean
+        leaf: pl.Boolean
+        sources:
+          url: pl.String
+          name: pl.String
   metadata:
     checksum: b7a669ddabfa209e939cc0a603095f3e
     origin:
       provider: opentargets
-      version: "25.06"
+      version: '25.06'
       dataset_name: disease
     kedro-viz:
       layer: landing

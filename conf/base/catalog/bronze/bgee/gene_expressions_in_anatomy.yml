@@ -1,17 +1,16 @@
 bronze.bgee.gene_expressions_in_anatomy:
-  type: polars.CSVDataset
-  filepath: "data/bronze/bgee/gene_expressions_in_anatomy.csv"
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/bgee/gene_expressions_in_anatomy.parquet
   load_args:
-    infer_schema: false
     schema:
-      "gene_id": "${pl:String}"
-      "gene_name": "${pl:String}"
-      "anatomy_id": "${pl:String}"
-      "anatomy_name": "${pl:String}"
-      "expression": "${pl:String}"
-      "call_quality": "${pl:String}"
-      "expression_rank": "${pl:String}"
+      gene_id: pl.String
+      gene_name: pl.String
+      anatomy_id: pl.String
+      anatomy_name: pl.String
+      expression: pl.String
+      call_quality: pl.String
+      expression_rank: pl.Float64
   metadata:
-    checksum: a3a2c2c492a946b05059982f35814544
+    checksum: 6b01d578a186a26a7cf20318993defbd
     kedro-viz:
       layer: bronze

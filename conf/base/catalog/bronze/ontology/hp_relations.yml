@@ -1,12 +1,11 @@
 bronze.ontology.hp_relations:
-  type: polars.CSVDataset
-  filepath: "data/bronze/ontology/hp_relations.csv"
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/ontology/hp_relations.parquet
   load_args:
-    infer_schema: false
     schema:
-      "parent": "${pl:String}"
-      "child": "${pl:String}"
+      parent: pl.String
+      child: pl.String
   metadata:
-    checksum: 08d3cd7b4969889f5809589b5965a032
+    checksum: 0fd66d66e4787d65c82e904a1772104a
     kedro-viz:
       layer: bronze

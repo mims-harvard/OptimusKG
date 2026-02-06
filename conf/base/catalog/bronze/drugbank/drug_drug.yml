@@ -1,13 +1,12 @@
 bronze.drug_drug:
-  type: polars.CSVDataset
-  filepath: "data/bronze/drugbank/drug_drug.csv"
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/drugbank/drug_drug.parquet
   load_args:
-    infer_schema: false
     schema:
-      "tail_drug_id": "${pl:Utf8}"
-      "head_drug_id": "${pl:Utf8}"
-      "description": "${pl:Utf8}"
+      tail_drug_id: pl.Null
+      head_drug_id: pl.Null
+      description: pl.Null
   metadata:
-    checksum: e14a734e880cab3a48f3212c74ebe6ae
+    checksum: df4a84aeac1797ad85f247d826c17107
     kedro-viz:
       layer: bronze

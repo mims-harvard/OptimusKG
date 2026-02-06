@@ -1,16 +1,15 @@
 bronze.drug_protein:
-  type: polars.CSVDataset
-  filepath: "data/bronze/drugbank/drug_protein.csv"
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/drugbank/drug_protein.parquet
   load_args:
-    infer_schema: false
     schema:
-      "drug_bank_id": "${pl:Utf8}"
-      "relation": "${pl:Utf8}"
-      "ncbi_gene_id": "${pl:Utf8}"
-      "uniprot_name": "${pl:Utf8}"
-      "uniprot_id": "${pl:Utf8}"
-      "drug_bank_name": "${pl:Utf8}"
+      drug_bank_id: pl.String
+      relation: pl.String
+      ncbi_gene_id: pl.String
+      uniprot_name: pl.String
+      uniprot_id: pl.String
+      drug_bank_name: pl.String
   metadata:
-    checksum: f80f9ab8326f96190636d362947f6161
+    checksum: 1e240cd32af4242dc17b9633c6c0a312
     kedro-viz:
       layer: bronze

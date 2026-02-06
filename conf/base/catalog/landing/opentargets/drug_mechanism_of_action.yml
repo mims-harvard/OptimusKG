@@ -1,11 +1,23 @@
 landing.opentargets.drug_mechanism_of_action:
-  filepath: "data/landing/opentargets/drug_mechanism_of_action"
   type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/landing/opentargets/drug_mechanism_of_action
+  load_args:
+    schema:
+      actionType: pl.String
+      mechanismOfAction: pl.String
+      chemblIds: pl.List(pl.String)
+      targetName: pl.String
+      targetType: pl.String
+      targets: pl.List(pl.String)
+      references:
+      - source: pl.String
+        ids: pl.List(pl.String)
+        urls: pl.List(pl.String)
   metadata:
     checksum: d52a422cfdb1572d3593a7f87017b002
     origin:
       provider: opentargets
-      version: "25.06"
+      version: '25.06'
       dataset_name: drug_mechanism_of_action
     kedro-viz:
       layer: landing

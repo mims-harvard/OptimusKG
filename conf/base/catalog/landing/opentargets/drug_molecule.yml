@@ -1,11 +1,37 @@
 landing.opentargets.drug_molecule:
-  filepath: "data/landing/opentargets/drug_molecule"
   type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/landing/opentargets/drug_molecule
+  load_args:
+    schema:
+      id: pl.String
+      canonicalSmiles: pl.String
+      inchiKey: pl.String
+      drugType: pl.String
+      blackBoxWarning: pl.Boolean
+      name: pl.String
+      yearOfFirstApproval: pl.Int64
+      maximumClinicalTrialPhase: pl.Float64
+      parentId: pl.String
+      hasBeenWithdrawn: pl.Boolean
+      isApproved: pl.Boolean
+      tradeNames: pl.List(pl.String)
+      synonyms: pl.List(pl.String)
+      crossReferences:
+      - source: pl.String
+        ids: pl.List(pl.String)
+      childChemblIds: pl.List(pl.String)
+      linkedDiseases:
+        rows: pl.List(pl.String)
+        count: pl.Int32
+      linkedTargets:
+        rows: pl.List(pl.String)
+        count: pl.Int32
+      description: pl.String
   metadata:
     checksum: 758ff4f7f171e6dc56dfb2d2f2360a17
     origin:
       provider: opentargets
-      version: "25.06"
+      version: '25.06'
       dataset_name: drug_molecule
     kedro-viz:
       layer: landing

@@ -1,11 +1,23 @@
 landing.opentargets.drug_indication:
-  filepath: "data/landing/opentargets/drug_indication"
   type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/landing/opentargets/drug_indication
+  load_args:
+    schema:
+      id: pl.String
+      indications:
+      - disease: pl.String
+        efoName: pl.String
+        references:
+        - source: pl.String
+          ids: pl.List(pl.String)
+        maxPhaseForIndication: pl.Float64
+      approvedIndications: pl.List(pl.String)
+      indicationCount: pl.Int32
   metadata:
     checksum: 08560111aab08d22a5ede1f3be229cab
     origin:
       provider: opentargets
-      version: "25.06"
+      version: '25.06'
       dataset_name: drug_indication
     kedro-viz:
       layer: landing

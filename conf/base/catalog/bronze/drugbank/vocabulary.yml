@@ -1,17 +1,16 @@
 bronze.drugbank.vocabulary:
-  type: polars.CSVDataset
-  filepath: "data/bronze/drugbank/vocabulary.csv"
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/drugbank/vocabulary.parquet
   load_args:
-    infer_schema: false
     schema:
-      "drugbank_id": "${pl:Utf8}"
-      "accession_numbers": "${pl:Utf8}"
-      "common_name": "${pl:Utf8}"
-      "cas": "${pl:Utf8}"
-      "unii": "${pl:Utf8}"
-      "synonyms": "${pl:Utf8}"
-      "standard_inchi_key": "${pl:Utf8}"
+      drugbank_id: pl.String
+      accession_numbers: pl.String
+      common_name: pl.String
+      cas: pl.String
+      unii: pl.String
+      synonyms: pl.String
+      standard_inchi_key: pl.String
   metadata:
-    checksum: 960226a0ad180d8b53df7e42e69dc3e5
+    checksum: 9717f203e13e6f14bbb3aab94c2e798e
     kedro-viz:
       layer: bronze
