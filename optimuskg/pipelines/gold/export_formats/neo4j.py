@@ -1,3 +1,4 @@
+import json
 import logging
 import subprocess
 import uuid
@@ -18,31 +19,29 @@ logger = logging.getLogger(__name__)
 _BIOCYPHER_CONFIG_PATH = "conf/base/biocypher/biocypher_config.yaml"
 
 
-def _flatten_properties(properties: dict[str, Any], prefix: str = "") -> dict[str, Any]:
-    """Flatten nested dicts into flat key-value pairs with prefixed keys.
+def _encode_nested_properties(properties: dict[str, Any]) -> dict[str, Any]:
+    """JSON-encode nested dicts into string values for Neo4j compatibility.
 
-    Neo4j does not support nested properties, so this function flattens nested
-    dictionaries (e.g., ontology structs) into flat key-value pairs.
+    Neo4j does not support nested properties, so this function converts nested
+    dictionaries (e.g., ontology structs) into JSON-encoded strings.
 
     Example:
-        {"ontology": {"description": "foo", "version": "1.0"}}
+        {"ontology": {"description": "foo", "version": "1.0"}, "name": "bar"}
         becomes:
-        {"ontology_description": "foo", "ontology_version": "1.0"}
+        {"ontology": '{"description": "foo", "version": "1.0"}', "name": "bar"}
 
     Args:
         properties: Dictionary of properties, potentially with nested dicts.
-        prefix: Prefix to prepend to keys (used for recursion).
 
     Returns:
-        Flattened dictionary with no nested structures.
+        Dictionary with nested dicts JSON-encoded as strings.
     """
     result: dict[str, Any] = {}
     for k, v in properties.items():
-        key = f"{prefix}{k}" if prefix else k
         if isinstance(v, dict):
-            result.update(_flatten_properties(v, f"{key}_"))
+            result[k] = json.dumps(v)
         elif v is not None:
-            result[key] = v
+            result[k] = v
     return result
 
 
@@ -56,7 +55,7 @@ def _escape_quotes(value: Any) -> Any:
 
 
 _BIOCYPHER_SCHEMA_CONFIG_PATH = Path("conf/base/biocypher/schema_config.yaml")
-_NEO4J_IMPORT_PATH = Path("data/neo4j/import")
+_NEO4J_IMPORT_PATH = Path("data/gold/neo4j/import")
 
 
 @dataclass(frozen=True)
@@ -82,9 +81,9 @@ def _yield_nodes(
     for row in df.iter_rows(named=True):
         not_null_properties: dict[str, Any] = {}
         if include_properties:
-            # Flatten nested structs (like ontology) for Neo4j compatibility
-            flat_props = _flatten_properties(row["properties"])
-            for k, v in flat_props.items():
+            # JSON-encode nested structs for Neo4j compatibility
+            encoded_props = _encode_nested_properties(row["properties"])
+            for k, v in encoded_props.items():
                 if v is not None:
                     not_null_properties[k] = _escape_quotes(v)
         yield BiocypherNode(
@@ -192,7 +191,7 @@ def csv_to_neo4j(import_path: Path, schema_config_path: Path) -> None:
         "docker",
         "run",
         "--rm",
-        "--volume=./data/neo4j/data:/data",
+        "--volume=./data/gold/neo4j/data:/data",
         f"--volume=./{import_path}:/import",
         "--volume=./data/export:/export",
         "neo4j:5.26.2-community-bullseye",

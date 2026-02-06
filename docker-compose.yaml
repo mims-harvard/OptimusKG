@@ -9,8 +9,8 @@ services:
       - "7687:7687" # Bolt
       - "7473:7473" # HTTPS
     volumes:
-      - ./data/neo4j/import:/var/lib/neo4j/import/
-      - ./data/neo4j/data:/var/lib/neo4j/data/
+      - ./data/gold/neo4j/import:/var/lib/neo4j/import/
+      - ./data/gold/neo4j/data:/var/lib/neo4j/data/
       - ./data/export:/var/lib/neo4j/export/
       - ./scripts/neo4j_entrypoint.sh:/startup/neo4j_entrypoint.sh
     environment:

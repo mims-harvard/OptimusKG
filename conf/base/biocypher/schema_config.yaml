@@ -43,12 +43,9 @@ anatomy:
     source: str
     name: str
     definition: str
-    xrefs: str
-    synonyms: str
-    ontology_description: str
-    ontology_title: str
-    ontology_license: str
-    ontology_version: str
+    xrefs: str[]
+    synonyms: str[]
+    ontology: str
 
 exposure:
   is_a: environmental exposure
@@ -157,10 +154,7 @@ phenotype:
     ancestors: str[]
     descendants: str[]
     type: str
-    ontology_description: str
-    ontology_title: str
-    ontology_license: str
-    ontology_version: str
+    ontology: str
     concept_ids: str[]
     concept_names: str[]
     umls_cui: str
@@ -177,10 +171,7 @@ biological process:
     definition: str
     xrefs: str[]
     synonyms: str[]
-    ontology_description: str
-    ontology_title: str
-    ontology_license: str
-    ontology_version: str
+    ontology: str
 
 cellular component:
   represented_as: node
@@ -191,10 +182,7 @@ cellular component:
     definition: str
     xrefs: str[]
     synonyms: str[]
-    ontology_description: str
-    ontology_title: str
-    ontology_license: str
-    ontology_version: str
+    ontology: str
 
 molecular function:
   represented_as: node
@@ -205,10 +193,7 @@ molecular function:
     definition: str
     xrefs: str[]
     synonyms: str[]
-    ontology_description: str
-    ontology_title: str
-    ontology_license: str
-    ontology_version: str
+    ontology: str
 
 pathway:
   represented_as: node
