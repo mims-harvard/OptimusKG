@@ -20,26 +20,33 @@ _BIOCYPHER_CONFIG_PATH = "conf/base/biocypher/biocypher_config.yaml"
 
 
 def _encode_nested_properties(properties: dict[str, Any]) -> dict[str, Any]:
-    """JSON-encode nested dicts into string values for Neo4j compatibility.
+    """JSON-encode nested dicts and lists of dicts for Neo4j compatibility.
 
     Neo4j does not support nested properties, so this function converts nested
-    dictionaries (e.g., ontology structs) into JSON-encoded strings.
+    dictionaries and lists of dictionaries into JSON-encoded strings.
 
     Example:
         {"ontology": {"description": "foo", "version": "1.0"}, "name": "bar"}
         becomes:
         {"ontology": '{"description": "foo", "version": "1.0"}', "name": "bar"}
 
+        {"items": [{"id": "1", "label": "a"}, {"id": "2", "label": "b"}]}
+        becomes:
+        {"items": ['{"id": "1", "label": "a"}', '{"id": "2", "label": "b"}']}
+
     Args:
-        properties: Dictionary of properties, potentially with nested dicts.
+        properties: Dictionary of properties, potentially with nested dicts
+            or lists of dicts.
 
     Returns:
-        Dictionary with nested dicts JSON-encoded as strings.
+        Dictionary with nested dicts/lists of dicts JSON-encoded as strings.
     """
     result: dict[str, Any] = {}
     for k, v in properties.items():
         if isinstance(v, dict):
             result[k] = json.dumps(v)
+        elif isinstance(v, list) and v and isinstance(v[0], dict):
+            result[k] = [json.dumps(item) for item in v]
         elif v is not None:
             result[k] = v
     return result

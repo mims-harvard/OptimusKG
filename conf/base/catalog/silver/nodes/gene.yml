@@ -10,31 +10,125 @@ silver.nodes.gene:
         symbol: pl.String
         biotype: pl.String
         transcript_ids: pl.List(pl.String)
-        canonical_transcript_encoded: pl.String
+        canonical_transcript:
+          id: pl.String
+          chromosome: pl.String
+          start: pl.Int64
+          end: pl.Int64
+          strand: pl.String
         canonical_exons: pl.List(pl.String)
-        genomic_location_encoded: pl.String
+        genomic_location:
+          chromosome: pl.String
+          start: pl.Int64
+          end: pl.Int64
+          strand: pl.Int32
         alternative_genes: pl.List(pl.String)
         name: pl.String
-        hallmarks_attributes_encoded: pl.List(pl.String)
-        cancer_hallmarks_encoded: pl.List(pl.String)
-        synonyms_encoded: pl.List(pl.String)
-        symbol_synonyms_encoded: pl.List(pl.String)
-        name_synonyms_encoded: pl.List(pl.String)
+        hallmarks_attributes:
+          - pmid: pl.Int64
+            description: pl.String
+            attribute_name: pl.String
+        cancer_hallmarks:
+          - pmid: pl.Int64
+            description: pl.String
+            impact: pl.String
+            label: pl.String
+        synonyms:
+          - label: pl.String
+            source: pl.String
+        symbol_synonyms:
+          - label: pl.String
+            source: pl.String
+        name_synonyms:
+          - label: pl.String
+            source: pl.String
         function_descriptions: pl.List(pl.String)
-        subcellular_locations_encoded: pl.List(pl.String)
-        target_class_encoded: pl.List(pl.String)
-        obsolete_symbols_encoded: pl.List(pl.String)
-        obsolete_names_encoded: pl.List(pl.String)
-        constraint_scores_encoded: pl.List(pl.String)
-        target_enabling_package_encoded: pl.String
-        associated_proteins_encoded: pl.List(pl.String)
-        xrefs_encoded: pl.List(pl.String)
-        chemical_probes_encoded: pl.List(pl.String)
-        homologues_encoded: pl.List(pl.String)
-        tractability_encoded: pl.List(pl.String)
-        safety_liabilities_encoded: pl.List(pl.String)
+        subcellular_locations:
+          - location: pl.String
+            source: pl.String
+            term_sl: pl.String
+            label_sl: pl.String
+        target_class:
+          - id: pl.Int64
+            label: pl.String
+            level: pl.String
+        obsolete_symbols:
+          - label: pl.String
+            source: pl.String
+        obsolete_names:
+          - label: pl.String
+            source: pl.String
+        constraint_scores:
+          - constraint_type: pl.String
+            score: pl.Float32
+            exp: pl.Float32
+            obs: pl.Int32
+            oe: pl.Float32
+            oe_lower: pl.Float32
+            oe_upper: pl.Float32
+            upper_rank: pl.Int32
+            upper_bin: pl.Int32
+            upper_bin6: pl.Int32
+        target_enabling_package:
+          target_from_source_id: pl.String
+          description: pl.String
+          therapeutic_area: pl.String
+          url: pl.String
+        associated_proteins:
+          - id: pl.String
+            source: pl.String
+        xrefs:
+          - id: pl.String
+            source: pl.String
+        chemical_probes:
+          - control: pl.String
+            drug_id: pl.String
+            id: pl.String
+            is_high_quality: pl.Boolean
+            mechanism_of_action: pl.List(pl.String)
+            origin: pl.List(pl.String)
+            probe_miner_score: pl.Int64
+            probes_drugs_score: pl.Int64
+            score_in_cells: pl.Int64
+            score_in_organisms: pl.Int64
+            target_from_source_id: pl.String
+            urls:
+              - nice_name: pl.String
+                url: pl.String
+        homologues:
+          - species_id: pl.String
+            species_name: pl.String
+            homology_type: pl.String
+            target_gene_id: pl.String
+            is_high_confidence: pl.String
+            target_gene_symbol: pl.String
+            query_percentage_identity: pl.Float64
+            target_percentage_identity: pl.Float64
+            priority: pl.Int32
+        tractability:
+          - modality: pl.String
+            id: pl.String
+            value: pl.Boolean
+        safety_liabilities:
+          - event: pl.String
+            event_id: pl.String
+            effects:
+              - direction: pl.String
+                dosing: pl.String
+            biosamples:
+              - cell_format: pl.String
+                cell_label: pl.String
+                tissue_id: pl.String
+                tissue_label: pl.String
+            datasource: pl.String
+            literature: pl.String
+            url: pl.String
+            studies:
+              - description: pl.String
+                name: pl.String
+                type: pl.String
         transcription_start_site: pl.Int64
   metadata:
-    checksum: 46e7809eb5a693edff62dba1972348fe
+    checksum: 0dc29b3ba28800dc1157890b130d7129
     kedro-viz:
       layer: silver
