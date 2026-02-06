@@ -7,7 +7,7 @@ from cli.commands import (
     metrics_command,
     plot_benchmark_command,
     plot_normalized_time,
-    sync_catalog_schemas_command,
+    sync_catalog_command,
     unify_benchmark_files_command,
 )
 from cli.commands.figures import figure_app
@@ -110,13 +110,13 @@ def unify_benchmark_files(
     unify_benchmark_files_command(benchmarks_dir)
 
 
-@app.command(help="Synchronize or validate schema specifications for parquet datasets.")
-def sync_schemas(  # noqa: PLR0913
+@app.command(help="Synchronize or validate catalog schemas and checksums.")
+def sync_catalog(  # noqa: PLR0913
     layer: str = typer.Option(
         "all",
         "--layer",
         "-l",
-        help="Target layer: bronze, silver, or all.",
+        help="Target layer: landing, bronze, silver, or all.",
     ),
     dataset: str = typer.Option(
         None,
@@ -128,7 +128,7 @@ def sync_schemas(  # noqa: PLR0913
         False,
         "--validate",
         "-v",
-        help="Validate schemas without updating files.",
+        help="Validate schemas and checksums without updating files.",
     ),
     dry_run: bool = typer.Option(
         False,
@@ -147,30 +147,32 @@ def sync_schemas(  # noqa: PLR0913
         help="Path to the data directory.",
     ),
 ):
-    """Synchronize or validate schema specifications for parquet datasets.
+    """Synchronize or validate catalog schemas and checksums.
 
-    This command reads parquet files and generates idiomatic YAML schema
-    specifications for the Kedro catalog files.
+    For ParquetDataset entries, reads the parquet file and updates the YAML
+    schema specification.  For any dataset with a ``metadata.checksum``
+    field, recomputes the checksum from the data file on disk and updates
+    the catalog YAML (using regex replacement to preserve formatting).
 
     Examples:
 
-        # Sync all parquet schemas
+        # Sync all schemas and checksums
 
-        python -m cli sync-catalog-schemas
+        python -m cli sync-catalog
 
         # Validate without updating
 
-        python -m cli sync-catalog-schemas --validate
+        python -m cli sync-catalog --validate
 
         # Sync bronze layer only, dry-run
 
-        python -m cli sync-catalog-schemas --layer bronze --dry-run
+        python -m cli sync-catalog --layer bronze --dry-run
 
         # Sync a specific dataset
 
-        python -m cli sync-catalog-schemas --dataset bronze.opentargets.disease
+        python -m cli sync-catalog --dataset bronze.opentargets.disease
     """
-    sync_catalog_schemas_command(
+    sync_catalog_command(
         layer=layer,
         dataset=dataset,
         validate=validate,

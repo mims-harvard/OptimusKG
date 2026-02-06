@@ -1,16 +1,15 @@
 bronze.onsides.high_confidence:
-  type: polars.CSVDataset
-  filepath: "data/bronze/onsides/high_confidence.csv"
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/onsides/high_confidence.parquet
   load_args:
-    infer_schema: false
     schema:
-      "ingredient_id": "${pl:String}"
-      "effect_meddra_id": "${pl:String}"
-      "rxnorm_name": "${pl:String}"
-      "rxnorm_term_type": "${pl:String}"
-      "meddra_name": "${pl:String}"
-      "meddra_term_type": "${pl:String}"
+      ingredient_id: pl.String
+      effect_meddra_id: pl.String
+      rxnorm_name: pl.String
+      rxnorm_term_type: pl.String
+      meddra_name: pl.String
+      meddra_term_type: pl.String
   metadata:
-    checksum: 1b44f0cfb5884462580addf430691b09
+    checksum: c4a58390d5f9cea9feaa70c5ed84da5a
     kedro-viz:
       layer: bronze

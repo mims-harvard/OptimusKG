@@ -1,11 +1,30 @@
 landing.opentargets.disease_phenotype:
-  filepath: "data/landing/opentargets/disease_phenotype"
   type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/landing/opentargets/disease_phenotype
+  load_args:
+    schema:
+      disease: pl.String
+      phenotype: pl.String
+      evidence:
+      - aspect: pl.String
+        bioCuration: pl.String
+        diseaseFromSourceId: pl.String
+        diseaseFromSource: pl.String
+        diseaseName: pl.String
+        evidenceType: pl.String
+        frequency: pl.String
+        modifiers: pl.List(pl.String)
+        onset: pl.List(pl.String)
+        qualifier: pl.String
+        qualifierNot: pl.Boolean
+        references: pl.List(pl.String)
+        sex: pl.String
+        resource: pl.String
   metadata:
     checksum: 371b9b8dd8a8af0f17b0ee81936929d7
     origin:
       provider: opentargets
-      version: "25.06"
+      version: '25.06'
       dataset_name: disease_phenotype
     kedro-viz:
       layer: landing

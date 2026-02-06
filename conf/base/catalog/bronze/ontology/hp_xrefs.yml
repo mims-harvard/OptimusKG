@@ -1,13 +1,12 @@
 bronze.ontology.hp_xrefs:
-  type: polars.CSVDataset
-  filepath: "data/bronze/ontology/hp_xrefs.csv"
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/ontology/hp_xrefs.parquet
   load_args:
-    infer_schema: false
     schema:
-      "hp_id": "${pl:String}"
-      "ontology": "${pl:String}"
-      "ontology_id": "${pl:String}"
+      hp_id: pl.String
+      ontology: pl.String
+      ontology_id: pl.String
   metadata:
-    checksum: 2d7b4a733c2253860ea4cd64a6372187
+    checksum: a8e155fd3df6792fe158e3d5d19661fd
     kedro-viz:
       layer: bronze

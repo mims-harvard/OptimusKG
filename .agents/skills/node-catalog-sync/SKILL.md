@@ -1,95 +1,81 @@
 ---
 name: node-catalog-sync
-description: >
-  Enforces node-catalog synchronization in the OptimusKG Kedro project. Use this skill whenever
-  editing, creating, or deleting a Python node file under `optimuskg/pipelines/{layer}/nodes/`.
-  Ensures the corresponding catalog YAML files in `conf/base/catalog/{layer}/` are updated to
-  match: schema, checksum, dataset ID, filepath, and downstream cascade. Also use when renaming
-  node outputs, changing column definitions in a `run()` function, or adding/removing outputs
-  from a node. Triggers on any modification to files matching `optimuskg/pipelines/*/nodes/*.py`.
+description: Enforce synchronization between Kedro node files and catalog YAML files in the OptimusKG project. Use when editing any Python node file under optimuskg/pipelines/*/nodes/, including modifying run() functions, changing node() inputs/outputs, adding/removing/renaming DataFrame columns, or changing column types. Also use when creating new nodes or deleting existing ones.
 ---
 
-# Node-Catalog Sync
+# Node–Catalog Sync
 
-When a node file is edited, the corresponding catalog YAML files **must** be updated and all downstream nodes rerun.
+When a node file is edited, the corresponding catalog YAML files must be updated to stay in sync.
 
 ## Path Mapping
 
-Node file: `optimuskg/pipelines/{layer}/nodes/{source}.py`
-Catalog dir: `conf/base/catalog/{layer}/`
-
-The `outputs` field in the `node()` call determines catalog file locations. The pipeline applies `namespace="{layer}"`, so output `"foo.bar"` becomes catalog ID `{layer}.foo.bar`.
+Node `outputs` are namespace-prefixed by `pipeline.py`. Use this table to locate catalog files:
 
 | Layer | Node `outputs` | Catalog ID | YAML path | `filepath` |
-|-------|---------------|-----------|-----------|------------|
-| bronze | `"{source}.{name}"` | `bronze.{source}.{name}` | `conf/base/catalog/bronze/{source}/{name}.yml` | `data/bronze/{source}/{name}.parquet` |
-| silver | `"nodes.{entity}"` | `silver.nodes.{entity}` | `conf/base/catalog/silver/nodes/{entity}.yml` | `data/silver/nodes/{entity}.parquet` |
-| silver | `"edges.{e1}_{e2}"` | `silver.edges.{e1}_{e2}` | `conf/base/catalog/silver/edges/{e1}_{e2}.yml` | `data/silver/edges/{e1}_{e2}.parquet` |
-| gold | `["kg.csv", "kg.parquet"]` | `gold.kg.csv`, `gold.kg.parquet` | `conf/base/catalog/gold/csv.yml`, `conf/base/catalog/gold/parquet.yml` | `data/gold/formats/{fmt}/` |
+|-------|---------------|------------|-----------|------------|
+| Bronze | `"{src}.{name}"` | `bronze.{src}.{name}` | `conf/base/catalog/bronze/{src}/{name}.yml` | `data/bronze/{src}/{name}.parquet` |
+| Silver nodes | `"nodes.{entity}"` | `silver.nodes.{entity}` | `conf/base/catalog/silver/nodes/{entity}.yml` | `data/silver/nodes/{entity}.parquet` |
+| Silver edges | `"edges.{e1}_{e2}"` | `silver.edges.{e1}_{e2}` | `conf/base/catalog/silver/edges/{e1}_{e2}.yml` | `data/silver/edges/{e1}_{e2}.parquet` |
+| Gold | `"kg.{fmt}"` | `gold.kg.{fmt}` | `conf/base/catalog/gold/{fmt}.yml` | `data/gold/formats/{fmt}/` |
 
 Multiple outputs (list) produce one YAML file per output.
 
-## Workflow
+## Sync Workflow
 
-### 1. Identify outputs
+Follow all 4 steps in order after every node file edit.
 
-Read the `*_node = node(...)` call at the bottom of the edited file. Extract the `outputs` value (string or list). Determine the layer from the file path or `tags`.
+### Step 1: Identify affected catalog entries
 
-### 2. Update catalog schema
+1. Read the `node()` call in the edited file to find `outputs` (string or list).
+2. Determine the namespace from the corresponding `pipeline.py` (e.g., `namespace="bronze"`).
+3. Construct the full catalog ID: `{namespace}.{output}`.
+4. Locate the YAML file using the path mapping table above.
 
-If columns were added, removed, renamed, or types changed in the `run()` function, update `load_args.schema` in each corresponding YAML.
+### Step 2: Update dataset ID and filepath
 
-Schema uses Polars type strings. Nested structs use indented keys:
+Only if the `outputs` value in the `node()` call changed:
 
-```yaml
-load_args:
-  schema:
-    id: pl.String
-    label: pl.String
-    properties:
-      name: pl.String
-      xrefs: pl.List(pl.String)
-```
+1. Update the YAML top-level key to the new full catalog ID.
+2. Update `filepath` following the convention in the path mapping table.
+3. Rename the YAML file to match the new output name.
 
-### 3. Update dataset ID and filepath
+### Step 3: Rerun node and sync catalog
 
-If the `outputs` string changed, update the YAML top-level key and `filepath` to match. Rename the YAML file if needed.
+1. Rerun the node: `uv run kedro run --nodes={node_name}`
+2. Sync schema and checksum: `uv run cli sync-catalog --dataset {catalog_id}`
+   - This reads the parquet file on disk and updates both `load_args.schema` and `metadata.checksum` in the YAML automatically.
+   - Use `--dry-run` to preview changes first.
+   - Use `--validate` to check without writing (useful in CI).
+3. **Never delete the checksum property.**
 
-### 4. Update checksum
+### Step 4: Cascade downstream
 
-After making code changes:
+1. List all downstream nodes using `DryRunner` (no execution, just shows the DAG):
+   ```
+   uv run kedro run --from-nodes={node_name} --runner=optimuskg.runners.DryRunner
+   ```
+2. Rerun the edited node and all its downstream dependents:
+   ```
+   uv run kedro run --from-nodes={node_name}
+   ```
+3. Sync all affected catalog entries:
+   ```
+   uv run cli sync-catalog
+   ```
 
-1. Rerun the node: `uv run kedro run --nodes={layer}.{node_name}`
-2. Get new checksum: `uv run cli checksum {filepath}` (where `{filepath}` is the `filepath` value from the YAML, e.g. `data/silver/nodes/disease.parquet`)
-3. Update `metadata.checksum` in the YAML with the new hex string
-
-**Never delete the `metadata.checksum` field.**
-
-### 5. Cascade downstream
-
-Find all nodes that consume this node's outputs:
-
-1. Grep for each output catalog ID across all node files and catalog files
-2. Rerun each downstream node: `uv run kedro run --nodes={layer}.{node_name}`
-3. Update checksums for each downstream output
-4. Repeat recursively until no more downstream consumers exist
-
-```bash
-# Example: find consumers of "bronze.ontology.mondo_terms"
-grep -r "bronze.ontology.mondo_terms" optimuskg/pipelines/ conf/base/catalog/
-```
-
-## Catalog YAML Template
+## Catalog YAML Structure
 
 ```yaml
-{layer}.{dotted.output.name}:
+{catalog_id}:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: data/{layer}/{slash/output/name}.parquet
+  filepath: data/{layer}/{path}.parquet
   load_args:
     schema:
-      # columns from run() return value
+      column_name: pl.Type
+      struct_column:
+        nested_field: pl.Type
   metadata:
-    checksum: {hex_from_cli}
+    checksum: {blake2b_hex_digest}
     kedro-viz:
       layer: {layer}
 ```

@@ -1,11 +1,147 @@
 landing.opentargets.target:
-  filepath: "data/landing/opentargets/target"
   type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/landing/opentargets/target
+  load_args:
+    schema:
+      id: pl.String
+      approvedSymbol: pl.String
+      biotype: pl.String
+      transcriptIds: pl.List(pl.String)
+      canonicalTranscript:
+        id: pl.String
+        chromosome: pl.String
+        start: pl.Int64
+        end: pl.Int64
+        strand: pl.String
+      canonicalExons: pl.List(pl.String)
+      genomicLocation:
+        chromosome: pl.String
+        start: pl.Int64
+        end: pl.Int64
+        strand: pl.Int32
+      alternativeGenes: pl.List(pl.String)
+      approvedName: pl.String
+      go:
+      - id: pl.String
+        source: pl.String
+        evidence: pl.String
+        aspect: pl.String
+        geneProduct: pl.String
+        ecoId: pl.String
+      hallmarks:
+        attributes:
+        - pmid: pl.Int64
+          description: pl.String
+          attribute_name: pl.String
+        cancerHallmarks:
+        - pmid: pl.Int64
+          description: pl.String
+          impact: pl.String
+          label: pl.String
+      synonyms:
+      - label: pl.String
+        source: pl.String
+      symbolSynonyms:
+      - label: pl.String
+        source: pl.String
+      nameSynonyms:
+      - label: pl.String
+        source: pl.String
+      functionDescriptions: pl.List(pl.String)
+      subcellularLocations:
+      - location: pl.String
+        source: pl.String
+        termSL: pl.String
+        labelSL: pl.String
+      targetClass:
+      - id: pl.Int64
+        label: pl.String
+        level: pl.String
+      obsoleteSymbols:
+      - label: pl.String
+        source: pl.String
+      obsoleteNames:
+      - label: pl.String
+        source: pl.String
+      constraint:
+      - constraintType: pl.String
+        score: pl.Float32
+        exp: pl.Float32
+        obs: pl.Int32
+        oe: pl.Float32
+        oeLower: pl.Float32
+        oeUpper: pl.Float32
+        upperRank: pl.Int32
+        upperBin: pl.Int32
+        upperBin6: pl.Int32
+      tep:
+        targetFromSourceId: pl.String
+        description: pl.String
+        therapeuticArea: pl.String
+        url: pl.String
+      proteinIds:
+      - id: pl.String
+        source: pl.String
+      dbXrefs:
+      - id: pl.String
+        source: pl.String
+      chemicalProbes:
+      - control: pl.String
+        drugId: pl.String
+        id: pl.String
+        isHighQuality: pl.Boolean
+        mechanismOfAction: pl.List(pl.String)
+        origin: pl.List(pl.String)
+        probeMinerScore: pl.Int64
+        probesDrugsScore: pl.Int64
+        scoreInCells: pl.Int64
+        scoreInOrganisms: pl.Int64
+        targetFromSourceId: pl.String
+        urls:
+        - niceName: pl.String
+          url: pl.String
+      homologues:
+      - speciesId: pl.String
+        speciesName: pl.String
+        homologyType: pl.String
+        targetGeneId: pl.String
+        isHighConfidence: pl.String
+        targetGeneSymbol: pl.String
+        queryPercentageIdentity: pl.Float64
+        targetPercentageIdentity: pl.Float64
+        priority: pl.Int32
+      tractability:
+      - modality: pl.String
+        id: pl.String
+        value: pl.Boolean
+      safetyLiabilities:
+      - event: pl.String
+        eventId: pl.String
+        effects:
+        - direction: pl.String
+          dosing: pl.String
+        biosamples:
+        - cellFormat: pl.String
+          cellLabel: pl.String
+          tissueId: pl.String
+          tissueLabel: pl.String
+        datasource: pl.String
+        literature: pl.String
+        url: pl.String
+        studies:
+        - description: pl.String
+          name: pl.String
+          type: pl.String
+      pathways:
+      - pathwayId: pl.String
+        pathway: pl.String
+        topLevelTerm: pl.String
+      tss: pl.Int64
   metadata:
     checksum: 04fae2eb255020b16b4b981a9d788316
     origin:
       provider: opentargets
-      version: "25.06"
+      version: '25.06'
       dataset_name: target
     kedro-viz:
       layer: landing

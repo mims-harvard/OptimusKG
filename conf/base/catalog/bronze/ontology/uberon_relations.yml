@@ -1,13 +1,12 @@
 bronze.ontology.uberon_relations:
-  type: polars.CSVDataset
-  filepath: "data/bronze/ontology/uberon_relations.csv"
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/ontology/uberon_relations.parquet
   load_args:
-    infer_schema: false
     schema:
-      "id": "${pl:Utf8}"
-      "relation_type": "${pl:Utf8}"
-      "relation_id": "${pl:Utf8}"
+      id: pl.String
+      relation_type: pl.String
+      relation_id: pl.String
   metadata:
-    checksum: 5b9ad1993f3d2eb3a7a47885f58aceba
+    checksum: d68c6b9a695817543d4dc8f4b3a1645f
     kedro-viz:
       layer: bronze
