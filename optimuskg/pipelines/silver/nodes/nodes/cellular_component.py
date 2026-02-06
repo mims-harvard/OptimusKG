@@ -30,8 +30,8 @@ def run(
                     pl.lit("GO").alias("source"),
                     pl.col("name"),
                     pl.col("definition"),
-                    pl.col("xrefs"),  # TODO: cast to a proper list
-                    pl.col("synonyms"),  # TODO: cast to a proper list
+                    pl.col("xrefs"),
+                    pl.col("synonyms"),
                     pl.col("ontology"),
                 ]
             ).alias("properties"),
