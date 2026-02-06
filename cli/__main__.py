@@ -4,16 +4,17 @@ from pathlib import Path
 import typer
 
 from cli.commands import (
-    get_primekg_metrics_command,
     metrics_command,
     plot_benchmark_command,
     plot_normalized_time,
     sync_catalog_schemas_command,
     unify_benchmark_files_command,
 )
+from cli.commands.figures import figure_app
 from optimuskg.utils import calculate_checksum
 
 app = typer.Typer(help="Main entry point for the CLI.")
+app.add_typer(figure_app, name="figure")
 
 logger = logging.getLogger("cli")
 
@@ -58,38 +59,22 @@ def checksum(  # noqa: PLR0913
         logger.error(f"An unexpected error occurred: {e}")
 
 
-@app.command(help="Get statistics about a PrimeKG knowledge graph.")
-def primekg_metrics(
-    in_path: Path = typer.Option(
-        "data/primekg/kg.csv",
-        "--in",
-        help="The path to read the input file from.",
-    ),
-    out_path: Path = typer.Option(
-        "data/primekg/metrics.json",
-        "--out",
-        help="The path to write the output file to.",
-    ),
-):
-    get_primekg_metrics_command(in_path, out_path)
-
-
-@app.command(help="Generate metrics report from OptimusKG parquet files.")
+@app.command(help="Generate metrics parquet files from gold KG data.")
 def metrics(
     nodes_dir: Path = typer.Option(
-        "data/silver/nodes",
+        "data/gold/formats/parquet/nodes",
         "--nodes",
-        help="The path to read the nodes from.",
+        help="Directory containing gold node parquet files.",
     ),
     edges_dir: Path = typer.Option(
-        "data/silver/edges",
+        "data/gold/formats/parquet/edges",
         "--edges",
-        help="The path to read the edges from.",
+        help="Directory containing gold edge parquet files.",
     ),
     out_dir: Path = typer.Option(
         "data/gold/metrics",
         "--out",
-        help="The path to write the output file to.",
+        help="Directory to write metrics parquet files to.",
     ),
 ):
     metrics_command(nodes_dir, edges_dir, out_dir)
