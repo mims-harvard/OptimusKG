@@ -1,7 +1,7 @@
 bronze.reactome.reactome_relations:
-  type: polars.CSVDataset
-  filepath: "data/bronze/reactome/reactome_relations.csv"
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/reactome/reactome_relations.parquet
   metadata:
-    checksum: 62f70983060c4e8cf90c08aa28617d93
+    checksum: 813e0433f9c6efa5c249eeb2a8243fe0
     kedro-viz:
       layer: bronze
