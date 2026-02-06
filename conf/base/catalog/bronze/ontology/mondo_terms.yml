@@ -15,5 +15,6 @@ bronze.ontology.mondo_terms:
         license: pl.String
         version: pl.String
   metadata:
+    checksum: 4d480227962f4b7a2ddff9566e374a7e
     kedro-viz:
       layer: bronze

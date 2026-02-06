@@ -15,5 +15,6 @@ bronze.ontology.go_terms:
         license: pl.String
         version: pl.String
   metadata:
+    checksum: e3e7da2358b3395cfc9cb7dc5bad0a65
     kedro-viz:
       layer: bronze

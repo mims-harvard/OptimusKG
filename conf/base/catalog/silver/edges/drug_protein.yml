@@ -14,6 +14,6 @@ silver.edges.drug_protein:
         mechanisms_of_action: pl.List(pl.String)
         sources: pl.List(pl.String)
   metadata:
-    checksum: fc6f8f0840062bb16766088f82da0984
+    checksum: e406c19a2a702245f92f1a7158b40a0c
     kedro-viz:
       layer: silver

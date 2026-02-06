@@ -11,6 +11,6 @@ silver.edges.molecular_function_molecular_function:
       properties:
         sources: pl.List(pl.String)
   metadata:
-    checksum: d1b49f787a7050a9a7a70c7a1398b180
+    checksum: 68b5fb4cfc56b097cefba8f30843f19e
     kedro-viz:
       layer: silver

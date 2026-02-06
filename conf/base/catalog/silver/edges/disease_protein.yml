@@ -21,5 +21,6 @@ silver.edges.disease_protein:
         number_of_snps: pl.Int16
         sources: pl.List(pl.String)
   metadata:
+    checksum: 1fef730999fb339f555de9b897cb6129
     kedro-viz:
       layer: silver

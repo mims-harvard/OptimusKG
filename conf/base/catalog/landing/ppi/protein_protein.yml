@@ -8,6 +8,6 @@ landing.ppi.protein_protein:
       "proteinB_entrezid": "${pl:String}"
       "databases": "${pl:String}"
   metadata:
-    checksum: "fa8ee611cda04d85d652abb3e16ece03"
+    checksum: fa8ee611cda04d85d652abb3e16ece03
     kedro-viz:
       layer: landing

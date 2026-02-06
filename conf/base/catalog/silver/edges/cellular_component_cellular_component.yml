@@ -11,6 +11,6 @@ silver.edges.cellular_component_cellular_component:
       properties:
         sources: pl.List(pl.String)
   metadata:
-    checksum: d1b49f787a7050a9a7a70c7a1398b180
+    checksum: d3afe7323eeea4ce9ba2645082b090a9
     kedro-viz:
       layer: silver

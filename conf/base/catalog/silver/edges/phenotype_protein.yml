@@ -21,6 +21,6 @@ silver.edges.phenotype_protein:
         number_of_snps: pl.Int16
         sources: pl.List(pl.String)
   metadata:
-    checksum: d1b49f787a7050a9a7a70c7a1398b180
+    checksum: 50a492d7158050f510db8fbf205f8889
     kedro-viz:
       layer: silver

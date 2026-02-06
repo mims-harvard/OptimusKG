@@ -6,6 +6,6 @@ bronze.opentargets.ensembl_ncbi_mapping:
       ensembl_id: pl.String
       ncbi_id: pl.String
   metadata:
-    checksum: '44150070848198245156620716408455'
+    checksum: 86a27cf3931fbe6fcddd98f469da6a3d
     kedro-viz:
       layer: bronze

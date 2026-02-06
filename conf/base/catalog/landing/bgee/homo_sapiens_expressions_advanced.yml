@@ -65,7 +65,7 @@ landing.bgee.homo_sapiens_expressions_advanced:
       "Self observation count single-cell RNA-Seq": "${pl:Int64}"
       "Descendant observation count single-cell RNA-Seq": "${pl:Int64}"
   metadata:
-    checksum: "a845f239f13469219ba6debf574208aa"
+    checksum: a845f239f13469219ba6debf574208aa
     origin:
       provider: http
       url: "https://www.bgee.org/ftp/current/download/calls/expr_calls/Homo_sapiens_expr_advanced.tsv.gz"

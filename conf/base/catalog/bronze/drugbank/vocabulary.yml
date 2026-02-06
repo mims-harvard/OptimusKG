@@ -12,6 +12,6 @@ bronze.drugbank.vocabulary:
       "synonyms": "${pl:Utf8}"
       "standard_inchi_key": "${pl:Utf8}"
   metadata:
-    checksum: "960226a0ad180d8b53df7e42e69dc3e5"
+    checksum: 960226a0ad180d8b53df7e42e69dc3e5
     kedro-viz:
       layer: bronze

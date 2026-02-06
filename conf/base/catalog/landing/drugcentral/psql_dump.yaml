@@ -50,7 +50,7 @@ landing.drugcentral.psql_dump:
     ) AS drug_disease ON structures.id = drug_disease.struct_id
   db_name: "drugcentral"
   metadata:
-    checksum: "67f34af47af1857433c9bea21ba8b761"
+    checksum: 67f34af47af1857433c9bea21ba8b761
     origin:
       provider: http
       url: "https://unmtid-dbs.net/download/drugcentral.dump.11012023.sql.gz"

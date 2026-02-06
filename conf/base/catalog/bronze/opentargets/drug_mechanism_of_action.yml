@@ -15,6 +15,6 @@ bronze.opentargets.drug_mechanism_of_action:
             ids: pl.List(pl.String)
             urls: pl.List(pl.String)
   metadata:
-    checksum: 0dc00d77ff5e42a35ba51c33dd4b78ea
+    checksum: a88f67c2f67b22b2205f956df117a89d
     kedro-viz:
       layer: bronze
