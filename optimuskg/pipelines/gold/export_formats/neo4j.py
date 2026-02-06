@@ -1,3 +1,4 @@
+import json
 import logging
 import subprocess
 import uuid
@@ -18,31 +19,29 @@ logger = logging.getLogger(__name__)
 _BIOCYPHER_CONFIG_PATH = "conf/base/biocypher/biocypher_config.yaml"
 
 
-def _flatten_properties(properties: dict[str, Any], prefix: str = "") -> dict[str, Any]:
-    """Flatten nested dicts into flat key-value pairs with prefixed keys.
+def _encode_nested_properties(properties: dict[str, Any]) -> dict[str, Any]:
+    """JSON-encode nested dicts into string values for Neo4j compatibility.
 
-    Neo4j does not support nested properties, so this function flattens nested
-    dictionaries (e.g., ontology structs) into flat key-value pairs.
+    Neo4j does not support nested properties, so this function converts nested
+    dictionaries (e.g., ontology structs) into JSON-encoded strings.
 
     Example:
-        {"ontology": {"description": "foo", "version": "1.0"}}
+        {"ontology": {"description": "foo", "version": "1.0"}, "name": "bar"}
         becomes:
-        {"ontology_description": "foo", "ontology_version": "1.0"}
+        {"ontology": '{"description": "foo", "version": "1.0"}', "name": "bar"}
 
     Args:
         properties: Dictionary of properties, potentially with nested dicts.
-        prefix: Prefix to prepend to keys (used for recursion).
 
     Returns:
-        Flattened dictionary with no nested structures.
+        Dictionary with nested dicts JSON-encoded as strings.
     """
     result: dict[str, Any] = {}
     for k, v in properties.items():
-        key = f"{prefix}{k}" if prefix else k
         if isinstance(v, dict):
-            result.update(_flatten_properties(v, f"{key}_"))
+            result[k] = json.dumps(v)
         elif v is not None:
-            result[key] = v
+            result[k] = v
     return result
 
 
@@ -56,7 +55,7 @@ def _escape_quotes(value: Any) -> Any:
 
 
 _BIOCYPHER_SCHEMA_CONFIG_PATH = Path("conf/base/biocypher/schema_config.yaml")
-_NEO4J_IMPORT_PATH = Path("data/neo4j/import")
+_NEO4J_IMPORT_PATH = Path("data/gold/neo4j/import")
 
 
 @dataclass(frozen=True)
@@ -82,9 +81,9 @@ def _yield_nodes(
     for row in df.iter_rows(named=True):
         not_null_properties: dict[str, Any] = {}
         if include_properties:
-            # Flatten nested structs (like ontology) for Neo4j compatibility
-            flat_props = _flatten_properties(row["properties"])
-            for k, v in flat_props.items():
+            # JSON-encode nested structs for Neo4j compatibility
+            encoded_props = _encode_nested_properties(row["properties"])
+            for k, v in encoded_props.items():
                 if v is not None:
                     not_null_properties[k] = _escape_quotes(v)
         yield BiocypherNode(
@@ -155,15 +154,14 @@ def csv_to_neo4j(import_path: Path, schema_config_path: Path) -> None:
     edge_args = []
     for name, config in schema_config.items():
         represented_as = config.get("represented_as")
-        input_label = config.get("input_label")
 
-        if not input_label:
-            logger.warning(f"'{name}' is missing 'input_label' in schema, skipping.")
+        if not represented_as:
+            logger.debug(f"'{name}' is missing 'represented_as' in schema, skipping.")
             continue
 
-        pascal_case_label = "".join(
-            word.capitalize() for word in input_label.split("_")
-        )
+        # BioCypher names files based on the schema key (entity name), not input_label.
+        # Schema uses spaces (e.g., "biological process"), so split on whitespace.
+        pascal_case_label = "".join(word.capitalize() for word in name.split())
         header_file = f"{pascal_case_label}-header.csv"
 
         if represented_as == "node":
@@ -192,12 +190,8 @@ def csv_to_neo4j(import_path: Path, schema_config_path: Path) -> None:
     command = [
         "docker",
         "run",
-        "--interactive",
-        "--tty",
         "--rm",
-        "--publish=7474:7474",
-        "--publish=7687:7687",
-        "--volume=./data/neo4j/data:/data",
+        "--volume=./data/gold/neo4j/data:/data",
         f"--volume=./{import_path}:/import",
         "--volume=./data/export:/export",
         "neo4j:5.26.2-community-bullseye",
@@ -285,6 +279,29 @@ def neo4j_export(
         _process_adapters(bc, edge_adapters, "edge", bc.write_edges)
     except Exception as e:
         logger.exception(f"Error writing graph data to disk: {e}")
+        raise
+
+    # Fix permissions on import directory so host user can check file existence.
+    # BioCypher writes files via Docker as uid 7474 with mode 700, which prevents
+    # the host user from reading the directory for the csv_to_neo4j file checks.
+    try:
+        logger.info("Fixing permissions on import directory...")
+        subprocess.run(
+            [
+                "docker",
+                "run",
+                "--rm",
+                f"--volume=./{_NEO4J_IMPORT_PATH}:/import",
+                "alpine",
+                "chmod",
+                "-R",
+                "755",
+                "/import",
+            ],
+            check=True,
+        )
+    except subprocess.CalledProcessError as e:
+        logger.exception(f"Error fixing permissions on import directory: {e}")
         raise
 
     try:

@@ -9,7 +9,7 @@ biocypher:
   log_to_disk: true
   log_directory: .biocypher/biocypher-log
   cache_directory: .biocypher/biocypher_cache
-  output_directory: data/neo4j/import/
+  output_directory: data/gold/neo4j/import/
   
   head_ontology:
     url: https://github.com/biolink/biolink-model/raw/v3.2.1/biolink-model.owl.ttl
