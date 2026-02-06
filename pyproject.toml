@@ -108,7 +108,7 @@ color = true
 python-version = "3.12"
 
 [tool.ty.src]
-exclude = ["**/*.ipynb"]
+exclude = ["**/*.ipynb", ".agents/**/*"]
 
 [tool.ty.analysis]
 allowed-unresolved-imports = [
