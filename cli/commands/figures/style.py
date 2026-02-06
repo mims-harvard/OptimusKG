@@ -5,10 +5,10 @@ Contains unified aesthetics for all figure plots including:
 - Helper functions for consistent styling
 """
 
-from matplotlib.axes import Axes
-from matplotlib.legend import Legend
 import matplotlib.pyplot as plt
 import scienceplots  # noqa: F401
+from matplotlib.axes import Axes
+from matplotlib.legend import Legend
 
 # Apply science plot style
 plt.style.use(["science", "ieee", "no-latex"])

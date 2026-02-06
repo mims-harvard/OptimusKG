@@ -14,6 +14,7 @@ import seaborn as sns
 
 from cli.commands.metrics.utils import load_parquet_dir
 from optimuskg.pipelines.silver.nodes.constants import Node
+
 from . import style  # noqa: F401
 from .style import apply_axis_styling
 
