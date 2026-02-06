@@ -14,7 +14,7 @@ landing.gene_names.gene_names:
       "UniProt ID(supplied by UniProt)": "${pl:String}"
       "OMIM ID(supplied by OMIM)": "${pl:String}"
   metadata:
-    checksum: "27ac941e347fc1cd69a07b3e5242ca56"
+    checksum: 27ac941e347fc1cd69a07b3e5242ca56
     origin:
       provider: "http"
       url: "https://www.genenames.org/cgi-bin/download/custom?col=gd_app_sym&col=gd_app_name&col=gd_pub_acc_ids&col=gd_pub_refseq_ids&col=gd_pub_eg_id&col=md_eg_id&col=md_prot_id&col=md_mim_id&status=Approved&hgnc_dbtag=on&order_by=gd_app_sym_sort&format=text&submit=submit"

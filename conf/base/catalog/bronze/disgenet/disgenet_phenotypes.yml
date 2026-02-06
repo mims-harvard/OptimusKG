@@ -21,6 +21,6 @@ bronze.disgenet.disgenet_phenotypes:
       "nof_snps": "${pl:Utf8}"
       "source": "${pl:Utf8}"
   metadata:
-    checksum: "e4265252402daee6533467b5e27cb916"
+    checksum: e1e12a080081f2281160792ad3d81e05
     kedro-viz:
       layer: bronze

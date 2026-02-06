@@ -11,6 +11,6 @@ silver.edges.pathway_protein:
       properties:
         sources: pl.List(pl.String)
   metadata:
-    checksum: 55c501c89a1515c5748131f501c41d58
+    checksum: ba35ecd40cd120358a830d7bda0d7307
     kedro-viz:
       layer: silver

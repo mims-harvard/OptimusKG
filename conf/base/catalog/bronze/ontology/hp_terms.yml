@@ -9,11 +9,12 @@ bronze.ontology.hp_terms:
       definition: pl.String
       xrefs: pl.List(pl.String)
       synonyms: pl.List(pl.String)
-      ontology_description: pl.String
-      ontology_title: pl.String
-      ontology_license: pl.String
-      ontology_version: pl.String
+      ontology:
+        description: pl.String
+        title: pl.String
+        license: pl.String
+        version: pl.String
   metadata:
-    checksum: e08a998df9f24541e70f8c09da223cef
+    checksum: 613a038adbf1c4ae7994a798d8601157
     kedro-viz:
       layer: bronze

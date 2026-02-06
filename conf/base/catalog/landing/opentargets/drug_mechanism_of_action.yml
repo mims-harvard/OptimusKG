@@ -2,7 +2,7 @@ landing.opentargets.drug_mechanism_of_action:
   filepath: "data/landing/opentargets/drug_mechanism_of_action"
   type: optimuskg.datasets.polars.ParquetDataset
   metadata:
-    checksum: "d52a422cfdb1572d3593a7f87017b002"
+    checksum: d52a422cfdb1572d3593a7f87017b002
     origin:
       provider: opentargets
       version: "25.06"

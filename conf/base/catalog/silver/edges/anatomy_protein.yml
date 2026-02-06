@@ -13,6 +13,6 @@ silver.edges.anatomy_protein:
         call_quality: pl.String
         sources: pl.List(pl.String)
   metadata:
-    checksum: 8040fa149fa71730ed1c97f00d6db18b
+    checksum: f9a57bda17d8862ac193e9d9974fd357
     kedro-viz:
       layer: silver

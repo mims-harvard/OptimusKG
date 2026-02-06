@@ -20,6 +20,6 @@ silver.edges.disease_phenotype:
         sexes: pl.List(pl.String)
         sources: pl.List(pl.String)
   metadata:
-    checksum: d1b49f787a7050a9a7a70c7a1398b180
+    checksum: 7eb015c302486d84d7f5a0512b8cf43d
     kedro-viz:
       layer: silver

@@ -11,6 +11,6 @@ silver.edges.phenotype_phenotype:
       properties:
         sources: pl.List(pl.String)
   metadata:
-    checksum: ''
+    checksum: 2de2d4609baa6d4f2bb3f862051ace8c
     kedro-viz:
       layer: silver

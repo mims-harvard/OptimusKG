@@ -9,11 +9,12 @@ bronze.ontology.uberon_terms:
       definition: pl.String
       xrefs: pl.List(pl.String)
       synonyms: pl.List(pl.String)
-      ontology_description: pl.String
-      ontology_title: pl.String
-      ontology_license: pl.String
-      ontology_version: pl.String
+      ontology:
+        description: pl.String
+        title: pl.String
+        license: pl.String
+        version: pl.String
   metadata:
-    checksum: f266de69a1d9295daa0133cd41cce77a
+    checksum: 10e7622f1dde2e4dbd95478988dd22bc
     kedro-viz:
       layer: bronze

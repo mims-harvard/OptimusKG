@@ -2,7 +2,7 @@ landing.ontology.uberon:
   type: optimuskg.datasets.polars.JsonDataset
   filepath: "data/landing/ontology/uberon.json"
   metadata:
-    checksum: "a3ca8e746e4d2343d1bce1dce3b39d1f"
+    checksum: a3ca8e746e4d2343d1bce1dce3b39d1f
     title: "Uber Anatomy Ontology"
     description: "Uberon is an integrated cross-species anatomy ontology representing a variety of entities classified according to traditional anatomical criteria such as structure, function and developmental lineage."
     origin:

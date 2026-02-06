@@ -11,6 +11,6 @@ silver.edges.anatomy_anatomy:
       properties:
         sources: pl.List(pl.String)
   metadata:
-    checksum: d1b49f787a7050a9a7a70c7a1398b180
+    checksum: d68200805f2e503ac349a9a598b5814f
     kedro-viz:
       layer: silver

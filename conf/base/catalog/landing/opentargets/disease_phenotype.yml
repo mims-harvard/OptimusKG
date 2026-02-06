@@ -2,7 +2,7 @@ landing.opentargets.disease_phenotype:
   filepath: "data/landing/opentargets/disease_phenotype"
   type: optimuskg.datasets.polars.ParquetDataset
   metadata:
-    checksum: "371b9b8dd8a8af0f17b0ee81936929d7"
+    checksum: 371b9b8dd8a8af0f17b0ee81936929d7
     origin:
       provider: opentargets
       version: "25.06"

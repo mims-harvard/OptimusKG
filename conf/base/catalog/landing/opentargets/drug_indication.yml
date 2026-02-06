@@ -2,7 +2,7 @@ landing.opentargets.drug_indication:
   filepath: "data/landing/opentargets/drug_indication"
   type: optimuskg.datasets.polars.ParquetDataset
   metadata:
-    checksum: "08560111aab08d22a5ede1f3be229cab"
+    checksum: 08560111aab08d22a5ede1f3be229cab
     origin:
       provider: opentargets
       version: "25.06"

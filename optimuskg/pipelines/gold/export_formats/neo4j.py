@@ -16,6 +16,45 @@ from optimuskg.utils import format_rich
 logger = logging.getLogger(__name__)
 
 _BIOCYPHER_CONFIG_PATH = "conf/base/biocypher/biocypher_config.yaml"
+
+
+def _flatten_properties(properties: dict[str, Any], prefix: str = "") -> dict[str, Any]:
+    """Flatten nested dicts into flat key-value pairs with prefixed keys.
+
+    Neo4j does not support nested properties, so this function flattens nested
+    dictionaries (e.g., ontology structs) into flat key-value pairs.
+
+    Example:
+        {"ontology": {"description": "foo", "version": "1.0"}}
+        becomes:
+        {"ontology_description": "foo", "ontology_version": "1.0"}
+
+    Args:
+        properties: Dictionary of properties, potentially with nested dicts.
+        prefix: Prefix to prepend to keys (used for recursion).
+
+    Returns:
+        Flattened dictionary with no nested structures.
+    """
+    result: dict[str, Any] = {}
+    for k, v in properties.items():
+        key = f"{prefix}{k}" if prefix else k
+        if isinstance(v, dict):
+            result.update(_flatten_properties(v, f"{key}_"))
+        elif v is not None:
+            result[key] = v
+    return result
+
+
+def _escape_quotes(value: Any) -> Any:
+    """Escape double quotes in strings and string lists for Neo4j CSV export."""
+    if isinstance(value, list) and all(isinstance(x, str) for x in value):
+        return [x.replace('"', '""') for x in value]
+    elif isinstance(value, str):
+        return value.replace('"', '""')
+    return value
+
+
 _BIOCYPHER_SCHEMA_CONFIG_PATH = Path("conf/base/biocypher/schema_config.yaml")
 _NEO4J_IMPORT_PATH = Path("data/neo4j/import")
 
@@ -43,16 +82,11 @@ def _yield_nodes(
     for row in df.iter_rows(named=True):
         not_null_properties: dict[str, Any] = {}
         if include_properties:
-            for k, v in row[
-                "properties"
-            ].items():  # Escape double quotes since biocypher doesn't escape them
+            # Flatten nested structs (like ontology) for Neo4j compatibility
+            flat_props = _flatten_properties(row["properties"])
+            for k, v in flat_props.items():
                 if v is not None:
-                    if isinstance(v, list) and all(isinstance(x, str) for x in v):
-                        not_null_properties[k] = [x.replace('"', '""') for x in v]
-                    elif isinstance(v, str):
-                        not_null_properties[k] = v.replace('"', '""')
-                    else:
-                        not_null_properties[k] = v
+                    not_null_properties[k] = _escape_quotes(v)
         yield BiocypherNode(
             id=row["id"],
             label=row["label"],

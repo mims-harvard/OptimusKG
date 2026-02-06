@@ -7,6 +7,6 @@ bronze.ppi.protein_protein:
       to: pl.String
       databases: pl.List(pl.String)
   metadata:
-    checksum: '44150070848198245156620716408455'
+    checksum: d19feda309063156dee68037cc2d037e
     kedro-viz:
       layer: bronze

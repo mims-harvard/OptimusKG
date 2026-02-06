@@ -21,6 +21,6 @@ bronze.disgenet.diseases:
       "nof_snps": "${pl:Utf8}"
       "source": "${pl:Utf8}"
   metadata:
-    checksum: "eb14e4e3170ab1f9ca252e377e8db501"
+    checksum: e1e12a080081f2281160792ad3d81e05
     kedro-viz:
       layer: bronze

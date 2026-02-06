@@ -38,6 +38,6 @@ bronze.drugcentral.drug:
       unii: pl.String
       synonyms: pl.String
   metadata:
-    checksum: 03b249e597ce160dc8d3ec3ac41c91bf
+    checksum: 4a5ab9e05e508d336f42cf05cef26fe4
     kedro-viz:
       layer: bronze

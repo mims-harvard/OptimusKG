@@ -11,11 +11,12 @@ silver.nodes.biological_process:
         definition: pl.String
         xrefs: pl.List(pl.String)
         synonyms: pl.List(pl.String)
-        ontology_description: pl.String
-        ontology_title: pl.String
-        ontology_license: pl.String
-        ontology_version: pl.String
+        ontology:
+          description: pl.String
+          title: pl.String
+          license: pl.String
+          version: pl.String
   metadata:
-    checksum: d1b49f787a7050a9a7a70c7a1398b180
+    checksum: 1d26a36205f400f4ebcf59ab7602691a
     kedro-viz:
       layer: silver

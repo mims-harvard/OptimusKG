@@ -76,10 +76,7 @@ def run(  # noqa: PLR0913
                     pl.coalesce(
                         [pl.col("meddra_term_type"), pl.lit("phenotype")]
                     ).alias("type"),
-                    pl.col("ontology_description").alias("ontology_description"),
-                    pl.col("ontology_title").alias("ontology_title"),
-                    pl.col("ontology_license").alias("ontology_license"),
-                    pl.col("ontology_version").alias("ontology_version"),
+                    pl.col("ontology"),
                     pl.col("concept_ids").alias("concept_ids"),
                     pl.col("concept_names").alias("concept_names"),
                     pl.col("umls_cui").alias("umls_cui"),

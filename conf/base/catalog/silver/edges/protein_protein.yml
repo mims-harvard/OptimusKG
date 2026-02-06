@@ -11,6 +11,6 @@ silver.edges.protein_protein:
       properties:
         sources: pl.List(pl.String)
   metadata:
-    checksum: '44150070848198245156620716408455'
+    checksum: 3a1fe3d1b9cd548f529885670f7691fc
     kedro-viz:
       layer: silver
