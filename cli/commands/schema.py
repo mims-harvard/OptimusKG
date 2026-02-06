@@ -11,20 +11,11 @@ from optimuskg.utils import calculate_checksum, format_rich
 logger = logging.getLogger("cli")
 
 
-# ---------------------------------------------------------------------------
-# Display helpers
-# ---------------------------------------------------------------------------
-
-
 def _format_dataset_display(ds_name: str, ds_type: str) -> str:
     display_name = format_rich(ds_name, "dark_orange")
     type_name = ds_type.split(".")[-1]
     return f"{display_name} ({type_name})"
 
-
-# ---------------------------------------------------------------------------
-# Polars type conversion
-# ---------------------------------------------------------------------------
 
 _SIMPLE_TYPE_MAP: dict[type, str] = {
     pl.String: "pl.String",
@@ -83,11 +74,6 @@ def _struct_to_yaml_dict(struct_dtype: pl.Struct) -> dict[str, Any]:
     }
 
 
-# ---------------------------------------------------------------------------
-# YAML I/O
-# ---------------------------------------------------------------------------
-
-
 class _CustomYamlDumper(yaml.SafeDumper):
     pass
 
@@ -124,11 +110,6 @@ def _generate_schema_yaml(parquet_path: Path) -> dict[str, Any]:
     return {col: polars_dtype_to_yaml(dtype) for col, dtype in df.schema.items()}
 
 
-# ---------------------------------------------------------------------------
-# Catalog file iteration
-# ---------------------------------------------------------------------------
-
-
 def _iter_catalog_yamls(
     catalog_dir: Path,
     layers: list[str],
@@ -158,11 +139,6 @@ def _iter_catalog_yamls(
                 yaml_files.append(yaml_file)
 
     return sorted(yaml_files)
-
-
-# ---------------------------------------------------------------------------
-# Schema processing
-# ---------------------------------------------------------------------------
 
 
 def _process_schema(  # noqa: PLR0911
@@ -222,11 +198,6 @@ def _process_schema(  # noqa: PLR0911
 
     _write_yaml(new_config, yaml_path)
     return "updated", None
-
-
-# ---------------------------------------------------------------------------
-# Checksum processing
-# ---------------------------------------------------------------------------
 
 
 def _update_checksum_in_file(
@@ -298,10 +269,6 @@ def _process_checksum(  # noqa: PLR0911
     return "error", "Failed to update checksum in file (regex match failed)"
 
 
-# ---------------------------------------------------------------------------
-# Logging helpers
-# ---------------------------------------------------------------------------
-
 _ZERO_STATS: dict[str, int] = {
     "updated": 0,
     "unchanged": 0,
@@ -359,11 +326,6 @@ def _log_checksum_status(
             f"Checksum mismatch for {display}: {message}",
             extra={"markup": True},
         )
-
-
-# ---------------------------------------------------------------------------
-# Main command
-# ---------------------------------------------------------------------------
 
 
 def sync_catalog_command(  # noqa: PLR0913, PLR0912
