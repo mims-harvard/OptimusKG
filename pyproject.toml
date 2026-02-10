@@ -41,6 +41,7 @@ dev = [
   "scienceplots>=2.1.1",
   "asv>=0.6.4",
   "seaborn>=0.13.2",
+  "powerlaw>=1.5",
 ]
 
 [project.scripts]

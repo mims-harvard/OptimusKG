@@ -19,6 +19,10 @@ plt.rcParams.update(
         "savefig.dpi": 300,
         "savefig.bbox": "tight",
         "savefig.pad_inches": 0.1,
+        # Use Arial (Liberation Sans is a metrically identical fallback).
+        "font.family": "sans-serif",
+        "font.sans-serif": ["Arial", "Liberation Sans", "DejaVu Sans"],
+        "mathtext.fontset": "dejavusans",
         "font.size": 10,
         "axes.labelsize": 11,
         "axes.titlesize": 12,

@@ -1,3 +1,47 @@
+gold.figures.closeness_centrality:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/gold/figures/closeness_centrality.parquet
+  load_args:
+    schema:
+      closeness: pl.Float64
+  metadata:
+    kedro-viz:
+      layer: gold
+
+gold.figures.ccdf_degree_distribution:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/gold/figures/ccdf_degree_distribution.parquet
+  load_args:
+    schema:
+      degree: pl.Int64
+  metadata:
+    kedro-viz:
+      layer: gold
+
+gold.figures.degree_distribution:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/gold/figures/degree_distribution.parquet
+  load_args:
+    schema:
+      degree: pl.Int64
+  metadata:
+    kedro-viz:
+      layer: gold
+
+gold.figures.metaedge_bubble_plot:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/gold/figures/metaedge_bubble_plot.parquet
+  load_args:
+    schema:
+      node_type: pl.String
+      node_count: pl.Int64
+      edge_count: pl.Int64
+      metaedge_count: pl.Int64
+      avg_degree: pl.Float64
+  metadata:
+    kedro-viz:
+      layer: gold
+
 gold.figures.adjacency_heatmap:
   type: optimuskg.datasets.polars.ParquetDataset
   filepath: data/gold/figures/adjacency_heatmap.parquet
@@ -10,12 +54,30 @@ gold.figures.adjacency_heatmap:
       DIS: pl.Int64
       DRG: pl.Int64
       EXP: pl.Int64
-      GEN: pl.Int64
       MFN: pl.Int64
       PWY: pl.Int64
       PHE: pl.Int64
       PRO: pl.Int64
   metadata:
     checksum: 3925f476f146a674c8ee75fab65acb5e
+    kedro-viz:
+      layer: gold
+
+gold.figures.metapath_counts:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/gold/figures/metapath_counts.parquet
+  load_args:
+    schema:
+      from_type: pl.String
+      to_type: pl.String
+      L1: pl.Int64
+      L2: pl.Int64
+      L3: pl.Int64
+      L4: pl.Int64
+      E1: pl.Int64
+      E2: pl.Int64
+      E3: pl.Int64
+      E4: pl.Int64
+  metadata:
     kedro-viz:
       layer: gold
