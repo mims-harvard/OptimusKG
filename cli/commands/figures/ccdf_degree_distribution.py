@@ -56,33 +56,52 @@ def _empirical_ccdf(data: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     return unique_vals, ccdf
 
 
-def render_plot(data: pl.DataFrame, out_path: Path) -> None:
-    """Render the CCDF degree distribution plot and save as PDF."""
+def _render_ccdf(
+    degrees: np.ndarray,
+    out_path: Path,
+    *,
+    xmin: int | None = None,
+) -> None:
+    """Render a single CCDF plot and save as PDF.
 
-    degrees = data["degree"].to_numpy().astype(float)
+    Parameters
+    ----------
+    degrees:
+        1-D array of node degrees.
+    out_path:
+        Destination PDF path.
+    xmin:
+        Minimum degree threshold passed to ``powerlaw.Fit``.  When *None*
+        the library auto-selects the optimal ``xmin`` (tail fit).  Set to
+        ``1`` to fit the distributions over the full degree range.
+    """
 
     # Fit theoretical distributions.
+    fit_kwargs: dict[str, object] = {"discrete": True, "verbose": False}
+    if xmin is not None:
+        fit_kwargs["xmin"] = xmin
+
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        fit = powerlaw.Fit(degrees, discrete=True, verbose=False)
+        fit = powerlaw.Fit(degrees, **fit_kwargs)
 
-    xmin = fit.xmin
+    fitted_xmin = fit.xmin
 
     # Empirical CCDF (full range).
     emp_x, emp_y = _empirical_ccdf(degrees)
 
-    # Theoretical CCDFs evaluated on a log-spaced grid from xmin to max.
+    # Theoretical CCDFs evaluated on a log-spaced grid from fitted xmin to max.
     # powerlaw's .ccdf() for discrete distributions returns n-1 values
     # corresponding to x[1:], so we generate one extra point.
     x_grid = np.logspace(
-        np.log10(xmin),
+        np.log10(fitted_xmin),
         np.log10(degrees.max()),
         201,
     )
 
     # Scale factor: the theoretical CCDFs model P(X >= x | X >= xmin),
     # so we multiply by P(X >= xmin) to align with the empirical CCDF.
-    p_above_xmin = np.sum(degrees >= xmin) / len(degrees)
+    p_above_xmin = np.sum(degrees >= fitted_xmin) / len(degrees)
 
     pl_ccdf = fit.power_law.ccdf(x_grid) * p_above_xmin
     ln_ccdf = fit.lognormal.ccdf(x_grid) * p_above_xmin
@@ -118,3 +137,16 @@ def render_plot(data: pl.DataFrame, out_path: Path) -> None:
     plt.tight_layout(pad=0.4)
     plt.savefig(out_path)
     plt.close(fig)
+
+
+def render_plot(data: pl.DataFrame, out_path: Path) -> None:
+    """Render tail-fit and full-range CCDF plots."""
+
+    degrees = data["degree"].to_numpy().astype(float)
+
+    stem = out_path.stem
+    suffix = out_path.suffix
+    parent = out_path.parent
+
+    _render_ccdf(degrees, parent / f"{stem}_tail{suffix}")
+    _render_ccdf(degrees, parent / f"{stem}_full{suffix}", xmin=1)
