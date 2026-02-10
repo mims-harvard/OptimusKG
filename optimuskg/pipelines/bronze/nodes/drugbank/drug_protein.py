@@ -33,7 +33,7 @@ def run(  # noqa: PLR0913
             left_on="UniProt ID",
             right_on="uniprot_id",
             how="left",
-        ).with_columns(pl.col("ncbi_gene_id").cast(pl.Utf8).fill_null(""))
+        ).with_columns(pl.col("ncbi_gene_id").cast(pl.String).fill_null(""))
 
         edge_df = (
             df_with_ncbi.with_columns(
@@ -68,7 +68,7 @@ def run(  # noqa: PLR0913
         left_on="drug_bank_id",
         right_on="drugbank_id",
         how="left",
-    ).with_columns(pl.col("drug_bank_name").cast(pl.Utf8).fill_null(""))
+    ).with_columns(pl.col("drug_bank_name").cast(pl.String).fill_null(""))
 
     # Add prefixes
     drug_protein = drug_protein.with_columns(

@@ -19,7 +19,6 @@ def _format_dataset_display(ds_name: str, ds_type: str) -> str:
 
 _SIMPLE_TYPE_MAP: dict[type, str] = {
     pl.String: "pl.String",
-    pl.Utf8: "pl.String",
     pl.Int8: "pl.Int8",
     pl.Int16: "pl.Int16",
     pl.Int32: "pl.Int32",

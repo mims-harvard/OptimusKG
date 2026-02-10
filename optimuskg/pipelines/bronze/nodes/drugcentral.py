@@ -25,9 +25,9 @@ def run(
         .select(  # TODO: I think we can also add the "stem" column here
             pl.coalesce([pl.col("chembl_id"), pl.col("drugbank_id")]).alias("from"),
             pl.col("id").alias("to"),
-            pl.col("structure_id").cast(pl.Utf8),
-            pl.col("drug_disease_id").cast(pl.Utf8),
-            pl.col("cd_id").cast(pl.Utf8),
+            pl.col("structure_id").cast(pl.String),
+            pl.col("drug_disease_id").cast(pl.String),
+            pl.col("cd_id").cast(pl.String),
             pl.col("cd_formula"),
             pl.col("cd_molweight"),
             pl.col("clogp"),
@@ -58,7 +58,7 @@ def run(
                 "inchi_key"
             ),
             pl.col("status"),
-            pl.col("struct_id").cast(pl.Utf8),
+            pl.col("struct_id").cast(pl.String),
             pl.col("concept_id").cast(pl.String),
             pl.col("relationship_name"),
             pl.col("concept_name"),

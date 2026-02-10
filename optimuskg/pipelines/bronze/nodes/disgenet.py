@@ -33,7 +33,7 @@ def run(
             curated_gene_disease_associations.columns,
             curated_gene_disease_associations.dtypes,
         )
-        if dtype == pl.Utf8
+        if dtype == pl.String
     ]
     curated_gene_disease_associations = curated_gene_disease_associations.with_columns(
         [pl.col(col).str.strip_chars() for col in string_columns]
@@ -42,10 +42,10 @@ def run(
     curated_gene_disease_associations = curated_gene_disease_associations.with_columns(
         [
             pl.col("gene_id")
-            .cast(pl.Utf8)
+            .cast(pl.String)
             .map_elements(
                 lambda x: f"NCBIGene:{x}",
-                return_dtype=pl.Utf8,
+                return_dtype=pl.String,
             )
             .alias("gene_id"),
         ]

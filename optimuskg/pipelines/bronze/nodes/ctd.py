@@ -57,15 +57,15 @@ def run(
         [
             pl.col("exposure_marker_id").map_elements(
                 lambda x: f"MESH:{x}",
-                return_dtype=pl.Utf8,
+                return_dtype=pl.String,
             ),
             pl.col("exposure_stressor_id").map_elements(
                 lambda x: f"MESH:{x}",
-                return_dtype=pl.Utf8,
+                return_dtype=pl.String,
             ),
             pl.col("disease_id").map_elements(
                 lambda x: f"MESH:{x}",
-                return_dtype=pl.Utf8,
+                return_dtype=pl.String,
             ),
         ]
     )

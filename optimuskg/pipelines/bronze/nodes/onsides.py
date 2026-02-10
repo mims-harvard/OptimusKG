@@ -10,10 +10,10 @@ def run(
     high_confidence = high_confidence.with_columns(
         [
             pl.col("ingredient_id").map_elements(
-                lambda x: f"RXNORM:{x}", return_dtype=pl.Utf8
+                lambda x: f"RXNORM:{x}", return_dtype=pl.String
             ),
             pl.col("effect_meddra_id").map_elements(
-                lambda x: f"meddra:{x}", return_dtype=pl.Utf8
+                lambda x: f"meddra:{x}", return_dtype=pl.String
             ),
         ]
     )
@@ -23,7 +23,7 @@ def run(
     ).with_columns(
         [
             pl.col("rxnorm_id").map_elements(
-                lambda x: f"RXNORM:{x}", return_dtype=pl.Utf8
+                lambda x: f"RXNORM:{x}", return_dtype=pl.String
             ),
         ]
     )
@@ -31,7 +31,7 @@ def run(
     vocab_meddra_adverse_effect = vocab_meddra_adverse_effect.with_columns(
         [
             pl.col("meddra_id").map_elements(
-                lambda x: f"meddra:{x}", return_dtype=pl.Utf8
+                lambda x: f"meddra:{x}", return_dtype=pl.String
             ),
         ]
     )
