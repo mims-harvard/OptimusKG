@@ -151,15 +151,6 @@ def get_node_metrics(  # noqa: PLR0912
                     )
                     all_sources.extend([s for s in field_values if s])
 
-        # Handle 'source' column (single string) - collect directly
-        if "source" in df_unnested.columns:
-            sources_from_string = (
-                df_unnested.select("source")
-                .filter(pl.col("source").is_not_null())["source"]
-                .to_list()
-            )
-            all_sources.extend([s for s in sources_from_string if s])
-
         # Count sources
         sources_counts = {}
         for source in all_sources:
