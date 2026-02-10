@@ -28,9 +28,6 @@ _EDGE_TO_NODE_LABEL = {"PRO": "GEN"}
 _NODE_TYPE_ORDER = [member.value for member in Node]
 
 
-# -- data computation --------------------------------------------------------
-
-
 def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
     """Compute per-node-type statistics for the bubble plot.
 
@@ -42,13 +39,11 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
       - ``avg_degree``     (Float64)  – average degree (edge_count / node_count)
     """
 
-    # --- node counts --------------------------------------------------------
     node_counts: dict[str, int] = {}
     for df in load_parquet_dir(nodes_dir):
         label = df["label"][0]
         node_counts[label] = df.height
 
-    # --- edge counts & metaedge counts --------------------------------------
     edge_counts: dict[str, int] = defaultdict(int)
     # metaedge_sets stores the set of unique metaedge strings per node type
     metaedge_sets: dict[str, set[str]] = defaultdict(set)
@@ -85,7 +80,6 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
             metaedge_sets[ms].add(metaedge)
             metaedge_sets[md].add(metaedge)
 
-    # --- assemble result ----------------------------------------------------
     rows: list[dict[str, object]] = []
     for nt in _NODE_TYPE_ORDER:
         nc = node_counts.get(nt, 0)
@@ -112,8 +106,6 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
         }
     )
 
-
-# -- plot rendering ----------------------------------------------------------
 
 # Abbreviation -> human-readable name for the legend footer.
 _ABBREVIATIONS: dict[str, str] = {
@@ -191,7 +183,6 @@ def render_plot(data: pl.DataFrame, out_path: Path) -> None:
     cbar.set_label("Avg. degree", fontsize=8)
     cbar.ax.tick_params(labelsize=7)
 
-    # -- smart label placement with collision avoidance ----------------------
     # Work in display (pixel) coordinates so offsets are resolution-independent.
     fig.canvas.draw()  # force a layout pass so transData is accurate
 
@@ -289,7 +280,6 @@ def render_plot(data: pl.DataFrame, out_path: Path) -> None:
     apply_axis_styling(ax)
     ax.tick_params(axis="both", labelsize=7)
 
-    # -- abbreviation legend footer ------------------------------------------
     ax_leg = fig.add_subplot(gs[1])
     ax_leg.axis("off")
 

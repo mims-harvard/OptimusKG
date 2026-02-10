@@ -17,8 +17,6 @@ from cli.commands.metrics.utils import build_degree_map, load_parquet_dir
 from . import style  # noqa: F401
 from .style import apply_axis_styling
 
-# -- data computation --------------------------------------------------------
-
 
 def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
     """Compute the degree of every node in the knowledge graph.
@@ -31,8 +29,6 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
     degree_map = build_degree_map(edges)
     return degree_map.select(pl.col("degree").cast(pl.Int64))
 
-
-# -- plot rendering ----------------------------------------------------------
 
 _BAR_COLOR = "#999999"
 

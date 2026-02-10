@@ -28,8 +28,6 @@ logger = logging.getLogger(__name__)
 _N_SAMPLES = 100
 _RANDOM_SEED = 42
 
-# -- data computation --------------------------------------------------------
-
 
 def _build_graph(edges_dir: Path) -> nx.Graph:
     """Build an undirected NetworkX graph from all edge parquet files."""
@@ -92,8 +90,6 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
 
     return pl.DataFrame({"closeness": closeness_values}).cast({"closeness": pl.Float64})
 
-
-# -- plot rendering ----------------------------------------------------------
 
 _BAR_COLOR = "#999999"
 

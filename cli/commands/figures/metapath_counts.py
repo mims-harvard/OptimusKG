@@ -197,7 +197,6 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
     """
     all_edges = load_parquet_dir(edges_dir)
 
-    # --- collect unique directed metaedges (incl. reverse) ------------------
     metaedges: set[_Metaedge] = set()
 
     for df in all_edges:
@@ -211,7 +210,6 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
             metaedges.add((src, rel, dst))
             metaedges.add((dst, rel, src))  # reverse for undirected traversal
 
-    # --- build metaedge count matrix E (theoretical) ------------------------
     idx = {nt: i for i, nt in enumerate(_NODE_TYPE_ORDER)}
     n = len(_NODE_TYPE_ORDER)
     E = np.zeros((n, n), dtype=np.int64)
@@ -220,14 +218,12 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
         if src in idx and dst in idx:
             E[idx[src], idx[dst]] += 1
 
-    # --- matrix powers for L=1..4 (theoretical) ----------------------------
     theo: dict[str, np.ndarray] = {"L1": E}
     power = E.copy()
     for length in range(2, _MAX_LENGTH + 1):
         power = power @ E
         theo[f"L{length}"] = power
 
-    # --- empirical counts ---------------------------------------------------
     logger.info("Building per-metaedge node-ID index ...")
     edge_index = _build_edge_index(all_edges)
 
@@ -238,7 +234,6 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
     logger.info("Counting empirical metapath schemas ...")
     emp = _count_empirical_metapaths(edge_index, metaedges_by_pair, _MAX_LENGTH)
 
-    # --- assemble upper-triangle rows ---------------------------------------
     rows: list[dict[str, object]] = []
     for i, ft in enumerate(_NODE_TYPE_ORDER):
         for j, tt in enumerate(_NODE_TYPE_ORDER):
@@ -253,9 +248,6 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
     all_cols = {f"L{k}": pl.Int64 for k in range(1, _MAX_LENGTH + 1)}
     all_cols.update({f"E{k}": pl.Int64 for k in range(1, _MAX_LENGTH + 1)})
     return pl.DataFrame(rows).cast(all_cols)
-
-
-# -- plot rendering ----------------------------------------------------------
 
 
 def _pivot_to_matrix(
