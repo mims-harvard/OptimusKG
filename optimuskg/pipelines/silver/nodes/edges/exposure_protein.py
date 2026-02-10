@@ -198,7 +198,8 @@ def run(
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
-                        pl.lit(["CTD", "opentargets"]).alias("sources"),
+                        pl.lit(["CTD", "opentargets"]).alias("direct_sources"),
+                        pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
                         pl.col("evidence_count"),
                         pl.col("number_of_receptors"),
                         pl.col("receptors"),

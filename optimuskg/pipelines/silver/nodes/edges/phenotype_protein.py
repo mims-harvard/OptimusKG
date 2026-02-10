@@ -20,7 +20,8 @@ def run(
             ),  # TODO: change this literal to "associated with" using the evidence_score/evidence_count columns.
             pl.struct(
                 [
-                    pl.lit(["opentargets"]).alias("sources"),
+                    pl.lit(["opentargets"]).alias("direct_sources"),
+                    pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
                     pl.col("metadata").struct.field("score").alias("evidence_score"),
                     pl.col("metadata")
                     .struct.field("evidence_count")
@@ -56,10 +57,11 @@ def run(
                     pl.col("year_final").alias("year_final"),
                     pl.col("nof_pmids").cast(pl.Int16).alias("number_of_pmids"),
                     pl.col("nof_snps").cast(pl.Int16).alias("number_of_snps"),
+                    pl.lit(["disgenet"]).alias("direct_sources"),
                     pl.col("source")
                     .str.split(";")
                     .cast(pl.List(pl.Utf8))
-                    .alias("sources"),
+                    .alias("indirect_sources"),
                 ]
             ).alias("disgenet_props"),
         )
@@ -99,12 +101,28 @@ def run(
                             ],
                             pl.concat_list(
                                 [
-                                    pl.col("opentargets_props").struct.field("sources"),
-                                    pl.col("disgenet_props").struct.field("sources"),
+                                    pl.col("opentargets_props").struct.field(
+                                        "direct_sources"
+                                    ),
+                                    pl.col("disgenet_props").struct.field(
+                                        "direct_sources"
+                                    ),
                                 ]
                             )
                             .list.unique()
-                            .alias("sources"),
+                            .alias("direct_sources"),
+                            pl.concat_list(
+                                [
+                                    pl.col("opentargets_props").struct.field(
+                                        "indirect_sources"
+                                    ),
+                                    pl.col("disgenet_props").struct.field(
+                                        "indirect_sources"
+                                    ),
+                                ]
+                            )
+                            .list.unique()
+                            .alias("indirect_sources"),
                         ]
                     )
                 )

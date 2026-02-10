@@ -16,7 +16,8 @@ def run(
             pl.lit(False).alias("undirected"),
             pl.struct(
                 [
-                    pl.lit(["REACTOME"]).alias("sources"),
+                    pl.lit(["REACTOME"]).alias("direct_sources"),
+                    pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
                 ]
             ).alias("properties"),
         )

@@ -25,7 +25,8 @@ def run(
             pl.lit(False).alias("undirected"),
             pl.struct(
                 [
-                    pl.lit(["opentargets"]).alias("sources"),
+                    pl.lit(["opentargets"]).alias("direct_sources"),
+                    pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
                 ]
             ).alias("properties"),
         )

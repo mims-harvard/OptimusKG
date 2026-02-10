@@ -44,7 +44,8 @@ def run(  # noqa: PLR0913
                 pl.lit(Node.EXPOSURE).alias("label"),
                 pl.struct(
                     [
-                        pl.lit(["MESH", "CTD"]).alias("sources"),
+                        pl.lit(["CTD"]).alias("direct_sources"),
+                        pl.lit(["MESH"]).alias("indirect_sources"),
                         pl.col("exposure_stressor_name").alias("name"),
                         pl.col("stressor_source_category")
                         .str.split("|")

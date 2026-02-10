@@ -11,7 +11,8 @@ silver.edges.anatomy_protein:
       properties:
         expression_rank: pl.Int32
         call_quality: pl.String
-        sources: pl.List(pl.String)
+        direct_sources: pl.List(pl.String)
+        indirect_sources: pl.List(pl.String)
   metadata:
     checksum: f9a57bda17d8862ac193e9d9974fd357
     kedro-viz:

@@ -27,7 +27,8 @@ def run(
             pl.lit(Node.CELLULAR_COMPONENT).alias("label"),
             pl.struct(
                 [
-                    pl.lit("GO").alias("source"),
+                    pl.lit(["GO"]).alias("direct_sources"),
+                    pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
                     pl.col("name"),
                     pl.col("definition"),
                     pl.col("xrefs"),

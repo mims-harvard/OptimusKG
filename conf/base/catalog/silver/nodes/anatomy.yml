@@ -6,7 +6,8 @@ silver.nodes.anatomy:
       id: pl.String
       label: pl.String
       properties:
-        source: pl.String
+        direct_sources: pl.List(pl.String)
+        indirect_sources: pl.List(pl.String)
         name: pl.String
         definition: pl.String
         xrefs: pl.List(pl.String)

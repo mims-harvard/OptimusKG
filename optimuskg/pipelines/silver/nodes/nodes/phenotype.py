@@ -50,7 +50,8 @@ def run(  # noqa: PLR0913
             pl.lit(Node.PHENOTYPE).alias("label"),
             pl.struct(
                 [
-                    pl.lit(["MedDRA", "opentargets", "HP"]).alias("sources"),
+                    pl.lit(["opentargets", "HP", "MedDRA"]).alias("direct_sources"),
+                    pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
                     pl.coalesce(
                         [pl.col("name"), pl.col("name_right"), pl.col("meddra_name")]
                     ).alias("name"),

@@ -9,7 +9,8 @@ silver.edges.pathway_protein:
       relation: pl.String
       undirected: pl.Boolean
       properties:
-        sources: pl.List(pl.String)
+        direct_sources: pl.List(pl.String)
+        indirect_sources: pl.List(pl.String)
   metadata:
     checksum: ba35ecd40cd120358a830d7bda0d7307
     kedro-viz:
