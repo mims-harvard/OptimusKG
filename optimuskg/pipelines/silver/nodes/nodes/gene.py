@@ -25,68 +25,34 @@ def run(  # noqa: PLR0913
             pl.col("id"),
             pl.col("approved_symbol").alias("symbol"),
             pl.col("biotype"),
-            pl.col("transcript_ids").alias("transcript_ids"),
-            pl.col("canonical_transcript")
-            .struct.json_encode()
-            .alias("canonical_transcript_encoded"),
-            pl.col("canonical_exons").alias("canonical_exons"),
-            pl.col("genomic_location")
-            .struct.json_encode()
-            .alias("genomic_location_encoded"),
-            pl.col("alternative_genes").alias("alternative_genes"),
+            pl.col("transcript_ids"),
+            pl.col("canonical_transcript"),
+            pl.col("canonical_exons"),
+            pl.col("genomic_location"),
+            pl.col("alternative_genes"),
             pl.col("approved_name").alias("name"),
             pl.col("hallmarks")
             .struct.field("attributes")
-            .list.eval(pl.element().struct.json_encode())
-            .alias("hallmarks_attributes_encoded"),
+            .alias("hallmarks_attributes"),
             pl.col("hallmarks")
             .struct.field("cancer_hallmarks")
-            .list.eval(pl.element().struct.json_encode())
-            .alias("cancer_hallmarks_encoded"),
-            pl.col("synonyms")
-            .list.eval(pl.element().struct.json_encode())
-            .alias("synonyms_encoded"),
-            pl.col("symbol_synonyms")
-            .list.eval(pl.element().struct.json_encode())
-            .alias("symbol_synonyms_encoded"),
-            pl.col("name_synonyms")
-            .list.eval(pl.element().struct.json_encode())
-            .alias("name_synonyms_encoded"),
-            pl.col("function_descriptions").alias("function_descriptions"),
-            pl.col("subcellular_locations")
-            .list.eval(pl.element().struct.json_encode())
-            .alias("subcellular_locations_encoded"),
-            pl.col("target_class")
-            .list.eval(pl.element().struct.json_encode())
-            .alias("target_class_encoded"),
-            pl.col("obsolete_symbols")
-            .list.eval(pl.element().struct.json_encode())
-            .alias("obsolete_symbols_encoded"),
-            pl.col("obsolete_names")
-            .list.eval(pl.element().struct.json_encode())
-            .alias("obsolete_names_encoded"),
-            pl.col("constraint")
-            .list.eval(pl.element().struct.json_encode())
-            .alias("constraint_scores_encoded"),
-            pl.col("tep").struct.json_encode().alias("target_enabling_package_encoded"),
-            pl.col("protein_ids")
-            .list.eval(pl.element().struct.json_encode())
-            .alias("associated_proteins_encoded"),
-            pl.col("db_xrefs")
-            .list.eval(pl.element().struct.json_encode())
-            .alias("xrefs_encoded"),
-            pl.col("chemical_probes")
-            .list.eval(pl.element().struct.json_encode())
-            .alias("chemical_probes_encoded"),
-            pl.col("homologues")
-            .list.eval(pl.element().struct.json_encode())
-            .alias("homologues_encoded"),
-            pl.col("tractability")
-            .list.eval(pl.element().struct.json_encode())
-            .alias("tractability_encoded"),
-            pl.col("safety_liabilities")
-            .list.eval(pl.element().struct.json_encode())
-            .alias("safety_liabilities_encoded"),
+            .alias("cancer_hallmarks"),
+            pl.col("synonyms"),
+            pl.col("symbol_synonyms"),
+            pl.col("name_synonyms"),
+            pl.col("function_descriptions"),
+            pl.col("subcellular_locations"),
+            pl.col("target_class"),
+            pl.col("obsolete_symbols"),
+            pl.col("obsolete_names"),
+            pl.col("constraint").alias("constraint_scores"),
+            pl.col("tep").alias("target_enabling_package"),
+            pl.col("protein_ids").alias("associated_proteins"),
+            pl.col("db_xrefs").alias("xrefs"),
+            pl.col("chemical_probes"),
+            pl.col("homologues"),
+            pl.col("tractability"),
+            pl.col("safety_liabilities"),
             pl.col("tss").alias("transcription_start_site"),
         ]
     )
@@ -142,29 +108,29 @@ def run(  # noqa: PLR0913
                         ),
                         pl.col("biotype"),
                         pl.col("transcript_ids"),
-                        pl.col("canonical_transcript_encoded"),
+                        pl.col("canonical_transcript"),
                         pl.col("canonical_exons"),
-                        pl.col("genomic_location_encoded"),
+                        pl.col("genomic_location"),
                         pl.col("alternative_genes"),
                         pl.col("name"),
-                        pl.col("hallmarks_attributes_encoded"),
-                        pl.col("cancer_hallmarks_encoded"),
-                        pl.col("synonyms_encoded"),
-                        pl.col("symbol_synonyms_encoded"),
-                        pl.col("name_synonyms_encoded"),
+                        pl.col("hallmarks_attributes"),
+                        pl.col("cancer_hallmarks"),
+                        pl.col("synonyms"),
+                        pl.col("symbol_synonyms"),
+                        pl.col("name_synonyms"),
                         pl.col("function_descriptions"),
-                        pl.col("subcellular_locations_encoded"),
-                        pl.col("target_class_encoded"),
-                        pl.col("obsolete_symbols_encoded"),
-                        pl.col("obsolete_names_encoded"),
-                        pl.col("constraint_scores_encoded"),
-                        pl.col("target_enabling_package_encoded"),
-                        pl.col("associated_proteins_encoded"),
-                        pl.col("xrefs_encoded"),
-                        pl.col("chemical_probes_encoded"),
-                        pl.col("homologues_encoded"),
-                        pl.col("tractability_encoded"),
-                        pl.col("safety_liabilities_encoded"),
+                        pl.col("subcellular_locations"),
+                        pl.col("target_class"),
+                        pl.col("obsolete_symbols"),
+                        pl.col("obsolete_names"),
+                        pl.col("constraint_scores"),
+                        pl.col("target_enabling_package"),
+                        pl.col("associated_proteins"),
+                        pl.col("xrefs"),
+                        pl.col("chemical_probes"),
+                        pl.col("homologues"),
+                        pl.col("tractability"),
+                        pl.col("safety_liabilities"),
                         pl.col("transcription_start_site"),
                     ]
                 ).alias("properties"),

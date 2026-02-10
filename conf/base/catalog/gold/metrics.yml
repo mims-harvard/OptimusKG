@@ -1,0 +1,52 @@
+gold.metrics.nodes:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/gold/metrics/node_metrics.parquet
+  load_args:
+    schema:
+      label: pl.String
+      count: pl.Int64
+      percentage: pl.Float64
+      properties:
+        avg: pl.Float64
+        std: pl.Float64
+        total: pl.Int64
+      degree:
+        avg: pl.Float64
+        std: pl.Float64
+        total: pl.Int64
+      sources:
+        - key: pl.String
+          value: pl.Int64
+      ontologies:
+        - key: pl.String
+          value: pl.Int64
+  metadata:
+    checksum: 97bb045014da8b029b23a09257899c52
+    kedro-viz:
+      layer: gold
+
+gold.metrics.edges:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/gold/metrics/edge_metrics.parquet
+  load_args:
+    schema:
+      label: pl.String
+      count: pl.Int64
+      percentage: pl.Float64
+      properties:
+        avg: pl.Float64
+        std: pl.Float64
+        total: pl.Int64
+      directionality:
+        directed: pl.Int64
+        undirected: pl.Int64
+      sources:
+        - key: pl.String
+          value: pl.Int64
+      ontologies:
+        - key: pl.String
+          value: pl.Int64
+  metadata:
+    checksum: e725f65c91fdb598825caea532ea8a82
+    kedro-viz:
+      layer: gold

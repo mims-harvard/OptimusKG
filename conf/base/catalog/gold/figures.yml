@@ -1,0 +1,21 @@
+gold.figures.adjacency_heatmap:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/gold/figures/adjacency_heatmap.parquet
+  load_args:
+    schema:
+      node_type: pl.String
+      ANA: pl.Int64
+      BPO: pl.Int64
+      CCO: pl.Int64
+      DIS: pl.Int64
+      DRG: pl.Int64
+      EXP: pl.Int64
+      GEN: pl.Int64
+      MFN: pl.Int64
+      PWY: pl.Int64
+      PHE: pl.Int64
+      PRO: pl.Int64
+  metadata:
+    checksum: d0dffd0754fd8a5e862d5d1e596defb0
+    kedro-viz:
+      layer: gold

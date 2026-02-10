@@ -10,29 +10,29 @@ gene:
     symbol: str
     biotype: str
     transcript_ids: str[]
-    canonical_transcript_encoded: str
+    canonical_transcript: str
     canonical_exons: str[]
-    genomic_location_encoded: str
+    genomic_location: str
     alternative_genes: str[]
     name: str
-    hallmarks_attributes_encoded: str[]
-    cancer_hallmarks_encoded: str[]
-    synonyms_encoded: str[]
-    symbol_synonyms_encoded: str[]
-    name_synonyms_encoded: str[]
+    hallmarks_attributes: str[]
+    cancer_hallmarks: str[]
+    synonyms: str[]
+    symbol_synonyms: str[]
+    name_synonyms: str[]
     function_descriptions: str[]
-    subcellular_locations_encoded: str[]
-    target_class_encoded: str[]
-    obsolete_symbols_encoded: str[]
-    obsolete_names_encoded: str[]
-    constraint_scores_encoded: str[]
-    target_enabling_package_encoded: str
-    associated_proteins_encoded: str[]
-    xrefs_encoded: str[]
-    chemical_probes_encoded: str[]
-    homologues_encoded: str[]
-    tractability_encoded: str[]
-    safety_liabilities_encoded: str[]
+    subcellular_locations: str[]
+    target_class: str[]
+    obsolete_symbols: str[]
+    obsolete_names: str[]
+    constraint_scores: str[]
+    target_enabling_package: str
+    associated_proteins: str[]
+    xrefs: str[]
+    chemical_probes: str[]
+    homologues: str[]
+    tractability: str[]
+    safety_liabilities: str[]
     transcription_start_site: int
 
 anatomy:
