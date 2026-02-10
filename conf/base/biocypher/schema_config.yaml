@@ -6,7 +6,8 @@ gene:
   represented_as: node
   input_label: GEN
   properties:
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     symbol: str
     biotype: str
     transcript_ids: str[]
@@ -40,7 +41,8 @@ anatomy:
   represented_as: node
   input_label: ANA
   properties:
-    source: str
+    direct_sources: str[]
+    indirect_sources: str[]
     name: str
     definition: str
     xrefs: str[]
@@ -52,7 +54,8 @@ exposure:
   represented_as: node
   input_label: EXP
   properties:
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     name: str
     source_categories: str[]
     source_details: str
@@ -76,7 +79,8 @@ drug:
     has_been_withdrawn: bool
     is_approved: bool
     trade_names: str[]
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     source_ids: str[]
     cd_id: str
     cd_formula: str
@@ -109,7 +113,8 @@ disease:
   represented_as: node
   input_label: DIS
   properties:
-    source: str
+    direct_sources: str[]
+    indirect_sources: str[]
     name: str
     description: str
     code: str
@@ -138,7 +143,8 @@ phenotype:
   represented_as: node
   input_label: PHE
   properties:
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     name: str
     description: str
     code: str
@@ -166,7 +172,8 @@ biological process:
   represented_as: node
   input_label: BPO
   properties:
-    source: str
+    direct_sources: str[]
+    indirect_sources: str[]
     name: str
     definition: str
     xrefs: str[]
@@ -177,7 +184,8 @@ cellular component:
   represented_as: node
   input_label: CCO
   properties:
-    source: str
+    direct_sources: str[]
+    indirect_sources: str[]
     name: str
     definition: str
     xrefs: str[]
@@ -188,7 +196,8 @@ molecular function:
   represented_as: node
   input_label: MFN
   properties:
-    source: str
+    direct_sources: str[]
+    indirect_sources: str[]
     name: str
     definition: str
     xrefs: str[]
@@ -200,7 +209,8 @@ pathway:
   input_label: PWY
   properties:
     name: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     species: str
 
 # ---
@@ -216,7 +226,8 @@ anatomy protein:
     relation: str
     expression_rank: int
     call_quality: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
 
 anatomy anatomy:
   is_a: related to
@@ -225,7 +236,8 @@ anatomy anatomy:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
 
 exposure disease:
   is_a: linked to
@@ -234,7 +246,8 @@ exposure disease:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     evidence_count: int
     number_of_receptors: int
     receptors: str[]
@@ -273,7 +286,8 @@ exposure exposure:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     evidence_count: int
     number_of_receptors: int
     receptors: str[]
@@ -312,7 +326,8 @@ exposure protein:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     evidence_count: int
     number_of_receptors: int
     receptors: str[]
@@ -361,7 +376,8 @@ disease protein:
     year_final: str
     number_of_pmids: int
     number_of_snps: int
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
 
 disease disease:
   is_a: related to
@@ -370,7 +386,8 @@ disease disease:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
 
 phenotype protein:
   is_a: related to
@@ -389,7 +406,8 @@ phenotype protein:
     year_final: str
     number_of_pmids: int
     number_of_snps: int
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
 
 drug protein:
   is_a: physically interacts with
@@ -401,7 +419,8 @@ drug protein:
     source_ids: str[]
     source_urls: str[]
     mechanisms_of_action: str[]
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
 
 drug drug:
   is_a: physically interacts with
@@ -410,7 +429,8 @@ drug drug:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     interaction_description: str
 
 drug disease:
@@ -421,7 +441,8 @@ drug disease:
     undirected: bool
     relation: str
     reference_ids: str[]
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     highest_clinical_trial_phase: float
     structure_id: str
     drug_disease_id: str
@@ -433,7 +454,8 @@ drug phenotype:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     reference_ids: str[]
     highest_clinical_trial_phase: float
     structure_id: str
@@ -446,7 +468,8 @@ biological process protein:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     evidence: str[]
     gene_product: str[]
     eco_ids: str[]
@@ -458,7 +481,8 @@ cellular component protein:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     evidence: str[]
     gene_product: str[]
     eco_ids: str[]
@@ -470,7 +494,8 @@ molecular function protein:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     evidence: str[]
     gene_product: str[]
     eco_ids: str[]
@@ -482,7 +507,8 @@ pathway pathway:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
 
 pathway protein:
   is_a: has_part
@@ -491,7 +517,8 @@ pathway protein:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
 
 exposure biological process:
   is_a: related to
@@ -500,7 +527,8 @@ exposure biological process:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     evidence_count: int
     number_of_receptors: int
     receptors: str[]
@@ -539,7 +567,8 @@ exposure molecular function:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     evidence_count: int
     number_of_receptors: int
     receptors: str[]
@@ -578,7 +607,8 @@ exposure cellular component:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
     evidence_count: int
     number_of_receptors: int
     receptors: str[]
@@ -618,7 +648,8 @@ cellular component cellular component:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
 
 biological process biological process:
   is_a: has_part
@@ -627,7 +658,8 @@ biological process biological process:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
 
 molecular function molecular function:
   is_a: has_part
@@ -636,7 +668,8 @@ molecular function molecular function:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
 
 disease phenotype:
   is_a: related to
@@ -654,7 +687,8 @@ disease phenotype:
     qualifier_not: bool
     references: str[]
     sexes: str[]
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
 
 phenotype phenotype:
   is_a: has_part
@@ -663,7 +697,8 @@ phenotype phenotype:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]
 
 protein protein:
   is_a: related to
@@ -672,4 +707,5 @@ protein protein:
   properties:
     undirected: bool
     relation: str
-    sources: str[]
+    direct_sources: str[]
+    indirect_sources: str[]

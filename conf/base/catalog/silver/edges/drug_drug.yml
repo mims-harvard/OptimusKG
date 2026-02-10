@@ -9,9 +9,10 @@ silver.edges.drug_drug:
       relation: pl.String
       undirected: pl.Boolean
       properties:
-        sources: pl.List(pl.String)
+        direct_sources: pl.List(pl.String)
+        indirect_sources: pl.List(pl.String)
         interaction_description: pl.String
   metadata:
-    checksum: 0a2462c2462ff43528105e62cd78103a
+    checksum: f27ec25a3a26ba1a62c539440818eb2a
     kedro-viz:
       layer: silver

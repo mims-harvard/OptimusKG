@@ -18,7 +18,8 @@ silver.edges.disease_phenotype:
         qualifier_not: pl.Boolean
         references: pl.List(pl.String)
         sexes: pl.List(pl.String)
-        sources: pl.List(pl.String)
+        direct_sources: pl.List(pl.String)
+        indirect_sources: pl.List(pl.String)
   metadata:
     checksum: 1787009afd48e9665285c3981d66c6ef
     kedro-viz:

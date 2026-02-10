@@ -35,7 +35,8 @@ def run(  # noqa: PLR0913
                 pl.lit(Node.PATHWAY).alias("label"),
                 pl.struct(
                     [
-                        pl.lit(["REACTOME", "opentargets"]).alias("sources"),
+                        pl.lit(["REACTOME", "opentargets"]).alias("direct_sources"),
+                        pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
                         pl.col("reactome_name").alias("name"),
                         pl.col("species"),
                     ]

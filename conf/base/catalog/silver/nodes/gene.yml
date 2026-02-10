@@ -6,7 +6,8 @@ silver.nodes.gene:
       id: pl.String
       label: pl.String
       properties:
-        sources: pl.List(pl.String)
+        direct_sources: pl.List(pl.String)
+        indirect_sources: pl.List(pl.String)
         symbol: pl.String
         biotype: pl.String
         transcript_ids: pl.List(pl.String)

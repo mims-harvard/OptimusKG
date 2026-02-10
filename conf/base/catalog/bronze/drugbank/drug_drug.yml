@@ -3,9 +3,9 @@ bronze.drug_drug:
   filepath: data/bronze/drugbank/drug_drug.parquet
   load_args:
     schema:
-      tail_drug_id: pl.Null
-      head_drug_id: pl.Null
-      description: pl.Null
+      tail_drug_id: pl.String
+      head_drug_id: pl.String
+      description: pl.String
   metadata:
     checksum: df4a84aeac1797ad85f247d826c17107
     kedro-viz:

@@ -6,7 +6,8 @@ silver.nodes.phenotype:
       id: pl.String
       label: pl.String
       properties:
-        sources: pl.List(pl.String)
+        direct_sources: pl.List(pl.String)
+        indirect_sources: pl.List(pl.String)
         name: pl.String
         description: pl.String
         code: pl.String

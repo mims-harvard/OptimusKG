@@ -45,8 +45,9 @@ def run(
             pl.struct(
                 [
                     pl.col("ids").alias("reference_ids"),
+                    pl.lit(["opentargets"]).alias("direct_sources"),
                     pl.concat_list([pl.col("source")]).alias(
-                        "sources"
+                        "indirect_sources"
                     ),  # transform source to list
                     pl.col("max_phase_for_indication").alias(
                         "highest_clinical_trial_phase"
@@ -70,7 +71,8 @@ def run(
             pl.lit(True).alias("undirected"),
             pl.struct(
                 [
-                    pl.lit(["drugcentral", "drugbank"]).alias("sources"),
+                    pl.lit(["drugcentral"]).alias("direct_sources"),
+                    pl.lit([]).cast(pl.List(pl.Utf8)).alias("indirect_sources"),
                     pl.col("structure_id").alias("structure_id"),
                     pl.col("drug_disease_id").alias("drug_disease_id"),
                 ]
@@ -117,7 +119,7 @@ def run(
                                 pl.coalesce(
                                     [
                                         pl.col("drugcentral_props").struct.field(
-                                            "sources"
+                                            "direct_sources"
                                         ),
                                         pl.lit([], dtype=pl.List(pl.Utf8)),
                                     ]
@@ -125,13 +127,33 @@ def run(
                                 pl.coalesce(
                                     [
                                         pl.col("opentargets_props").struct.field(
-                                            "sources"
+                                            "direct_sources"
                                         ),
                                         pl.lit([], dtype=pl.List(pl.Utf8)),
                                     ]
                                 ),
                             ]
-                        ).alias("sources"),
+                        ).alias("direct_sources"),
+                        pl.concat_list(
+                            [
+                                pl.coalesce(
+                                    [
+                                        pl.col("drugcentral_props").struct.field(
+                                            "indirect_sources"
+                                        ),
+                                        pl.lit([], dtype=pl.List(pl.Utf8)),
+                                    ]
+                                ),
+                                pl.coalesce(
+                                    [
+                                        pl.col("opentargets_props").struct.field(
+                                            "indirect_sources"
+                                        ),
+                                        pl.lit([], dtype=pl.List(pl.Utf8)),
+                                    ]
+                                ),
+                            ]
+                        ).alias("indirect_sources"),
                         pl.col("drugcentral_props").struct.field("structure_id"),
                         pl.col("drugcentral_props").struct.field("drug_disease_id"),
                         pl.col("opentargets_props").struct.field("reference_ids"),
