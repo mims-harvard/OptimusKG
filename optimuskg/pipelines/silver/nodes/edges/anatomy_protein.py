@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation, Source
 
 
 def run(
@@ -31,7 +31,9 @@ def run(
                     pl.col("call_quality").alias("call_quality"),
                     pl.struct(
                         [
-                            pl.lit(["BGEE"]).alias("direct"),
+                            pl.lit([Source.BGEE])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                         ]
                     ).alias("sources"),

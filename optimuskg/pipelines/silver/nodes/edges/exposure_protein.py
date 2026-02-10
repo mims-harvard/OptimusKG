@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation, Source
 
 from .utils import classify_age_type, extract_age_value
 
@@ -200,7 +200,9 @@ def run(
                     [
                         pl.struct(
                             [
-                                pl.lit(["CTD", "opentargets"]).alias("direct"),
+                                pl.lit([Source.CTD, Source.OPEN_TARGETS])
+                                .cast(pl.List(pl.String))
+                                .alias("direct"),
                                 pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                             ]
                         ).alias("sources"),

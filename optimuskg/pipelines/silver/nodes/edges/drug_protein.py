@@ -5,7 +5,9 @@ from optimuskg.pipelines.silver.nodes.constants import (
     Edge,
     Node,
     Relation,
+    Source,
     resolve_relation,
+    resolve_sources,
 )
 
 # DrugBank role types (lowercase)
@@ -79,7 +81,9 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit(["drugbank", "opentargets"]).alias("direct"),
+                            pl.lit([Source.DRUG_BANK, Source.OPEN_TARGETS])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                         ]
                     ).alias("sources"),
@@ -134,8 +138,14 @@ def run(
                     [
                         pl.struct(
                             [
-                                pl.lit(["opentargets"]).alias("direct"),
-                                pl.col("indirect_sources").alias("indirect"),
+                                pl.lit([Source.OPEN_TARGETS])
+                                .cast(pl.List(pl.String))
+                                .alias("direct"),
+                                pl.col("indirect_sources")
+                                .map_elements(
+                                    resolve_sources, return_dtype=pl.List(pl.String)
+                                )
+                                .alias("indirect"),
                             ]
                         ).alias("sources"),
                         pl.col("source_ids"),
@@ -160,18 +170,18 @@ def run(
                         pl.coalesce(
                             [
                                 pl.col("relation"),
-                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                pl.lit([], dtype=pl.List(pl.String)),
                             ]
                         ),
                         pl.coalesce(
                             [
                                 pl.col("relation_right"),
-                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                pl.lit([], dtype=pl.List(pl.String)),
                             ]
                         ),
                     ]
                 )
-                .map_elements(resolve_relation, return_dtype=pl.Utf8)
+                .map_elements(resolve_relation, return_dtype=pl.String)
                 .alias("relation_merged"),
                 pl.when(pl.col("opentargets_props").is_not_null())
                 .then(

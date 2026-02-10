@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation, Source
 
 # DrugCentral relationship_name values
 _RELATION_MAP: dict[str, Relation] = {
@@ -26,14 +26,16 @@ def run(
             [
                 pl.struct(
                     [
-                        pl.lit(["OnSIDES"]).alias("direct"),
+                        pl.lit([Source.ONSIDES])
+                        .cast(pl.List(pl.String))
+                        .alias("direct"),
                         pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                     ]
                 ).alias("sources"),
-                pl.lit(None, dtype=pl.List(pl.Utf8)).alias("reference_ids"),
+                pl.lit(None, dtype=pl.List(pl.String)).alias("reference_ids"),
                 pl.lit(None, dtype=pl.Float64).alias("highest_clinical_trial_phase"),
-                pl.lit(None, dtype=pl.Utf8).alias("structure_id"),
-                pl.lit(None, dtype=pl.Utf8).alias("drug_disease_id"),
+                pl.lit(None, dtype=pl.String).alias("structure_id"),
+                pl.lit(None, dtype=pl.String).alias("drug_disease_id"),
             ]
         ).alias("properties"),
     ).unique(subset=["from", "to"])
@@ -60,7 +62,9 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit(["opentargets"]).alias("direct"),
+                            pl.lit([Source.OPEN_TARGETS])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.concat_list([pl.col("source")]).alias(
                                 "indirect"
                             ),  # transform source to list
@@ -70,8 +74,8 @@ def run(
                     pl.col("max_phase_for_indication").alias(
                         "highest_clinical_trial_phase"
                     ),  # TODO: convert opentargets number to actual string
-                    pl.lit(None, dtype=pl.Utf8).alias("structure_id"),
-                    pl.lit(None, dtype=pl.Utf8).alias("drug_disease_id"),
+                    pl.lit(None, dtype=pl.String).alias("structure_id"),
+                    pl.lit(None, dtype=pl.String).alias("drug_disease_id"),
                 ]
             ).alias("properties"),
         )
@@ -90,11 +94,13 @@ def run(
             [
                 pl.struct(
                     [
-                        pl.lit(["drugcentral"]).alias("direct"),
+                        pl.lit([Source.DRUG_CENTRAL])
+                        .cast(pl.List(pl.String))
+                        .alias("direct"),
                         pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                     ]
                 ).alias("sources"),
-                pl.lit(None, dtype=pl.List(pl.Utf8)).alias("reference_ids"),
+                pl.lit(None, dtype=pl.List(pl.String)).alias("reference_ids"),
                 pl.lit(None, dtype=pl.Float64).alias("highest_clinical_trial_phase"),
                 pl.col("structure_id").alias("structure_id"),
                 pl.col("drug_disease_id").alias("drug_disease_id"),
