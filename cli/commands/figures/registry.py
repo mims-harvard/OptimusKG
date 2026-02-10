@@ -6,7 +6,7 @@ from . import (
     closeness_centrality,
     degree_distribution,
     metaedge_bubble_plot,
-    metapaths_counts,
+    metapath_counts,
 )
 
 FIGURES = {
@@ -15,5 +15,5 @@ FIGURES = {
     "closeness-centrality": closeness_centrality,
     "degree-distribution": degree_distribution,
     "metaedge-bubble-plot": metaedge_bubble_plot,
-    "metapath-counts": metapaths_counts,
+    "metapath-counts": metapath_counts,
 }
