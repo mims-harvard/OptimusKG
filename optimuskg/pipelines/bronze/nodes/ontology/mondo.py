@@ -137,7 +137,7 @@ def run(
         .with_columns(
             pl.col("xref_id")
             .map_elements(
-                lambda x: x.replace("Orphanet:", "Orphanet_"), return_dtype=pl.Utf8
+                lambda x: x.replace("Orphanet:", "Orphanet_"), return_dtype=pl.String
             )
             .alias("xref_id")
         )

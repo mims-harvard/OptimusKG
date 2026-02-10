@@ -11,10 +11,10 @@ def run(
         )
         .with_columns(
             pl.col("ncbi_id")
-            .cast(pl.Utf8)
+            .cast(pl.String)
             .map_elements(
                 lambda x: f"NCBIGene:{x}",
-                return_dtype=pl.Utf8,
+                return_dtype=pl.String,
             )
             .alias("ncbi_id")
         )
