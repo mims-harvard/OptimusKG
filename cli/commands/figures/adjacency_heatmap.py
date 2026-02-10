@@ -18,7 +18,9 @@ from optimuskg.pipelines.silver.nodes.constants import Node
 from . import style  # noqa: F401
 from .style import apply_axis_styling
 
-_NODE_TYPE_ORDER = [member.value for member in Node]
+# GEN is excluded because edges use the PRO label for gene/protein nodes;
+# the GEN row/column would be entirely zeros.
+_NODE_TYPE_ORDER = [member.value for member in Node if member is not Node.GENE]
 
 
 def _extract_type_counts(df: pl.DataFrame) -> pl.DataFrame:
@@ -143,7 +145,7 @@ def render_plot(data: pl.DataFrame, out_path: Path) -> None:
     vmax = matrix.max() if matrix.max() > 0 else 1
     norm = mcolors.LogNorm(vmin=vmin, vmax=vmax)
 
-    fig, ax = plt.subplots(figsize=(8, 7))
+    fig, ax = plt.subplots(figsize=(5, 4.5))
 
     sns.heatmap(
         matrix,
@@ -152,21 +154,35 @@ def render_plot(data: pl.DataFrame, out_path: Path) -> None:
         yticklabels=row_labels,
         annot=annotations,
         fmt="",
+        annot_kws={"fontsize": 7},
         cmap="YlOrRd",
         norm=norm,
         square=True,
         linewidths=0.5,
         linecolor="white",
-        cbar_kws={"label": "Edge count", "shrink": 0.8},
+        cbar_kws={"shrink": 0.8},
         mask=(matrix == 0),
     )
 
+    # Style the colorbar.
+    cbar = ax.collections[0].colorbar
+    cbar.set_label("Edge count", fontsize=8)
+    cbar.ax.tick_params(labelsize=7)
+
     ax.set_xlabel("")
     ax.set_ylabel("")
-    ax.tick_params(axis="x", rotation=0)
-    ax.tick_params(axis="y", rotation=0)
-    apply_axis_styling(ax)
+    ax.tick_params(axis="x", rotation=0, labelsize=8)
+    ax.tick_params(axis="y", rotation=0, labelsize=8)
 
-    plt.tight_layout()
+    # Bold row/column labels.
+    for lbl in ax.get_xticklabels() + ax.get_yticklabels():
+        lbl.set_fontweight("bold")
+
+    # Heatmaps keep all four spines visible (unlike scatter plots).
+    ax.grid(False)
+    for spine in ax.spines.values():
+        spine.set_linewidth(0.5)
+
+    plt.tight_layout(pad=0.4)
     plt.savefig(out_path)
     plt.close(fig)
