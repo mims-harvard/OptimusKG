@@ -25,8 +25,12 @@ def run(
             pl.lit(Node.ANATOMY).alias("label"),
             pl.struct(
                 [
-                    pl.lit(["UBERON"]).alias("direct_sources"),
-                    pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
+                    pl.struct(
+                        [
+                            pl.lit(["UBERON"]).alias("direct"),
+                            pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
+                        ]
+                    ).alias("sources"),
                     pl.col("name"),
                     pl.col("definition"),
                     pl.col("xrefs"),

@@ -88,11 +88,15 @@ def run(  # noqa: PLR0913
                 pl.lit(Node.GENE).alias("label"),
                 pl.struct(
                     [
-                        pl.when(pl.col("id").str.starts_with("NCBIGene"))
-                        .then(pl.lit(["disgenet"]))
-                        .otherwise(pl.lit(["opentargets", "BGEE"]))
-                        .alias("direct_sources"),
-                        pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
+                        pl.struct(
+                            [
+                                pl.when(pl.col("id").str.starts_with("NCBIGene"))
+                                .then(pl.lit(["disgenet"]))
+                                .otherwise(pl.lit(["opentargets", "BGEE"]))
+                                .alias("direct"),
+                                pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
+                            ]
+                        ).alias("sources"),
                         pl.coalesce([pl.col("symbol"), pl.col("gene_symbol")]).alias(
                             "symbol"
                         ),

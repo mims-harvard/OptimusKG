@@ -29,8 +29,12 @@ def run(
                     .cast(pl.Int32)
                     .alias("expression_rank"),
                     pl.col("call_quality").alias("call_quality"),
-                    pl.lit(["BGEE"]).alias("direct_sources"),
-                    pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
+                    pl.struct(
+                        [
+                            pl.lit(["BGEE"]).alias("direct"),
+                            pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
+                        ]
+                    ).alias("sources"),
                 ]
             ).alias("properties"),
         )

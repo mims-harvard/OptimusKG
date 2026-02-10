@@ -45,10 +45,14 @@ def run(
             pl.struct(
                 [
                     pl.col("ids").alias("reference_ids"),
-                    pl.lit(["opentargets"]).alias("direct_sources"),
-                    pl.concat_list([pl.col("source")]).alias(
-                        "indirect_sources"
-                    ),  # transform source to list
+                    pl.struct(
+                        [
+                            pl.lit(["opentargets"]).alias("direct"),
+                            pl.concat_list([pl.col("source")]).alias(
+                                "indirect"
+                            ),  # transform source to list
+                        ]
+                    ).alias("sources"),
                     pl.col("max_phase_for_indication").alias(
                         "highest_clinical_trial_phase"
                     ),
@@ -71,8 +75,12 @@ def run(
             pl.lit(True).alias("undirected"),
             pl.struct(
                 [
-                    pl.lit(["drugcentral"]).alias("direct_sources"),
-                    pl.lit([]).cast(pl.List(pl.Utf8)).alias("indirect_sources"),
+                    pl.struct(
+                        [
+                            pl.lit(["drugcentral"]).alias("direct"),
+                            pl.lit([]).cast(pl.List(pl.Utf8)).alias("indirect"),
+                        ]
+                    ).alias("sources"),
                     pl.col("structure_id").alias("structure_id"),
                     pl.col("drug_disease_id").alias("drug_disease_id"),
                 ]
@@ -114,46 +122,50 @@ def run(
                 ),
                 pl.struct(
                     [
-                        pl.concat_list(
+                        pl.struct(
                             [
-                                pl.coalesce(
+                                pl.concat_list(
                                     [
-                                        pl.col("drugcentral_props").struct.field(
-                                            "direct_sources"
+                                        pl.coalesce(
+                                            [
+                                                pl.col("drugcentral_props")
+                                                .struct.field("sources")
+                                                .struct.field("direct"),
+                                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                            ]
                                         ),
-                                        pl.lit([], dtype=pl.List(pl.Utf8)),
+                                        pl.coalesce(
+                                            [
+                                                pl.col("opentargets_props")
+                                                .struct.field("sources")
+                                                .struct.field("direct"),
+                                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                            ]
+                                        ),
                                     ]
-                                ),
-                                pl.coalesce(
+                                ).alias("direct"),
+                                pl.concat_list(
                                     [
-                                        pl.col("opentargets_props").struct.field(
-                                            "direct_sources"
+                                        pl.coalesce(
+                                            [
+                                                pl.col("drugcentral_props")
+                                                .struct.field("sources")
+                                                .struct.field("indirect"),
+                                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                            ]
                                         ),
-                                        pl.lit([], dtype=pl.List(pl.Utf8)),
+                                        pl.coalesce(
+                                            [
+                                                pl.col("opentargets_props")
+                                                .struct.field("sources")
+                                                .struct.field("indirect"),
+                                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                            ]
+                                        ),
                                     ]
-                                ),
+                                ).alias("indirect"),
                             ]
-                        ).alias("direct_sources"),
-                        pl.concat_list(
-                            [
-                                pl.coalesce(
-                                    [
-                                        pl.col("drugcentral_props").struct.field(
-                                            "indirect_sources"
-                                        ),
-                                        pl.lit([], dtype=pl.List(pl.Utf8)),
-                                    ]
-                                ),
-                                pl.coalesce(
-                                    [
-                                        pl.col("opentargets_props").struct.field(
-                                            "indirect_sources"
-                                        ),
-                                        pl.lit([], dtype=pl.List(pl.Utf8)),
-                                    ]
-                                ),
-                            ]
-                        ).alias("indirect_sources"),
+                        ).alias("sources"),
                         pl.col("drugcentral_props").struct.field("structure_id"),
                         pl.col("drugcentral_props").struct.field("drug_disease_id"),
                         pl.col("opentargets_props").struct.field("reference_ids"),

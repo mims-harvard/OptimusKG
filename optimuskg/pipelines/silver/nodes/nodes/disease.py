@@ -50,10 +50,14 @@ def run(  # noqa: PLR0913
             pl.lit(Node.DISEASE).alias("label"),
             pl.struct(
                 [
-                    pl.lit(["opentargets", "drugcentral", "MONDO"]).alias(
-                        "direct_sources"
-                    ),
-                    pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
+                    pl.struct(
+                        [
+                            pl.lit(["opentargets", "drugcentral", "MONDO"]).alias(
+                                "direct"
+                            ),
+                            pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
+                        ]
+                    ).alias("sources"),
                     pl.coalesce([pl.col("name"), pl.col("name_right")]).alias("name"),
                     pl.coalesce(
                         [pl.col("description"), pl.col("description_right")]

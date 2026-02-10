@@ -125,20 +125,12 @@ def _yield_edges(
     for row in df.iter_rows(named=True):
         not_null_properties: dict[str, Any] = {"undirected": row["undirected"]}
         if include_properties:
-            properties = {**row["properties"], "undirected": row["undirected"]}
-            for (
-                k,
-                v,
-            ) in (
-                properties.items()
-            ):  # Escape double quotes since biocypher doesn't escape them
+            # JSON-encode nested structs (e.g., sources) for Neo4j compatibility
+            encoded_props = _encode_nested_properties(row["properties"])
+            properties = {**encoded_props, "undirected": row["undirected"]}
+            for k, v in properties.items():
                 if v is not None:
-                    if isinstance(v, list) and all(isinstance(x, str) for x in v):
-                        not_null_properties[k] = [x.replace('"', '""') for x in v]
-                    elif isinstance(v, str):
-                        not_null_properties[k] = v.replace('"', '""')
-                    else:
-                        not_null_properties[k] = v
+                    not_null_properties[k] = _escape_quotes(v)
         yield BiocypherEdge(
             id=str(uuid.uuid4()),
             from_id=row["from"],

@@ -9,8 +9,9 @@ silver.edges.molecular_function_protein:
       relation: pl.String
       undirected: pl.Boolean
       properties:
-        direct_sources: pl.List(pl.String)
-        indirect_sources: pl.List(pl.String)
+        sources:
+          direct: pl.List(pl.String)
+          indirect: pl.List(pl.String)
         evidence: pl.List(pl.String)
         gene_product: pl.List(pl.String)
         eco_ids: pl.List(pl.String)
