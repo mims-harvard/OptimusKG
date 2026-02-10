@@ -81,9 +81,9 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit([Source.DRUGBANK, Source.OPENTARGETS]).alias(
-                                "direct"
-                            ),
+                            pl.lit([Source.DRUGBANK, Source.OPENTARGETS])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                         ]
                     ).alias("sources"),
@@ -138,10 +138,12 @@ def run(
                     [
                         pl.struct(
                             [
-                                pl.lit([Source.OPENTARGETS]).alias("direct"),
+                                pl.lit([Source.OPENTARGETS])
+                                .cast(pl.List(pl.String))
+                                .alias("direct"),
                                 pl.col("indirect_sources")
                                 .map_elements(
-                                    resolve_sources, return_dtype=pl.List(pl.Utf8)
+                                    resolve_sources, return_dtype=pl.List(pl.String)
                                 )
                                 .alias("indirect"),
                             ]
@@ -168,18 +170,18 @@ def run(
                         pl.coalesce(
                             [
                                 pl.col("relation"),
-                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                pl.lit([], dtype=pl.List(pl.String)),
                             ]
                         ),
                         pl.coalesce(
                             [
                                 pl.col("relation_right"),
-                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                pl.lit([], dtype=pl.List(pl.String)),
                             ]
                         ),
                     ]
                 )
-                .map_elements(resolve_relation, return_dtype=pl.Utf8)
+                .map_elements(resolve_relation, return_dtype=pl.String)
                 .alias("relation_merged"),
                 pl.when(pl.col("opentargets_props").is_not_null())
                 .then(

@@ -27,7 +27,9 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit([Source.UBERON]).alias("direct"),
+                            pl.lit([Source.UBERON])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                         ]
                     ).alias("sources"),

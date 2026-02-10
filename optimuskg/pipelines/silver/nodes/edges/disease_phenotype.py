@@ -62,10 +62,12 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit([Source.OPENTARGETS]).alias("direct"),
+                            pl.lit([Source.OPENTARGETS])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.col("indirect_sources")
                             .map_elements(
-                                resolve_sources, return_dtype=pl.List(pl.Utf8)
+                                resolve_sources, return_dtype=pl.List(pl.String)
                             )
                             .alias("indirect"),
                         ]

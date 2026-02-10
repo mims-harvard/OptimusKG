@@ -63,7 +63,9 @@ def run(  # noqa: PLR0913
                     "ingredient_id",
                     "rxnorm_name",
                     "rxnorm_term_type",
-                    pl.lit([Source.ONSIDES]).alias("direct_sources"),
+                    pl.lit([Source.ONSIDES])
+                    .cast(pl.List(pl.String))
+                    .alias("direct_sources"),
                 ]
             ).unique(subset="ingredient_id"),
             left_on="id",

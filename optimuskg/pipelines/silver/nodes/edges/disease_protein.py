@@ -50,7 +50,9 @@ def run(  # noqa: PLR0913
                 [
                     pl.struct(
                         [
-                            pl.lit([Source.OPENTARGETS]).alias("direct"),
+                            pl.lit([Source.OPENTARGETS])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                         ]
                     ).alias("sources"),
@@ -85,12 +87,14 @@ def run(  # noqa: PLR0913
                     pl.col("nof_snps").cast(pl.Int16).alias("number_of_snps"),
                     pl.struct(
                         [
-                            pl.lit([Source.DISGENET]).alias("direct"),
+                            pl.lit([Source.DISGENET])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.col("source")
                             .str.split(";")
-                            .cast(pl.List(pl.Utf8))
+                            .cast(pl.List(pl.String))
                             .map_elements(
-                                resolve_sources, return_dtype=pl.List(pl.Utf8)
+                                resolve_sources, return_dtype=pl.List(pl.String)
                             )
                             .alias("indirect"),
                         ]

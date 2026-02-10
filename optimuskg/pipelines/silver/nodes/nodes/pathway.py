@@ -37,9 +37,9 @@ def run(  # noqa: PLR0913
                     [
                         pl.struct(
                             [
-                                pl.lit([Source.REACTOME, Source.OPENTARGETS]).alias(
-                                    "direct"
-                                ),
+                                pl.lit([Source.REACTOME, Source.OPENTARGETS])
+                                .cast(pl.List(pl.String))
+                                .alias("direct"),
                                 pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                             ]
                         ).alias("sources"),

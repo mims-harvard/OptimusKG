@@ -31,7 +31,9 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit([Source.GO]).alias("direct"),
+                            pl.lit([Source.GO])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                         ]
                     ).alias("sources"),

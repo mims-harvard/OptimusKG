@@ -52,9 +52,9 @@ def run(  # noqa: PLR0913
                 [
                     pl.struct(
                         [
-                            pl.lit(
-                                [Source.OPENTARGETS, Source.HPO, Source.MEDDRA]
-                            ).alias("direct"),
+                            pl.lit([Source.OPENTARGETS, Source.HPO, Source.MEDDRA])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                         ]
                     ).alias("sources"),

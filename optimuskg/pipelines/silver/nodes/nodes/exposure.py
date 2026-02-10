@@ -46,8 +46,12 @@ def run(  # noqa: PLR0913
                     [
                         pl.struct(
                             [
-                                pl.lit([Source.CTD]).alias("direct"),
-                                pl.lit([Source.MESH]).alias("indirect"),
+                                pl.lit([Source.CTD])
+                                .cast(pl.List(pl.String))
+                                .alias("direct"),
+                                pl.lit([Source.MESH])
+                                .cast(pl.List(pl.String))
+                                .alias("indirect"),
                             ]
                         ).alias("sources"),
                         pl.col("exposure_stressor_name").alias("name"),

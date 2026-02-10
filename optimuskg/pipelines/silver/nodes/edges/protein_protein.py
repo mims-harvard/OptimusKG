@@ -30,10 +30,12 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit([Source.PRIMEKG]).alias("direct"),
+                            pl.lit([Source.PRIMEKG])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.col("databases")
                             .map_elements(
-                                resolve_sources, return_dtype=pl.List(pl.Utf8)
+                                resolve_sources, return_dtype=pl.List(pl.String)
                             )
                             .alias("indirect"),
                         ]

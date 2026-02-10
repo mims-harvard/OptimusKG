@@ -125,8 +125,14 @@ def run(  # noqa: PLR0913
                         pl.struct(
                             [
                                 pl.when(pl.col("id").str.starts_with("NCBIGene"))
-                                .then(pl.lit([Source.DISGENET]))
-                                .otherwise(pl.lit([Source.OPENTARGETS, Source.BGEE]))
+                                .then(
+                                    pl.lit([Source.DISGENET]).cast(pl.List(pl.String))
+                                )
+                                .otherwise(
+                                    pl.lit([Source.OPENTARGETS, Source.BGEE]).cast(
+                                        pl.List(pl.String)
+                                    )
+                                )
                                 .alias("direct"),
                                 pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                             ]

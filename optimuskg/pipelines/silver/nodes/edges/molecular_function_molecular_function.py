@@ -32,7 +32,7 @@ def run(
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     pl.struct(
-                        pl.lit([Source.GO]).alias("direct"),
+                        pl.lit([Source.GO]).cast(pl.List(pl.String)).alias("direct"),
                         pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                     ).alias("sources"),
                 ).alias("properties"),

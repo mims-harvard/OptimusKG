@@ -44,7 +44,9 @@ def run(
                     [
                         pl.struct(
                             [
-                                pl.lit([Source.OPENTARGETS]).alias("direct"),
+                                pl.lit([Source.OPENTARGETS])
+                                .cast(pl.List(pl.String))
+                                .alias("direct"),
                                 pl.col("indirect_sources").alias("indirect"),
                             ]
                         ).alias("sources"),

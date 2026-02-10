@@ -200,9 +200,9 @@ def run(
                     [
                         pl.struct(
                             [
-                                pl.lit([Source.CTD, Source.OPENTARGETS]).alias(
-                                    "direct"
-                                ),
+                                pl.lit([Source.CTD, Source.OPENTARGETS])
+                                .cast(pl.List(pl.String))
+                                .alias("direct"),
                                 pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                             ]
                         ).alias("sources"),

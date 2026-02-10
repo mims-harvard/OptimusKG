@@ -31,7 +31,9 @@ def run(
                     pl.col("call_quality").alias("call_quality"),
                     pl.struct(
                         [
-                            pl.lit([Source.BGEE]).alias("direct"),
+                            pl.lit([Source.BGEE])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                         ]
                     ).alias("sources"),

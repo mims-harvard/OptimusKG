@@ -54,7 +54,9 @@ def run(  # noqa: PLR0913
                         [
                             pl.lit(
                                 [Source.OPENTARGETS, Source.DRUGCENTRAL, Source.MONDO]
-                            ).alias("direct"),
+                            )
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                         ]
                     ).alias("sources"),

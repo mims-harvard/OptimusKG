@@ -49,10 +49,12 @@ def run(
                     pl.col("ids").alias("reference_ids"),
                     pl.struct(
                         [
-                            pl.lit([Source.OPENTARGETS]).alias("direct"),
+                            pl.lit([Source.OPENTARGETS])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.concat_list([pl.col("source")])
                             .map_elements(
-                                resolve_sources, return_dtype=pl.List(pl.Utf8)
+                                resolve_sources, return_dtype=pl.List(pl.String)
                             )
                             .alias("indirect"),
                         ]
@@ -81,8 +83,10 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit([Source.DRUGCENTRAL]).alias("direct"),
-                            pl.lit([]).cast(pl.List(pl.Utf8)).alias("indirect"),
+                            pl.lit([Source.DRUGCENTRAL])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
+                            pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                         ]
                     ).alias("sources"),
                     pl.col("structure_id").alias("structure_id"),
@@ -108,18 +112,18 @@ def run(
                         pl.coalesce(
                             [
                                 pl.col("relation"),
-                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                pl.lit([], dtype=pl.List(pl.String)),
                             ]
                         ),
                         pl.coalesce(
                             [
                                 pl.col("relation_right"),
-                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                pl.lit([], dtype=pl.List(pl.String)),
                             ]
                         ),
                     ]
                 )
-                .map_elements(resolve_relation, return_dtype=pl.Utf8)
+                .map_elements(resolve_relation, return_dtype=pl.String)
                 .alias("relation"),
                 pl.coalesce([pl.col("undirected"), pl.col("undirected_right")]).alias(
                     "undirected"
@@ -135,7 +139,7 @@ def run(
                                                 pl.col("drugcentral_props")
                                                 .struct.field("sources")
                                                 .struct.field("direct"),
-                                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                                pl.lit([], dtype=pl.List(pl.String)),
                                             ]
                                         ),
                                         pl.coalesce(
@@ -143,7 +147,7 @@ def run(
                                                 pl.col("opentargets_props")
                                                 .struct.field("sources")
                                                 .struct.field("direct"),
-                                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                                pl.lit([], dtype=pl.List(pl.String)),
                                             ]
                                         ),
                                     ]
@@ -155,7 +159,7 @@ def run(
                                                 pl.col("drugcentral_props")
                                                 .struct.field("sources")
                                                 .struct.field("indirect"),
-                                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                                pl.lit([], dtype=pl.List(pl.String)),
                                             ]
                                         ),
                                         pl.coalesce(
@@ -163,7 +167,7 @@ def run(
                                                 pl.col("opentargets_props")
                                                 .struct.field("sources")
                                                 .struct.field("indirect"),
-                                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                                pl.lit([], dtype=pl.List(pl.String)),
                                             ]
                                         ),
                                     ]

@@ -197,8 +197,12 @@ def run(
                     [
                         pl.struct(
                             [
-                                pl.lit([Source.CTD]).alias("direct"),
-                                pl.lit([Source.GO]).alias("indirect"),
+                                pl.lit([Source.CTD])
+                                .cast(pl.List(pl.String))
+                                .alias("direct"),
+                                pl.lit([Source.GO])
+                                .cast(pl.List(pl.String))
+                                .alias("indirect"),
                             ]
                         ).alias("sources"),
                         pl.col("evidence_count"),

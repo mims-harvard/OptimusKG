@@ -18,7 +18,9 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit([Source.REACTOME]).alias("direct"),
+                            pl.lit([Source.REACTOME])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                         ]
                     ).alias("sources"),
