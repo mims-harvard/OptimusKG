@@ -7,7 +7,9 @@ from optimuskg.pipelines.silver.nodes.constants import (
     Edge,
     Node,
     Relation,
+    Source,
     resolve_relation,
+    resolve_sources,
 )
 
 logger = logging.getLogger(__name__)
@@ -47,10 +49,12 @@ def run(
                     pl.col("ids").alias("reference_ids"),
                     pl.struct(
                         [
-                            pl.lit(["opentargets"]).alias("direct"),
-                            pl.concat_list([pl.col("source")]).alias(
-                                "indirect"
-                            ),  # transform source to list
+                            pl.lit([Source.OPENTARGETS]).alias("direct"),
+                            pl.concat_list([pl.col("source")])
+                            .map_elements(
+                                resolve_sources, return_dtype=pl.List(pl.Utf8)
+                            )
+                            .alias("indirect"),
                         ]
                     ).alias("sources"),
                     pl.col("max_phase_for_indication").alias(
@@ -77,7 +81,7 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit(["drugcentral"]).alias("direct"),
+                            pl.lit([Source.DRUGCENTRAL]).alias("direct"),
                             pl.lit([]).cast(pl.List(pl.Utf8)).alias("indirect"),
                         ]
                     ).alias("sources"),

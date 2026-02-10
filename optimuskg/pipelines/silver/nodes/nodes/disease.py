@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Node
+from optimuskg.pipelines.silver.nodes.constants import Node, Source
 
 
 def run(  # noqa: PLR0913
@@ -52,9 +52,9 @@ def run(  # noqa: PLR0913
                 [
                     pl.struct(
                         [
-                            pl.lit(["opentargets", "drugcentral", "MONDO"]).alias(
-                                "direct"
-                            ),
+                            pl.lit(
+                                [Source.OPENTARGETS, Source.DRUGCENTRAL, Source.MONDO]
+                            ).alias("direct"),
                             pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                         ]
                     ).alias("sources"),

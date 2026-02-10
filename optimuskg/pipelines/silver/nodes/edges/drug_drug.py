@@ -5,6 +5,7 @@ from optimuskg.pipelines.silver.nodes.constants import (
     Edge,
     Node,
     Relation,
+    Source,
     resolve_relation,
 )
 
@@ -47,7 +48,7 @@ def run(
                     [
                         pl.struct(
                             [
-                                pl.lit(["drugbank"]).alias("direct"),
+                                pl.lit([Source.DRUGBANK]).alias("direct"),
                                 pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                             ]
                         ).alias("sources"),
@@ -73,7 +74,7 @@ def run(
                     [
                         pl.struct(
                             [
-                                pl.lit(["opentargets"]).alias("direct"),
+                                pl.lit([Source.OPENTARGETS]).alias("direct"),
                                 pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                             ]
                         ).alias("sources"),

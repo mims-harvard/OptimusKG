@@ -1,7 +1,13 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
+from optimuskg.pipelines.silver.nodes.constants import (
+    Edge,
+    Node,
+    Relation,
+    Source,
+    resolve_sources,
+)
 
 
 def run(
@@ -24,8 +30,12 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit(["PrimeKG"]).alias("direct"),
-                            pl.col("databases").alias("indirect"),
+                            pl.lit([Source.PRIMEKG]).alias("direct"),
+                            pl.col("databases")
+                            .map_elements(
+                                resolve_sources, return_dtype=pl.List(pl.Utf8)
+                            )
+                            .alias("indirect"),
                         ]
                     ).alias("sources"),
                 ]

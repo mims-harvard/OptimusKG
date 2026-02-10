@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation, Source
 
 # DrugCentral relationship_name values
 _RELATION_MAP: dict[str, Relation] = {
@@ -26,7 +26,7 @@ def run(
             [
                 pl.struct(
                     [
-                        pl.lit(["OnSIDES"]).alias("direct"),
+                        pl.lit([Source.ONSIDES]).alias("direct"),
                         pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                     ]
                 ).alias("sources"),
@@ -60,7 +60,7 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit(["opentargets"]).alias("direct"),
+                            pl.lit([Source.OPENTARGETS]).alias("direct"),
                             pl.concat_list([pl.col("source")]).alias(
                                 "indirect"
                             ),  # transform source to list
@@ -90,7 +90,7 @@ def run(
             [
                 pl.struct(
                     [
-                        pl.lit(["drugcentral"]).alias("direct"),
+                        pl.lit([Source.DRUGCENTRAL]).alias("direct"),
                         pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                     ]
                 ).alias("sources"),

@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Node
+from optimuskg.pipelines.silver.nodes.constants import Node, Source
 
 
 def run(  # noqa: PLR0913
@@ -125,8 +125,8 @@ def run(  # noqa: PLR0913
                         pl.struct(
                             [
                                 pl.when(pl.col("id").str.starts_with("NCBIGene"))
-                                .then(pl.lit(["disgenet"]))
-                                .otherwise(pl.lit(["opentargets", "BGEE"]))
+                                .then(pl.lit([Source.DISGENET]))
+                                .otherwise(pl.lit([Source.OPENTARGETS, Source.BGEE]))
                                 .alias("direct"),
                                 pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                             ]

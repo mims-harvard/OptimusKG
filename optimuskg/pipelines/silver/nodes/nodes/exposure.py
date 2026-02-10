@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Node
+from optimuskg.pipelines.silver.nodes.constants import Node, Source
 
 
 def run(  # noqa: PLR0913
@@ -46,8 +46,8 @@ def run(  # noqa: PLR0913
                     [
                         pl.struct(
                             [
-                                pl.lit(["CTD"]).alias("direct"),
-                                pl.lit(["MESH"]).alias("indirect"),
+                                pl.lit([Source.CTD]).alias("direct"),
+                                pl.lit([Source.MESH]).alias("indirect"),
                             ]
                         ).alias("sources"),
                         pl.col("exposure_stressor_name").alias("name"),

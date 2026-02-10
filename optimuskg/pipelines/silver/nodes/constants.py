@@ -1,9 +1,9 @@
-from enum import Enum
+from enum import StrEnum
 
 import polars as pl
 
 
-class Node(str, Enum):
+class Node(StrEnum):
     """3-letter abbreviations for node types in the knowledge graph."""
 
     ANATOMY = "ANA"
@@ -19,13 +19,135 @@ class Node(str, Enum):
     PROTEIN = "PRO"
 
 
-class Edge(str, Enum):
+class Edge(StrEnum):
     @staticmethod
     def format_label(src: Node, dst: Node) -> str:
         return f"{src.value}-{dst.value}"
 
 
-class Relation(str, Enum):
+class Source(StrEnum):
+    """Data source/database identifiers for provenance tracking."""
+
+    # Direct sources
+    BGEE = "BGEE"
+    CTD = "CTD"
+    DISGENET = "disgenet"
+    DRUGBANK = "drugbank"
+    DRUGCENTRAL = "drugcentral"
+    GO = "GO"
+    HPO = "HPO"
+    MEDDRA = "MedDRA"
+    MESH = "MESH"
+    MONDO = "MONDO"
+    ONSIDES = "OnSIDES"
+    OPENTARGETS = "opentargets"
+    PRIMEKG = "PrimeKG"
+    REACTOME = "REACTOME"
+    UBERON = "UBERON"
+
+    # Indirect sources for DisGeNET
+    CGI = "CGI"
+    CLINGEN = "CLINGEN"
+    GENOMICS_ENGLAND = "GENOMICS_ENGLAND"
+    ORPHANET = "ORPHANET"
+    PSYGENET = "PSYGENET"
+    UNIPROT = "UniProt"
+
+    # Indirect sources from PPI databases
+    APID = "APID"
+    BIOGRID = "biogrid"
+    BIOPLEX = "bioplex"
+    COFRAC = "CoFrac"
+    ENCODE = "encode"
+    HIUNION = "hiunion"
+    HINT_BINARY = "HINT-binary"
+    HINT_COMPLEX = "HINT-complex"
+    HIPPIE = "HIPPIE"
+    INNATEDB = "innatedb"
+    INSIDER = "insider"
+    INSTRUCT = "instruct"
+    INTACT = "intact"
+    INTERACTOME3D = "interactome3d"
+    INWEB = "inweb"
+    KINOMENETX = "KinomeNetX"
+    LITBM17 = "litbm17"
+    MINT = "mint"
+    PHOSPHOSP = "PhosphoSP"
+    PINA = "pina"
+    QUBIC = "qubic"
+    SIGNALINK = "signalink"
+
+    # Indirect sources for OpenTargets
+    ATC = "ATC"
+    BNF = "BNF"
+    CLINICAL_TRIALS = "ClinicalTrials"
+    DAILY_MED = "DailyMed"
+    DOI = "DOI"
+    EMA = "EMA"
+    EXPERT = "Expert"
+    FDA = "FDA"
+    HMA = "HMA"
+    INN = "INN"
+    INTERPRO = "InterPro"
+    ISBN = "ISBN"
+    IUPHAR = "IUPHAR"
+    KEGG = "KEGG"
+    OTHER = "Other"
+    PATENT = "Patent"
+    PMC = "PMC"
+    PMDA = "PMDA"
+    PUBCHEM = "PubChem"
+    PUBMED = "PubMed"
+    USAN = "USAN"
+    WIKIPEDIA = "Wikipedia"
+
+
+# Mapping from raw data strings to canonical Source enum members.
+# Built from enum values + explicit aliases for data variations.
+_SOURCE_BY_RAW: dict[str, Source] = {s.value: s for s in Source} | {
+    # DisGeNET uses uppercase "UNIPROT"; normalize to "UniProt"
+    "UNIPROT": Source.UNIPROT,
+    # DisGeNET uses "CTD_human"; normalize to CTD
+    "CTD_human": Source.CTD,
+    # HP ontology prefix; normalize to HPO
+    "HP": Source.HPO,
+}
+
+
+def resolve_source(raw: str) -> str:
+    """Resolve a raw source string to a canonical Source enum value.
+
+    Args:
+        raw: A source string from upstream data.
+
+    Returns:
+        The canonical Source string value.
+
+    Raises:
+        KeyError: If the raw string is not a known source or alias.
+    """
+    return _SOURCE_BY_RAW[raw]
+
+
+def resolve_sources(sources: pl.Series) -> list[str]:
+    """Resolve a list of raw source strings to canonical Source enum values.
+
+    Intended for use with ``map_elements`` on a ``List(String)`` column.
+
+    Args:
+        sources: Polars Series of raw source strings (passed by map_elements
+            when applied to a List column).
+
+    Returns:
+        List of canonical Source string values.
+
+    Raises:
+        KeyError: If any raw string is not a known source or alias.
+    """
+    return [resolve_source(s) for s in sources.to_list()]
+
+
+class Relation(StrEnum):
     """Standardized relation types for edges in the knowledge graph.
 
     All values are uppercase with underscores for consistency.

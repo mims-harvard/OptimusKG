@@ -5,7 +5,9 @@ from optimuskg.pipelines.silver.nodes.constants import (
     Edge,
     Node,
     Relation,
+    Source,
     resolve_relation,
+    resolve_sources,
 )
 
 
@@ -60,8 +62,12 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit(["opentargets"]).alias("direct"),
-                            pl.col("indirect_sources").alias("indirect"),
+                            pl.lit([Source.OPENTARGETS]).alias("direct"),
+                            pl.col("indirect_sources")
+                            .map_elements(
+                                resolve_sources, return_dtype=pl.List(pl.Utf8)
+                            )
+                            .alias("indirect"),
                         ]
                     ).alias("sources"),
                     pl.col("aspect"),

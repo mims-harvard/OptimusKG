@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
+from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation, Source
 
 
 def run(
@@ -44,7 +44,7 @@ def run(
                     [
                         pl.struct(
                             [
-                                pl.lit(["opentargets"]).alias("direct"),
+                                pl.lit([Source.OPENTARGETS]).alias("direct"),
                                 pl.col("indirect_sources").alias("indirect"),
                             ]
                         ).alias("sources"),
