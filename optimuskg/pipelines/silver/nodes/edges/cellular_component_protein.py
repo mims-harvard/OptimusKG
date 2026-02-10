@@ -40,8 +40,12 @@ def run(
                 pl.col("undirected"),
                 pl.struct(
                     [
-                        pl.lit(["opentargets"]).alias("direct_sources"),
-                        pl.col("indirect_sources"),
+                        pl.struct(
+                            [
+                                pl.lit(["opentargets"]).alias("direct"),
+                                pl.col("indirect_sources").alias("indirect"),
+                            ]
+                        ).alias("sources"),
                         pl.col("evidence"),
                         pl.col("gene_product"),
                         pl.col("eco_ids"),

@@ -28,8 +28,12 @@ def run(
             pl.lit(False).alias("undirected"),
             pl.struct(
                 [
-                    pl.lit(["UBERON"]).alias("direct_sources"),
-                    pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
+                    pl.struct(
+                        [
+                            pl.lit(["UBERON"]).alias("direct"),
+                            pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
+                        ]
+                    ).alias("sources"),
                 ]
             ).alias("properties"),
         )

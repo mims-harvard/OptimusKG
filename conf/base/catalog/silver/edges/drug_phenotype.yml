@@ -9,8 +9,9 @@ silver.edges.drug_phenotype:
       relation: pl.String
       undirected: pl.Boolean
       properties:
-        direct_sources: pl.List(pl.String)
-        indirect_sources: pl.List(pl.String)
+        sources:
+          direct: pl.List(pl.String)
+          indirect: pl.List(pl.String)
         reference_ids: pl.List(pl.String)
         highest_clinical_trial_phase: pl.Float64
         structure_id: pl.String

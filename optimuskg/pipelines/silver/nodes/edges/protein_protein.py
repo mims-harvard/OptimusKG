@@ -22,8 +22,12 @@ def run(
             pl.lit(False).alias("undirected"),
             pl.struct(
                 [
-                    pl.lit(["PrimeKG"]).alias("direct_sources"),
-                    pl.col("databases").alias("indirect_sources"),
+                    pl.struct(
+                        [
+                            pl.lit(["PrimeKG"]).alias("direct"),
+                            pl.col("databases").alias("indirect"),
+                        ]
+                    ).alias("sources"),
                 ]
             ).alias("properties"),
         )

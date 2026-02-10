@@ -19,8 +19,9 @@ silver.edges.disease_protein:
         year_final: pl.String
         number_of_pmids: pl.Int16
         number_of_snps: pl.Int16
-        direct_sources: pl.List(pl.String)
-        indirect_sources: pl.List(pl.String)
+        sources:
+          direct: pl.List(pl.String)
+          indirect: pl.List(pl.String)
   metadata:
     checksum: 1fef730999fb339f555de9b897cb6129
     kedro-viz:

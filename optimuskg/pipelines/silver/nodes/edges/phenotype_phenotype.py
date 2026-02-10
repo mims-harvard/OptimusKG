@@ -16,8 +16,12 @@ def run(
             pl.lit(False).alias("undirected"),
             pl.struct(  # TODO: we can add more metadata merging with opentargets disease_phenotype and disease dataset
                 [
-                    pl.lit(["HP"]).alias("direct_sources"),
-                    pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
+                    pl.struct(
+                        [
+                            pl.lit(["HP"]).alias("direct"),
+                            pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
+                        ]
+                    ).alias("sources"),
                 ]
             ).alias("properties"),
         )

@@ -45,8 +45,12 @@ def run(
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
-                        pl.lit(["drugbank"]).alias("direct_sources"),
-                        pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
+                        pl.struct(
+                            [
+                                pl.lit(["drugbank"]).alias("direct"),
+                                pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
+                            ]
+                        ).alias("sources"),
                         pl.col("description").alias("interaction_description"),
                     ]
                 ).alias("drugbank_props"),
@@ -67,8 +71,12 @@ def run(
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
-                        pl.lit(["opentargets"]).alias("direct_sources"),
-                        pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
+                        pl.struct(
+                            [
+                                pl.lit(["opentargets"]).alias("direct"),
+                                pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
+                            ]
+                        ).alias("sources"),
                     ]
                 ).alias("opentargets_props"),
             ]
@@ -105,46 +113,50 @@ def run(
                 ),
                 pl.struct(
                     [
-                        pl.concat_list(
+                        pl.struct(
                             [
-                                pl.coalesce(
+                                pl.concat_list(
                                     [
-                                        pl.col("drugbank_props").struct.field(
-                                            "direct_sources"
+                                        pl.coalesce(
+                                            [
+                                                pl.col("drugbank_props")
+                                                .struct.field("sources")
+                                                .struct.field("direct"),
+                                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                            ]
                                         ),
-                                        pl.lit([], dtype=pl.List(pl.Utf8)),
+                                        pl.coalesce(
+                                            [
+                                                pl.col("opentargets_props")
+                                                .struct.field("sources")
+                                                .struct.field("direct"),
+                                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                            ]
+                                        ),
                                     ]
-                                ),
-                                pl.coalesce(
+                                ).alias("direct"),
+                                pl.concat_list(
                                     [
-                                        pl.col("opentargets_props").struct.field(
-                                            "direct_sources"
+                                        pl.coalesce(
+                                            [
+                                                pl.col("drugbank_props")
+                                                .struct.field("sources")
+                                                .struct.field("indirect"),
+                                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                            ]
                                         ),
-                                        pl.lit([], dtype=pl.List(pl.Utf8)),
+                                        pl.coalesce(
+                                            [
+                                                pl.col("opentargets_props")
+                                                .struct.field("sources")
+                                                .struct.field("indirect"),
+                                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                            ]
+                                        ),
                                     ]
-                                ),
+                                ).alias("indirect"),
                             ]
-                        ).alias("direct_sources"),
-                        pl.concat_list(
-                            [
-                                pl.coalesce(
-                                    [
-                                        pl.col("drugbank_props").struct.field(
-                                            "indirect_sources"
-                                        ),
-                                        pl.lit([], dtype=pl.List(pl.Utf8)),
-                                    ]
-                                ),
-                                pl.coalesce(
-                                    [
-                                        pl.col("opentargets_props").struct.field(
-                                            "indirect_sources"
-                                        ),
-                                        pl.lit([], dtype=pl.List(pl.Utf8)),
-                                    ]
-                                ),
-                            ]
-                        ).alias("indirect_sources"),
+                        ).alias("sources"),
                         pl.col("drugbank_props")
                         .struct.field("interaction_description")
                         .alias(

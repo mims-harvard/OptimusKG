@@ -21,8 +21,9 @@ silver.nodes.drug:
         has_been_withdrawn: pl.Boolean
         is_approved: pl.Boolean
         trade_names: pl.List(pl.String)
-        direct_sources: pl.List(pl.String)
-        indirect_sources: pl.List(pl.String)
+        sources:
+          direct: pl.List(pl.String)
+          indirect: pl.List(pl.String)
         source_ids: pl.List(pl.String)
         cd_id: pl.String
         cd_formula: pl.String

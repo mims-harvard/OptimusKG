@@ -6,8 +6,9 @@ silver.nodes.disease:
       id: pl.String
       label: pl.String
       properties:
-        direct_sources: pl.List(pl.String)
-        indirect_sources: pl.List(pl.String)
+        sources:
+          direct: pl.List(pl.String)
+          indirect: pl.List(pl.String)
         name: pl.String
         description: pl.String
         code: pl.String
