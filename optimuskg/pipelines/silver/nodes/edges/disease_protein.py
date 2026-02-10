@@ -3,7 +3,13 @@ import logging
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation
+from optimuskg.pipelines.silver.nodes.constants import (
+    Edge,
+    Node,
+    Relation,
+    Source,
+    resolve_sources,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +50,9 @@ def run(  # noqa: PLR0913
                 [
                     pl.struct(
                         [
-                            pl.lit(["opentargets"]).alias("direct"),
+                            pl.lit([Source.OPEN_TARGETS])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                         ]
                     ).alias("sources"),
@@ -79,10 +87,15 @@ def run(  # noqa: PLR0913
                     pl.col("nof_snps").cast(pl.Int16).alias("number_of_snps"),
                     pl.struct(
                         [
-                            pl.lit(["disgenet"]).alias("direct"),
+                            pl.lit([Source.DISGENET])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
                             pl.col("source")
                             .str.split(";")
-                            .cast(pl.List(pl.Utf8))
+                            .cast(pl.List(pl.String))
+                            .map_elements(
+                                resolve_sources, return_dtype=pl.List(pl.String)
+                            )
                             .alias("indirect"),
                         ]
                     ).alias("sources"),

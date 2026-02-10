@@ -1,7 +1,7 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Node
+from optimuskg.pipelines.silver.nodes.constants import Node, Source
 
 
 def run(  # noqa: PLR0913
@@ -63,7 +63,9 @@ def run(  # noqa: PLR0913
                     "ingredient_id",
                     "rxnorm_name",
                     "rxnorm_term_type",
-                    pl.lit(["ONSIDES"]).alias("direct_sources"),
+                    pl.lit([Source.ONSIDES])
+                    .cast(pl.List(pl.String))
+                    .alias("direct_sources"),
                 ]
             ).unique(subset="ingredient_id"),
             left_on="id",

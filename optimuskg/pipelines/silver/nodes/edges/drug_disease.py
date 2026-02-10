@@ -7,7 +7,9 @@ from optimuskg.pipelines.silver.nodes.constants import (
     Edge,
     Node,
     Relation,
+    Source,
     resolve_relation,
+    resolve_sources,
 )
 
 logger = logging.getLogger(__name__)
@@ -47,10 +49,14 @@ def run(
                     pl.col("ids").alias("reference_ids"),
                     pl.struct(
                         [
-                            pl.lit(["opentargets"]).alias("direct"),
-                            pl.concat_list([pl.col("source")]).alias(
-                                "indirect"
-                            ),  # transform source to list
+                            pl.lit([Source.OPEN_TARGETS])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
+                            pl.concat_list([pl.col("source")])
+                            .map_elements(
+                                resolve_sources, return_dtype=pl.List(pl.String)
+                            )
+                            .alias("indirect"),
                         ]
                     ).alias("sources"),
                     pl.col("max_phase_for_indication").alias(
@@ -77,8 +83,10 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit(["drugcentral"]).alias("direct"),
-                            pl.lit([]).cast(pl.List(pl.Utf8)).alias("indirect"),
+                            pl.lit([Source.DRUG_CENTRAL])
+                            .cast(pl.List(pl.String))
+                            .alias("direct"),
+                            pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                         ]
                     ).alias("sources"),
                     pl.col("structure_id").alias("structure_id"),
@@ -104,18 +112,18 @@ def run(
                         pl.coalesce(
                             [
                                 pl.col("relation"),
-                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                pl.lit([], dtype=pl.List(pl.String)),
                             ]
                         ),
                         pl.coalesce(
                             [
                                 pl.col("relation_right"),
-                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                pl.lit([], dtype=pl.List(pl.String)),
                             ]
                         ),
                     ]
                 )
-                .map_elements(resolve_relation, return_dtype=pl.Utf8)
+                .map_elements(resolve_relation, return_dtype=pl.String)
                 .alias("relation"),
                 pl.coalesce([pl.col("undirected"), pl.col("undirected_right")]).alias(
                     "undirected"
@@ -131,7 +139,7 @@ def run(
                                                 pl.col("drugcentral_props")
                                                 .struct.field("sources")
                                                 .struct.field("direct"),
-                                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                                pl.lit([], dtype=pl.List(pl.String)),
                                             ]
                                         ),
                                         pl.coalesce(
@@ -139,7 +147,7 @@ def run(
                                                 pl.col("opentargets_props")
                                                 .struct.field("sources")
                                                 .struct.field("direct"),
-                                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                                pl.lit([], dtype=pl.List(pl.String)),
                                             ]
                                         ),
                                     ]
@@ -151,7 +159,7 @@ def run(
                                                 pl.col("drugcentral_props")
                                                 .struct.field("sources")
                                                 .struct.field("indirect"),
-                                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                                pl.lit([], dtype=pl.List(pl.String)),
                                             ]
                                         ),
                                         pl.coalesce(
@@ -159,7 +167,7 @@ def run(
                                                 pl.col("opentargets_props")
                                                 .struct.field("sources")
                                                 .struct.field("indirect"),
-                                                pl.lit([], dtype=pl.List(pl.Utf8)),
+                                                pl.lit([], dtype=pl.List(pl.String)),
                                             ]
                                         ),
                                     ]
