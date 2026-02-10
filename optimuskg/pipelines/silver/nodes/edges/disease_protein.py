@@ -42,8 +42,12 @@ def run(  # noqa: PLR0913
             pl.lit(True).alias("undirected"),
             pl.struct(
                 [
-                    pl.lit(["opentargets"]).alias("direct_sources"),
-                    pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
+                    pl.struct(
+                        [
+                            pl.lit(["opentargets"]).alias("direct"),
+                            pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
+                        ]
+                    ).alias("sources"),
                     pl.col("metadata").struct.field("score").alias("evidence_score"),
                     pl.col("metadata")
                     .struct.field("evidence_count")
@@ -73,11 +77,15 @@ def run(  # noqa: PLR0913
                     pl.col("year_final").alias("year_final"),
                     pl.col("nof_pmids").cast(pl.Int16).alias("number_of_pmids"),
                     pl.col("nof_snps").cast(pl.Int16).alias("number_of_snps"),
-                    pl.lit(["disgenet"]).alias("direct_sources"),
-                    pl.col("source")
-                    .str.split(";")
-                    .cast(pl.List(pl.Utf8))
-                    .alias("indirect_sources"),
+                    pl.struct(
+                        [
+                            pl.lit(["disgenet"]).alias("direct"),
+                            pl.col("source")
+                            .str.split(";")
+                            .cast(pl.List(pl.Utf8))
+                            .alias("indirect"),
+                        ]
+                    ).alias("sources"),
                 ]
             ).alias("disgenet_props"),
         )
@@ -128,30 +136,34 @@ def run(  # noqa: PLR0913
                                     "number_of_snps",
                                 ]
                             ],
-                            pl.concat_list(
+                            pl.struct(
                                 [
-                                    pl.col("opentargets_props").struct.field(
-                                        "direct_sources"
-                                    ),
-                                    pl.col("disgenet_props").struct.field(
-                                        "direct_sources"
-                                    ),
+                                    pl.concat_list(
+                                        [
+                                            pl.col("opentargets_props")
+                                            .struct.field("sources")
+                                            .struct.field("direct"),
+                                            pl.col("disgenet_props")
+                                            .struct.field("sources")
+                                            .struct.field("direct"),
+                                        ]
+                                    )
+                                    .list.unique()
+                                    .alias("direct"),
+                                    pl.concat_list(
+                                        [
+                                            pl.col("opentargets_props")
+                                            .struct.field("sources")
+                                            .struct.field("indirect"),
+                                            pl.col("disgenet_props")
+                                            .struct.field("sources")
+                                            .struct.field("indirect"),
+                                        ]
+                                    )
+                                    .list.unique()
+                                    .alias("indirect"),
                                 ]
-                            )
-                            .list.unique()
-                            .alias("direct_sources"),
-                            pl.concat_list(
-                                [
-                                    pl.col("opentargets_props").struct.field(
-                                        "indirect_sources"
-                                    ),
-                                    pl.col("disgenet_props").struct.field(
-                                        "indirect_sources"
-                                    ),
-                                ]
-                            )
-                            .list.unique()
-                            .alias("indirect_sources"),
+                            ).alias("sources"),
                         ]
                     )
                 )

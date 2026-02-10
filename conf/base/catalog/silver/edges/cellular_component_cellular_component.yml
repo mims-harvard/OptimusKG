@@ -9,8 +9,9 @@ silver.edges.cellular_component_cellular_component:
       relation: pl.String
       undirected: pl.Boolean
       properties:
-        direct_sources: pl.List(pl.String)
-        indirect_sources: pl.List(pl.String)
+        sources:
+          direct: pl.List(pl.String)
+          indirect: pl.List(pl.String)
   metadata:
     checksum: d3afe7323eeea4ce9ba2645082b090a9
     kedro-viz:

@@ -1,8 +1,21 @@
+import os
 import warnings
 
 # Ignore warnings about dataset names containing '.' characters.
 # We use '.' in dataset names to indicate a hierarchy of datasets.
-# NOTE: This must be set before importing hooks, which trigger node registration.
+# NOTE: The warnings.filterwarnings call suppresses these in the main process.
+# The PYTHONWARNINGS env var is needed for ParallelRunner child processes
+# (spawn mode on macOS), where settings.py is never imported because
+# _bootstrap_subprocess is skipped when PACKAGE_NAME is None.
+_DOT_WARNING_FILTER = "ignore::UserWarning:kedro.pipeline.node"
+_existing_py_warnings = os.environ.get("PYTHONWARNINGS", "")
+if _DOT_WARNING_FILTER not in _existing_py_warnings:
+    os.environ["PYTHONWARNINGS"] = (
+        f"{_existing_py_warnings},{_DOT_WARNING_FILTER}"
+        if _existing_py_warnings
+        else _DOT_WARNING_FILTER
+    )
+
 warnings.filterwarnings(
     "ignore",
     message="Dataset name '.*' contains '.' characters.*",

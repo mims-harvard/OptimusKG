@@ -195,8 +195,12 @@ def run(
                 pl.lit(True).alias("undirected"),
                 pl.struct(
                     [
-                        pl.lit(["CTD"]).alias("direct_sources"),
-                        pl.lit(["GO"]).alias("indirect_sources"),
+                        pl.struct(
+                            [
+                                pl.lit(["CTD"]).alias("direct"),
+                                pl.lit(["GO"]).alias("indirect"),
+                            ]
+                        ).alias("sources"),
                         pl.col("evidence_count"),
                         pl.col("number_of_receptors"),
                         pl.col("receptors"),

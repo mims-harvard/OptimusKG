@@ -134,27 +134,22 @@ def get_node_metrics(  # noqa: PLR0912
             total=properties_count.sum(),
         )
 
-        # Collect sources from both 'sources' list and 'source' string columns
+        # Collect sources from the nested 'sources' struct (direct + indirect)
         all_sources = []
 
-        # Handle 'sources' column (list of strings) - explode and collect
         if "sources" in df_unnested.columns:
-            sources_from_list = (
-                df_unnested.select("sources")
-                .filter(pl.col("sources").is_not_null())
-                .explode("sources")["sources"]
-                .to_list()
-            )
-            all_sources.extend([s for s in sources_from_list if s])
-
-        # Handle 'source' column (single string) - collect directly
-        if "source" in df_unnested.columns:
-            sources_from_string = (
-                df_unnested.select("source")
-                .filter(pl.col("source").is_not_null())["source"]
-                .to_list()
-            )
-            all_sources.extend([s for s in sources_from_string if s])
+            sources_col = df_unnested["sources"]
+            # Extract direct and indirect lists from the sources struct
+            for field_name in ("direct", "indirect"):
+                if field_name in [f.name for f in sources_col.dtype.fields]:
+                    field_values = (
+                        sources_col.struct.field(field_name)
+                        .drop_nulls()
+                        .explode()
+                        .drop_nulls()
+                        .to_list()
+                    )
+                    all_sources.extend([s for s in field_values if s])
 
         # Count sources
         sources_counts = {}
@@ -231,18 +226,22 @@ def get_edge_metrics(edges: list[pl.DataFrame]) -> list[EdgeMetrics]:
             total=properties_count.sum(),
         )
 
-        # Collect sources from 'sources' list column only (edges don't have 'source' string column)
+        # Collect sources from the nested 'sources' struct (direct + indirect)
         all_sources = []
 
-        # Handle 'sources' column (list of strings) - explode and collect
         if "sources" in df_unnested.columns:
-            sources_from_list = (
-                df_unnested.select("sources")
-                .filter(pl.col("sources").is_not_null())
-                .explode("sources")["sources"]
-                .to_list()
-            )
-            all_sources.extend([s for s in sources_from_list if s])
+            sources_col = df_unnested["sources"]
+            # Extract direct and indirect lists from the sources struct
+            for field_name in ("direct", "indirect"):
+                if field_name in [f.name for f in sources_col.dtype.fields]:
+                    field_values = (
+                        sources_col.struct.field(field_name)
+                        .drop_nulls()
+                        .explode()
+                        .drop_nulls()
+                        .to_list()
+                    )
+                    all_sources.extend([s for s in field_values if s])
 
         # Count sources (for edges, keep only prefix if source has ":")
         sources_counts = {}

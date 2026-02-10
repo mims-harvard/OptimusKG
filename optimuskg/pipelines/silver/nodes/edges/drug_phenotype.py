@@ -24,8 +24,12 @@ def run(
         pl.lit(True).alias("undirected"),
         pl.struct(
             [
-                pl.lit(["OnSIDES"]).alias("direct_sources"),
-                pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
+                pl.struct(
+                    [
+                        pl.lit(["OnSIDES"]).alias("direct"),
+                        pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
+                    ]
+                ).alias("sources"),
                 pl.lit(None, dtype=pl.List(pl.Utf8)).alias("reference_ids"),
                 pl.lit(None, dtype=pl.Float64).alias("highest_clinical_trial_phase"),
                 pl.lit(None, dtype=pl.Utf8).alias("structure_id"),
@@ -54,10 +58,14 @@ def run(
             pl.lit(True).alias("undirected"),
             pl.struct(
                 [
-                    pl.lit(["opentargets"]).alias("direct_sources"),
-                    pl.concat_list([pl.col("source")]).alias(
-                        "indirect_sources"
-                    ),  # transform source to list
+                    pl.struct(
+                        [
+                            pl.lit(["opentargets"]).alias("direct"),
+                            pl.concat_list([pl.col("source")]).alias(
+                                "indirect"
+                            ),  # transform source to list
+                        ]
+                    ).alias("sources"),
                     pl.col("ids").alias("reference_ids"),
                     pl.col("max_phase_for_indication").alias(
                         "highest_clinical_trial_phase"
@@ -80,8 +88,12 @@ def run(
         pl.lit(True).alias("undirected"),
         pl.struct(
             [
-                pl.lit(["drugcentral"]).alias("direct_sources"),
-                pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
+                pl.struct(
+                    [
+                        pl.lit(["drugcentral"]).alias("direct"),
+                        pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
+                    ]
+                ).alias("sources"),
                 pl.lit(None, dtype=pl.List(pl.Utf8)).alias("reference_ids"),
                 pl.lit(None, dtype=pl.Float64).alias("highest_clinical_trial_phase"),
                 pl.col("structure_id").alias("structure_id"),

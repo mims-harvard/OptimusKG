@@ -20,7 +20,8 @@ def run(  # noqa: PLR0913
                 drug_drug.with_columns(
                     [
                         pl.col("properties")
-                        .struct.field("direct_sources")
+                        .struct.field("sources")
+                        .struct.field("direct")
                         .alias("direct_sources")
                     ]
                 )
@@ -30,7 +31,8 @@ def run(  # noqa: PLR0913
                     [
                         pl.col("from").alias("id"),
                         pl.col("properties")
-                        .struct.field("direct_sources")
+                        .struct.field("sources")
+                        .struct.field("direct")
                         .alias("direct_sources"),
                     ]
                 ),
@@ -38,7 +40,8 @@ def run(  # noqa: PLR0913
                     [
                         pl.col("from").alias("id"),
                         pl.col("properties")
-                        .struct.field("direct_sources")
+                        .struct.field("sources")
+                        .struct.field("direct")
                         .alias("direct_sources"),
                     ]
                 ),
@@ -46,7 +49,8 @@ def run(  # noqa: PLR0913
                     [
                         pl.col("from").alias("id"),
                         pl.col("properties")
-                        .struct.field("direct_sources")
+                        .struct.field("sources")
+                        .struct.field("direct")
                         .alias("direct_sources"),
                     ]
                 ),
@@ -149,17 +153,19 @@ def run(  # noqa: PLR0913
                     .then(pl.col("trade_names"))
                     .otherwise(None)
                     .alias("trade_names"),
-                    pl.coalesce(
-                        [
-                            pl.col("direct_sources"),
-                            pl.col("cross_references").list.eval(
-                                pl.element().struct.field("source")
-                            ),
-                        ]
-                    )
-                    .list.unique()
-                    .alias("direct_sources"),
-                    pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
+                    pl.struct(
+                        pl.coalesce(
+                            [
+                                pl.col("direct_sources"),
+                                pl.col("cross_references").list.eval(
+                                    pl.element().struct.field("source")
+                                ),
+                            ]
+                        )
+                        .list.unique()
+                        .alias("direct"),
+                        pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
+                    ).alias("sources"),
                     pl.col("cross_references")
                     .list.eval(pl.element().struct.field("ids"))
                     .list.eval(pl.element().explode())
