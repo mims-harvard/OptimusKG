@@ -18,7 +18,7 @@ def run(  # noqa: PLR0913
     )
     vocabulary = vocabulary.with_columns(
         pl.col("drugbank_id")
-        .map_elements(lambda x: f"DRUGBANK:{x}", return_dtype=pl.Utf8)
+        .map_elements(lambda x: f"DRUGBANK:{x}", return_dtype=pl.String)
         .alias("drugbank_id"),
     )
     return vocabulary.sort(by="drugbank_id")
