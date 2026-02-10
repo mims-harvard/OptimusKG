@@ -21,7 +21,7 @@ gold.metrics.nodes:
         - key: pl.String
           value: pl.Int64
   metadata:
-    checksum: d68200805f2e503ac349a9a598b5814f
+    checksum: 97bb045014da8b029b23a09257899c52
     kedro-viz:
       layer: gold
 
@@ -47,6 +47,6 @@ gold.metrics.edges:
         - key: pl.String
           value: pl.Int64
   metadata:
-    checksum: d68200805f2e503ac349a9a598b5814f
+    checksum: e725f65c91fdb598825caea532ea8a82
     kedro-viz:
       layer: gold

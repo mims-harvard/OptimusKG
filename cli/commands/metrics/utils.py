@@ -59,23 +59,32 @@ def property_stats(property_counts: pl.Series) -> dict:
 def collect_sources(
     df: pl.DataFrame, *, prefix_only: bool = False
 ) -> list[dict[str, object]]:
-    """Extract source distribution from a DataFrame with a ``properties`` struct."""
+    """Extract source distribution from a DataFrame with a ``properties`` struct.
+
+    The ``sources`` property is expected to be a struct with ``direct`` and
+    ``indirect`` fields, each containing a ``List(String)``.  Both lists are
+    flattened and combined into a single distribution.
+    """
     property_fields = [field.name for field in df["properties"].dtype.fields]
     df_unnested = df.unnest("properties")
 
     parts: list[pl.Series] = []
 
     if "sources" in property_fields:
-        sources_series = (
-            df_unnested.select("sources")
-            .filter(pl.col("sources").is_not_null())
-            .explode("sources")
-            .filter(pl.col("sources").is_not_null())
-            .to_series()
-        )
-        if prefix_only:
-            sources_series = sources_series.str.split(":").list.first()
-        parts.append(sources_series)
+        # sources is Struct({'direct': List(String), 'indirect': List(String)})
+        sources_df = df_unnested.select("sources").unnest("sources")
+        for sub_field in ("direct", "indirect"):
+            if sub_field in sources_df.columns:
+                series = (
+                    sources_df.select(sub_field)
+                    .filter(pl.col(sub_field).is_not_null())
+                    .explode(sub_field)
+                    .filter(pl.col(sub_field).is_not_null())
+                    .to_series()
+                )
+                if prefix_only:
+                    series = series.str.split(":").list.first()
+                parts.append(series)
 
     if "source" in property_fields:
         source_series = (
