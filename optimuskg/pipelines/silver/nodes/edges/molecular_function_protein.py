@@ -21,7 +21,7 @@ def run(
                     "label"
                 ),
                 pl.lit(True).alias("undirected"),
-                pl.col("source").unique().alias("sources"),
+                pl.col("source").unique().alias("indirect_sources"),
                 pl.col("evidence").unique(),
                 pl.col("aspect").unique().alias("aspect"),
                 pl.col("gene_product").unique(),
@@ -42,7 +42,8 @@ def run(
                 pl.col("undirected"),
                 pl.struct(
                     [
-                        pl.col("sources"),
+                        pl.lit(["opentargets"]).alias("direct_sources"),
+                        pl.col("indirect_sources"),
                         pl.col("evidence"),
                         pl.col("gene_product"),
                         pl.col("eco_ids"),

@@ -21,7 +21,8 @@ silver.nodes.drug:
         has_been_withdrawn: pl.Boolean
         is_approved: pl.Boolean
         trade_names: pl.List(pl.String)
-        sources: pl.List(pl.String)
+        direct_sources: pl.List(pl.String)
+        indirect_sources: pl.List(pl.String)
         source_ids: pl.List(pl.String)
         cd_id: pl.String
         cd_formula: pl.String
@@ -50,6 +51,6 @@ silver.nodes.drug:
         status: pl.String
         struct_id: pl.String
   metadata:
-    checksum: e78f5c8d5049cac76b469a6083996210
+    checksum: 1a043f0010dd41ccdc434e1b0a4fb4ee
     kedro-viz:
       layer: silver

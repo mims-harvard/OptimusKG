@@ -12,7 +12,8 @@ silver.edges.drug_protein:
         source_ids: pl.List(pl.String)
         source_urls: pl.List(pl.String)
         mechanisms_of_action: pl.List(pl.String)
-        sources: pl.List(pl.String)
+        direct_sources: pl.List(pl.String)
+        indirect_sources: pl.List(pl.String)
   metadata:
     checksum: e406c19a2a702245f92f1a7158b40a0c
     kedro-viz:

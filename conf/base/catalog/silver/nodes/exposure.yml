@@ -6,7 +6,8 @@ silver.nodes.exposure:
       id: pl.String
       label: pl.String
       properties:
-        sources: pl.List(pl.String)
+        direct_sources: pl.List(pl.String)
+        indirect_sources: pl.List(pl.String)
         name: pl.String
         source_categories: pl.List(pl.String)
         source_details: pl.String

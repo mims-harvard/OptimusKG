@@ -9,7 +9,8 @@ silver.edges.exposure_exposure:
       relation: pl.String
       undirected: pl.Boolean
       properties:
-        sources: pl.List(pl.String)
+        direct_sources: pl.List(pl.String)
+        indirect_sources: pl.List(pl.String)
         evidence_count: pl.UInt32
         number_of_receptors: pl.Int64
         receptors: pl.List(pl.String)

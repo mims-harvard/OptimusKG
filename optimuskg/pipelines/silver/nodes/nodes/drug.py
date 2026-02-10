@@ -18,26 +18,36 @@ def run(  # noqa: PLR0913
         pl.concat(
             [
                 drug_drug.with_columns(
-                    [pl.col("properties").struct.field("sources").alias("sources")]
+                    [
+                        pl.col("properties")
+                        .struct.field("direct_sources")
+                        .alias("direct_sources")
+                    ]
                 )
-                .unpivot(index=["sources"], on=["from", "to"], value_name="id")
-                .select(["id", "sources"]),
+                .unpivot(index=["direct_sources"], on=["from", "to"], value_name="id")
+                .select(["id", "direct_sources"]),
                 drug_disease.select(
                     [
                         pl.col("from").alias("id"),
-                        pl.col("properties").struct.field("sources").alias("sources"),
+                        pl.col("properties")
+                        .struct.field("direct_sources")
+                        .alias("direct_sources"),
                     ]
                 ),
                 drug_phenotype.select(
                     [
                         pl.col("from").alias("id"),
-                        pl.col("properties").struct.field("sources").alias("sources"),
+                        pl.col("properties")
+                        .struct.field("direct_sources")
+                        .alias("direct_sources"),
                     ]
                 ),
                 drug_protein.select(
                     [
                         pl.col("from").alias("id"),
-                        pl.col("properties").struct.field("sources").alias("sources"),
+                        pl.col("properties")
+                        .struct.field("direct_sources")
+                        .alias("direct_sources"),
                     ]
                 ),
             ]
@@ -49,7 +59,7 @@ def run(  # noqa: PLR0913
                     "ingredient_id",
                     "rxnorm_name",
                     "rxnorm_term_type",
-                    pl.lit(["ONSIDES"]).alias("sources"),
+                    pl.lit(["ONSIDES"]).alias("direct_sources"),
                 ]
             ).unique(subset="ingredient_id"),
             left_on="id",
@@ -141,14 +151,15 @@ def run(  # noqa: PLR0913
                     .alias("trade_names"),
                     pl.coalesce(
                         [
-                            pl.col("sources"),
+                            pl.col("direct_sources"),
                             pl.col("cross_references").list.eval(
                                 pl.element().struct.field("source")
                             ),
                         ]
                     )
                     .list.unique()
-                    .alias("sources"),
+                    .alias("direct_sources"),
+                    pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
                     pl.col("cross_references")
                     .list.eval(pl.element().struct.field("ids"))
                     .list.eval(pl.element().explode())

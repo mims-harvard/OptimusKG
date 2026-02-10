@@ -184,7 +184,8 @@ def run(
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
-                        pl.lit(["CTD", "MONDO"]).alias("sources"),
+                        pl.lit(["CTD"]).alias("direct_sources"),
+                        pl.lit(["MONDO"]).alias("indirect_sources"),
                         pl.col("evidence_count"),
                         pl.col("number_of_receptors"),
                         pl.col("receptors"),

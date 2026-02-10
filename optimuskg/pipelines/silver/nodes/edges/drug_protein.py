@@ -77,7 +77,8 @@ def run(
             pl.lit(False).alias("undirected"),
             pl.struct(
                 [
-                    pl.lit(["drugbank", "opentargets"]).alias("sources"),
+                    pl.lit(["drugbank", "opentargets"]).alias("direct_sources"),
+                    pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
                 ]
             ).alias("drugbank_props"),
         )
@@ -100,7 +101,7 @@ def run(
                 .drop_nulls()
                 .unique()
                 .alias("mechanisms_of_action"),
-                pl.col("source").drop_nulls().unique().alias("sources"),
+                pl.col("source").drop_nulls().unique().alias("indirect_sources"),
                 pl.concat_list("ids")
                 .flatten()
                 .drop_nulls()
@@ -127,7 +128,8 @@ def run(
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
-                        pl.col("sources"),
+                        pl.lit(["opentargets"]).alias("direct_sources"),
+                        pl.col("indirect_sources"),
                         pl.col("source_ids"),
                         pl.col("source_urls"),
                         pl.col("mechanisms_of_action"),
@@ -177,12 +179,28 @@ def run(
                             ],
                             pl.concat_list(
                                 [
-                                    pl.col("opentargets_props").struct.field("sources"),
-                                    pl.col("drugbank_props").struct.field("sources"),
+                                    pl.col("opentargets_props").struct.field(
+                                        "direct_sources"
+                                    ),
+                                    pl.col("drugbank_props").struct.field(
+                                        "direct_sources"
+                                    ),
                                 ]
                             )
                             .list.unique()
-                            .alias("sources"),
+                            .alias("direct_sources"),
+                            pl.concat_list(
+                                [
+                                    pl.col("opentargets_props").struct.field(
+                                        "indirect_sources"
+                                    ),
+                                    pl.col("drugbank_props").struct.field(
+                                        "indirect_sources"
+                                    ),
+                                ]
+                            )
+                            .list.unique()
+                            .alias("indirect_sources"),
                         ]
                     )
                 )

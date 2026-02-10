@@ -50,11 +50,10 @@ def run(  # noqa: PLR0913
             pl.lit(Node.DISEASE).alias("label"),
             pl.struct(
                 [
-                    pl.col("id")
-                    .str.extract(r"^([A-Za-z]+)_")
-                    .alias(
-                        "source"
-                    ),  # TODO: We define the source as it's ontology, but the actual sources (opentargets, drugcentral, etc) should be used instead
+                    pl.lit(["opentargets", "drugcentral", "MONDO"]).alias(
+                        "direct_sources"
+                    ),
+                    pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
                     pl.coalesce([pl.col("name"), pl.col("name_right")]).alias("name"),
                     pl.coalesce(
                         [pl.col("description"), pl.col("description_right")]

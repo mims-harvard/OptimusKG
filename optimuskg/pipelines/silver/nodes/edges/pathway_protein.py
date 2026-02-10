@@ -23,7 +23,8 @@ def run(
                 pl.lit(True).alias("undirected"),
                 pl.struct(
                     [
-                        pl.lit(["opentargets"]).alias("sources"),
+                        pl.lit(["opentargets"]).alias("direct_sources"),
+                        pl.lit(["REACTOME"]).alias("indirect_sources"),
                     ]
                 ).alias("properties"),
             ]

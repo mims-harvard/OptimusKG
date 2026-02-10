@@ -89,9 +89,10 @@ def run(  # noqa: PLR0913
                 pl.struct(
                     [
                         pl.when(pl.col("id").str.starts_with("NCBIGene"))
-                        .then(pl.lit(["UMLS"]))
+                        .then(pl.lit(["disgenet"]))
                         .otherwise(pl.lit(["opentargets", "BGEE"]))
-                        .alias("sources"),
+                        .alias("direct_sources"),
+                        pl.lit([]).cast(pl.List(pl.String)).alias("indirect_sources"),
                         pl.coalesce([pl.col("symbol"), pl.col("gene_symbol")]).alias(
                             "symbol"
                         ),

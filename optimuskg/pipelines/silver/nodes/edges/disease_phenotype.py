@@ -47,7 +47,7 @@ def run(
                 .unique()
                 .alias("references"),
                 pl.col("sex").drop_nulls().unique().alias("sexes"),
-                pl.col("resource").drop_nulls().unique().alias("sources"),
+                pl.col("resource").drop_nulls().unique().alias("indirect_sources"),
             ]
         )
         .select(
@@ -58,6 +58,8 @@ def run(
             pl.lit(True).alias("undirected"),
             pl.struct(
                 [
+                    pl.lit(["opentargets"]).alias("direct_sources"),
+                    pl.col("indirect_sources"),
                     pl.col("aspect"),
                     pl.col("bio_curation"),
                     pl.col("evidence_type"),
@@ -67,7 +69,6 @@ def run(
                     pl.col("qualifier_not"),
                     pl.col("references"),
                     pl.col("sexes"),
-                    pl.col("sources"),
                 ]
             ).alias("properties"),
         )
