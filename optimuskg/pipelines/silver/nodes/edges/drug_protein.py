@@ -81,7 +81,7 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit([Source.DRUGBANK, Source.OPENTARGETS])
+                            pl.lit([Source.DRUG_BANK, Source.OPEN_TARGETS])
                             .cast(pl.List(pl.String))
                             .alias("direct"),
                             pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
@@ -138,7 +138,7 @@ def run(
                     [
                         pl.struct(
                             [
-                                pl.lit([Source.OPENTARGETS])
+                                pl.lit([Source.OPEN_TARGETS])
                                 .cast(pl.List(pl.String))
                                 .alias("direct"),
                                 pl.col("indirect_sources")

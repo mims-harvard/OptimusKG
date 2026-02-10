@@ -129,7 +129,7 @@ def run(  # noqa: PLR0913
                                     pl.lit([Source.DISGENET]).cast(pl.List(pl.String))
                                 )
                                 .otherwise(
-                                    pl.lit([Source.OPENTARGETS, Source.BGEE]).cast(
+                                    pl.lit([Source.OPEN_TARGETS, Source.BGEE]).cast(
                                         pl.List(pl.String)
                                     )
                                 )

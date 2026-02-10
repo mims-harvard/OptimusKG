@@ -49,7 +49,7 @@ def run(
                     pl.col("ids").alias("reference_ids"),
                     pl.struct(
                         [
-                            pl.lit([Source.OPENTARGETS])
+                            pl.lit([Source.OPEN_TARGETS])
                             .cast(pl.List(pl.String))
                             .alias("direct"),
                             pl.concat_list([pl.col("source")])
@@ -83,7 +83,7 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit([Source.DRUGCENTRAL])
+                            pl.lit([Source.DRUG_CENTRAL])
                             .cast(pl.List(pl.String))
                             .alias("direct"),
                             pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),

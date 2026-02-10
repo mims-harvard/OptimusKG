@@ -26,22 +26,26 @@ class Edge(StrEnum):
 
 
 class Source(StrEnum):
-    """Data source/database identifiers for provenance tracking."""
+    """Data source/database identifiers for provenance tracking.
+
+    All values are uppercase with underscores, matching the member name.
+    Native database casing is handled via aliases in ``_SOURCE_BY_RAW``.
+    """
 
     # Direct sources
     BGEE = "BGEE"
     CTD = "CTD"
-    DISGENET = "disgenet"
-    DRUGBANK = "drugbank"
-    DRUGCENTRAL = "drugcentral"
+    DISGENET = "DISGENET"
+    DRUG_BANK = "DRUG_BANK"
+    DRUG_CENTRAL = "DRUG_CENTRAL"
     GO = "GO"
     HPO = "HPO"
-    MEDDRA = "MedDRA"
+    MEDDRA = "MEDDRA"
     MESH = "MESH"
     MONDO = "MONDO"
-    ONSIDES = "OnSIDES"
-    OPENTARGETS = "opentargets"
-    PRIMEKG = "PrimeKG"
+    ONSIDES = "ONSIDES"
+    OPEN_TARGETS = "OPEN_TARGETS"
+    PRIMEKG = "PRIMEKG"
     REACTOME = "REACTOME"
     UBERON = "UBERON"
 
@@ -51,66 +55,101 @@ class Source(StrEnum):
     GENOMICS_ENGLAND = "GENOMICS_ENGLAND"
     ORPHANET = "ORPHANET"
     PSYGENET = "PSYGENET"
-    UNIPROT = "UniProt"
+    UNIPROT = "UNIPROT"
 
     # Indirect sources from PPI databases
     APID = "APID"
-    BIOGRID = "biogrid"
-    BIOPLEX = "bioplex"
-    COFRAC = "CoFrac"
-    ENCODE = "encode"
-    HIUNION = "hiunion"
-    HINT_BINARY = "HINT-binary"
-    HINT_COMPLEX = "HINT-complex"
+    BIOGRID = "BIOGRID"
+    BIOPLEX = "BIOPLEX"
+    COFRAC = "COFRAC"
+    ENCODE = "ENCODE"
+    HIUNION = "HIUNION"
+    HINT_BINARY = "HINT_BINARY"
+    HINT_COMPLEX = "HINT_COMPLEX"
     HIPPIE = "HIPPIE"
-    INNATEDB = "innatedb"
-    INSIDER = "insider"
-    INSTRUCT = "instruct"
-    INTACT = "intact"
-    INTERACTOME3D = "interactome3d"
-    INWEB = "inweb"
-    KINOMENETX = "KinomeNetX"
-    LITBM17 = "litbm17"
-    MINT = "mint"
-    PHOSPHOSP = "PhosphoSP"
-    PINA = "pina"
-    QUBIC = "qubic"
-    SIGNALINK = "signalink"
+    INNATEDB = "INNATEDB"
+    INSIDER = "INSIDER"
+    INSTRUCT = "INSTRUCT"
+    INTACT = "INTACT"
+    INTERACTOME3D = "INTERACTOME3D"
+    INWEB = "INWEB"
+    KINOMENETX = "KINOMENETX"
+    LITBM17 = "LITBM17"
+    MINT = "MINT"
+    PHOSPHOSP = "PHOSPHOSP"
+    PINA = "PINA"
+    QUBIC = "QUBIC"
+    SIGNALINK = "SIGNALINK"
 
     # Indirect sources for OpenTargets
     ATC = "ATC"
     BNF = "BNF"
-    CLINICAL_TRIALS = "ClinicalTrials"
-    DAILY_MED = "DailyMed"
+    CLINICAL_TRIALS = "CLINICAL_TRIALS"
+    DAILY_MED = "DAILY_MED"
     DOI = "DOI"
     EMA = "EMA"
-    EXPERT = "Expert"
+    EXPERT = "EXPERT"
     FDA = "FDA"
     HMA = "HMA"
     INN = "INN"
-    INTERPRO = "InterPro"
+    INTERPRO = "INTERPRO"
     ISBN = "ISBN"
     IUPHAR = "IUPHAR"
     KEGG = "KEGG"
-    OTHER = "Other"
-    PATENT = "Patent"
+    OTHER = "OTHER"
+    PATENT = "PATENT"
     PMC = "PMC"
     PMDA = "PMDA"
-    PUBCHEM = "PubChem"
-    PUBMED = "PubMed"
+    PUBCHEM = "PUBCHEM"
+    PUBMED = "PUBMED"
     USAN = "USAN"
-    WIKIPEDIA = "Wikipedia"
+    WIKIPEDIA = "WIKIPEDIA"
 
 
 # Mapping from raw data strings to canonical Source enum members.
-# Built from enum values + explicit aliases for data variations.
+# Built automatically from enum values, plus aliases for native database casing.
 _SOURCE_BY_RAW: dict[str, Source] = {s.value: s for s in Source} | {
-    # DisGeNET uses uppercase "UNIPROT"; normalize to "UniProt"
-    "UNIPROT": Source.UNIPROT,
-    # DisGeNET uses "CTD_human"; normalize to CTD
+    # Native database casing aliases (lowercase, mixed-case, hyphenated, etc.)
+    "biogrid": Source.BIOGRID,
+    "bioplex": Source.BIOPLEX,
+    "ClinicalTrials": Source.CLINICAL_TRIALS,
+    "CoFrac": Source.COFRAC,
     "CTD_human": Source.CTD,
-    # HP ontology prefix; normalize to HPO
+    "DailyMed": Source.DAILY_MED,
+    "disgenet": Source.DISGENET,
+    "drugbank": Source.DRUG_BANK,
+    "drugcentral": Source.DRUG_CENTRAL,
+    "encode": Source.ENCODE,
+    "Expert": Source.EXPERT,
+    "HINT-binary": Source.HINT_BINARY,
+    "HINT-complex": Source.HINT_COMPLEX,
+    "hiunion": Source.HIUNION,
     "HP": Source.HPO,
+    "innatedb": Source.INNATEDB,
+    "insider": Source.INSIDER,
+    "instruct": Source.INSTRUCT,
+    "intact": Source.INTACT,
+    "interactome3d": Source.INTERACTOME3D,
+    "InterPro": Source.INTERPRO,
+    "inweb": Source.INWEB,
+    "KinomeNetX": Source.KINOMENETX,
+    "litbm17": Source.LITBM17,
+    "MedDRA": Source.MEDDRA,
+    "mint": Source.MINT,
+    "OnSIDES": Source.ONSIDES,
+    "opentargets": Source.OPEN_TARGETS,
+    "Other": Source.OTHER,
+    "Patent": Source.PATENT,
+    "PhosphoSP": Source.PHOSPHOSP,
+    "pina": Source.PINA,
+    "PrimeKG": Source.PRIMEKG,
+    "PubChem": Source.PUBCHEM,
+    "PubMed": Source.PUBMED,
+    "qubic": Source.QUBIC,
+    "signalink": Source.SIGNALINK,
+    "UNIPROT": Source.UNIPROT,
+    "UniProt": Source.UNIPROT,
+    "Wikipedia": Source.WIKIPEDIA,
 }
 
 

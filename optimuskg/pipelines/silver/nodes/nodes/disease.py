@@ -53,7 +53,7 @@ def run(  # noqa: PLR0913
                     pl.struct(
                         [
                             pl.lit(
-                                [Source.OPENTARGETS, Source.DRUGCENTRAL, Source.MONDO]
+                                [Source.OPEN_TARGETS, Source.DRUG_CENTRAL, Source.MONDO]
                             )
                             .cast(pl.List(pl.String))
                             .alias("direct"),

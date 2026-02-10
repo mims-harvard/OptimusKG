@@ -25,7 +25,7 @@ def run(
                     [
                         pl.struct(
                             [
-                                pl.lit([Source.OPENTARGETS])
+                                pl.lit([Source.OPEN_TARGETS])
                                 .cast(pl.List(pl.String))
                                 .alias("direct"),
                                 pl.lit([Source.REACTOME])
