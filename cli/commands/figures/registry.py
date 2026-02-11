@@ -7,6 +7,7 @@ from . import (
     degree_distribution,
     metaedge_bubble_plot,
     metapath_counts,
+    property_type_distribution,
 )
 
 FIGURES = {
@@ -16,4 +17,5 @@ FIGURES = {
     "degree-distribution": degree_distribution,
     "metaedge-bubble-plot": metaedge_bubble_plot,
     "metapath-counts": metapath_counts,
+    "property-type-distribution": property_type_distribution,
 }

@@ -1,6 +1,0 @@
-gold.kg.parquet:
-  type: partitions.PartitionedDataset
-  path: data/gold/formats/parquet
-  dataset:
-    type: optimuskg.datasets.polars.ParquetDataset
-  filename_suffix: ".parquet"
