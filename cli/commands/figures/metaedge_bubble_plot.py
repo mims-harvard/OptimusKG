@@ -12,9 +12,12 @@ from collections import defaultdict
 from pathlib import Path
 
 import matplotlib.colors as mcolors
+import matplotlib.figure as mfigure
 import matplotlib.pyplot as plt
 import numpy as np
 import polars as pl
+from matplotlib.axes import Axes
+
 from cli.commands.metrics.utils import load_parquet_dir
 from optimuskg.pipelines.silver.nodes.constants import Node
 
@@ -123,6 +126,10 @@ _ABBREVIATIONS: dict[str, str] = {
 
 _LEGEND_COLS = 3
 
+# Labels whose vertical position (in log-scale fraction) falls below this
+# threshold are placed *above* their bubble to avoid clipping at the bottom.
+_LABEL_BELOW_THRESHOLD = 0.15
+
 
 def _scale_sizes(
     values: np.ndarray,
@@ -135,6 +142,163 @@ def _scale_sizes(
     if hi == lo:
         return np.full_like(values, (min_size + max_size) / 2, dtype=float)
     return min_size + (max_size - min_size) * (values - lo) / (hi - lo)
+
+
+def _place_labels(
+    node_types: list[str],
+    xy: tuple[np.ndarray, np.ndarray],
+    sizes: np.ndarray,
+    ax: Axes,
+    log_y_bounds: tuple[float, float],
+) -> tuple[np.ndarray, np.ndarray, list[str]]:
+    """Compute label positions for each bubble, resolving overlaps.
+
+    Parameters
+    ----------
+    xy:
+        Tuple of ``(x, y)`` data arrays.
+    log_y_bounds:
+        Tuple of ``(log_y_min, log_y_max)`` for the y-axis range.
+
+    Returns ``(label_cx, label_cy, va_list)`` — x/y positions in display
+    coordinates and the vertical-alignment string for each label.
+    """
+    x, y = xy
+    log_y_min, log_y_max = log_y_bounds
+
+    # Bubble radius in display points (scatter size is area in pt^2).
+    radii_pt = np.sqrt(sizes) / 2
+
+    # Convert data positions to display coordinates.
+    display_pts = np.column_stack(
+        [ax.transData.transform((xi, yi)) for xi, yi in zip(x, y)]
+    ).T  # shape (N, 2)
+
+    # Approximate label dimensions in display points.
+    label_h = 10  # approx height of one label line at fontsize 8
+    label_w = 22  # approx half-width of a 3-char bold label
+
+    # Initial placement: below each bubble by default.
+    label_cx = display_pts[:, 0].copy()
+    label_cy = display_pts[:, 1].copy()
+    va_list: list[str] = []
+
+    for i in range(len(node_types)):
+        y_frac = (np.log10(y[i]) - log_y_min) / (log_y_max - log_y_min)
+        gap = 4 + radii_pt[i]
+        if y_frac < _LABEL_BELOW_THRESHOLD:
+            label_cy[i] += gap  # above
+            va_list.append("bottom")
+        else:
+            label_cy[i] -= gap  # below
+            va_list.append("top")
+
+    # Collision resolution helper.
+    def _boxes_overlap(i: int, j: int) -> bool:
+        dy_i = label_h if va_list[i] == "top" else -label_h
+        dy_j = label_h if va_list[j] == "top" else -label_h
+        b_i = (
+            label_cx[i] - label_w,
+            label_cx[i] + label_w,
+            min(label_cy[i], label_cy[i] - dy_i),
+            max(label_cy[i], label_cy[i] - dy_i),
+        )
+        b_j = (
+            label_cx[j] - label_w,
+            label_cx[j] + label_w,
+            min(label_cy[j], label_cy[j] - dy_j),
+            max(label_cy[j], label_cy[j] - dy_j),
+        )
+        return (
+            b_i[0] < b_j[1] and b_i[1] > b_j[0] and b_i[2] < b_j[3] and b_i[3] > b_j[2]
+        )
+
+    for i in range(len(node_types)):
+        for j in range(i + 1, len(node_types)):
+            if _boxes_overlap(i, j):
+                nudge_idx = j if sizes[i] >= sizes[j] else i
+                gap = 4 + radii_pt[nudge_idx]
+                if va_list[nudge_idx] == "top":
+                    label_cy[nudge_idx] = display_pts[nudge_idx, 1] + gap
+                    va_list[nudge_idx] = "bottom"
+                else:
+                    label_cy[nudge_idx] = display_pts[nudge_idx, 1] - gap
+                    va_list[nudge_idx] = "top"
+                if _boxes_overlap(i, j):
+                    label_cx[nudge_idx] += label_w * 1.5
+
+    # Convert back to offset-from-data-point and annotate.
+    for i, label in enumerate(node_types):
+        off_x = label_cx[i] - display_pts[i, 0]
+        off_y = label_cy[i] - display_pts[i, 1]
+        ax.annotate(
+            label,
+            (x[i], y[i]),
+            textcoords="offset points",
+            xytext=(off_x, off_y),
+            ha="center",
+            va=va_list[i],
+            fontsize=8,
+            fontweight="bold",
+        )
+
+    return label_cx, label_cy, va_list
+
+
+_COL_POSITIONS = [0.0, 0.35, 0.70]
+
+
+def _render_abbreviation_legend(
+    fig: mfigure.Figure,
+    ax_leg: Axes,
+) -> None:
+    """Draw the abbreviation legend in the given axes panel."""
+    ax_leg.axis("off")
+
+    items = list(_ABBREVIATIONS.items())
+    n_rows = -(-len(items) // _LEGEND_COLS)  # ceil division
+
+    ax_leg.text(
+        0.0,
+        1.0,
+        "Legend with abbreviations",
+        transform=ax_leg.transAxes,
+        ha="left",
+        va="top",
+        fontsize=8,
+    )
+
+    row_height = 0.80 / max(n_rows, 1)
+
+    for idx, (abbr, full_name) in enumerate(items):
+        col = idx % _LEGEND_COLS
+        row = idx // _LEGEND_COLS
+        x_pos = _COL_POSITIONS[col]
+        y_pos = 0.82 - row * row_height
+
+        abbr_txt = ax_leg.text(
+            x_pos,
+            y_pos,
+            f"{abbr}",
+            transform=ax_leg.transAxes,
+            ha="left",
+            va="top",
+            fontsize=7,
+            fontweight="bold",
+        )
+        fig.canvas.draw()
+        bb = abbr_txt.get_window_extent(fig.canvas.get_renderer())
+        bb_ax = bb.transformed(ax_leg.transAxes.inverted())
+        ax_leg.text(
+            bb_ax.x1,
+            y_pos,
+            f": {full_name}",
+            transform=ax_leg.transAxes,
+            ha="left",
+            va="top",
+            fontsize=7,
+            fontweight="regular",
+        )
 
 
 def render_plot(data: pl.DataFrame, out_path: Path) -> None:
@@ -186,88 +350,7 @@ def render_plot(data: pl.DataFrame, out_path: Path) -> None:
     # Work in display (pixel) coordinates so offsets are resolution-independent.
     fig.canvas.draw()  # force a layout pass so transData is accurate
 
-    # Bubble radius in display points (scatter size is area in pt^2).
-    radii_pt = np.sqrt(sizes) / 2
-
-    # Convert data positions to display coordinates.
-    display_pts = np.column_stack(
-        [ax.transData.transform((xi, yi)) for xi, yi in zip(x, y)]
-    ).T  # shape (N, 2)
-
-    # Approximate label dimensions in display points.
-    _LABEL_H = 10  # approx height of one label line at fontsize 8
-    _LABEL_W = 22  # approx half-width of a 3-char bold label
-
-    # Initial placement: below each bubble by default.
-    label_cx = display_pts[:, 0].copy()
-    label_cy = display_pts[:, 1].copy()
-    va_list: list[str] = []
-
-    for i in range(len(node_types)):
-        y_frac = (np.log10(y[i]) - log_y_min) / (log_y_max - log_y_min)
-        gap = 4 + radii_pt[i]
-        if y_frac < 0.15:
-            label_cy[i] += gap  # above
-            va_list.append("bottom")
-        else:
-            label_cy[i] -= gap  # below
-            va_list.append("top")
-
-    # Collision resolution: if two label bounding boxes overlap, nudge them.
-    def _boxes_overlap(i: int, j: int) -> bool:
-        """Check if the approximate bounding boxes of labels i and j overlap."""
-        dy_i = _LABEL_H if va_list[i] == "top" else -_LABEL_H
-        dy_j = _LABEL_H if va_list[j] == "top" else -_LABEL_H
-        # box: (left, right, bottom, top)
-        b_i = (
-            label_cx[i] - _LABEL_W,
-            label_cx[i] + _LABEL_W,
-            min(label_cy[i], label_cy[i] - dy_i),
-            max(label_cy[i], label_cy[i] - dy_i),
-        )
-        b_j = (
-            label_cx[j] - _LABEL_W,
-            label_cx[j] + _LABEL_W,
-            min(label_cy[j], label_cy[j] - dy_j),
-            max(label_cy[j], label_cy[j] - dy_j),
-        )
-        return (
-            b_i[0] < b_j[1] and b_i[1] > b_j[0] and b_i[2] < b_j[3] and b_i[3] > b_j[2]
-        )
-
-    for i in range(len(node_types)):
-        for j in range(i + 1, len(node_types)):
-            if _boxes_overlap(i, j):
-                # Nudge the label with the smaller bubble to the opposite
-                # vertical side, or shift it right if both are similar size.
-                nudge_idx = j if sizes[i] >= sizes[j] else i
-                gap = 4 + radii_pt[nudge_idx]
-                if va_list[nudge_idx] == "top":
-                    # Move above
-                    label_cy[nudge_idx] = display_pts[nudge_idx, 1] + gap
-                    va_list[nudge_idx] = "bottom"
-                else:
-                    # Move below
-                    label_cy[nudge_idx] = display_pts[nudge_idx, 1] - gap
-                    va_list[nudge_idx] = "top"
-                # If they still overlap after vertical flip, shift right
-                if _boxes_overlap(i, j):
-                    label_cx[nudge_idx] += _LABEL_W * 1.5
-
-    # Convert back to offset-from-data-point in display points.
-    for i, label in enumerate(node_types):
-        off_x = label_cx[i] - display_pts[i, 0]
-        off_y = label_cy[i] - display_pts[i, 1]
-        ax.annotate(
-            label,
-            (x[i], y[i]),
-            textcoords="offset points",
-            xytext=(off_x, off_y),
-            ha="center",
-            va=va_list[i],
-            fontsize=8,
-            fontweight="bold",
-        )
+    _place_labels(node_types, (x, y), sizes, ax, (log_y_min, log_y_max))
 
     ax.set_xscale("log")
     ax.set_yscale("log")
@@ -281,56 +364,7 @@ def render_plot(data: pl.DataFrame, out_path: Path) -> None:
     ax.tick_params(axis="both", labelsize=7)
 
     ax_leg = fig.add_subplot(gs[1])
-    ax_leg.axis("off")
-
-    items = list(_ABBREVIATIONS.items())
-    n_rows = -(-len(items) // _LEGEND_COLS)  # ceil division
-
-    # Title – left-aligned to match the reference Hetionet style.
-    ax_leg.text(
-        0.0,
-        1.0,
-        "Legend with abbreviations",
-        transform=ax_leg.transAxes,
-        ha="left",
-        va="top",
-        fontsize=8,
-    )
-
-    _COL_POSITIONS = [0.0, 0.35, 0.70]
-    row_height = 0.80 / max(n_rows, 1)
-
-    for idx, (abbr, full_name) in enumerate(items):
-        col = idx % _LEGEND_COLS
-        row = idx // _LEGEND_COLS
-        x_pos = _COL_POSITIONS[col]
-        y_pos = 0.82 - row * row_height
-
-        # Bold abbreviation
-        abbr_txt = ax_leg.text(
-            x_pos,
-            y_pos,
-            f"{abbr}",
-            transform=ax_leg.transAxes,
-            ha="left",
-            va="top",
-            fontsize=7,
-            fontweight="bold",
-        )
-        # Regular name, offset after the abbreviation
-        fig.canvas.draw()
-        bb = abbr_txt.get_window_extent(fig.canvas.get_renderer())
-        bb_ax = bb.transformed(ax_leg.transAxes.inverted())
-        ax_leg.text(
-            bb_ax.x1,
-            y_pos,
-            f": {full_name}",
-            transform=ax_leg.transAxes,
-            ha="left",
-            va="top",
-            fontsize=7,
-            fontweight="regular",
-        )
+    _render_abbreviation_legend(fig, ax_leg)
 
     plt.savefig(out_path)
     plt.close(fig)

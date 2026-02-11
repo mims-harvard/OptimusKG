@@ -40,6 +40,7 @@ logger = logging.getLogger(__name__)
 _NODE_TYPE_ORDER = [m.value for m in Node if m is not Node.GENE]
 
 _MAX_LENGTH = 4
+_MIN_MULTIHOP_LENGTH = 2
 
 # Type alias for a directed metaedge: (src_type, relation, dst_type).
 _Metaedge = tuple[str, str, str]
@@ -107,7 +108,7 @@ def _count_empirical_metapaths(
             E1[idx[src], idx[dst]] += 1
     result["E1"] = E1
 
-    if max_length < 2:
+    if max_length < _MIN_MULTIHOP_LENGTH:
         return result
 
     # Helper: metaedges leaving a given node type.
@@ -270,16 +271,21 @@ def _pivot_to_matrix(
     return mat
 
 
+_SI_KILO = 1_000
+_SI_TEN_KILO = 10_000
+_SI_MEGA = 1_000_000
+
+
 def _format_si(value: float) -> str:
     """Format a number with SI suffixes (K, M) for compact display."""
     v = abs(value)
-    if v < 1000:
+    if v < _SI_KILO:
         return f"{int(value)}"
-    if v < 10_000:
-        return f"{value / 1000:.1f}K"
-    if v < 1_000_000:
-        return f"{value / 1000:.0f}K"
-    return f"{value / 1_000_000:.1f}M"
+    if v < _SI_TEN_KILO:
+        return f"{value / _SI_KILO:.1f}K"
+    if v < _SI_MEGA:
+        return f"{value / _SI_KILO:.0f}K"
+    return f"{value / _SI_MEGA:.1f}M"
 
 
 def _format_count_matrix(mat: np.ndarray) -> np.ndarray:
