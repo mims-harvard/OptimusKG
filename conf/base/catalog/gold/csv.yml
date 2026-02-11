@@ -1,6 +1,0 @@
-gold.kg.csv:
-  type: partitions.PartitionedDataset
-  path: data/gold/formats/csv
-  dataset:
-    type: polars.CSVDataset
-  filename_suffix: ".csv"

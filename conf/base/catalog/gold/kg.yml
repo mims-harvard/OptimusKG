@@ -1,0 +1,13 @@
+gold.kg.parquet:
+  type: partitions.PartitionedDataset
+  path: data/gold/kg/parquet
+  dataset:
+    type: optimuskg.datasets.polars.ParquetDataset
+  filename_suffix: ".parquet"
+
+gold.kg.csv:
+  type: partitions.PartitionedDataset
+  path: data/gold/kg/csv
+  dataset:
+    type: polars.CSVDataset
+  filename_suffix: ".csv"
