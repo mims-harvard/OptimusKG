@@ -68,8 +68,8 @@ venvPath = "."
 venv = ".venv"
 
 [tool.typos.default.extend-words]
-# Don't correct the OpenTargets Abbreviation
-ot = "ot"
+ot = "ot"       # Don't correct the Open Targets abbreviation
+qubic = "qubic" # Don't correct QUBIC database name
 
 [tool.ruff.format]
 docstring-code-format = true
