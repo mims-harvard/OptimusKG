@@ -14,7 +14,6 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 import networkx as nx
-import numpy as np
 import polars as pl
 
 from cli.commands.metrics.utils import load_parquet_dir
