@@ -11,7 +11,6 @@ from __future__ import annotations
 import json
 import logging
 import random
-import warnings
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -19,7 +18,9 @@ import networkx as nx
 import polars as pl
 import yaml
 
-logger = logging.getLogger(__name__)
+from .utils import load_graph, load_node_metadata
+
+logger = logging.getLogger("cli")
 
 # Default config path
 DEFAULT_CONFIG_PATH = Path("conf/base/evals.yml")
@@ -57,40 +58,6 @@ def load_config(config_path: Path | None = None) -> dict:
         config = yaml.safe_load(f)
 
     return config.get("edge_eval", FALLBACK_DEFAULTS.copy())
-
-
-def load_graph(edges_dir: Path) -> nx.Graph:
-    """Build an undirected NetworkX graph from edge parquet files."""
-    G = nx.Graph()
-    for path in sorted(edges_dir.glob("*.parquet")):
-        df = pl.read_parquet(path)
-        if df.height > 0:
-            edge_pairs = df.select("from", "to").iter_rows()
-            G.add_edges_from(edge_pairs)
-    logger.info(
-        "Built graph with %s nodes and %s edges",
-        G.number_of_nodes(),
-        G.number_of_edges(),
-    )
-    return G
-
-
-def load_node_metadata(nodes_dir: Path) -> pl.DataFrame:
-    """Load node id, label, and name from all node parquet files."""
-    frames: list[pl.DataFrame] = []
-    for path in sorted(nodes_dir.glob("*.parquet")):
-        df = pl.read_parquet(path)
-        if df.height > 0:
-            frames.append(
-                df.select(
-                    "id",
-                    "label",
-                    pl.col("properties").struct.field("name").alias("name"),
-                )
-            )
-    result = pl.concat(frames)
-    logger.info("Loaded metadata for %s nodes", result.height)
-    return result
 
 
 def compute_pagerank_by_type(
@@ -273,7 +240,6 @@ def sample_edges_for_nodes(
 
     all_nodes = set(G.nodes())
     edge_records: list[dict] = []
-    edge_stats: dict[str, dict] = {}
 
     # Track stats by seed node type
     type_stats: dict[str, dict] = {}
@@ -404,10 +370,10 @@ def run(
         pagerank_upper: Upper percentile cutoff (top X%). Overrides config.
         pagerank_lower: Lower percentile cutoff (top X%). Overrides config.
         nodes_per_type: Nodes to sample per type. Overrides config.
-        config_path: Path to config file. Defaults to conf/base/evals.yml.
         true_neighbors: True neighbors per node. Overrides config.
         false_neighbors: False neighbors per node. Overrides config.
         seed: Random seed. Overrides config.
+        config_path: Path to config file. Defaults to conf/base/evals.yml.
     """
     # Load config and merge with CLI args (CLI takes precedence)
     config = load_config(config_path)

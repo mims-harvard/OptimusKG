@@ -1,1 +1,0 @@
-"""Evaluation scripts for OptimusKG."""

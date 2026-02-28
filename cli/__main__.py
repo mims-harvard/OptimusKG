@@ -17,12 +17,12 @@ from cli.commands import (
     sync_catalog_command,
     unify_benchmark_files_command,
 )
+from cli.commands.evals import evals_app
 from cli.commands.figures import figure_app
-from evals.edge_eval import run as edge_eval_run
-from evals.pagerank import run as pagerank_run
 from optimuskg.utils import calculate_checksum
 
 app = typer.Typer(help="Main entry point for the CLI.")
+app.add_typer(evals_app, name="evals")
 app.add_typer(figure_app, name="figure")
 
 logger = logging.getLogger("cli")
@@ -104,7 +104,7 @@ def plot_benchmark(
 ):
     plot_benchmark_command(results_path, out_dir)
     plot_normalized_time(
-        "data/benchmarks/normalized_time/unified_benchmarks.json", out_dir
+        Path("data/benchmarks/normalized_time/unified_benchmarks.json"), out_dir
     )
 
 
@@ -188,154 +188,6 @@ def sync_catalog(  # noqa: PLR0913
         dry_run=dry_run,
         catalog_dir=catalog_dir,
         data_dir=data_dir,
-    )
-
-
-@app.command(help="Compute PageRank importance scores for the knowledge graph.")
-def pagerank(
-    nodes_dir: Path = typer.Option(
-        Path("data/gold/kg/parquet/nodes"),
-        "--nodes",
-        help="Directory containing node parquet files.",
-    ),
-    edges_dir: Path = typer.Option(
-        Path("data/gold/kg/parquet/edges"),
-        "--edges",
-        help="Directory containing edge parquet files.",
-    ),
-    out_dir: Path = typer.Option(
-        Path("evals/outputs"),
-        "--out",
-        help="Directory to write outputs (CSV, figures).",
-    ),
-    top_n: int = typer.Option(
-        10,
-        "--top",
-        "-n",
-        help="Number of top nodes to display.",
-    ),
-    alpha: float = typer.Option(
-        0.85,
-        "--alpha",
-        help="PageRank damping factor.",
-    ),
-):
-    """Compute PageRank importance scores for the knowledge graph.
-
-    Builds an undirected graph from the gold KG exports, computes
-    PageRank centrality for all nodes, and outputs:
-
-    - Console table of top N nodes with names
-    - CSV file with full rankings
-    - PDF bar chart of mean PageRank by node type
-
-    Examples:
-
-        # Run with defaults
-        uv run cli pagerank
-
-        # Show top 20 nodes
-        uv run cli pagerank --top 20
-
-        # Custom output directory
-        uv run cli pagerank --out evals/outputs/v2
-    """
-    pagerank_run(nodes_dir, edges_dir, out_dir, top_n, alpha)
-
-
-@app.command(
-    name="edge-eval", help="Generate edge evaluation dataset for link prediction."
-)
-def edge_eval(  # noqa: PLR0913
-    nodes_dir: Path = typer.Option(
-        Path("data/gold/kg/parquet/nodes"),
-        "--nodes",
-        help="Directory containing node parquet files.",
-    ),
-    edges_dir: Path = typer.Option(
-        Path("data/gold/kg/parquet/edges"),
-        "--edges",
-        help="Directory containing edge parquet files.",
-    ),
-    out_dir: Path = typer.Option(
-        Path("evals/outputs"),
-        "--out",
-        help="Directory to write outputs.",
-    ),
-    pagerank_upper: int = typer.Option(
-        None,
-        "--pagerank-upper",
-        help="Upper percentile cutoff (top X%%). Overrides config.",
-    ),
-    pagerank_lower: int = typer.Option(
-        None,
-        "--pagerank-lower",
-        help="Lower percentile cutoff (top X%%). Overrides config.",
-    ),
-    nodes_per_type: int = typer.Option(
-        None,
-        "--nodes-per-type",
-        help="Nodes to sample per node type. Overrides config.",
-    ),
-    true_neighbors: int = typer.Option(
-        None,
-        "--true-neighbors",
-        help="Max true neighbors to sample per node. Overrides config.",
-    ),
-    false_neighbors: int = typer.Option(
-        None,
-        "--false-neighbors",
-        help="False neighbors to sample per node. Overrides config.",
-    ),
-    seed: int = typer.Option(
-        None,
-        "--seed",
-        help="Random seed for reproducibility. Overrides config.",
-    ),
-    config_path: Path = typer.Option(
-        None,
-        "--config",
-        help="Path to config file. Defaults to conf/base/evals.yml.",
-    ),
-):
-    """Generate edge evaluation dataset for link prediction models.
-
-    Samples nodes from the knowledge graph based on PageRank centrality
-    (within a specified percentile range), then generates true/false edge
-    pairs for evaluation. Parameters are loaded from conf/base/evals.yml
-    and can be overridden via CLI options.
-
-    Outputs:
-    - pagerank_distribution_by_type.pdf: PageRank vs rank plots per node type
-    - sampled_nodes.csv: Sampled seed nodes with metadata
-    - sampled_edges.csv: True and false edge pairs with labels
-    - summary_stats.json: Sampling statistics
-
-    Examples:
-
-        # Run with config defaults
-        uv run cli edge-eval
-
-        # Override percentile range
-        uv run cli edge-eval --pagerank-upper 10 --pagerank-lower 25
-
-        # Use custom config file
-        uv run cli edge-eval --config conf/local/evals.yml
-
-        # Override specific parameters
-        uv run cli edge-eval --nodes-per-type 200 --seed 123
-    """
-    edge_eval_run(
-        nodes_dir=nodes_dir,
-        edges_dir=edges_dir,
-        out_dir=out_dir,
-        pagerank_upper=pagerank_upper,
-        pagerank_lower=pagerank_lower,
-        nodes_per_type=nodes_per_type,
-        true_neighbors=true_neighbors,
-        false_neighbors=false_neighbors,
-        seed=seed,
-        config_path=config_path,
     )
 
 

@@ -4,6 +4,7 @@ edge_eval:
   # Data paths (gold KG exports)
   nodes_dir: data/gold/kg/parquet/nodes
   edges_dir: data/gold/kg/parquet/edges
+  out_dir: data/gold/evals
 
   # PageRank percentile range for node sampling
   # Nodes between top X% and top Y% are eligible for sampling
