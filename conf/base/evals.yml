@@ -1,0 +1,15 @@
+# Evaluation dataset generation parameters
+
+edge_eval:
+  # PageRank percentile range for node sampling
+  # Nodes between top X% and top Y% are eligible for sampling
+  pagerank_upper: 5      # Upper bound (top 5%)
+  pagerank_lower: 15     # Lower bound (top 15%)
+
+  # Sampling parameters
+  nodes_per_type: 100    # Nodes to sample per node type
+  true_neighbors: 10     # Max true neighbors to sample per node
+  false_neighbors: 5     # False neighbors to sample per node
+
+  # Reproducibility
+  seed: 42

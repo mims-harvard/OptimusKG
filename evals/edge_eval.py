@@ -17,16 +17,46 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import networkx as nx
 import polars as pl
+import yaml
 
 logger = logging.getLogger(__name__)
 
-# Default hyperparameters
-DEFAULT_PAGERANK_UPPER = 5  # Top 5% cutoff
-DEFAULT_PAGERANK_LOWER = 15  # Top 15% cutoff
-DEFAULT_NODES_PER_TYPE = 100
-DEFAULT_TRUE_NEIGHBORS = 10
-DEFAULT_FALSE_NEIGHBORS = 5
-DEFAULT_SEED = 42
+# Default config path
+DEFAULT_CONFIG_PATH = Path("conf/base/evals.yml")
+
+# Fallback defaults (used if config file not found)
+FALLBACK_DEFAULTS = {
+    "pagerank_upper": 5,
+    "pagerank_lower": 15,
+    "nodes_per_type": 100,
+    "true_neighbors": 10,
+    "false_neighbors": 5,
+    "seed": 42,
+}
+
+
+def load_config(config_path: Path | None = None) -> dict:
+    """Load edge eval configuration from YAML file.
+
+    Args:
+        config_path: Path to config file. Defaults to conf/base/evals.yml.
+
+    Returns:
+        Dictionary with edge_eval configuration values.
+    """
+    if config_path is None:
+        config_path = DEFAULT_CONFIG_PATH
+
+    if not config_path.exists():
+        logger.warning(
+            "Config file not found: %s, using fallback defaults", config_path
+        )
+        return FALLBACK_DEFAULTS.copy()
+
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+
+    return config.get("edge_eval", FALLBACK_DEFAULTS.copy())
 
 
 def load_graph(edges_dir: Path) -> nx.Graph:
@@ -357,12 +387,13 @@ def run(
     nodes_dir: Path,
     edges_dir: Path,
     out_dir: Path,
-    pagerank_upper: int = DEFAULT_PAGERANK_UPPER,
-    pagerank_lower: int = DEFAULT_PAGERANK_LOWER,
-    nodes_per_type: int = DEFAULT_NODES_PER_TYPE,
-    true_neighbors: int = DEFAULT_TRUE_NEIGHBORS,
-    false_neighbors: int = DEFAULT_FALSE_NEIGHBORS,
-    seed: int = DEFAULT_SEED,
+    pagerank_upper: int | None = None,
+    pagerank_lower: int | None = None,
+    nodes_per_type: int | None = None,
+    true_neighbors: int | None = None,
+    false_neighbors: int | None = None,
+    seed: int | None = None,
+    config_path: Path | None = None,
 ) -> None:
     """Run edge evaluation dataset generation.
 
@@ -370,13 +401,33 @@ def run(
         nodes_dir: Directory containing node parquet files
         edges_dir: Directory containing edge parquet files
         out_dir: Output directory for generated files
-        pagerank_upper: Upper percentile cutoff (top X%)
-        pagerank_lower: Lower percentile cutoff (top X%)
-        nodes_per_type: Nodes to sample per type
-        true_neighbors: True neighbors per node
-        false_neighbors: False neighbors per node
-        seed: Random seed
+        pagerank_upper: Upper percentile cutoff (top X%). Overrides config.
+        pagerank_lower: Lower percentile cutoff (top X%). Overrides config.
+        nodes_per_type: Nodes to sample per type. Overrides config.
+        config_path: Path to config file. Defaults to conf/base/evals.yml.
+        true_neighbors: True neighbors per node. Overrides config.
+        false_neighbors: False neighbors per node. Overrides config.
+        seed: Random seed. Overrides config.
     """
+    # Load config and merge with CLI args (CLI takes precedence)
+    config = load_config(config_path)
+    pagerank_upper = (
+        pagerank_upper if pagerank_upper is not None else config["pagerank_upper"]
+    )
+    pagerank_lower = (
+        pagerank_lower if pagerank_lower is not None else config["pagerank_lower"]
+    )
+    nodes_per_type = (
+        nodes_per_type if nodes_per_type is not None else config["nodes_per_type"]
+    )
+    true_neighbors = (
+        true_neighbors if true_neighbors is not None else config["true_neighbors"]
+    )
+    false_neighbors = (
+        false_neighbors if false_neighbors is not None else config["false_neighbors"]
+    )
+    seed = seed if seed is not None else config["seed"]
+
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # Load data

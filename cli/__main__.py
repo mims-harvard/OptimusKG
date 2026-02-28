@@ -263,41 +263,47 @@ def edge_eval(  # noqa: PLR0913
         help="Directory to write outputs.",
     ),
     pagerank_upper: int = typer.Option(
-        5,
+        None,
         "--pagerank-upper",
-        help="Upper percentile cutoff (top X%%).",
+        help="Upper percentile cutoff (top X%%). Overrides config.",
     ),
     pagerank_lower: int = typer.Option(
-        15,
+        None,
         "--pagerank-lower",
-        help="Lower percentile cutoff (top X%%).",
+        help="Lower percentile cutoff (top X%%). Overrides config.",
     ),
     nodes_per_type: int = typer.Option(
-        100,
+        None,
         "--nodes-per-type",
-        help="Nodes to sample per node type.",
+        help="Nodes to sample per node type. Overrides config.",
     ),
     true_neighbors: int = typer.Option(
-        10,
+        None,
         "--true-neighbors",
-        help="Max true neighbors to sample per node.",
+        help="Max true neighbors to sample per node. Overrides config.",
     ),
     false_neighbors: int = typer.Option(
-        5,
+        None,
         "--false-neighbors",
-        help="False neighbors to sample per node.",
+        help="False neighbors to sample per node. Overrides config.",
     ),
     seed: int = typer.Option(
-        42,
+        None,
         "--seed",
-        help="Random seed for reproducibility.",
+        help="Random seed for reproducibility. Overrides config.",
+    ),
+    config_path: Path = typer.Option(
+        None,
+        "--config",
+        help="Path to config file. Defaults to conf/base/evals.yml.",
     ),
 ):
     """Generate edge evaluation dataset for link prediction models.
 
     Samples nodes from the knowledge graph based on PageRank centrality
     (within a specified percentile range), then generates true/false edge
-    pairs for evaluation.
+    pairs for evaluation. Parameters are loaded from conf/base/evals.yml
+    and can be overridden via CLI options.
 
     Outputs:
     - pagerank_distribution_by_type.pdf: PageRank vs rank plots per node type
@@ -307,17 +313,17 @@ def edge_eval(  # noqa: PLR0913
 
     Examples:
 
-        # Run with defaults (top 5-15%, 100 nodes/type)
+        # Run with config defaults
         uv run cli edge-eval
 
-        # Custom percentile range
+        # Override percentile range
         uv run cli edge-eval --pagerank-upper 10 --pagerank-lower 25
 
-        # More nodes per type
-        uv run cli edge-eval --nodes-per-type 200
+        # Use custom config file
+        uv run cli edge-eval --config conf/local/evals.yml
 
-        # Custom output directory
-        uv run cli edge-eval --out evals/outputs/experiment_v2
+        # Override specific parameters
+        uv run cli edge-eval --nodes-per-type 200 --seed 123
     """
     edge_eval_run(
         nodes_dir=nodes_dir,
@@ -329,6 +335,7 @@ def edge_eval(  # noqa: PLR0913
         true_neighbors=true_neighbors,
         false_neighbors=false_neighbors,
         seed=seed,
+        config_path=config_path,
     )
 
 
