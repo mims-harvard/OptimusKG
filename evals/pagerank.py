@@ -7,7 +7,14 @@ outputs a ranked table with node metadata, and generates visualizations.
 from __future__ import annotations
 
 import logging
+import warnings
 from pathlib import Path
+
+warnings.filterwarnings(
+    "ignore",
+    message="Dataset name '.*' contains '.' characters.*",
+    category=UserWarning,
+)
 
 import matplotlib.pyplot as plt
 import networkx as nx

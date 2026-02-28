@@ -11,6 +11,7 @@ from cli.commands import (
     unify_benchmark_files_command,
 )
 from cli.commands.figures import figure_app
+from evals.edge_eval import run as edge_eval_run
 from evals.pagerank import run as pagerank_run
 from optimuskg.utils import calculate_checksum
 
@@ -233,6 +234,95 @@ def pagerank(
         uv run cli pagerank --out evals/outputs/v2
     """
     pagerank_run(nodes_dir, edges_dir, out_dir, top_n, alpha)
+
+
+@app.command(
+    name="edge-eval", help="Generate edge evaluation dataset for link prediction."
+)
+def edge_eval(  # noqa: PLR0913
+    nodes_dir: Path = typer.Option(
+        Path("data/silver/nodes"),
+        "--nodes",
+        help="Directory containing node parquet files.",
+    ),
+    edges_dir: Path = typer.Option(
+        Path("data/silver/edges"),
+        "--edges",
+        help="Directory containing edge parquet files.",
+    ),
+    out_dir: Path = typer.Option(
+        Path("evals/outputs"),
+        "--out",
+        help="Directory to write outputs.",
+    ),
+    pagerank_upper: int = typer.Option(
+        5,
+        "--pagerank-upper",
+        help="Upper percentile cutoff (top X%%).",
+    ),
+    pagerank_lower: int = typer.Option(
+        15,
+        "--pagerank-lower",
+        help="Lower percentile cutoff (top X%%).",
+    ),
+    nodes_per_type: int = typer.Option(
+        100,
+        "--nodes-per-type",
+        help="Nodes to sample per node type.",
+    ),
+    true_neighbors: int = typer.Option(
+        10,
+        "--true-neighbors",
+        help="Max true neighbors to sample per node.",
+    ),
+    false_neighbors: int = typer.Option(
+        5,
+        "--false-neighbors",
+        help="False neighbors to sample per node.",
+    ),
+    seed: int = typer.Option(
+        42,
+        "--seed",
+        help="Random seed for reproducibility.",
+    ),
+):
+    """Generate edge evaluation dataset for link prediction models.
+
+    Samples nodes from the knowledge graph based on PageRank centrality
+    (within a specified percentile range), then generates true/false edge
+    pairs for evaluation.
+
+    Outputs:
+    - pagerank_distribution_by_type.pdf: PageRank vs rank plots per node type
+    - sampled_nodes.csv: Sampled seed nodes with metadata
+    - sampled_edges.csv: True and false edge pairs with labels
+    - summary_stats.json: Sampling statistics
+
+    Examples:
+
+        # Run with defaults (top 5-15%, 100 nodes/type)
+        uv run cli edge-eval
+
+        # Custom percentile range
+        uv run cli edge-eval --pagerank-upper 10 --pagerank-lower 25
+
+        # More nodes per type
+        uv run cli edge-eval --nodes-per-type 200
+
+        # Custom output directory
+        uv run cli edge-eval --out evals/outputs/experiment_v2
+    """
+    edge_eval_run(
+        nodes_dir=nodes_dir,
+        edges_dir=edges_dir,
+        out_dir=out_dir,
+        pagerank_upper=pagerank_upper,
+        pagerank_lower=pagerank_lower,
+        nodes_per_type=nodes_per_type,
+        true_neighbors=true_neighbors,
+        false_neighbors=false_neighbors,
+        seed=seed,
+    )
 
 
 if __name__ == "__main__":
