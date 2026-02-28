@@ -16,7 +16,7 @@ Node `outputs` are namespace-prefixed by `pipeline.py`. Use this table to locate
 | Bronze | `"{src}.{name}"` | `bronze.{src}.{name}` | `conf/base/catalog/bronze/{src}/{name}.yml` | `data/bronze/{src}/{name}.parquet` |
 | Silver nodes | `"nodes.{entity}"` | `silver.nodes.{entity}` | `conf/base/catalog/silver/nodes/{entity}.yml` | `data/silver/nodes/{entity}.parquet` |
 | Silver edges | `"edges.{e1}_{e2}"` | `silver.edges.{e1}_{e2}` | `conf/base/catalog/silver/edges/{e1}_{e2}.yml` | `data/silver/edges/{e1}_{e2}.parquet` |
-| Gold | `"kg.{fmt}"` | `gold.kg.{fmt}` | `conf/base/catalog/gold/{fmt}.yml` | `data/gold/formats/{fmt}/` |
+| Gold | `"kg.{fmt}"` | `gold.kg.{fmt}` | `conf/base/catalog/gold/{fmt}.yml` | `data/gold/kg/{fmt}/` |
 
 Multiple outputs (list) produce one YAML file per output.
 

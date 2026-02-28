@@ -99,7 +99,7 @@ $ uv run kedro run --to-nodes gold.export_kg --runner=ParallelRunner --async
 ```
 
 This will automatically download all the necessary data, store it in the `landing` layer, and execute the `bronze`, `silver`, and `gold` layers
-to finally export the graph inside the `data/gold/formats/` folder.
+to finally export the graph inside the `data/gold/kg/` folder.
 
 > [!NOTE]
 > It is recommended to use the [ParallelRunner](https://docs.kedro.org/en/latest/build/run_a_pipeline/#parallelrunner) 

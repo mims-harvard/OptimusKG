@@ -17,12 +17,12 @@ figure_app = typer.Typer(help="Compute figure data and render plots.")
 def data(
     figure: str = typer.Argument(help="Figure name (e.g. 'adjacency-heatmap')."),
     nodes_dir: Path = typer.Option(
-        "data/gold/formats/parquet/nodes",
+        "data/gold/kg/parquet/nodes",
         "--nodes",
         help="Directory containing gold node parquet files.",
     ),
     edges_dir: Path = typer.Option(
-        "data/gold/formats/parquet/edges",
+        "data/gold/kg/parquet/edges",
         "--edges",
         help="Directory containing gold edge parquet files.",
     ),
