@@ -10,12 +10,6 @@ import logging
 import warnings
 from pathlib import Path
 
-warnings.filterwarnings(
-    "ignore",
-    message="Dataset name '.*' contains '.' characters.*",
-    category=UserWarning,
-)
-
 import matplotlib.pyplot as plt
 import networkx as nx
 import polars as pl
@@ -184,8 +178,7 @@ def run(
 
     plot_pagerank_by_type(df, out_dir / "pagerank_by_type.pdf")
 
-    # Print top N to console
-    print(f"\nTop {top_n} nodes by PageRank:\n")
-    print(df.head(top_n))
+    # Log top N to console
+    logger.info("Top %d nodes by PageRank:\n%s", top_n, df.head(top_n))
 
     return df

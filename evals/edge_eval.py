@@ -14,12 +14,6 @@ import random
 import warnings
 from pathlib import Path
 
-warnings.filterwarnings(
-    "ignore",
-    message="Dataset name '.*' contains '.' characters.*",
-    category=UserWarning,
-)
-
 import matplotlib.pyplot as plt
 import networkx as nx
 import polars as pl
@@ -460,24 +454,37 @@ def run(
         json.dump(summary_stats, f, indent=2)
     logger.info("Saved summary stats to %s", summary_path)
 
-    # Print summary to console
-    print("\n" + "=" * 60)
-    print("EDGE EVALUATION DATASET GENERATION COMPLETE")
-    print("=" * 60)
-    print(f"\nParameters:")
-    print(f"  - PageRank percentile range: [{pagerank_upper}%, {pagerank_lower}%]")
-    print(f"  - Nodes per type: {nodes_per_type}")
-    print(f"  - True neighbors per node: {true_neighbors}")
-    print(f"  - False neighbors per node: {false_neighbors}")
-    print(f"  - Random seed: {seed}")
-    print(f"\nResults:")
-    print(f"  - Sampled nodes: {sampled_nodes.height:,}")
-    print(f"  - True edges: {edge_sampling_stats['total_true_edges']:,}")
-    print(f"  - False edges: {edge_sampling_stats['total_false_edges']:,}")
-    print(f"  - Total edge pairs: {edge_sampling_stats['total_edges']:,}")
-    print(f"\nOutput files:")
-    print(f"  - {out_dir / 'pagerank_distribution_by_type.pdf'}")
-    print(f"  - {out_dir / 'sampled_nodes.csv'}")
-    print(f"  - {out_dir / 'sampled_edges.csv'}")
-    print(f"  - {out_dir / 'summary_stats.json'}")
-    print("=" * 60 + "\n")
+    # Log summary to console
+    logger.info(
+        "EDGE EVALUATION DATASET GENERATION COMPLETE\n"
+        "Parameters:\n"
+        "  - PageRank percentile range: [%d%%, %d%%]\n"
+        "  - Nodes per type: %d\n"
+        "  - True neighbors per node: %d\n"
+        "  - False neighbors per node: %d\n"
+        "  - Random seed: %d\n"
+        "Results:\n"
+        "  - Sampled nodes: %d\n"
+        "  - True edges: %d\n"
+        "  - False edges: %d\n"
+        "  - Total edge pairs: %d\n"
+        "Output files:\n"
+        "  - %s\n"
+        "  - %s\n"
+        "  - %s\n"
+        "  - %s",
+        pagerank_upper,
+        pagerank_lower,
+        nodes_per_type,
+        true_neighbors,
+        false_neighbors,
+        seed,
+        sampled_nodes.height,
+        edge_sampling_stats["total_true_edges"],
+        edge_sampling_stats["total_false_edges"],
+        edge_sampling_stats["total_edges"],
+        out_dir / "pagerank_distribution_by_type.pdf",
+        out_dir / "sampled_nodes.csv",
+        out_dir / "sampled_edges.csv",
+        out_dir / "summary_stats.json",
+    )

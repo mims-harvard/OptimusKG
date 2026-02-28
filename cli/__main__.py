@@ -1,5 +1,12 @@
 import logging
+import warnings
 from pathlib import Path
+
+warnings.filterwarnings(
+    "ignore",
+    message="Dataset name '.*' contains '.' characters.*",
+    category=UserWarning,
+)
 
 import typer
 
