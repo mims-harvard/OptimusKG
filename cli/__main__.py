@@ -11,6 +11,7 @@ from cli.commands import (
     unify_benchmark_files_command,
 )
 from cli.commands.figures import figure_app
+from evals.pagerank import run as pagerank_run
 from optimuskg.utils import calculate_checksum
 
 app = typer.Typer(help="Main entry point for the CLI.")
@@ -180,6 +181,58 @@ def sync_catalog(  # noqa: PLR0913
         catalog_dir=catalog_dir,
         data_dir=data_dir,
     )
+
+
+@app.command(help="Compute PageRank importance scores for the knowledge graph.")
+def pagerank(
+    nodes_dir: Path = typer.Option(
+        Path("data/silver/nodes"),
+        "--nodes",
+        help="Directory containing node parquet files.",
+    ),
+    edges_dir: Path = typer.Option(
+        Path("data/silver/edges"),
+        "--edges",
+        help="Directory containing edge parquet files.",
+    ),
+    out_dir: Path = typer.Option(
+        Path("evals/outputs"),
+        "--out",
+        help="Directory to write outputs (CSV, figures).",
+    ),
+    top_n: int = typer.Option(
+        10,
+        "--top",
+        "-n",
+        help="Number of top nodes to display.",
+    ),
+    alpha: float = typer.Option(
+        0.85,
+        "--alpha",
+        help="PageRank damping factor.",
+    ),
+):
+    """Compute PageRank importance scores for the knowledge graph.
+
+    Builds an undirected graph from the silver layer edges, computes
+    PageRank centrality for all nodes, and outputs:
+
+    - Console table of top N nodes with names
+    - CSV file with full rankings
+    - PDF bar chart of mean PageRank by node type
+
+    Examples:
+
+        # Run with defaults
+        uv run cli pagerank
+
+        # Show top 20 nodes
+        uv run cli pagerank --top 20
+
+        # Custom output directory
+        uv run cli pagerank --out evals/outputs/v2
+    """
+    pagerank_run(nodes_dir, edges_dir, out_dir, top_n, alpha)
 
 
 if __name__ == "__main__":
