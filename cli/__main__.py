@@ -194,12 +194,12 @@ def sync_catalog(  # noqa: PLR0913
 @app.command(help="Compute PageRank importance scores for the knowledge graph.")
 def pagerank(
     nodes_dir: Path = typer.Option(
-        Path("data/silver/nodes"),
+        Path("data/gold/kg/parquet/nodes"),
         "--nodes",
         help="Directory containing node parquet files.",
     ),
     edges_dir: Path = typer.Option(
-        Path("data/silver/edges"),
+        Path("data/gold/kg/parquet/edges"),
         "--edges",
         help="Directory containing edge parquet files.",
     ),
@@ -222,7 +222,7 @@ def pagerank(
 ):
     """Compute PageRank importance scores for the knowledge graph.
 
-    Builds an undirected graph from the silver layer edges, computes
+    Builds an undirected graph from the gold KG exports, computes
     PageRank centrality for all nodes, and outputs:
 
     - Console table of top N nodes with names
@@ -248,12 +248,12 @@ def pagerank(
 )
 def edge_eval(  # noqa: PLR0913
     nodes_dir: Path = typer.Option(
-        Path("data/silver/nodes"),
+        Path("data/gold/kg/parquet/nodes"),
         "--nodes",
         help="Directory containing node parquet files.",
     ),
     edges_dir: Path = typer.Option(
-        Path("data/silver/edges"),
+        Path("data/gold/kg/parquet/edges"),
         "--edges",
         help="Directory containing edge parquet files.",
     ),

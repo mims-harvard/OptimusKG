@@ -1,6 +1,10 @@
 # Evaluation dataset generation parameters
 
 edge_eval:
+  # Data paths (gold KG exports)
+  nodes_dir: data/gold/kg/parquet/nodes
+  edges_dir: data/gold/kg/parquet/edges
+
   # PageRank percentile range for node sampling
   # Nodes between top X% and top Y% are eligible for sampling
   pagerank_upper: 5      # Upper bound (top 5%)

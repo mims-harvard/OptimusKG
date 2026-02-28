@@ -4,7 +4,7 @@ This module generates evaluation datasets for testing OptimusKG edge validity.
 
 ## Purpose
 
-The edge evaluation dataset is created by sampling nodes from the knowledge graph based on their PageRank centrality and creating labeled edge pairs (true edges and false/negative edges) for evaluation.
+The edge evaluation dataset is created by sampling nodes from the knowledge graph based on their PageRank centrality and creating labeled edge pairs (true edges and false/negative edges) for evaluation. By default, evals use the `gold` KG exports at `data/gold/kg/parquet/`.
 
 ## Methodology
 
@@ -134,8 +134,8 @@ from pathlib import Path
 from evals.edge_eval import run
 
 run(
-    nodes_dir=Path("data/silver/nodes"),
-    edges_dir=Path("data/silver/edges"),
+    nodes_dir=Path("data/gold/kg/parquet/nodes"),
+    edges_dir=Path("data/gold/kg/parquet/edges"),
     out_dir=Path("evals/outputs"),
     pagerank_upper=5,
     pagerank_lower=15,
@@ -150,15 +150,18 @@ run(
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `--nodes` | `data/silver/nodes` | Directory containing node parquet files |
-| `--edges` | `data/silver/edges` | Directory containing edge parquet files |
+| `--nodes` | `data/gold/kg/parquet/nodes` | Directory containing node parquet files |
+| `--edges` | `data/gold/kg/parquet/edges` | Directory containing edge parquet files |
 | `--out` | `evals/outputs` | Output directory |
-| `--pagerank-upper` | 5 | Upper percentile cutoff (top X%) |
-| `--pagerank-lower` | 15 | Lower percentile cutoff (top X%) |
-| `--nodes-per-type` | 100 | Nodes to sample per node type |
-| `--true-neighbors` | 10 | Max true neighbors to sample per node |
-| `--false-neighbors` | 5 | False neighbors to sample per node |
-| `--seed` | 42 | Random seed for reproducibility |
+| `--config` | `conf/base/evals.yml` | Path to config file |
+| `--pagerank-upper` | config | Upper percentile cutoff (top X%) |
+| `--pagerank-lower` | config | Lower percentile cutoff (top X%) |
+| `--nodes-per-type` | config | Nodes to sample per node type |
+| `--true-neighbors` | config | Max true neighbors to sample per node |
+| `--false-neighbors` | config | False neighbors to sample per node |
+| `--seed` | config | Random seed for reproducibility |
+
+Parameters marked "config" are loaded from `conf/base/evals.yml` and can be overridden via CLI.
 
 ## Edge Cases
 
