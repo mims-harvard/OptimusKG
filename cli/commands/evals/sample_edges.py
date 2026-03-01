@@ -18,7 +18,12 @@ import networkx as nx
 import polars as pl
 import yaml
 
-from .utils import load_graph, load_node_metadata
+from .utils import (
+    compute_pagerank,
+    load_graph,
+    load_node_metadata,
+    pagerank_to_dataframe,
+)
 
 logger = logging.getLogger("cli")
 
@@ -60,32 +65,23 @@ def load_config(config_path: Path | None = None) -> dict:
     return config.get("edge_eval", FALLBACK_DEFAULTS.copy())
 
 
-def compute_pagerank_by_type(
+def stratify_pagerank_by_type(
     G: nx.Graph, node_metadata: pl.DataFrame
 ) -> dict[str, pl.DataFrame]:
     """Compute PageRank and return DataFrames stratified by node type.
 
-    Returns a dict mapping node_type -> DataFrame with columns:
-    [node_id, node_type, node_name, pagerank, rank_within_type, percentile]
+    Args:
+        G: NetworkX graph.
+        node_metadata: DataFrame with id, label, name columns.
+
+    Returns:
+        Dict mapping node_type -> DataFrame with columns:
+        [node_id, node_type, node_name, pagerank, rank_within_type, percentile]
     """
-    logger.info("Computing PageRank...")
-    pagerank_scores = nx.pagerank(G, alpha=0.85)
-
-    # Create base DataFrame
-    pagerank_df = pl.DataFrame(
-        {
-            "node_id": list(pagerank_scores.keys()),
-            "pagerank": list(pagerank_scores.values()),
-        }
-    )
-
-    # Join with metadata
-    pagerank_df = pagerank_df.join(
-        node_metadata.rename(
-            {"id": "node_id", "label": "node_type", "name": "node_name"}
-        ),
-        on="node_id",
-        how="left",
+    # Use shared PageRank computation
+    scores = compute_pagerank(G, alpha=0.85)
+    pagerank_df = pagerank_to_dataframe(scores, node_metadata).rename(
+        {"id": "node_id", "label": "node_type", "name": "node_name"}
     )
 
     # Stratify by node type
@@ -248,6 +244,7 @@ def sample_edges_for_nodes(
         seed_id = row["node_id"]
         seed_type = row["node_type"]
         seed_name = row["node_name"]
+        seed_pagerank = row["pagerank"]
 
         # Initialize type stats
         if seed_type not in type_stats:
@@ -281,6 +278,7 @@ def sample_edges_for_nodes(
                     "seed_node_id": seed_id,
                     "seed_node_type": seed_type,
                     "seed_node_name": seed_name,
+                    "seed_pagerank": seed_pagerank,
                     "target_node_id": target_id,
                     "target_node_type": target_meta["type"],
                     "target_node_name": target_meta["name"],
@@ -303,6 +301,7 @@ def sample_edges_for_nodes(
                     "seed_node_id": seed_id,
                     "seed_node_type": seed_type,
                     "seed_node_name": seed_name,
+                    "seed_pagerank": seed_pagerank,
                     "target_node_id": target_id,
                     "target_node_type": target_meta["type"],
                     "target_node_name": target_meta["name"],
@@ -402,7 +401,7 @@ def run(
     node_metadata = load_node_metadata(nodes_dir)
 
     # Compute PageRank stratified by type
-    stratified_data = compute_pagerank_by_type(G, node_metadata)
+    stratified_data = stratify_pagerank_by_type(G, node_metadata)
 
     # Plot PageRank distributions
     logger.info("Generating PageRank distribution plots...")
@@ -424,9 +423,11 @@ def run(
         seed=seed,
     )
 
-    # Save sampled nodes
+    # Save sampled nodes (sorted by node_type, pagerank desc)
     sampled_nodes_path = out_dir / "sampled_nodes.csv"
-    sampled_nodes.write_csv(sampled_nodes_path)
+    sampled_nodes.sort("node_type", "pagerank", descending=[False, True]).write_csv(
+        sampled_nodes_path
+    )
     logger.info("Saved sampled nodes to %s", sampled_nodes_path)
 
     # Sample edges
@@ -440,9 +441,11 @@ def run(
         seed=seed,
     )
 
-    # Save sampled edges
+    # Save sampled edges (sorted by seed_node_type, seed_pagerank desc)
     sampled_edges_path = out_dir / "sampled_edges.csv"
-    sampled_edges.write_csv(sampled_edges_path)
+    sampled_edges.sort(
+        "seed_node_type", "seed_pagerank", descending=[False, True]
+    ).write_csv(sampled_edges_path)
     logger.info("Saved sampled edges to %s", sampled_edges_path)
 
     # Compile and save summary stats
@@ -473,7 +476,7 @@ def run(
 
     # Log summary to console
     logger.info(
-        "EDGE EVALUATION DATASET GENERATION COMPLETE\n"
+        "Analysis complete\n"
         "Parameters:\n"
         "  - PageRank percentile range: [%d%%, %d%%]\n"
         "  - Nodes per type: %d\n"

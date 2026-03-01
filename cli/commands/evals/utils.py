@@ -1,5 +1,7 @@
 """Shared utilities for evals commands."""
 
+from __future__ import annotations
+
 import logging
 from pathlib import Path
 
@@ -57,3 +59,38 @@ def load_node_metadata(nodes_dir: Path) -> pl.DataFrame:
     result = pl.concat(frames)
     logger.info("Loaded metadata for %s nodes", result.height)
     return result
+
+
+def compute_pagerank(G: nx.Graph, alpha: float = 0.85) -> dict[str, float]:
+    """Compute PageRank scores for all nodes.
+
+    Args:
+        G: NetworkX graph.
+        alpha: Damping factor (default 0.85).
+
+    Returns:
+        Dictionary mapping node ID to PageRank score.
+    """
+    logger.info("Computing PageRank with alpha=%s...", alpha)
+    scores = nx.pagerank(G, alpha=alpha)
+    logger.info("Computed PageRank for %s nodes", len(scores))
+    return scores
+
+
+def pagerank_to_dataframe(
+    scores: dict[str, float],
+    node_metadata: pl.DataFrame,
+) -> pl.DataFrame:
+    """Convert PageRank scores to a DataFrame with metadata.
+
+    Args:
+        scores: Dictionary mapping node ID to PageRank score.
+        node_metadata: DataFrame with id, label, name columns.
+
+    Returns:
+        DataFrame with columns: id, label, name, pagerank
+        (sorted by pagerank descending)
+    """
+    df = pl.DataFrame({"id": list(scores.keys()), "pagerank": list(scores.values())})
+
+    return df.join(node_metadata, on="id", how="left").sort("pagerank", descending=True)

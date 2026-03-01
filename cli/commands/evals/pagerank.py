@@ -10,51 +10,16 @@ import logging
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-import networkx as nx
 import polars as pl
 
-from .utils import load_graph, load_node_metadata
+from .utils import (
+    compute_pagerank,
+    load_graph,
+    load_node_metadata,
+    pagerank_to_dataframe,
+)
 
 logger = logging.getLogger("cli")
-
-
-def compute_pagerank(G: nx.Graph, alpha: float = 0.85) -> dict[str, float]:
-    """Compute PageRank scores for all nodes.
-
-    Args:
-        G: NetworkX graph.
-        alpha: Damping factor (default 0.85).
-
-    Returns:
-        Dictionary mapping node ID to PageRank score.
-    """
-    logger.info("Computing PageRank with alpha=%s...", alpha)
-    scores = nx.pagerank(G, alpha=alpha)
-    logger.info("Computed PageRank for %s nodes", len(scores))
-    return scores
-
-
-def pagerank_to_dataframe(
-    scores: dict[str, float],
-    node_metadata: pl.DataFrame,
-) -> pl.DataFrame:
-    """Convert PageRank scores to a ranked DataFrame with metadata.
-
-    Args:
-        scores: Dictionary mapping node ID to PageRank score.
-        node_metadata: DataFrame with id, label, name columns.
-
-    Returns:
-        DataFrame with columns: rank, id, label, name, pagerank
-    """
-    df = pl.DataFrame({"id": list(scores.keys()), "pagerank": list(scores.values())})
-
-    return (
-        df.join(node_metadata, on="id", how="left")
-        .sort("pagerank", descending=True)
-        .with_row_index("rank", offset=1)
-        .select("rank", "id", "label", "name", "pagerank")
-    )
 
 
 def plot_pagerank_by_type(df: pl.DataFrame, out_path: Path) -> None:
@@ -120,7 +85,11 @@ def run(
     G = load_graph(edges_dir)
     node_metadata = load_node_metadata(nodes_dir)
     scores = compute_pagerank(G, alpha=alpha)
-    df = pagerank_to_dataframe(scores, node_metadata)
+    df = (
+        pagerank_to_dataframe(scores, node_metadata)
+        .with_row_index("rank", offset=1)
+        .select("rank", "id", "label", "name", "pagerank")
+    )
 
     # Save outputs
     csv_path = out_dir / "pagerank.csv"
