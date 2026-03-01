@@ -4,10 +4,9 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import polars as pl
-import scienceplots  # noqa: F401
-import seaborn as sns
+import matplotlabs as mpll  # noqa: F401  — registers styles, colormaps, named colors
 
-plt.style.use(["science", "nature", "high-contrast"])
+plt.style.use("mpll")
 colors = plt.rcParams["axes.prop_cycle"].by_key()["color"]
 
 
@@ -70,7 +69,6 @@ def plot_benchmark_command(results_path: Path, out_dir: Path):
     plt.xlabel("")
     plt.ylabel("Execution time (seconds)")
 
-    plt.tight_layout()
     plt.savefig(out_dir / "boxplot.pdf")
     plt.close()
 
@@ -139,6 +137,5 @@ def plot_normalized_time(results_path: Path, out_dir: Path):
     plt.ylabel("Normalized time (seconds / edge)")
     plt.legend()
 
-    plt.tight_layout()
-    plt.savefig(out_dir / "normalized_time_benchmark.pdf", bbox_inches="tight")
+    plt.savefig(out_dir / "normalized_time_benchmark.pdf")
     plt.close()

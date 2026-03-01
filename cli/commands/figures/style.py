@@ -6,33 +6,12 @@ Contains unified aesthetics for all figure plots including:
 """
 
 import matplotlib.pyplot as plt
-import scienceplots  # noqa: F401
+import matplotlabs as mpll  # noqa: F401  — registers styles, colormaps, named colors
+
 from matplotlib.axes import Axes
 from matplotlib.legend import Legend
 
-# Apply science plot style
-plt.style.use(["science", "ieee", "no-latex"])
-
-plt.rcParams.update(
-    {
-        "figure.dpi": 300,
-        "savefig.dpi": 300,
-        "savefig.bbox": "tight",
-        "savefig.pad_inches": 0.1,
-        # Use Arial (Liberation Sans is a metrically identical fallback).
-        "font.family": "sans-serif",
-        "font.sans-serif": ["Arial", "Liberation Sans", "DejaVu Sans"],
-        "mathtext.fontset": "dejavusans",
-        "font.size": 10,
-        "axes.labelsize": 11,
-        "axes.titlesize": 12,
-        "xtick.labelsize": 10,
-        "ytick.labelsize": 10,
-        "legend.fontsize": 9,
-        "legend.title_fontsize": 10,
-        "figure.titlesize": 13,
-    }
-)
+plt.style.use("mpll")
 
 STYLE = {
     # Grid
@@ -49,15 +28,15 @@ STYLE = {
     "bar_alpha": 0.9,
     "bar_width": 0.75,
     # Text labels
-    "value_label_fontsize": 8,
-    "title_fontsize": 12,
+    "value_label_fontsize": 6,
+    "title_fontsize": 8,
     "title_fontweight": "bold",
     "title_pad": 10,
-    "axis_label_fontsize": 11,
+    "axis_label_fontsize": 7,
     "axis_label_fontweight": "medium",
-    "tick_label_fontsize": 10,
+    "tick_label_fontsize": 7,
     # Legend
-    "legend_fontsize": 9,
+    "legend_fontsize": 6,
     "legend_frameon": True,
     "legend_fancybox": False,
     "legend_shadow": False,

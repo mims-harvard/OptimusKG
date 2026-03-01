@@ -18,21 +18,34 @@ from optimuskg.pipelines.silver.nodes.constants import Node
 from . import style  # noqa: F401
 from .style import apply_axis_styling
 
-# GEN is excluded because edges use the PRO label for gene/protein nodes;
-# the GEN row/column would be entirely zeros.
-_NODE_TYPE_ORDER = [member.value for member in Node if member is not Node.GENE]
+# PRO is excluded; edges use PRO in their labels but we remap to GEN so
+# all figures consistently show the Gene node type.
+_NODE_TYPE_ORDER = [member.value for member in Node if member is not Node.PROTEIN]
+
+# Remap PRO -> GEN when parsing edge labels.
+_EDGE_LABEL_MAP = {"PRO": "GEN"}
 
 
 def _extract_type_counts(df: pl.DataFrame) -> pl.DataFrame:
     """Extract (from_type, to_type, count) rows from an edge DataFrame.
 
     Splits the ``label`` column (e.g. ``"DIS-PRO"``) on ``"-"`` to get the
-    source and target node-type abbreviations.  For undirected edges the
-    reverse pair is also emitted so the resulting matrix is symmetric.
+    source and target node-type abbreviations.  PRO is remapped to GEN so
+    all figures use a single consistent label for gene/protein nodes.
+    For undirected edges the reverse pair is also emitted so the resulting
+    matrix is symmetric.
     """
     typed = df.with_columns(
-        pl.col("label").str.split("-").list.get(0).alias("from_type"),
-        pl.col("label").str.split("-").list.get(1).alias("to_type"),
+        pl.col("label")
+        .str.split("-")
+        .list.get(0)
+        .replace(_EDGE_LABEL_MAP)
+        .alias("from_type"),
+        pl.col("label")
+        .str.split("-")
+        .list.get(1)
+        .replace(_EDGE_LABEL_MAP)
+        .alias("to_type"),
     )
 
     directed = typed.group_by("from_type", "to_type").agg(pl.len().alias("edge_count"))
@@ -154,25 +167,25 @@ def render_plot(data: pl.DataFrame, out_path: Path) -> None:
         yticklabels=row_labels,
         annot=annotations,
         fmt="",
-        annot_kws={"fontsize": 7},
-        cmap="YlOrRd",
+        annot_kws={"fontsize": 5},
+        cmap="mpll-blue",
         norm=norm,
         square=True,
         linewidths=0.5,
         linecolor="white",
-        cbar_kws={"shrink": 0.8},
+        cbar_kws={"shrink": 0.5},
         mask=(matrix == 0),
     )
 
     # Style the colorbar.
     cbar = ax.collections[0].colorbar
-    cbar.set_label("Edge count", fontsize=8)
-    cbar.ax.tick_params(labelsize=7)
+    cbar.set_label("Edge count", fontsize=7)
+    cbar.ax.tick_params(labelsize=6)
 
     ax.set_xlabel("")
     ax.set_ylabel("")
-    ax.tick_params(axis="x", rotation=0, labelsize=8)
-    ax.tick_params(axis="y", rotation=0, labelsize=8)
+    ax.tick_params(axis="x", rotation=0, labelsize=7)
+    ax.tick_params(axis="y", rotation=0, labelsize=7)
 
     # Bold row/column labels.
     for lbl in ax.get_xticklabels() + ax.get_yticklabels():
@@ -183,6 +196,5 @@ def render_plot(data: pl.DataFrame, out_path: Path) -> None:
     for spine in ax.spines.values():
         spine.set_linewidth(0.5)
 
-    plt.tight_layout(pad=0.4)
     plt.savefig(out_path)
     plt.close(fig)

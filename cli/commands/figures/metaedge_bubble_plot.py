@@ -21,11 +21,11 @@ from optimuskg.pipelines.silver.nodes.constants import Node
 from . import style  # noqa: F401
 from .style import apply_axis_styling
 
-# GEN nodes appear as PRO in edge labels.  We map PRO -> GEN so edges are
-# attributed to the node-type label used in the node parquet files.
+# Edges use PRO in their labels; remap to GEN so all figures consistently
+# show the Gene node type.  PRO is excluded from the order.
 _EDGE_TO_NODE_LABEL = {"PRO": "GEN"}
 
-_NODE_TYPE_ORDER = [member.value for member in Node]
+_NODE_TYPE_ORDER = [member.value for member in Node if member is not Node.PROTEIN]
 
 
 def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
@@ -107,23 +107,6 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
     )
 
 
-# Abbreviation -> human-readable name for the legend footer.
-_ABBREVIATIONS: dict[str, str] = {
-    "ANA": "Anatomy",
-    "BPO": "Biol. Process",
-    "CCO": "Cell. Component",
-    "DIS": "Disease",
-    "DRG": "Drug",
-    "EXP": "Exposure",
-    "GEN": "Gene",
-    "MFN": "Mol. Function",
-    "PWY": "Pathway",
-    "PHE": "Phenotype",
-}
-
-_LEGEND_COLS = 3
-
-
 def _scale_sizes(
     values: np.ndarray,
     *,
@@ -156,22 +139,14 @@ def render_plot(data: pl.DataFrame, out_path: Path) -> None:
     y_lo, y_hi = 5e3, 5e7
     log_y_min, log_y_max = np.log10(y_lo), np.log10(y_hi)
 
-    # Reserve space: plot on top, abbreviation legend below.
-    fig = plt.figure(figsize=(4, 4.8))
-    gs = fig.add_gridspec(
-        2,
-        1,
-        height_ratios=[3.2, 1.0],
-        hspace=0.35,
-    )
-    ax = fig.add_subplot(gs[0])
+    fig, ax = plt.subplots(figsize=(4, 3.5))
 
     sc = ax.scatter(
         x,
         y,
         s=sizes,
         c=avg_degree,
-        cmap="YlOrRd",
+        cmap="mpll-blue",
         norm=norm,
         edgecolors="black",
         linewidths=0.4,
@@ -180,8 +155,8 @@ def render_plot(data: pl.DataFrame, out_path: Path) -> None:
     )
 
     cbar = fig.colorbar(sc, ax=ax, shrink=0.8, pad=0.02)
-    cbar.set_label("Avg. degree", fontsize=8)
-    cbar.ax.tick_params(labelsize=7)
+    cbar.set_label("Avg. degree", fontsize=7)
+    cbar.ax.tick_params(labelsize=6)
 
     # Work in display (pixel) coordinates so offsets are resolution-independent.
     fig.canvas.draw()  # force a layout pass so transData is accurate
@@ -265,7 +240,7 @@ def render_plot(data: pl.DataFrame, out_path: Path) -> None:
             xytext=(off_x, off_y),
             ha="center",
             va=va_list[i],
-            fontsize=8,
+            fontsize=7,
             fontweight="bold",
         )
 
@@ -274,63 +249,12 @@ def render_plot(data: pl.DataFrame, out_path: Path) -> None:
     ax.set_xlim(x_lo, x_hi)
     ax.set_ylim(y_lo, y_hi)
 
-    ax.set_xlabel("Nodes", fontsize=8, fontweight="bold")
-    ax.set_ylabel("Edges", fontsize=8, fontweight="bold")
+    ax.set_xlabel("Nodes", fontsize=7, fontweight="bold")
+    ax.set_ylabel("Edges", fontsize=7, fontweight="bold")
 
     apply_axis_styling(ax)
-    ax.tick_params(axis="both", labelsize=7)
-
-    ax_leg = fig.add_subplot(gs[1])
-    ax_leg.axis("off")
-
-    items = list(_ABBREVIATIONS.items())
-    n_rows = -(-len(items) // _LEGEND_COLS)  # ceil division
-
-    # Title – left-aligned to match the reference Hetionet style.
-    ax_leg.text(
-        0.0,
-        1.0,
-        "Legend with abbreviations",
-        transform=ax_leg.transAxes,
-        ha="left",
-        va="top",
-        fontsize=8,
-    )
-
-    _COL_POSITIONS = [0.0, 0.35, 0.70]
-    row_height = 0.80 / max(n_rows, 1)
-
-    for idx, (abbr, full_name) in enumerate(items):
-        col = idx % _LEGEND_COLS
-        row = idx // _LEGEND_COLS
-        x_pos = _COL_POSITIONS[col]
-        y_pos = 0.82 - row * row_height
-
-        # Bold abbreviation
-        abbr_txt = ax_leg.text(
-            x_pos,
-            y_pos,
-            f"{abbr}",
-            transform=ax_leg.transAxes,
-            ha="left",
-            va="top",
-            fontsize=7,
-            fontweight="bold",
-        )
-        # Regular name, offset after the abbreviation
-        fig.canvas.draw()
-        bb = abbr_txt.get_window_extent(fig.canvas.get_renderer())
-        bb_ax = bb.transformed(ax_leg.transAxes.inverted())
-        ax_leg.text(
-            bb_ax.x1,
-            y_pos,
-            f": {full_name}",
-            transform=ax_leg.transAxes,
-            ha="left",
-            va="top",
-            fontsize=7,
-            fontweight="regular",
-        )
+    ax.tick_params(axis="both", labelsize=6)
+    ax.tick_params(which="minor", left=False, bottom=False)
 
     plt.savefig(out_path)
     plt.close(fig)
