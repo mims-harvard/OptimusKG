@@ -82,7 +82,7 @@ def run(
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # Build graph and compute PageRank
-    G = load_graph(edges_dir)
+    G, _, _, _ = load_graph(nodes_dir, edges_dir)
     node_metadata = load_node_metadata(nodes_dir)
     scores = compute_pagerank(G, alpha=alpha)
     df = (

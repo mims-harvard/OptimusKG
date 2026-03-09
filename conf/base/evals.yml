@@ -8,8 +8,8 @@ edge_eval:
 
   # PageRank percentile range for node sampling
   # Nodes between top X% and top Y% are eligible for sampling
-  pagerank_upper: 5      # Upper bound (top 5%)
-  pagerank_lower: 15     # Lower bound (top 15%)
+  pagerank_upper: 10     # Upper bound (top 10%)
+  pagerank_lower: 20     # Lower bound (top 20%)
 
   # Sampling parameters
   nodes_per_type: 100    # Nodes to sample per node type

@@ -32,8 +32,8 @@ DEFAULT_CONFIG_PATH = Path("conf/base/evals.yml")
 
 # Fallback defaults (used if config file not found)
 FALLBACK_DEFAULTS = {
-    "pagerank_upper": 5,
-    "pagerank_lower": 15,
+    "pagerank_upper": 10,
+    "pagerank_lower": 20,
     "nodes_per_type": 100,
     "true_neighbors": 10,
     "false_neighbors": 5,
@@ -169,10 +169,12 @@ def sample_nodes_in_percentile(
     sampling_stats: dict[str, dict] = {}
 
     for node_type, df in stratified_data.items():
-        # Filter to percentile range
+        # Filter to percentile range and exclude nodes with blank names
         eligible = df.filter(
             (pl.col("percentile") >= upper_percentile)
             & (pl.col("percentile") <= lower_percentile)
+            & pl.col("node_name").is_not_null()
+            & (pl.col("node_name") != "")
         )
 
         n_eligible = eligible.height
@@ -209,6 +211,7 @@ def sample_edges_for_nodes(
     sampled_nodes: pl.DataFrame,
     G: nx.Graph,
     node_metadata: pl.DataFrame,
+    edge_type_lookup: dict[tuple[str, str], str],
     true_neighbors_per_node: int,
     false_neighbors_per_node: int,
     seed: int,
@@ -219,6 +222,7 @@ def sample_edges_for_nodes(
         sampled_nodes: DataFrame of sampled seed nodes
         G: NetworkX graph
         node_metadata: DataFrame with node id, label, name
+        edge_type_lookup: Dict mapping (from_id, to_id) -> edge label
         true_neighbors_per_node: Max true neighbors to sample per node
         false_neighbors_per_node: False neighbors to sample per node
         seed: Random seed
@@ -232,6 +236,13 @@ def sample_edges_for_nodes(
     metadata_dict = {
         row["id"]: {"type": row["label"], "name": row["name"]}
         for row in node_metadata.iter_rows(named=True)
+    }
+
+    # Create set of nodes with valid (non-blank) names
+    nodes_with_names = {
+        node_id
+        for node_id, meta in metadata_dict.items()
+        if meta["name"] is not None and meta["name"] != ""
     }
 
     all_nodes = set(G.nodes())
@@ -263,8 +274,8 @@ def sample_edges_for_nodes(
 
         type_stats[seed_type]["total_neighbors"] += len(neighbors)
 
-        # Sample true neighbors
-        neighbors_list = list(neighbors)
+        # Sample true neighbors (only those with valid names)
+        neighbors_list = [n for n in neighbors if n in nodes_with_names]
         n_true = min(true_neighbors_per_node, len(neighbors_list))
         if n_true < true_neighbors_per_node:
             type_stats[seed_type]["nodes_with_few_neighbors"] += 1
@@ -283,14 +294,14 @@ def sample_edges_for_nodes(
                     "target_node_type": target_meta["type"],
                     "target_node_name": target_meta["name"],
                     "is_true_edge": True,
-                    "edge_type": "true_neighbor",
+                    "relation_type": edge_type_lookup.get((seed_id, target_id)),
                 }
             )
             type_stats[seed_type]["true_edges"] += 1
 
-        # Sample false neighbors (non-edges)
+        # Sample false neighbors (non-edges, only those with valid names)
         non_neighbors = all_nodes - neighbors - {seed_id}
-        non_neighbors_list = list(non_neighbors)
+        non_neighbors_list = [n for n in non_neighbors if n in nodes_with_names]
         n_false = min(false_neighbors_per_node, len(non_neighbors_list))
         false_sample = random.sample(non_neighbors_list, n_false) if n_false > 0 else []
 
@@ -306,7 +317,7 @@ def sample_edges_for_nodes(
                     "target_node_type": target_meta["type"],
                     "target_node_name": target_meta["name"],
                     "is_true_edge": False,
-                    "edge_type": "false_neighbor",
+                    "relation_type": None,
                 }
             )
             type_stats[seed_type]["false_edges"] += 1
@@ -397,7 +408,7 @@ def run(
 
     # Load data
     logger.info("Loading graph and node metadata...")
-    G = load_graph(edges_dir)
+    G, edge_type_lookup, node_types, edge_types = load_graph(nodes_dir, edges_dir)
     node_metadata = load_node_metadata(nodes_dir)
 
     # Compute PageRank stratified by type
@@ -436,6 +447,7 @@ def run(
         sampled_nodes,
         G,
         node_metadata,
+        edge_type_lookup,
         true_neighbors_per_node=true_neighbors,
         false_neighbors_per_node=false_neighbors,
         seed=seed,
@@ -461,6 +473,8 @@ def run(
         "graph": {
             "total_nodes": G.number_of_nodes(),
             "total_edges": G.number_of_edges(),
+            "node_types": node_types,
+            "edge_types": edge_types,
         },
         "node_sampling": {
             "total_sampled_nodes": sampled_nodes.height,
