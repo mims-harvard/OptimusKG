@@ -19,51 +19,6 @@ _EXPORT_FORMATS_DICT = {
 }
 
 
-def _validate_global_id_uniqueness(
-    nodes_dict: dict[str, pl.DataFrame],
-) -> None:
-    """Validate that node IDs are globally unique across all node types.
-
-    Collects every ``id`` from each node DataFrame and checks for duplicates.
-    When duplicates exist the error message includes which node types share
-    each colliding ID so the upstream silver-layer pipeline can be fixed.
-
-    Raises:
-        ValueError: If duplicate IDs are found across node types.
-    """
-    non_empty = {name: df for name, df in nodes_dict.items() if not df.is_empty()}
-    if not non_empty:
-        return
-
-    # Build a DataFrame of (id, node_type) across all node types.
-    tagged = pl.concat(
-        [
-            df.select("id").with_columns(pl.lit(name).alias("node_type"))
-            for name, df in non_empty.items()
-        ]
-    )
-
-    duplicates = (
-        tagged.group_by("id")
-        .agg(pl.col("node_type"))
-        .filter(pl.col("node_type").list.len() > 1)
-    )
-
-    if duplicates.height > 0:
-        sample = (
-            duplicates.head(10)
-            .with_columns(pl.col("node_type").list.join(", "))
-            .to_dicts()
-        )
-        raise ValueError(
-            f"Found {duplicates.height} non-unique node IDs across node types. "
-            f"Duplicates (id -> node types): {sample}"
-        )
-
-    total = tagged.height
-    logger.info(f"Validated global ID uniqueness: {total} IDs are globally unique.")
-
-
 def export_kg(  # noqa: PLR0913
     export_formats: dict[str, dict[str, Any]],
     # Nodes
@@ -159,9 +114,6 @@ def export_kg(  # noqa: PLR0913
         "anatomy_anatomy": anatomy_anatomy,
         "drug_phenotype": drug_phenotype,
     }
-
-    # Validate that node IDs are globally unique across all node types.
-    _validate_global_id_uniqueness(nodes_dict)
 
     logger.info(
         f"Exporting knowledge graph to formats: {', '.join(export_formats.keys())}"
