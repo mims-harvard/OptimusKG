@@ -360,8 +360,8 @@ def sample_edges_for_nodes(
 
 
 def run(
-    nodes_dir: Path,
-    edges_dir: Path,
+    nodes_path: Path,
+    edges_path: Path,
     out_dir: Path,
     pagerank_upper: int | None = None,
     pagerank_lower: int | None = None,
@@ -374,8 +374,8 @@ def run(
     """Run edge evaluation dataset generation.
 
     Args:
-        nodes_dir: Directory containing node parquet files
-        edges_dir: Directory containing edge parquet files
+        nodes_path: Path to nodes.parquet file.
+        edges_path: Path to edges.parquet file.
         out_dir: Output directory for generated files
         pagerank_upper: Upper percentile cutoff (top X%). Overrides config.
         pagerank_lower: Lower percentile cutoff (top X%). Overrides config.
@@ -408,8 +408,8 @@ def run(
 
     # Load data
     logger.info("Loading graph and node metadata...")
-    G, edge_type_lookup, node_types, edge_types = load_graph(nodes_dir, edges_dir)
-    node_metadata = load_node_metadata(nodes_dir)
+    G, edge_type_lookup, node_types, edge_types = load_graph(nodes_path, edges_path)
+    node_metadata = load_node_metadata(nodes_path)
 
     # Compute PageRank stratified by type
     stratified_data = stratify_pagerank_by_type(G, node_metadata)

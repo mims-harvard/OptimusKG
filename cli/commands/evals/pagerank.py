@@ -61,8 +61,8 @@ def plot_pagerank_by_type(df: pl.DataFrame, out_path: Path) -> None:
 
 
 def run(
-    nodes_dir: Path,
-    edges_dir: Path,
+    nodes_path: Path,
+    edges_path: Path,
     out_dir: Path,
     top_n: int = 10,
     alpha: float = 0.85,
@@ -70,8 +70,8 @@ def run(
     """Run PageRank analysis and save outputs.
 
     Args:
-        nodes_dir: Directory containing node parquet files.
-        edges_dir: Directory containing edge parquet files.
+        nodes_path: Path to nodes.parquet file.
+        edges_path: Path to edges.parquet file.
         out_dir: Directory to write outputs (CSV, figures).
         top_n: Number of top nodes to display in console.
         alpha: PageRank damping factor.
@@ -82,8 +82,8 @@ def run(
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # Build graph and compute PageRank
-    G, _, _, _ = load_graph(nodes_dir, edges_dir)
-    node_metadata = load_node_metadata(nodes_dir)
+    G, _, _, _ = load_graph(nodes_path, edges_path)
+    node_metadata = load_node_metadata(nodes_path)
     scores = compute_pagerank(G, alpha=alpha)
     df = (
         pagerank_to_dataframe(scores, node_metadata)

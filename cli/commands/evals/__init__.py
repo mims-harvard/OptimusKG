@@ -14,15 +14,15 @@ evals_app = typer.Typer(help="Generate evaluation datasets for KG analysis.")
 
 @evals_app.command(name="pagerank", help="Compute PageRank importance scores.")
 def pagerank_cmd(
-    nodes_dir: Path = typer.Option(
-        Path("data/gold/kg/parquet/nodes"),
+    nodes_path: Path = typer.Option(
+        Path("data/gold/kg/parquet/nodes.parquet"),
         "--nodes",
-        help="Directory containing node parquet files.",
+        help="Path to nodes.parquet file.",
     ),
-    edges_dir: Path = typer.Option(
-        Path("data/gold/kg/parquet/edges"),
+    edges_path: Path = typer.Option(
+        Path("data/gold/kg/parquet/edges.parquet"),
         "--edges",
-        help="Directory containing edge parquet files.",
+        help="Path to edges.parquet file.",
     ),
     out_dir: Path = typer.Option(
         Path("data/gold/evals"),
@@ -61,22 +61,22 @@ def pagerank_cmd(
         # Custom output directory
         uv run cli evals pagerank --out data/gold/evals/v2
     """
-    pagerank.run(nodes_dir, edges_dir, out_dir, top_n, alpha)
+    pagerank.run(nodes_path, edges_path, out_dir, top_n, alpha)
 
 
 @evals_app.command(
     name="sample-edges", help="Generate edge evaluation dataset for link prediction."
 )
 def sample_edges_cmd(  # noqa: PLR0913
-    nodes_dir: Path = typer.Option(
-        Path("data/gold/kg/parquet/nodes"),
+    nodes_path: Path = typer.Option(
+        Path("data/gold/kg/parquet/nodes.parquet"),
         "--nodes",
-        help="Directory containing node parquet files.",
+        help="Path to nodes.parquet file.",
     ),
-    edges_dir: Path = typer.Option(
-        Path("data/gold/kg/parquet/edges"),
+    edges_path: Path = typer.Option(
+        Path("data/gold/kg/parquet/edges.parquet"),
         "--edges",
-        help="Directory containing edge parquet files.",
+        help="Path to edges.parquet file.",
     ),
     out_dir: Path = typer.Option(
         Path("data/gold/evals"),
@@ -147,8 +147,8 @@ def sample_edges_cmd(  # noqa: PLR0913
         uv run cli evals sample-edges --nodes-per-type 200 --seed 123
     """
     sample_edges.run(
-        nodes_dir=nodes_dir,
-        edges_dir=edges_dir,
+        nodes_path=nodes_path,
+        edges_path=edges_path,
         out_dir=out_dir,
         pagerank_upper=pagerank_upper,
         pagerank_lower=pagerank_lower,

@@ -12,7 +12,8 @@ logger = logging.getLogger("cli")
 
 
 def load_graph(
-    nodes_dir: Path, edges_dir: Path
+    nodes_path: Path,
+    edges_path: Path,
 ) -> tuple[nx.Graph, dict[tuple[str, str], str], list[str], list[str]]:
     """Build an undirected NetworkX graph from node and edge parquet files.
 
@@ -20,8 +21,8 @@ def load_graph(
     Also builds a lookup for edge types (relation labels).
 
     Args:
-        nodes_dir: Directory containing node parquet files.
-        edges_dir: Directory containing edge parquet files.
+        nodes_path: Path to nodes.parquet file.
+        edges_path: Path to edges.parquet file.
 
     Returns:
         Tuple of:
@@ -33,16 +34,11 @@ def load_graph(
     G = nx.Graph()
 
     # 1. Read nodes first
-    node_types: set[str] = set()
-    for path in sorted(nodes_dir.glob("*.parquet")):
-        df = pl.read_parquet(path)
-        if df.height > 0:
-            node_ids = df["id"].to_list()
-            labels = df["label"].unique().to_list()
-            node_types.update(labels)
-            G.add_nodes_from(node_ids)
+    nodes_df = pl.read_parquet(nodes_path)
+    node_ids = nodes_df["id"].to_list()
+    node_types_list = sorted(nodes_df["label"].unique().to_list())
+    G.add_nodes_from(node_ids)
 
-    node_types_list = sorted(node_types)
     logger.info(
         "Loaded %s nodes with %s node types: %s",
         G.number_of_nodes(),
@@ -51,21 +47,17 @@ def load_graph(
     )
 
     # 2. Read edges
-    edge_types: set[str] = set()
-    edge_type_lookup: dict[tuple[str, str], str] = {}
-    for path in sorted(edges_dir.glob("*.parquet")):
-        df = pl.read_parquet(path)
-        if df.height > 0:
-            labels = df["label"].unique().to_list()
-            edge_types.update(labels)
-            for row in df.select("from", "to", "label").iter_rows():
-                from_id, to_id, label = row
-                G.add_edge(from_id, to_id)
-                # Store both directions for undirected lookup
-                edge_type_lookup[(from_id, to_id)] = label
-                edge_type_lookup[(to_id, from_id)] = label
+    edges_df = pl.read_parquet(edges_path)
+    edge_types_list = sorted(edges_df["label"].unique().to_list())
 
-    edge_types_list = sorted(edge_types)
+    edge_type_lookup: dict[tuple[str, str], str] = {}
+    for row in edges_df.select("from", "to", "label").iter_rows():
+        from_id, to_id, label = row
+        G.add_edge(from_id, to_id)
+        # Store both directions for undirected lookup
+        edge_type_lookup[(from_id, to_id)] = label
+        edge_type_lookup[(to_id, from_id)] = label
+
     logger.info(
         "Loaded %s edges with %s edge types: %s",
         G.number_of_edges(),
@@ -76,28 +68,33 @@ def load_graph(
     return G, edge_type_lookup, node_types_list, edge_types_list
 
 
-def load_node_metadata(nodes_dir: Path) -> pl.DataFrame:
-    """Load node id, label, and name from all node parquet files.
+def load_node_metadata(nodes_path: Path) -> pl.DataFrame:
+    """Load node id, label, and name from nodes parquet file.
 
     Args:
-        nodes_dir: Directory containing node parquet files.
+        nodes_path: Path to nodes.parquet file.
 
     Returns:
         DataFrame with columns: id, label, name
     """
-    frames: list[pl.DataFrame] = []
-    for path in sorted(nodes_dir.glob("*.parquet")):
-        df = pl.read_parquet(path)
-        if df.height > 0:
-            frames.append(
-                df.select(
-                    "id",
-                    "label",
-                    pl.col("properties").struct.field("name").alias("name"),
-                )
-            )
+    df = pl.read_parquet(nodes_path)
 
-    result = pl.concat(frames)
+    # Handle both struct and JSON string properties
+    if df.schema["properties"] == pl.String:
+        # Properties is JSON string - parse it
+        result = df.select(
+            "id",
+            "label",
+            pl.col("properties").str.json_path_match("$.name").alias("name"),
+        )
+    else:
+        # Properties is struct - access field directly
+        result = df.select(
+            "id",
+            "label",
+            pl.col("properties").struct.field("name").alias("name"),
+        )
+
     logger.info("Loaded metadata for %s nodes", result.height)
     return result
 
