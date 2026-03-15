@@ -9,7 +9,6 @@ from optimuskg.pipelines.gold.export_formats import (
     neo4j_export,
     parquet_export,
 )
-from optimuskg.pipelines.silver.nodes.constants import Node
 
 logger = logging.getLogger(__name__)
 
@@ -20,76 +19,49 @@ _EXPORT_FORMATS_DICT = {
 }
 
 
-def _namespace_node_ids(
-    nodes_dict: dict[str, pl.DataFrame],
-) -> dict[str, pl.DataFrame]:
-    """Prefix node IDs with their label to ensure global uniqueness.
-
-    Each node's ``id`` becomes ``"{label}:{original_id}"``,
-    e.g. ``"GEN:ENSG00000141510"``.
-    """
-    return {
-        name: df.with_columns(
-            (pl.col("label") + pl.lit(":") + pl.col("id")).alias("id")
-        )
-        for name, df in nodes_dict.items()
-    }
-
-
-def _namespace_edge_ids(
-    edges_dict: dict[str, pl.DataFrame],
-) -> dict[str, pl.DataFrame]:
-    """Prefix edge ``from``/``to`` IDs with their node-type label.
-
-    The node type is derived from the edge's ``label`` column
-    (e.g. ``"DIS-PHE"``).  Proteins (``PRO``) are mapped to genes
-    (``GEN``) because protein nodes are stored as gene nodes.
-    """
-    result: dict[str, pl.DataFrame] = {}
-    for name, df in edges_dict.items():
-        if df.is_empty():
-            result[name] = df
-            continue
-
-        edge_label: str = df.select("label").row(0)[0]
-        from_type, to_type = edge_label.split("-")
-
-        # Proteins are represented as gene nodes in the KG.
-        from_ns = Node.GENE if from_type == Node.PROTEIN else from_type
-        to_ns = Node.GENE if to_type == Node.PROTEIN else to_type
-
-        result[name] = df.with_columns(
-            (pl.lit(f"{from_ns}:") + pl.col("from")).alias("from"),
-            (pl.lit(f"{to_ns}:") + pl.col("to")).alias("to"),
-        )
-    return result
-
-
 def _validate_global_id_uniqueness(
     nodes_dict: dict[str, pl.DataFrame],
 ) -> None:
     """Validate that node IDs are globally unique across all node types.
 
+    Collects every ``id`` from each node DataFrame and checks for duplicates.
+    When duplicates exist the error message includes which node types share
+    each colliding ID so the upstream silver-layer pipeline can be fixed.
+
     Raises:
         ValueError: If duplicate IDs are found across node types.
     """
-    non_empty = [df.select("id") for df in nodes_dict.values() if not df.is_empty()]
+    non_empty = {name: df for name, df in nodes_dict.items() if not df.is_empty()}
     if not non_empty:
         return
 
-    all_ids = pl.concat(non_empty)
-    duplicates = all_ids.filter(pl.col("id").is_duplicated()).unique()
+    # Build a DataFrame of (id, node_type) across all node types.
+    tagged = pl.concat(
+        [
+            df.select("id").with_columns(pl.lit(name).alias("node_type"))
+            for name, df in non_empty.items()
+        ]
+    )
+
+    duplicates = (
+        tagged.group_by("id")
+        .agg(pl.col("node_type"))
+        .filter(pl.col("node_type").list.len() > 1)
+    )
 
     if duplicates.height > 0:
-        sample = duplicates.head(10).to_series().to_list()
+        sample = (
+            duplicates.head(10)
+            .with_columns(pl.col("node_type").list.join(", "))
+            .to_dicts()
+        )
         raise ValueError(
             f"Found {duplicates.height} non-unique node IDs across node types. "
-            f"Sample: {sample}"
+            f"Duplicates (id -> node types): {sample}"
         )
 
-    logger.info(
-        f"Validated global ID uniqueness: {all_ids.height} IDs are globally unique."
-    )
+    total = tagged.height
+    logger.info(f"Validated global ID uniqueness: {total} IDs are globally unique.")
 
 
 def export_kg(  # noqa: PLR0913
@@ -188,9 +160,7 @@ def export_kg(  # noqa: PLR0913
         "drug_phenotype": drug_phenotype,
     }
 
-    # Namespace IDs for global uniqueness and validate.
-    nodes_dict = _namespace_node_ids(nodes_dict)
-    edges_dict = _namespace_edge_ids(edges_dict)
+    # Validate that node IDs are globally unique across all node types.
     _validate_global_id_uniqueness(nodes_dict)
 
     logger.info(
