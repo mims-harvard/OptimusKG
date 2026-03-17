@@ -14,7 +14,6 @@ def run(  # noqa: PLR0913
     disease_protein: pl.DataFrame,
     disease_phenotype: pl.DataFrame,
 ) -> pl.DataFrame:
-    non_disease_prefixes = ("GO_", "HP_", "UBERON_")
     return (
         pl.concat(
             [
@@ -28,10 +27,10 @@ def run(  # noqa: PLR0913
             ]
         )
         .unique(subset="id")
-        .filter(
-            ~pl.col("id").str.starts_with(non_disease_prefixes[0])
-            & ~pl.col("id").str.starts_with(non_disease_prefixes[1])
-            & ~pl.col("id").str.starts_with(non_disease_prefixes[2])
+        .filter(  # Filter out non-disease prefixes from DIS
+            ~pl.col("id").str.starts_with("GO_")
+            & ~pl.col("id").str.starts_with("HP_")
+            & ~pl.col("id").str.starts_with("UBERON_")
         )
         .join(opentargets_disease, left_on="id", right_on="id", how="left")
         .unnest("metadata")
