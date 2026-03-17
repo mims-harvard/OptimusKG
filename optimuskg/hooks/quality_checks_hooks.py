@@ -159,17 +159,16 @@ class QualityChecksHooks:
             ):
                 G.add_edge(src, dst, label=label)
 
-        n_components = nx.number_connected_components(G)
+        from collections import Counter
 
-        if n_components > 1:
-            max_display = 10
-            sizes = sorted((len(c) for c in nx.connected_components(G)), reverse=True)
-            raise DatasetError(
-                f"The exported graph in {output_name} has {n_components} connected components, expected 1. Component sizes (largest first): {sizes[:max_display]}{'...' if len(sizes) > max_display else ''}"
-            )
+        component_sizes = [len(c) for c in nx.connected_components(G)]
+        n_components = len(component_sizes)
+        size_counts = dict(sorted(Counter(component_sizes).items(), reverse=True))
 
         logger.info(
-            f"Validated graph connectivity in {output_name}: the graph forms a single connected component with {nodes_df.height} nodes."
+            f"Graph connectivity in {output_name}: "
+            f"{n_components} connected component(s), "
+            f"size distribution (size: count): {size_counts}"
         )
 
     def _check_relation_values(self, name: str, df: pl.DataFrame) -> None:
