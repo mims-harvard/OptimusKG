@@ -43,6 +43,6 @@ silver.edges.exposure_exposure:
         enrollment_end_years: pl.List(pl.String)
         study_factors: pl.List(pl.String)
   metadata:
-    checksum: 77ae8a5597adaf0e6cdbab6a905f3d7f
+    checksum: b0b2eccc754223a22dfdf3f065ee03b4
     kedro-viz:
       layer: silver
