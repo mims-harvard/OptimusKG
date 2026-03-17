@@ -16,6 +16,6 @@ silver.edges.biological_process_protein:
         gene_product: pl.List(pl.String)
         eco_ids: pl.List(pl.String)
   metadata:
-    checksum: bc0e7036aa0d829bf446e21aa23401a9
+    checksum: 53d6dc0ef21e99d8a1e9992cfe7756ff
     kedro-viz:
       layer: silver

@@ -23,6 +23,6 @@ silver.edges.disease_protein:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
   metadata:
-    checksum: f02d0f218c7d6d88f56c69204d3a5a7b
+    checksum: 12fd7a5feddb7e84782e08ed894e493a
     kedro-viz:
       layer: silver

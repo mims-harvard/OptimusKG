@@ -11,6 +11,6 @@ bronze.drugcentral.disease:
       cui_semantic_type: pl.String
       snomed_conceptids: pl.List(pl.String)
   metadata:
-    checksum: 797bcc15b723dfa81802a6ec0a085600
+    checksum: e53b15cd737d8dc9a87cdd0297bb7332
     kedro-viz:
       layer: bronze
