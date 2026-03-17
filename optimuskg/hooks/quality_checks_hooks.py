@@ -18,6 +18,9 @@ class QualityChecksHooks:
         if node.namespace in ["silver", "gold"]:
             self._validate_outputs(outputs)
 
+        if node.namespace == "gold" and node.name == "export_kg":
+            self._validate_global_node_id_uniqueness(outputs)
+
     def _validate_outputs(self, outputs: dict[str, Any]) -> None:
         for output_name, output_value in outputs.items():
             if isinstance(output_value, pl.DataFrame):
@@ -44,6 +47,48 @@ class QualityChecksHooks:
                     f"{get_dataset_display_name(name)}: Column {column} has null ids",
                     extra={"markup": True},
                 )
+
+    def _validate_global_node_id_uniqueness(self, outputs: dict[str, Any]) -> None:
+        """Check that node IDs are globally unique across all node types.
+
+        Runs on the consolidated ``"nodes"`` DataFrame that the export_kg
+        node already produces (via csv_export / parquet_export).  When
+        duplicates exist the error lists which labels share each colliding
+        ID so the upstream silver-layer pipeline can be fixed.
+        """
+        for output_name, output_value in outputs.items():
+            if not isinstance(output_value, dict):
+                continue
+            nodes_df = output_value.get("nodes")
+            if nodes_df is None or not isinstance(nodes_df, pl.DataFrame):
+                continue
+            if nodes_df.is_empty():
+                continue
+
+            duplicates = (
+                nodes_df.select("id", "label")
+                .group_by("id")
+                .agg(pl.col("label"))
+                .filter(pl.col("label").list.len() > 1)
+            )
+
+            if duplicates.height > 0:
+                sample = (
+                    duplicates.head(10)
+                    .with_columns(pl.col("label").list.join(", "))
+                    .to_dicts()
+                )
+                raise DatasetError(
+                    f"Found {duplicates.height} non-unique node IDs across "
+                    f"node types in {output_name}. "
+                    f"Duplicates (id -> labels): {sample}"
+                )
+
+            logger.info(
+                f"Validated global ID uniqueness in {output_name}: "
+                f"{nodes_df.height} IDs are globally unique."
+            )
+            return  # Only need to validate once; all formats share the same source data.
 
     def _check_relation_values(self, name: str, df: pl.DataFrame) -> None:
         if "relation" not in df.columns:
