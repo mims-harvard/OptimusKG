@@ -22,6 +22,6 @@ silver.edges.disease_phenotype:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
   metadata:
-    checksum: 691a7c8cec43e6291c29d8b245ee96aa
+    checksum: a39c0bb36527dec46e92a0a51b813dee
     kedro-viz:
       layer: silver
