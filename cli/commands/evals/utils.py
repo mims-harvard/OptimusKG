@@ -31,7 +31,7 @@ def load_graph(
         - node_types: Sorted list of unique node type labels
         - edge_types: Sorted list of unique edge type labels
     """
-    G = nx.Graph()
+    G = nx.DiGraph()
 
     # 1. Read nodes first
     nodes_df = pl.read_parquet(nodes_path)
@@ -51,9 +51,16 @@ def load_graph(
     edge_types_list = sorted(edges_df["label"].unique().to_list())
 
     edge_type_lookup: dict[tuple[str, str], str] = {}
-    for row in edges_df.select("from", "to", "label").iter_rows():
-        from_id, to_id, label = row
+    for row in edges_df.select("from", "to", "label", "undirected").iter_rows():
+        from_id, to_id, label, is_undirected = row
+
+        # Add forward edge
         G.add_edge(from_id, to_id)
+
+        # Add reverse edge if undirected
+        if is_undirected:
+            G.add_edge(to_id, from_id)
+
         # Store both directions for undirected lookup
         edge_type_lookup[(from_id, to_id)] = label
         edge_type_lookup[(to_id, from_id)] = label
