@@ -21,6 +21,7 @@ class QualityChecksHooks:
         if node.name == "gold.export_kg":
             self._validate_global_node_id_uniqueness(outputs)
             self._validate_edge_node_references(outputs)
+            self._validate_single_connected_component(outputs)
 
     def _validate_outputs(self, outputs: dict[str, Any]) -> None:
         for output_name, output_value in outputs.items():
@@ -127,6 +128,48 @@ class QualityChecksHooks:
 
         logger.info(
             f"Validated edge-node references in {output_name}: all edge endpoints reference valid node IDs."
+        )
+
+    def _validate_single_connected_component(self, outputs: dict[str, Any]) -> None:
+        """Check that the exported graph forms a single connected component.
+
+        Builds a networkx Graph from the consolidated nodes and edges
+        DataFrames produced by export_kg and verifies it is connected.
+        """
+        import networkx as nx
+
+        output_name = "gold.kg.parquet"
+        output_value = outputs[output_name]
+
+        nodes_df = output_value.get("nodes")
+        edges_df = output_value.get("edges")
+
+        if nodes_df.is_empty():
+            return
+
+        G = nx.Graph()
+        for nid, label in zip(nodes_df["id"].to_list(), nodes_df["label"].to_list()):
+            G.add_node(nid, label=label)
+
+        if not edges_df.is_empty():
+            for src, dst, label in zip(
+                edges_df["from"].to_list(),
+                edges_df["to"].to_list(),
+                edges_df["label"].to_list(),
+            ):
+                G.add_edge(src, dst, label=label)
+
+        n_components = nx.number_connected_components(G)
+
+        if n_components > 1:
+            max_display = 10
+            sizes = sorted((len(c) for c in nx.connected_components(G)), reverse=True)
+            raise DatasetError(
+                f"The exported graph in {output_name} has {n_components} connected components, expected 1. Component sizes (largest first): {sizes[:max_display]}{'...' if len(sizes) > max_display else ''}"
+            )
+
+        logger.info(
+            f"Validated graph connectivity in {output_name}: the graph forms a single connected component with {nodes_df.height} nodes."
         )
 
     def _check_relation_values(self, name: str, df: pl.DataFrame) -> None:
