@@ -43,6 +43,6 @@ silver.edges.exposure_molecular_function:
         enrollment_end_years: pl.List(pl.String)
         study_factors: pl.List(pl.String)
   metadata:
-    checksum: 886c76fb5489c31b73f3c76d82a2ef6f
+    checksum: 03d96030518993425020e0c229cca7ba
     kedro-viz:
       layer: silver

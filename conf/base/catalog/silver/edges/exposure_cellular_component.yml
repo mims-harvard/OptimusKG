@@ -43,6 +43,6 @@ silver.edges.exposure_cellular_component:
         enrollment_end_years: pl.List(pl.String)
         study_factors: pl.List(pl.String)
   metadata:
-    checksum: 9e3b22217509f1d043a23ac7e7dea1ad
+    checksum: 54f9973b10bfe4ad0c500448a913f4f1
     kedro-viz:
       layer: silver

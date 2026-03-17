@@ -52,6 +52,6 @@ silver.nodes.drug:
         status: pl.String
         struct_id: pl.String
   metadata:
-    checksum: 7c70f16342005d973b7f82dba48f9e89
+    checksum: 5066279127ea056fda432e87def9b571
     kedro-viz:
       layer: silver
