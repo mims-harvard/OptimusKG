@@ -1,12 +1,20 @@
 """Figure data computation and plot rendering."""
 
 import logging
+import warnings
 from pathlib import Path
 
 import polars as pl
 import typer
 
-from .registry import FIGURES
+# Suppress Kedro warning spam for dotted dataset names used by this project.
+warnings.filterwarnings(
+    "ignore",
+    message=r"Dataset name '.*' contains '\.' characters.*",
+    category=UserWarning,
+)
+
+from .registry import FIGURES  # noqa: E402
 
 logger = logging.getLogger("cli")
 
@@ -17,12 +25,12 @@ figure_app = typer.Typer(help="Compute figure data and render plots.")
 def data(
     figure: str = typer.Argument(help="Figure name (e.g. 'adjacency-heatmap')."),
     nodes_dir: Path = typer.Option(
-        "data/gold/formats/parquet/nodes",
+        "data/gold/kg/parquet/nodes",
         "--nodes",
         help="Directory containing gold node parquet files.",
     ),
     edges_dir: Path = typer.Option(
-        "data/gold/formats/parquet/edges",
+        "data/gold/kg/parquet/edges",
         "--edges",
         help="Directory containing gold edge parquet files.",
     ),
