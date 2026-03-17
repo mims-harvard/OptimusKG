@@ -14,7 +14,7 @@ warnings.filterwarnings(
     category=UserWarning,
 )
 
-from .registry import FIGURES
+from .registry import FIGURES  # noqa: E402
 
 logger = logging.getLogger("cli")
 
