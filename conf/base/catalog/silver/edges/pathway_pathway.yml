@@ -13,6 +13,6 @@ silver.edges.pathway_pathway:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
   metadata:
-    checksum: 6d286bc22611cd3a30dcbc701fe0d883
+    checksum: ebd23f74c64567e78630d9187a880e02
     kedro-viz:
       layer: silver

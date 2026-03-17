@@ -23,6 +23,6 @@ silver.edges.phenotype_protein:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
   metadata:
-    checksum: 50a492d7158050f510db8fbf205f8889
+    checksum: b1c62b3fb9e5f4e65b898df9f4352a81
     kedro-viz:
       layer: silver

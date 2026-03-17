@@ -13,6 +13,6 @@ silver.nodes.exposure:
         source_categories: pl.List(pl.String)
         source_details: pl.String
   metadata:
-    checksum: 1693aae27d6d2044e3917976ecdb76da
+    checksum: c75ff1ac8d590ae123135a2721bcbf6b
     kedro-viz:
       layer: silver

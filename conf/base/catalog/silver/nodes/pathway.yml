@@ -12,6 +12,6 @@ silver.nodes.pathway:
         name: pl.String
         species: pl.String
   metadata:
-    checksum: 806e98b8d013ee65710da2f2b71c0d6d
+    checksum: 8a944754894eee0b90617662df75b3ef
     kedro-viz:
       layer: silver
