@@ -162,9 +162,7 @@ def export_kg(  # noqa: PLR0913
             ].filter(pl.col("id").is_in(lcc_ids))
             fmt_output["largest_connected_component_edges"] = fmt_output[
                 "edges"
-            ].filter(
-                pl.col("from").is_in(lcc_ids) & pl.col("to").is_in(lcc_ids)
-            )
+            ].filter(pl.col("from").is_in(lcc_ids) & pl.col("to").is_in(lcc_ids))
             outputs[f"kg.{format_name}"] = fmt_output
         elif format_name == "neo4j":
             export_func(nodes_dict, edges_dict, include_properties)
