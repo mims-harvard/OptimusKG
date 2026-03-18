@@ -14,6 +14,6 @@ silver.edges.drug_drug:
           indirect: pl.List(pl.String)
         interaction_description: pl.String
   metadata:
-    checksum: f27ec25a3a26ba1a62c539440818eb2a
+    checksum: 54cfa75ff2ce58ed470a0f1c3922253e
     kedro-viz:
       layer: silver

@@ -19,6 +19,6 @@ silver.nodes.cellular_component:
           license: pl.String
           version: pl.String
   metadata:
-    checksum: 29925e762deb07f72eb6b967dc484c42
+    checksum: 40fb3a3435452b4c9761203659ac7e91
     kedro-viz:
       layer: silver
