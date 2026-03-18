@@ -157,6 +157,7 @@ def export_kg(  # noqa: PLR0913
 
         if format_name in ["csv", "parquet"]:
             fmt_output = export_func(nodes_dict, edges_dict, include_properties)
+
             fmt_output["largest_connected_component_nodes"] = fmt_output[
                 "nodes"
             ].filter(pl.col("id").is_in(lcc_ids))
