@@ -46,13 +46,12 @@ def _init_worker(hook_classes: tuple[type, ...], settings_module: str) -> None:
         settings_module: Dotted path to the project's settings module
             (e.g. ``"optimuskg.settings"``).
     """
-    from kedro.framework.hooks.manager import _create_hook_manager, _register_hooks
-    from kedro.framework.project import settings
-    from kedro.runner.runner import Task
-
     # Configure settings (but NOT pipelines) so hooks that access
     # the catalog via KedroSession can resolve the project config.
     import kedro.framework.project as _project
+    from kedro.framework.hooks.manager import _create_hook_manager, _register_hooks
+    from kedro.framework.project import settings
+    from kedro.runner.runner import Task
 
     settings.configure(settings_module)
     _project.PACKAGE_NAME = settings_module.removesuffix(".settings")
