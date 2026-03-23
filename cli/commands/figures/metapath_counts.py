@@ -33,6 +33,7 @@ from cli.commands.metrics.utils import load_parquet_dir
 from optimuskg.pipelines.silver.nodes.constants import Node
 
 from . import style  # noqa: F401
+from .style import BLUE_CMAP
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +45,7 @@ _NODE_TYPE_ORDER = [m.value for m in Node if m is not Node.PROTEIN]
 _EDGE_LABEL_MAP = {"PRO": "GEN"}
 
 _MAX_LENGTH = 4
+_MIN_MULTIHOP_LENGTH = 2
 
 # Type alias for a directed metaedge: (src_type, relation, dst_type).
 _Metaedge = tuple[str, str, str]
@@ -119,7 +121,7 @@ def _count_empirical_metapaths(
             E1[idx[src], idx[dst]] += 1
     result["E1"] = E1
 
-    if max_length < 2:
+    if max_length < _MIN_MULTIHOP_LENGTH:
         return result
 
     # Helper: metaedges leaving a given node type.
@@ -290,16 +292,21 @@ def _pivot_to_matrix(
     return mat
 
 
+_SI_KILO = 1_000
+_SI_TEN_KILO = 10_000
+_SI_MEGA = 1_000_000
+
+
 def _format_si(value: float) -> str:
     """Format a number with SI suffixes (K, M) for compact display."""
     v = abs(value)
-    if v < 1000:
+    if v < _SI_KILO:
         return f"{int(value)}"
-    if v < 10_000:
-        return f"{value / 1000:.1f}K"
-    if v < 1_000_000:
-        return f"{value / 1000:.0f}K"
-    return f"{value / 1_000_000:.1f}M"
+    if v < _SI_TEN_KILO:
+        return f"{value / _SI_KILO:.1f}K"
+    if v < _SI_MEGA:
+        return f"{value / _SI_KILO:.0f}K"
+    return f"{value / _SI_MEGA:.1f}M"
 
 
 def _format_count_matrix(mat: np.ndarray) -> np.ndarray:
@@ -359,7 +366,7 @@ def _render_count_heatmap(
             mask=mask | (mat == 0),
             xticklabels=_NODE_TYPE_ORDER,
             yticklabels=_NODE_TYPE_ORDER,
-            cmap="mpll-blue",
+            cmap=BLUE_CMAP,
             norm=norm,
             square=True,
             linewidths=0.3,
@@ -392,7 +399,7 @@ def _render_count_heatmap(
             spine.set_visible(True)
 
     # Shared colorbar on the right.
-    sm = plt.cm.ScalarMappable(cmap="mpll-blue", norm=norm)
+    sm = plt.cm.ScalarMappable(cmap=BLUE_CMAP, norm=norm)
     cbar = fig.colorbar(sm, ax=axes.tolist(), shrink=0.8, pad=0.02)
     cbar.set_label("Metapath count", fontsize=7)
     cbar.ax.tick_params(labelsize=6)

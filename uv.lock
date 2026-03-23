@@ -7,6 +7,20 @@ resolution-markers = [
 ]
 
 [[package]]
+name = "adjusttext"
+version = "1.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "matplotlib" },
+    { name = "numpy" },
+    { name = "scipy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4c/d4/6585f3b6fdb75648bca294664af4becc8aa2fb3fb08f4e4e9fd27e10d773/adjusttext-1.3.0.tar.gz", hash = "sha256:4ab75cd4453af4828876ac3e964f2c49be642ea834f0c1f7449558d5f12cbca1", size = 15724, upload-time = "2024-10-31T16:45:36.101Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/53/1c/8feedd607cc14c5df9aef74fe3af9a99bf660743b842a9b5b1865326b4aa/adjustText-1.3.0-py3-none-any.whl", hash = "sha256:da23d7b24b6db5ffa039bb136bfa556207365e32f48ac74b07ad26dd485bc691", size = 13154, upload-time = "2024-10-31T16:45:35.227Z" },
+]
+
+[[package]]
 name = "aiofiles"
 version = "24.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -2070,10 +2084,11 @@ wheels = [
 ]
 
 [[package]]
-name = "optimuskg"
-version = "0.55.0"
+name = "optimus"
+version = "0.58.1"
 source = { editable = "." }
 dependencies = [
+    { name = "adjusttext" },
     { name = "aiohttp" },
     { name = "biocypher" },
     { name = "ipython" },
@@ -2112,6 +2127,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "adjusttext", specifier = ">=1.3.0" },
     { name = "aiohttp", specifier = ">=3.11.11" },
     { name = "biocypher", specifier = ">=0.6.1" },
     { name = "ipython", specifier = ">=8.10" },

@@ -81,3 +81,16 @@ gold.figures.metapath_counts:
   metadata:
     kedro-viz:
       layer: gold
+
+gold.figures.property_type_distribution:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/gold/figures/property_type_distribution.parquet
+  load_args:
+    schema:
+      entity_type: pl.String
+      entity_kind: pl.String
+      dtype_category: pl.String
+      count: pl.Int64
+  metadata:
+    kedro-viz:
+      layer: gold

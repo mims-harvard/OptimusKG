@@ -16,7 +16,7 @@ from cli.commands.metrics.utils import load_parquet_dir
 from optimuskg.pipelines.silver.nodes.constants import Node
 
 from . import style  # noqa: F401
-from .style import apply_axis_styling
+from .style import BLUE_CMAP
 
 # PRO is excluded; edges use PRO in their labels but we remap to GEN so
 # all figures consistently show the Gene node type.
@@ -168,7 +168,7 @@ def render_plot(data: pl.DataFrame, out_path: Path) -> None:
         annot=annotations,
         fmt="",
         annot_kws={"fontsize": 5},
-        cmap="mpll-blue",
+        cmap=BLUE_CMAP,
         norm=norm,
         square=True,
         linewidths=0.5,

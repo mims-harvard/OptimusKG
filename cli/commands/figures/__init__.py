@@ -1,12 +1,21 @@
 """Figure data computation and plot rendering."""
 
 import logging
+import warnings
 from pathlib import Path
+from typing import Annotated
 
 import polars as pl
 import typer
 
-from .registry import FIGURES
+# Suppress Kedro warning spam for dotted dataset names used by this project.
+warnings.filterwarnings(
+    "ignore",
+    message=r"Dataset name '.*' contains '\.' characters.*",
+    category=UserWarning,
+)
+
+from .registry import FIGURES  # noqa: E402
 
 logger = logging.getLogger("cli")
 
@@ -17,12 +26,12 @@ figure_app = typer.Typer(help="Compute figure data and render plots.")
 def data(
     figure: str = typer.Argument(help="Figure name (e.g. 'adjacency-heatmap')."),
     nodes_dir: Path = typer.Option(
-        "data/gold/formats/parquet/nodes",
+        "data/gold/kg/parquet/nodes",
         "--nodes",
         help="Directory containing gold node parquet files.",
     ),
     edges_dir: Path = typer.Option(
-        "data/gold/formats/parquet/edges",
+        "data/gold/kg/parquet/edges",
         "--edges",
         help="Directory containing gold edge parquet files.",
     ),
@@ -46,7 +55,7 @@ def data(
     logger.info("Figure data written to %s", out_path)
 
 
-@figure_app.command(help="Render a figure from precomputed data and save as PDF.")
+@figure_app.command(help="Render a figure from precomputed data and export as PDF or SVG.")
 def plot(
     figure: str = typer.Argument(help="Figure name (e.g. 'adjacency-heatmap')."),
     data_dir: Path = typer.Option(
@@ -57,8 +66,17 @@ def plot(
     out_dir: Path = typer.Option(
         "data/gold/figures",
         "--out",
-        help="Directory to write PDF plots to.",
+        help="Directory to write plot files to.",
     ),
+    fmt: Annotated[
+        str,
+        typer.Option(
+            "--format",
+            "-f",
+            help="Export format for the plot file.",
+            case_sensitive=False,
+        ),
+    ] = "pdf",
 ):
     if figure not in FIGURES:
         available = ", ".join(sorted(FIGURES))
@@ -70,6 +88,11 @@ def plot(
     df = pl.read_parquet(data_path)
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / f"{figure.replace('-', '_')}.pdf"
+    file_format = fmt.lower()
+    if file_format not in {"pdf", "svg"}:
+        logger.error("Unsupported format '%s'. Choose one of: pdf, svg", fmt)
+        raise typer.Exit(code=1)
+
+    out_path = out_dir / f"{figure.replace('-', '_')}.{file_format}"
     module.render_plot(df, out_path)
     logger.info("Plot saved to %s", out_path)

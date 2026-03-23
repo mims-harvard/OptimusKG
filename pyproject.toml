@@ -4,9 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 requires-python = ">=3.12"
-name = "optimuskg"
+name = "optimus"
 readme = "README.md"
-version = "0.55.0"
+version = "0.58.1"
 dependencies = [
   "ipython>=8.10",
   "jupyterlab>=3.0",
@@ -29,6 +29,7 @@ dependencies = [
   "owlready2>=0.47",
   "powerlaw>=2.0.0",
   "matplotlabs>=0.2.0",
+  "adjusttext>=1.3.0",
 ]
 
 [dependency-groups]
@@ -68,8 +69,8 @@ venvPath = "."
 venv = ".venv"
 
 [tool.typos.default.extend-words]
-# Don't correct the OpenTargets Abbreviation
-ot = "ot"
+ot = "ot"       # Don't correct the Open Targets abbreviation
+qubic = "qubic" # Don't correct QUBIC database name
 
 [tool.ruff.format]
 docstring-code-format = true

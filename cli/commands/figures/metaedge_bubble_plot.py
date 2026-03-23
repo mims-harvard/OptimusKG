@@ -12,14 +12,17 @@ from collections import defaultdict
 from pathlib import Path
 
 import matplotlib.colors as mcolors
+import matplotlib.figure as mfigure
 import matplotlib.pyplot as plt
 import numpy as np
 import polars as pl
+from matplotlib.axes import Axes
+
 from cli.commands.metrics.utils import load_parquet_dir
 from optimuskg.pipelines.silver.nodes.constants import Node
 
 from . import style  # noqa: F401
-from .style import apply_axis_styling
+from .style import BLUE_CMAP, WARM_GRAY_SCALE, apply_axis_styling
 
 # Edges use PRO in their labels; remap to GEN so all figures consistently
 # show the Gene node type.  PRO is excluded from the order.
@@ -39,10 +42,22 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
       - ``avg_degree``     (Float64)  – average degree (edge_count / node_count)
     """
 
-    node_counts: dict[str, int] = {}
+    node_counts: dict[str, int] = defaultdict(int)
     for df in load_parquet_dir(nodes_dir):
         label = df["label"][0]
-        node_counts[label] = df.height
+        if label is None:
+            continue
+        mapped_label: str = _EDGE_TO_NODE_LABEL.get(str(label), str(label))
+
+        # Count unique nodes per node type (not raw rows), since a file can
+        # contain duplicates in some intermediate/export scenarios.
+        if "id" in df.columns:
+            unique_nodes = df["id"].n_unique()
+        else:
+            unique_nodes = df.height
+
+        # Aggregate in case multiple parquet files map to the same node label.
+        node_counts[mapped_label] += int(unique_nodes)
 
     edge_counts: dict[str, int] = defaultdict(int)
     # metaedge_sets stores the set of unique metaedge strings per node type
@@ -62,10 +77,12 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
         # Determine the (single) src and dst types in this file
         src_type = typed["src"][0]
         dst_type = typed["dst"][0]
+        if src_type is None or dst_type is None:
+            continue
 
         # Map edge labels to node labels
-        mapped_src = _EDGE_TO_NODE_LABEL.get(src_type, src_type)
-        mapped_dst = _EDGE_TO_NODE_LABEL.get(dst_type, dst_type)
+        mapped_src: str = _EDGE_TO_NODE_LABEL.get(str(src_type), str(src_type))
+        mapped_dst: str = _EDGE_TO_NODE_LABEL.get(str(dst_type), str(dst_type))
 
         # Accumulate edge counts – each edge is incident on both src and dst
         edge_counts[mapped_src] += n_rows
@@ -74,8 +91,12 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
 
         # Accumulate metaedge sets
         for row in unique_metaedges:
-            ms = _EDGE_TO_NODE_LABEL.get(row["src"], row["src"])
-            md = _EDGE_TO_NODE_LABEL.get(row["dst"], row["dst"])
+            src = row["src"]
+            dst = row["dst"]
+            if src is None or dst is None:
+                continue
+            ms: str = _EDGE_TO_NODE_LABEL.get(str(src), str(src))
+            md: str = _EDGE_TO_NODE_LABEL.get(str(dst), str(dst))
             metaedge = f"{ms}-{row['relation']}-{md}"
             metaedge_sets[ms].add(metaedge)
             metaedge_sets[md].add(metaedge)
@@ -120,6 +141,8 @@ def _scale_sizes(
     return min_size + (max_size - min_size) * (values - lo) / (hi - lo)
 
 
+_COL_POSITIONS = [0.0, 0.35, 0.70]
+
 def render_plot(data: pl.DataFrame, out_path: Path) -> None:
     """Render the metaedge bubble plot and save as PDF."""
 
@@ -146,102 +169,45 @@ def render_plot(data: pl.DataFrame, out_path: Path) -> None:
         y,
         s=sizes,
         c=avg_degree,
-        cmap="mpll-blue",
+        cmap=BLUE_CMAP,
         norm=norm,
-        edgecolors="black",
+        edgecolors=WARM_GRAY_SCALE["100"],
         linewidths=0.4,
         zorder=3,
         clip_on=False,
     )
 
-    cbar = fig.colorbar(sc, ax=ax, shrink=0.8, pad=0.02)
+    cbar = fig.colorbar(sc, ax=ax, shrink=0.5, pad=0.02)
     cbar.set_label("Avg. degree", fontsize=7)
     cbar.ax.tick_params(labelsize=6)
-
-    # Work in display (pixel) coordinates so offsets are resolution-independent.
-    fig.canvas.draw()  # force a layout pass so transData is accurate
+    cbar.ax.set_frame_on(False)
+    for spine in ("left", "right", "top", "bottom"):
+        cbar.ax.spines[spine].set_visible(False)
 
     # Bubble radius in display points (scatter size is area in pt^2).
     radii_pt = np.sqrt(sizes) / 2
-
-    # Convert data positions to display coordinates.
-    display_pts = np.column_stack(
-        [ax.transData.transform((xi, yi)) for xi, yi in zip(x, y)]
-    ).T  # shape (N, 2)
-
-    # Approximate label dimensions in display points.
-    _LABEL_H = 10  # approx height of one label line at fontsize 8
-    _LABEL_W = 22  # approx half-width of a 3-char bold label
-
-    # Initial placement: below each bubble by default.
-    label_cx = display_pts[:, 0].copy()
-    label_cy = display_pts[:, 1].copy()
-    va_list: list[str] = []
-
-    for i in range(len(node_types)):
-        y_frac = (np.log10(y[i]) - log_y_min) / (log_y_max - log_y_min)
-        gap = 4 + radii_pt[i]
-        if y_frac < 0.15:
-            label_cy[i] += gap  # above
-            va_list.append("bottom")
-        else:
-            label_cy[i] -= gap  # below
-            va_list.append("top")
-
-    # Collision resolution: if two label bounding boxes overlap, nudge them.
-    def _boxes_overlap(i: int, j: int) -> bool:
-        """Check if the approximate bounding boxes of labels i and j overlap."""
-        dy_i = _LABEL_H if va_list[i] == "top" else -_LABEL_H
-        dy_j = _LABEL_H if va_list[j] == "top" else -_LABEL_H
-        # box: (left, right, bottom, top)
-        b_i = (
-            label_cx[i] - _LABEL_W,
-            label_cx[i] + _LABEL_W,
-            min(label_cy[i], label_cy[i] - dy_i),
-            max(label_cy[i], label_cy[i] - dy_i),
-        )
-        b_j = (
-            label_cx[j] - _LABEL_W,
-            label_cx[j] + _LABEL_W,
-            min(label_cy[j], label_cy[j] - dy_j),
-            max(label_cy[j], label_cy[j] - dy_j),
-        )
-        return (
-            b_i[0] < b_j[1] and b_i[1] > b_j[0] and b_i[2] < b_j[3] and b_i[3] > b_j[2]
-        )
-
-    for i in range(len(node_types)):
-        for j in range(i + 1, len(node_types)):
-            if _boxes_overlap(i, j):
-                # Nudge the label with the smaller bubble to the opposite
-                # vertical side, or shift it right if both are similar size.
-                nudge_idx = j if sizes[i] >= sizes[j] else i
-                gap = 4 + radii_pt[nudge_idx]
-                if va_list[nudge_idx] == "top":
-                    # Move above
-                    label_cy[nudge_idx] = display_pts[nudge_idx, 1] + gap
-                    va_list[nudge_idx] = "bottom"
-                else:
-                    # Move below
-                    label_cy[nudge_idx] = display_pts[nudge_idx, 1] - gap
-                    va_list[nudge_idx] = "top"
-                # If they still overlap after vertical flip, shift right
-                if _boxes_overlap(i, j):
-                    label_cx[nudge_idx] += _LABEL_W * 1.5
-
-    # Convert back to offset-from-data-point in display points.
     for i, label in enumerate(node_types):
-        off_x = label_cx[i] - display_pts[i, 0]
-        off_y = label_cy[i] - display_pts[i, 1]
+        y_frac = (np.log10(y[i]) - log_y_min) / (log_y_max - log_y_min)
+        gap = float(4 + radii_pt[i])
+        if y_frac < 0.15:
+            off_y = gap  # above
+            va = "bottom"
+        else:
+            off_y = -gap  # below
+            va = "top"
         ax.annotate(
             label,
             (x[i], y[i]),
             textcoords="offset points",
-            xytext=(off_x, off_y),
+            xytext=(0.0, off_y),
+            color=WARM_GRAY_SCALE["900"],
             ha="center",
-            va=va_list[i],
+            va=va,
             fontsize=7,
-            fontweight="bold",
+            fontweight="semibold",
+            clip_on=False,
+            annotation_clip=False,
+            zorder=5,
         )
 
     ax.set_xscale("log")

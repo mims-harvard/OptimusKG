@@ -15,7 +15,7 @@ import polars as pl
 from cli.commands.metrics.utils import build_degree_map, load_parquet_dir
 
 from . import style  # noqa: F401
-from .style import apply_axis_styling
+from .style import WARM_GRAY_SCALE, apply_axis_styling
 
 
 def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
@@ -30,7 +30,7 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
     return degree_map.select(pl.col("degree").cast(pl.Int64))
 
 
-_BAR_COLOR = "mpll:grey"
+_BAR_COLOR = WARM_GRAY_SCALE["600"]
 
 
 def render_plot(data: pl.DataFrame, out_path: Path) -> None:
