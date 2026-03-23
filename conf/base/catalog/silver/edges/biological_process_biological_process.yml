@@ -13,6 +13,6 @@ silver.edges.biological_process_biological_process:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
   metadata:
-    checksum: be722af7ca027a52822ff0f477cb6efc
+    checksum: e0a2cf60e6b46ab527645f131a0642d3
     kedro-viz:
       layer: silver

@@ -10,6 +10,6 @@ bronze.drug_protein:
       uniprot_id: pl.String
       drug_bank_name: pl.String
   metadata:
-    checksum: 1e240cd32af4242dc17b9633c6c0a312
+    checksum: 04b5b7888237237c4ddaf5f998364548
     kedro-viz:
       layer: bronze

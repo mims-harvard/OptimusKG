@@ -19,6 +19,6 @@ silver.nodes.molecular_function:
           license: pl.String
           version: pl.String
   metadata:
-    checksum: 19dd9df15a8a652c7e6ce4bec4409689
+    checksum: 144b14eafe88a010b708ad988f0ab84f
     kedro-viz:
       layer: silver

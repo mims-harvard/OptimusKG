@@ -1,6 +1,7 @@
 import logging
 from typing import Any
 
+import networkx as nx
 import polars as pl
 from kedro.pipeline import node
 
@@ -119,6 +120,25 @@ def export_kg(  # noqa: PLR0913
         f"Exporting knowledge graph to formats: {', '.join(export_formats.keys())}"
     )
 
+    # Build graph to extract largest connected component
+    G = nx.Graph()
+    for df in nodes_dict.values():
+        for nid, label in zip(df["id"].to_list(), df["label"].to_list()):
+            G.add_node(nid, label=label)
+    for df in edges_dict.values():
+        if not df.is_empty():
+            for src, dst, label in zip(
+                df["from"].to_list(),
+                df["to"].to_list(),
+                df["label"].to_list(),
+            ):
+                G.add_edge(src, dst, label=label)
+
+    lcc_ids = list(max(nx.connected_components(G), key=len))
+    logger.info(
+        f"Largest connected component: {len(lcc_ids)} of {G.number_of_nodes()} nodes"
+    )
+
     outputs: dict[str, dict[str, pl.DataFrame]] = {
         "kg.csv": {},
         "kg.parquet": {},
@@ -136,9 +156,15 @@ def export_kg(  # noqa: PLR0913
         )
 
         if format_name in ["csv", "parquet"]:
-            outputs[f"kg.{format_name}"] = export_func(
-                nodes_dict, edges_dict, include_properties
-            )
+            fmt_output = export_func(nodes_dict, edges_dict, include_properties)
+
+            fmt_output["largest_connected_component_nodes"] = fmt_output[
+                "nodes"
+            ].filter(pl.col("id").is_in(lcc_ids))
+            fmt_output["largest_connected_component_edges"] = fmt_output[
+                "edges"
+            ].filter(pl.col("from").is_in(lcc_ids) & pl.col("to").is_in(lcc_ids))
+            outputs[f"kg.{format_name}"] = fmt_output
         elif format_name == "neo4j":
             export_func(nodes_dict, edges_dict, include_properties)
 
