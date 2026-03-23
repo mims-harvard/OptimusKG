@@ -12,11 +12,9 @@ from collections import defaultdict
 from pathlib import Path
 
 import matplotlib.colors as mcolors
-import matplotlib.figure as mfigure
 import matplotlib.pyplot as plt
 import numpy as np
 import polars as pl
-from matplotlib.axes import Axes
 
 from cli.commands.metrics.utils import load_parquet_dir
 from optimuskg.pipelines.silver.nodes.constants import Node
@@ -143,6 +141,7 @@ def _scale_sizes(
 
 _COL_POSITIONS = [0.0, 0.35, 0.70]
 
+
 def render_plot(data: pl.DataFrame, out_path: Path) -> None:
     """Render the metaedge bubble plot and save as PDF."""
 
@@ -185,11 +184,12 @@ def render_plot(data: pl.DataFrame, out_path: Path) -> None:
         cbar.ax.spines[spine].set_visible(False)
 
     # Bubble radius in display points (scatter size is area in pt^2).
+    _LABEL_FLIP_THRESHOLD = 0.15
     radii_pt = np.sqrt(sizes) / 2
     for i, label in enumerate(node_types):
         y_frac = (np.log10(y[i]) - log_y_min) / (log_y_max - log_y_min)
         gap = float(4 + radii_pt[i])
-        if y_frac < 0.15:
+        if y_frac < _LABEL_FLIP_THRESHOLD:
             off_y = gap  # above
             va = "bottom"
         else:

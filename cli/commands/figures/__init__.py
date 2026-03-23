@@ -55,7 +55,9 @@ def data(
     logger.info("Figure data written to %s", out_path)
 
 
-@figure_app.command(help="Render a figure from precomputed data and export as PDF or SVG.")
+@figure_app.command(
+    help="Render a figure from precomputed data and export as PDF or SVG."
+)
 def plot(
     figure: str = typer.Argument(help="Figure name (e.g. 'adjacency-heatmap')."),
     data_dir: Path = typer.Option(

@@ -11,15 +11,15 @@ import warnings
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
 import numpy as np
 import polars as pl
 import powerlaw
+from matplotlib import ticker
 
 from cli.commands.metrics.utils import build_degree_map, load_parquet_dir
 
 from . import style  # noqa: F401
-from .style import WARM_GRAY_SCALE, apply_axis_styling, apply_legend_styling
+from .style import BLUE_SCALE, apply_axis_styling, apply_legend_styling
 
 
 def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
@@ -39,7 +39,7 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
 
 # Line styles using matplotlabs named colors.
 _EMPIRICAL = {"color": "mpll:red", "linestyle": "-", "linewidth": 1.5}
-_POWERLAW = {"color": WARM_GRAY_SCALE["600"], "linestyle": "--", "linewidth": 1.2}
+_POWERLAW = {"color": BLUE_SCALE["600"], "linestyle": "--", "linewidth": 1.2}
 _LOGNORMAL = {"color": "mpll:green", "linestyle": ":", "linewidth": 1.2}
 _EXPONENTIAL = {"color": "mpll:purple", "linestyle": "-.", "linewidth": 1.2}
 

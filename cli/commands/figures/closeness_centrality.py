@@ -19,7 +19,7 @@ import polars as pl
 from cli.commands.metrics.utils import load_parquet_dir
 
 from . import style  # noqa: F401
-from .style import WARM_GRAY_SCALE, apply_axis_styling
+from .style import BLUE_SCALE, apply_axis_styling
 
 logger = logging.getLogger(__name__)
 
@@ -90,7 +90,7 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
     return pl.DataFrame({"closeness": closeness_values}).cast({"closeness": pl.Float64})
 
 
-_BAR_COLOR = WARM_GRAY_SCALE["600"]
+_BAR_COLOR = BLUE_SCALE["600"]
 
 
 def render_plot(data: pl.DataFrame, out_path: Path) -> None:

@@ -5,10 +5,9 @@ Contains unified aesthetics for all figure plots including:
 - Helper functions for consistent styling
 """
 
+import matplotlabs as mpll  # noqa: F401  — registers styles, colormaps, named colors
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
-import matplotlabs as mpll  # noqa: F401  — registers styles, colormaps, named colors
-
 from matplotlib.axes import Axes
 from matplotlib.legend import Legend
 
