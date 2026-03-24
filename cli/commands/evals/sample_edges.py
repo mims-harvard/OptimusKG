@@ -268,7 +268,8 @@ def sample_edges_for_nodes(
 
         # Get neighbors
         if seed_id in G:
-            neighbors = set(G.neighbors(seed_id))
+            # neighbors = set(G.neighbors(seed_id))
+            neighbors = set(G.successors(seed_id)) | set(G.predecessors(seed_id))
         else:
             neighbors = set()
 

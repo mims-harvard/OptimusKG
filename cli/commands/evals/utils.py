@@ -56,14 +56,12 @@ def load_graph(
 
         # Add forward edge
         G.add_edge(from_id, to_id)
+        edge_type_lookup[(from_id, to_id)] = label
 
         # Add reverse edge if undirected
         if is_undirected:
             G.add_edge(to_id, from_id)
-
-        # Store both directions for undirected lookup
-        edge_type_lookup[(from_id, to_id)] = label
-        edge_type_lookup[(to_id, from_id)] = label
+            edge_type_lookup[(to_id, from_id)] = label
 
     logger.info(
         "Loaded %s edges with %s edge types: %s",

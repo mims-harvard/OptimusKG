@@ -5,7 +5,7 @@ from pathlib import Path
 
 import typer
 
-from . import pagerank, sample_edges
+from . import pagerank, paperqa, sample_edges
 
 logger = logging.getLogger("cli")
 
@@ -158,3 +158,39 @@ def sample_edges_cmd(  # noqa: PLR0913
         seed=seed,
         config_path=config_path,
     )
+
+
+@evals_app.command(
+    name="paperqa",
+    help="Evaluate sampled edges using PaperQA3 via the Edison client.",
+)
+def paperqa_cmd(
+    sampled_edges_path: Path = typer.Option(
+        Path("data/gold/evals/sampled_edges.csv"),
+        "--edges",
+        help="Path to sampled_edges.csv produced by `cli evals sample-edges`.",
+    ),
+    out_path: Path = typer.Option(
+        Path("data/gold/evals/sampled_edges_paperqa.csv"),
+        "--out",
+        help="Output CSV path with PaperQA3 answers added.",
+    ),
+):
+    """Run literature-based evaluation of sampled edges.
+
+    This command expects the edge evaluation dataset produced by:
+
+        uv run cli evals sample-edges
+
+    It constructs prompts of the form:
+
+        Is there any scientific or medical evidence to support an association
+        between the <seed_type> <seed_name> and the <target_type> <target_name>?
+
+    and submits them to the Edison Platform (PaperQA3 / JobNames.LITERATURE).
+    """
+    paperqa.run(
+        sampled_edges_path=sampled_edges_path,
+        out_path=out_path,
+    )
+
