@@ -14,11 +14,17 @@ logger = logging.getLogger("cli")
 def load_graph(
     nodes_path: Path,
     edges_path: Path,
-) -> tuple[nx.Graph, dict[tuple[str, str], str], list[str], list[str]]:
-    """Build an undirected NetworkX graph from node and edge parquet files.
+) -> tuple[nx.MultiDiGraph, list[str], list[str]]:
+    """Build a MultiDiGraph from node and edge parquet files.
 
-    Reads nodes first to populate the graph, then reads edges.
-    Also builds a lookup for edge types (relation labels).
+    Reads nodes first to populate the graph, then reads edges. Each edge is
+    stored with its relation ``label`` as an edge attribute. Because a
+    ``MultiDiGraph`` supports parallel edges, multiple relation types between
+    the same pair of nodes are kept as distinct edges rather than collapsed
+    into a single entry.
+
+    Undirected edges are represented by adding both the forward and the
+    reverse directed edge (each carrying the same ``label``).
 
     Args:
         nodes_path: Path to nodes.parquet file.
@@ -26,12 +32,11 @@ def load_graph(
 
     Returns:
         Tuple of:
-        - G: Undirected NetworkX graph
-        - edge_type_lookup: Dict mapping (from_id, to_id) -> edge label
+        - G: Directed MultiDiGraph with ``label`` stored on every edge
         - node_types: Sorted list of unique node type labels
         - edge_types: Sorted list of unique edge type labels
     """
-    G = nx.DiGraph()
+    G = nx.MultiDiGraph()
 
     # 1. Read nodes first
     nodes_df = pl.read_parquet(nodes_path)
@@ -50,18 +55,16 @@ def load_graph(
     edges_df = pl.read_parquet(edges_path)
     edge_types_list = sorted(edges_df["label"].unique().to_list())
 
-    edge_type_lookup: dict[tuple[str, str], str] = {}
     for row in edges_df.select("from", "to", "label", "undirected").iter_rows():
         from_id, to_id, label, is_undirected = row
 
-        # Add forward edge
-        G.add_edge(from_id, to_id)
-        edge_type_lookup[(from_id, to_id)] = label
+        # Add forward edge, storing relation type as an attribute
+        G.add_edge(from_id, to_id, label=label)
 
-        # Add reverse edge if undirected
+        # Add reverse edge for undirected relations so that successor queries
+        # on either endpoint correctly surface the connection
         if is_undirected:
-            G.add_edge(to_id, from_id)
-            edge_type_lookup[(to_id, from_id)] = label
+            G.add_edge(to_id, from_id, label=label)
 
     logger.info(
         "Loaded %s edges with %s edge types: %s",
@@ -70,7 +73,7 @@ def load_graph(
         edge_types_list,
     )
 
-    return G, edge_type_lookup, node_types_list, edge_types_list
+    return G, node_types_list, edge_types_list
 
 
 def load_node_metadata(nodes_path: Path) -> pl.DataFrame:

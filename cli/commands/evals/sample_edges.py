@@ -66,7 +66,7 @@ def load_config(config_path: Path | None = None) -> dict:
 
 
 def stratify_pagerank_by_type(
-    G: nx.Graph, node_metadata: pl.DataFrame
+    G: nx.MultiDiGraph, node_metadata: pl.DataFrame
 ) -> dict[str, pl.DataFrame]:
     """Compute PageRank and return DataFrames stratified by node type.
 
@@ -126,8 +126,8 @@ def plot_pagerank_distributions(
         pageranks = df["pagerank"].to_numpy()
 
         ax.plot(ranks, pageranks, linewidth=0.8, color=plt.cm.tab10(idx % 10))
-        ax.set_yscale("log")
-        ax.set_xscale("log")
+        # ax.set_yscale("log")
+        # ax.set_xscale("log")
         ax.set_xlabel("Rank", fontsize=8)
         ax.set_ylabel("PageRank", fontsize=8)
         ax.set_title(f"{node_type}\n(n={len(ranks):,})", fontsize=9, fontweight="bold")
@@ -209,9 +209,8 @@ def sample_nodes_in_percentile(
 
 def sample_edges_for_nodes(
     sampled_nodes: pl.DataFrame,
-    G: nx.Graph,
+    G: nx.MultiDiGraph,
     node_metadata: pl.DataFrame,
-    edge_type_lookup: dict[tuple[str, str], str],
     true_neighbors_per_node: int,
     false_neighbors_per_node: int,
     seed: int,
@@ -220,9 +219,8 @@ def sample_edges_for_nodes(
 
     Args:
         sampled_nodes: DataFrame of sampled seed nodes
-        G: NetworkX graph
+        G: NetworkX MultiDiGraph with ``label`` stored on every edge
         node_metadata: DataFrame with node id, label, name
-        edge_type_lookup: Dict mapping (from_id, to_id) -> edge label
         true_neighbors_per_node: Max true neighbors to sample per node
         false_neighbors_per_node: False neighbors to sample per node
         seed: Random seed
@@ -295,7 +293,13 @@ def sample_edges_for_nodes(
                     "target_node_type": target_meta["type"],
                     "target_node_name": target_meta["name"],
                     "is_true_edge": True,
-                    "relation_type": edge_type_lookup.get((seed_id, target_id)),
+                    "relation_type": "|".join(
+                        sorted({
+                            edata["label"]
+                            for edata in G[seed_id][target_id].values()
+                            if "label" in edata
+                        })
+                    ) or None,
                 }
             )
             type_stats[seed_type]["true_edges"] += 1
@@ -409,7 +413,7 @@ def run(
 
     # Load data
     logger.info("Loading graph and node metadata...")
-    G, edge_type_lookup, node_types, edge_types = load_graph(nodes_path, edges_path)
+    G, node_types, edge_types = load_graph(nodes_path, edges_path)
     node_metadata = load_node_metadata(nodes_path)
 
     # Compute PageRank stratified by type
@@ -448,7 +452,6 @@ def run(
         sampled_nodes,
         G,
         node_metadata,
-        edge_type_lookup,
         true_neighbors_per_node=true_neighbors,
         false_neighbors_per_node=false_neighbors,
         seed=seed,
