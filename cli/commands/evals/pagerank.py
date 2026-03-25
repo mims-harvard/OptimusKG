@@ -1,7 +1,7 @@
-"""PageRank importance scores for the knowledge graph.
+"""Node centrality scores for the knowledge graph.
 
-Computes PageRank centrality for all nodes in the knowledge graph,
-outputs a ranked table with node metadata, and generates visualizations.
+Computes a chosen centrality metric for all nodes in the knowledge graph,
+outputs a ranked table with node metadata, and generates visualisations.
 """
 
 from __future__ import annotations
@@ -13,42 +13,50 @@ import matplotlib.pyplot as plt
 import polars as pl
 
 from .utils import (
-    compute_pagerank,
+    CentralityMetric,
+    GraphMode,
+    centrality_to_dataframe,
+    compute_centrality,
     load_graph,
     load_node_metadata,
-    pagerank_to_dataframe,
 )
 
 logger = logging.getLogger("cli")
 
 
-def plot_pagerank_by_type(df: pl.DataFrame, out_path: Path) -> None:
-    """Create and save bar chart of mean PageRank by node type.
+def plot_centrality_by_type(
+    df: pl.DataFrame,
+    metric: CentralityMetric,
+    out_path: Path,
+) -> None:
+    """Create and save bar chart of mean centrality score by node type.
 
     Args:
-        df: PageRank DataFrame with label column.
+        df: Centrality DataFrame with label and centrality columns.
+        metric: The centrality metric that was computed (used for axis labels).
         out_path: Path to save the figure.
     """
     by_type = (
         df.group_by("label")
         .agg(
-            pl.col("pagerank").mean().alias("mean_pagerank"),
-            pl.col("pagerank").count().alias("count"),
+            pl.col("centrality").mean().alias("mean_centrality"),
+            pl.col("centrality").count().alias("count"),
         )
-        .sort("mean_pagerank", descending=True)
+        .sort("mean_centrality", descending=True)
     )
 
     fig, ax = plt.subplots(figsize=(8, 5))
 
     labels = by_type["label"].to_list()[::-1]
-    values = by_type["mean_pagerank"].to_list()[::-1]
+    values = by_type["mean_centrality"].to_list()[::-1]
     colors = plt.cm.tab10.colors[: len(by_type)]
 
     ax.barh(labels, values, color=colors, edgecolor="black", linewidth=0.5)
 
-    ax.set_xlabel("Mean PageRank Score", fontweight="bold")
+    metric_label = metric.replace("_", " ").title()
+    ax.set_xlabel(f"Mean {metric_label} Score", fontweight="bold")
     ax.set_ylabel("Node Type", fontweight="bold")
-    ax.set_title("PageRank Importance by Node Type", fontweight="bold")
+    ax.set_title(f"{metric_label} by Node Type", fontweight="bold")
 
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
@@ -66,39 +74,47 @@ def run(
     out_dir: Path,
     top_n: int = 10,
     alpha: float = 0.85,
+    metric: CentralityMetric = "pagerank",
+    graph_mode: GraphMode = "undirected",
 ) -> pl.DataFrame:
-    """Run PageRank analysis and save outputs.
+    """Run centrality analysis and save outputs.
 
     Args:
         nodes_path: Path to nodes.parquet file.
         edges_path: Path to edges.parquet file.
         out_dir: Directory to write outputs (CSV, figures).
         top_n: Number of top nodes to display in console.
-        alpha: PageRank damping factor.
+        alpha: PageRank damping factor (only used when metric="pagerank").
+        metric: Centrality metric to compute. One of:
+            "pagerank", "degree", "betweenness", "closeness", "eigenvector".
+            Default: "pagerank".
+        graph_mode: Edge directionality mode passed to load_graph.
+            "undirected" (default) adds reverse arcs for every edge;
+            "directed" respects the undirected column only.
 
     Returns:
-        Full PageRank DataFrame.
+        Full centrality DataFrame.
     """
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    # Build graph and compute PageRank
-    G, _, _ = load_graph(nodes_path, edges_path)
+    # Build graph and compute centrality
+    G, _, _ = load_graph(nodes_path, edges_path, graph_mode=graph_mode)
     node_metadata = load_node_metadata(nodes_path)
-    scores = compute_pagerank(G, alpha=alpha)
+    scores = compute_centrality(G, metric=metric, alpha=alpha)
     df = (
-        pagerank_to_dataframe(scores, node_metadata)
+        centrality_to_dataframe(scores, node_metadata)
         .with_row_index("rank", offset=1)
-        .select("rank", "id", "label", "name", "pagerank")
+        .select("rank", "id", "label", "name", "centrality")
     )
 
-    # Save outputs
-    csv_path = out_dir / "pagerank.csv"
+    # Include the metric name in output filenames so multiple runs don't
+    # overwrite each other
+    csv_path = out_dir / f"{metric}.csv"
     df.write_csv(csv_path)
     logger.info("Saved CSV to %s", csv_path)
 
-    plot_pagerank_by_type(df, out_dir / "pagerank_by_type.pdf")
+    plot_centrality_by_type(df, metric, out_dir / f"{metric}_by_type.pdf")
 
-    # Log top N to console
-    logger.info("Top %d nodes by PageRank:\n%s", top_n, df.head(top_n))
+    logger.info("Top %d nodes by %s:\n%s", top_n, metric, df.head(top_n))
 
     return df

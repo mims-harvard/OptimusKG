@@ -1,7 +1,7 @@
 """Edge evaluation dataset generator.
 
 Generates evaluation datasets for edge prediction models by:
-1. Ranking nodes by PageRank within each node type
+1. Ranking nodes by a chosen centrality metric within each node type
 2. Sampling nodes from a specific percentile range
 3. Creating true/false edge pairs for evaluation
 """
@@ -12,6 +12,7 @@ import json
 import logging
 import random
 from pathlib import Path
+from typing import Literal
 
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -19,10 +20,12 @@ import polars as pl
 import yaml
 
 from .utils import (
-    compute_pagerank,
+    CentralityMetric,
+    GraphMode,
+    centrality_to_dataframe,
+    compute_centrality,
     load_graph,
     load_node_metadata,
-    pagerank_to_dataframe,
 )
 
 logger = logging.getLogger("cli")
@@ -32,13 +35,15 @@ DEFAULT_CONFIG_PATH = Path("conf/base/evals.yml")
 
 # Fallback defaults (used if config file not found)
 FALLBACK_DEFAULTS = {
-    "pagerank_upper": 10,
-    "pagerank_lower": 20,
+    "centrality_upper": 10,
+    "centrality_lower": 20,
     "nodes_per_type": 100,
     "true_neighbors": 10,
     "false_neighbors": 5,
     "seed": 42,
 }
+
+EdgeSampling = Literal["uniform", "degree"]
 
 
 def load_config(config_path: Path | None = None) -> dict:
@@ -65,33 +70,37 @@ def load_config(config_path: Path | None = None) -> dict:
     return config.get("edge_eval", FALLBACK_DEFAULTS.copy())
 
 
-def stratify_pagerank_by_type(
-    G: nx.MultiDiGraph, node_metadata: pl.DataFrame
+def stratify_centrality_by_type(
+    G: nx.MultiDiGraph,
+    node_metadata: pl.DataFrame,
+    metric: CentralityMetric = "pagerank",
+    alpha: float = 0.85,
 ) -> dict[str, pl.DataFrame]:
-    """Compute PageRank and return DataFrames stratified by node type.
+    """Compute a centrality metric and return DataFrames stratified by node type.
 
     Args:
-        G: NetworkX graph.
+        G: NetworkX MultiDiGraph.
         node_metadata: DataFrame with id, label, name columns.
+        metric: Centrality metric to compute.
+        alpha: Damping factor (PageRank only).
 
     Returns:
         Dict mapping node_type -> DataFrame with columns:
-        [node_id, node_type, node_name, pagerank, rank_within_type, percentile]
+        [node_id, node_type, node_name, centrality, rank_within_type, percentile]
     """
-    # Use shared PageRank computation
-    scores = compute_pagerank(G, alpha=0.85)
-    pagerank_df = pagerank_to_dataframe(scores, node_metadata).rename(
+    scores = compute_centrality(G, metric=metric, alpha=alpha)
+    centrality_df = centrality_to_dataframe(scores, node_metadata).rename(
         {"id": "node_id", "label": "node_type", "name": "node_name"}
     )
 
     # Stratify by node type
     stratified: dict[str, pl.DataFrame] = {}
-    node_types = pagerank_df["node_type"].unique().drop_nulls().to_list()
+    node_types = centrality_df["node_type"].unique().drop_nulls().to_list()
 
     for node_type in node_types:
         type_df = (
-            pagerank_df.filter(pl.col("node_type") == node_type)
-            .sort("pagerank", descending=True)
+            centrality_df.filter(pl.col("node_type") == node_type)
+            .sort("centrality", descending=True)
             .with_row_index("rank_within_type", offset=1)
         )
         # Add percentile (rank 1 = 0th percentile, i.e., top node)
@@ -105,10 +114,12 @@ def stratify_pagerank_by_type(
     return stratified
 
 
-def plot_pagerank_distributions(
-    stratified_data: dict[str, pl.DataFrame], out_path: Path
+def plot_centrality_distributions(
+    stratified_data: dict[str, pl.DataFrame],
+    metric: CentralityMetric,
+    out_path: Path,
 ) -> None:
-    """Create a multi-panel figure showing PageRank vs Rank for each node type."""
+    """Create a multi-panel figure showing centrality score vs rank for each node type."""
     n_types = len(stratified_data)
     n_cols = 5
     n_rows = (n_types + n_cols - 1) // n_cols
@@ -117,19 +128,18 @@ def plot_pagerank_distributions(
     axes = axes.flatten() if n_types > 1 else [axes]
 
     sorted_types = sorted(stratified_data.keys())
+    metric_label = metric.replace("_", " ").title()
 
     for idx, node_type in enumerate(sorted_types):
         ax = axes[idx]
         df = stratified_data[node_type]
 
         ranks = df["rank_within_type"].to_numpy()
-        pageranks = df["pagerank"].to_numpy()
+        scores = df["centrality"].to_numpy()
 
-        ax.plot(ranks, pageranks, linewidth=0.8, color=plt.cm.tab10(idx % 10))
-        # ax.set_yscale("log")
-        # ax.set_xscale("log")
+        ax.plot(ranks, scores, linewidth=0.8, color=plt.cm.tab10(idx % 10))
         ax.set_xlabel("Rank", fontsize=8)
-        ax.set_ylabel("PageRank", fontsize=8)
+        ax.set_ylabel(metric_label, fontsize=8)
         ax.set_title(f"{node_type}\n(n={len(ranks):,})", fontsize=9, fontweight="bold")
         ax.tick_params(axis="both", labelsize=7)
         ax.spines["top"].set_visible(False)
@@ -142,7 +152,7 @@ def plot_pagerank_distributions(
     plt.tight_layout()
     plt.savefig(out_path, dpi=300, bbox_inches="tight")
     plt.close(fig)
-    logger.info("Saved PageRank distribution plot to %s", out_path)
+    logger.info("Saved centrality distribution plot to %s", out_path)
 
 
 def sample_nodes_in_percentile(
@@ -155,7 +165,7 @@ def sample_nodes_in_percentile(
     """Sample nodes from the specified percentile range for each node type.
 
     Args:
-        stratified_data: Dict mapping node_type -> DataFrame with pagerank data
+        stratified_data: Dict mapping node_type -> DataFrame with centrality data
         upper_percentile: Top X% cutoff (e.g., 5 means top 5%)
         lower_percentile: Bottom cutoff (e.g., 15 means top 15%)
         nodes_per_type: Number of nodes to sample per type
@@ -181,7 +191,6 @@ def sample_nodes_in_percentile(
         n_to_sample = min(nodes_per_type, n_eligible)
 
         if n_eligible > 0:
-            # Sample randomly
             sampled = eligible.sample(n=n_to_sample, seed=seed)
             sampled_frames.append(sampled)
 
@@ -214,16 +223,23 @@ def sample_edges_for_nodes(
     true_neighbors_per_node: int,
     false_neighbors_per_node: int,
     seed: int,
+    edge_sampling: EdgeSampling = "uniform",
 ) -> tuple[pl.DataFrame, dict]:
     """Sample true and false edges for each sampled node.
 
     Args:
-        sampled_nodes: DataFrame of sampled seed nodes
-        G: NetworkX MultiDiGraph with ``label`` stored on every edge
-        node_metadata: DataFrame with node id, label, name
-        true_neighbors_per_node: Max true neighbors to sample per node
-        false_neighbors_per_node: False neighbors to sample per node
-        seed: Random seed
+        sampled_nodes: DataFrame of sampled seed nodes.
+        G: NetworkX MultiDiGraph with ``label`` stored on every edge.
+        node_metadata: DataFrame with node id, label, name.
+        true_neighbors_per_node: Max true neighbors to sample per node.
+        false_neighbors_per_node: False neighbors to sample per node.
+        seed: Random seed.
+        edge_sampling: Strategy for sampling true and false neighbor candidates.
+            - ``"uniform"`` (default): every candidate is equally likely.
+            - ``"degree"``: candidates are weighted by their total degree
+              (in + out) so higher-degree nodes are proportionally more likely
+              to be selected. This mimics a preferential-attachment prior and
+              tends to produce harder negatives for link-prediction evaluation.
 
     Returns:
         Tuple of (edges DataFrame, edge sampling stats dict)
@@ -246,6 +262,33 @@ def sample_edges_for_nodes(
     all_nodes = set(G.nodes())
     edge_records: list[dict] = []
 
+    # Pre-compute degree weights once if needed (total degree = in + out)
+    if edge_sampling == "degree":
+        degree_weight: dict[str, float] = {
+            node: G.in_degree(node) + G.out_degree(node)
+            for node in all_nodes
+        }
+    else:
+        degree_weight = {}
+
+    def _sample(population: list[str], k: int) -> list[str]:
+        """Sample up to k unique items, optionally weighted by degree."""
+        if k <= 0 or not population:
+            return []
+        k = min(k, len(population))
+        if edge_sampling == "degree":
+            weights = [degree_weight.get(n, 0) for n in population]
+            total = sum(weights)
+            if total == 0:
+                # All weights are zero — fall back to uniform
+                return random.sample(population, k)
+            # random.choices samples with replacement; loop until we have k unique items
+            chosen: set[str] = set()
+            while len(chosen) < k:
+                chosen.update(random.choices(population, weights=weights, k=k - len(chosen)))
+            return list(chosen)[:k]
+        return random.sample(population, k)
+
     # Track stats by seed node type
     type_stats: dict[str, dict] = {}
 
@@ -253,7 +296,7 @@ def sample_edges_for_nodes(
         seed_id = row["node_id"]
         seed_type = row["node_type"]
         seed_name = row["node_name"]
-        seed_pagerank = row["pagerank"]
+        seed_centrality = row["centrality"]
 
         # Initialize type stats
         if seed_type not in type_stats:
@@ -264,9 +307,8 @@ def sample_edges_for_nodes(
                 "nodes_with_few_neighbors": 0,
             }
 
-        # Get neighbors
+        # Neighbors = successors ∪ predecessors (full undirected view of connectivity)
         if seed_id in G:
-            # neighbors = set(G.neighbors(seed_id))
             neighbors = set(G.successors(seed_id)) | set(G.predecessors(seed_id))
         else:
             neighbors = set()
@@ -279,27 +321,34 @@ def sample_edges_for_nodes(
         if n_true < true_neighbors_per_node:
             type_stats[seed_type]["nodes_with_few_neighbors"] += 1
 
-        true_sample = random.sample(neighbors_list, n_true) if n_true > 0 else []
+        true_sample = _sample(neighbors_list, n_true)
 
         for target_id in true_sample:
             target_meta = metadata_dict.get(target_id, {"type": None, "name": None})
+            # Collect relation labels from whichever directed arc(s) exist.
+            # neighbors is a union of successors and predecessors, so the edge
+            # may be stored as seed→target, target→seed, or both (undirected
+            # edges in the data produce arcs in both directions).
+            relation_type = "|".join(
+                sorted({
+                    edata["label"]
+                    for (u, v) in ((seed_id, target_id), (target_id, seed_id))
+                    if G.has_edge(u, v)
+                    for edata in G[u][v].values()
+                    if "label" in edata
+                })
+            ) or None
             edge_records.append(
                 {
                     "seed_node_id": seed_id,
                     "seed_node_type": seed_type,
                     "seed_node_name": seed_name,
-                    "seed_pagerank": seed_pagerank,
+                    "seed_centrality": seed_centrality,
                     "target_node_id": target_id,
                     "target_node_type": target_meta["type"],
                     "target_node_name": target_meta["name"],
                     "is_true_edge": True,
-                    "relation_type": "|".join(
-                        sorted({
-                            edata["label"]
-                            for edata in G[seed_id][target_id].values()
-                            if "label" in edata
-                        })
-                    ) or None,
+                    "relation_type": relation_type,
                 }
             )
             type_stats[seed_type]["true_edges"] += 1
@@ -307,8 +356,7 @@ def sample_edges_for_nodes(
         # Sample false neighbors (non-edges, only those with valid names)
         non_neighbors = all_nodes - neighbors - {seed_id}
         non_neighbors_list = [n for n in non_neighbors if n in nodes_with_names]
-        n_false = min(false_neighbors_per_node, len(non_neighbors_list))
-        false_sample = random.sample(non_neighbors_list, n_false) if n_false > 0 else []
+        false_sample = _sample(non_neighbors_list, false_neighbors_per_node)
 
         for target_id in false_sample:
             target_meta = metadata_dict.get(target_id, {"type": None, "name": None})
@@ -317,7 +365,7 @@ def sample_edges_for_nodes(
                     "seed_node_id": seed_id,
                     "seed_node_type": seed_type,
                     "seed_node_name": seed_name,
-                    "seed_pagerank": seed_pagerank,
+                    "seed_centrality": seed_centrality,
                     "target_node_id": target_id,
                     "target_node_type": target_meta["type"],
                     "target_node_name": target_meta["name"],
@@ -357,9 +405,10 @@ def sample_edges_for_nodes(
     }
 
     logger.info(
-        "Sampled %d true edges and %d false edges",
+        "Sampled %d true edges and %d false edges (edge_sampling=%s)",
         total_true,
         total_false,
+        edge_sampling,
     )
     return edges_df, edge_stats
 
@@ -368,35 +417,48 @@ def run(
     nodes_path: Path,
     edges_path: Path,
     out_dir: Path,
-    pagerank_upper: int | None = None,
-    pagerank_lower: int | None = None,
+    centrality_upper: int | None = None,
+    centrality_lower: int | None = None,
     nodes_per_type: int | None = None,
     true_neighbors: int | None = None,
     false_neighbors: int | None = None,
     seed: int | None = None,
     config_path: Path | None = None,
+    metric: CentralityMetric = "pagerank",
+    graph_mode: GraphMode = "undirected",
+    edge_sampling: EdgeSampling = "uniform",
 ) -> None:
     """Run edge evaluation dataset generation.
 
     Args:
         nodes_path: Path to nodes.parquet file.
         edges_path: Path to edges.parquet file.
-        out_dir: Output directory for generated files
-        pagerank_upper: Upper percentile cutoff (top X%). Overrides config.
-        pagerank_lower: Lower percentile cutoff (top X%). Overrides config.
+        out_dir: Output directory for generated files.
+        centrality_upper: Upper percentile cutoff (top X%). Overrides config.
+        centrality_lower: Lower percentile cutoff (top X%). Overrides config.
         nodes_per_type: Nodes to sample per type. Overrides config.
         true_neighbors: True neighbors per node. Overrides config.
         false_neighbors: False neighbors per node. Overrides config.
         seed: Random seed. Overrides config.
         config_path: Path to config file. Defaults to conf/base/evals.yml.
+        metric: Centrality metric used to rank nodes for sampling.
+            One of: "pagerank", "degree", "betweenness", "closeness",
+            "eigenvector". Default: "pagerank".
+        graph_mode: Edge directionality passed to load_graph.
+            "undirected" (default) adds reverse arcs for every edge;
+            "directed" only adds reverse arcs where undirected=true.
+        edge_sampling: Strategy for sampling neighbor candidates.
+            "uniform" (default): uniform random sampling.
+            "degree": weight candidates by total degree so higher-degree
+            nodes are proportionally more likely to be sampled.
     """
     # Load config and merge with CLI args (CLI takes precedence)
     config = load_config(config_path)
-    pagerank_upper = (
-        pagerank_upper if pagerank_upper is not None else config["pagerank_upper"]
+    centrality_upper = (
+        centrality_upper if centrality_upper is not None else config["centrality_upper"]
     )
-    pagerank_lower = (
-        pagerank_lower if pagerank_lower is not None else config["pagerank_lower"]
+    centrality_lower = (
+        centrality_lower if centrality_lower is not None else config["centrality_lower"]
     )
     nodes_per_type = (
         nodes_per_type if nodes_per_type is not None else config["nodes_per_type"]
@@ -413,41 +475,49 @@ def run(
 
     # Load data
     logger.info("Loading graph and node metadata...")
-    G, node_types, edge_types = load_graph(nodes_path, edges_path)
+    G, node_types, edge_types = load_graph(nodes_path, edges_path, graph_mode=graph_mode)
     node_metadata = load_node_metadata(nodes_path)
 
-    # Compute PageRank stratified by type
-    stratified_data = stratify_pagerank_by_type(G, node_metadata)
+    # Compute centrality stratified by type
+    stratified_data = stratify_centrality_by_type(
+        G, node_metadata, metric=metric, alpha=0.85
+    )
 
-    # Plot PageRank distributions
-    logger.info("Generating PageRank distribution plots...")
-    plot_pagerank_distributions(
-        stratified_data, out_dir / "pagerank_distribution_by_type.pdf"
+    # Plot centrality distributions
+    logger.info("Generating centrality distribution plots...")
+    plot_centrality_distributions(
+        stratified_data,
+        metric,
+        out_dir / f"{metric}_distribution_by_type.pdf",
     )
 
     # Sample nodes
     logger.info(
         "Sampling nodes in percentile range [%d%%, %d%%]...",
-        pagerank_upper,
-        pagerank_lower,
+        centrality_upper,
+        centrality_lower,
     )
     sampled_nodes, node_sampling_stats = sample_nodes_in_percentile(
         stratified_data,
-        upper_percentile=pagerank_upper,
-        lower_percentile=pagerank_lower,
+        upper_percentile=centrality_upper,
+        lower_percentile=centrality_lower,
         nodes_per_type=nodes_per_type,
         seed=seed,
     )
 
-    # Save sampled nodes (sorted by node_type, pagerank desc)
+    # Save sampled nodes (sorted by node_type, centrality desc)
     sampled_nodes_path = out_dir / "sampled_nodes.csv"
-    sampled_nodes.sort("node_type", "pagerank", descending=[False, True]).write_csv(
+    sampled_nodes.sort("node_type", "centrality", descending=[False, True]).write_csv(
         sampled_nodes_path
     )
     logger.info("Saved sampled nodes to %s", sampled_nodes_path)
 
     # Sample edges
-    logger.info("Sampling edges for %d seed nodes...", sampled_nodes.height)
+    logger.info(
+        "Sampling edges for %d seed nodes (edge_sampling=%s)...",
+        sampled_nodes.height,
+        edge_sampling,
+    )
     sampled_edges, edge_sampling_stats = sample_edges_for_nodes(
         sampled_nodes,
         G,
@@ -455,20 +525,24 @@ def run(
         true_neighbors_per_node=true_neighbors,
         false_neighbors_per_node=false_neighbors,
         seed=seed,
+        edge_sampling=edge_sampling,
     )
 
-    # Save sampled edges (sorted by seed_node_type, seed_pagerank desc)
+    # Save sampled edges (sorted by seed_node_type, seed_centrality desc)
     sampled_edges_path = out_dir / "sampled_edges.csv"
     sampled_edges.sort(
-        "seed_node_type", "seed_pagerank", descending=[False, True]
+        "seed_node_type", "seed_centrality", descending=[False, True]
     ).write_csv(sampled_edges_path)
     logger.info("Saved sampled edges to %s", sampled_edges_path)
 
     # Compile and save summary stats
     summary_stats = {
         "parameters": {
-            "pagerank_upper_percentile": pagerank_upper,
-            "pagerank_lower_percentile": pagerank_lower,
+            "centrality_metric": metric,
+            "graph_mode": graph_mode,
+            "edge_sampling": edge_sampling,
+            "centrality_upper_percentile": centrality_upper,
+            "centrality_lower_percentile": centrality_lower,
             "nodes_per_type": nodes_per_type,
             "true_neighbors_per_node": true_neighbors,
             "false_neighbors_per_node": false_neighbors,
@@ -496,7 +570,10 @@ def run(
     logger.info(
         "Analysis complete\n"
         "Parameters:\n"
-        "  - PageRank percentile range: [%d%%, %d%%]\n"
+        "  - Centrality metric: %s\n"
+        "  - Graph mode: %s\n"
+        "  - Edge sampling: %s\n"
+        "  - Centrality percentile range: [%d%%, %d%%]\n"
         "  - Nodes per type: %d\n"
         "  - True neighbors per node: %d\n"
         "  - False neighbors per node: %d\n"
@@ -511,8 +588,11 @@ def run(
         "  - %s\n"
         "  - %s\n"
         "  - %s",
-        pagerank_upper,
-        pagerank_lower,
+        metric,
+        graph_mode,
+        edge_sampling,
+        centrality_upper,
+        centrality_lower,
         nodes_per_type,
         true_neighbors,
         false_neighbors,
@@ -521,7 +601,7 @@ def run(
         edge_sampling_stats["total_true_edges"],
         edge_sampling_stats["total_false_edges"],
         edge_sampling_stats["total_edges"],
-        out_dir / "pagerank_distribution_by_type.pdf",
+        out_dir / f"{metric}_distribution_by_type.pdf",
         out_dir / "sampled_nodes.csv",
         out_dir / "sampled_edges.csv",
         out_dir / "summary_stats.json",
