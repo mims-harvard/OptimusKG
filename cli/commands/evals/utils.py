@@ -185,22 +185,3 @@ def centrality_to_dataframe(
     """
     df = pl.DataFrame({"id": list(scores.keys()), "centrality": list(scores.values())})
     return df.join(node_metadata, on="id", how="left").sort("centrality", descending=True)
-
-
-# ---------------------------------------------------------------------------
-# Back-compat shims — kept so any code still using the old names doesn't break
-# ---------------------------------------------------------------------------
-
-def compute_pagerank(G: nx.MultiDiGraph, alpha: float = 0.85) -> dict[str, float]:
-    """Deprecated: use compute_centrality(G, metric='pagerank') instead."""
-    return compute_centrality(G, metric="pagerank", alpha=alpha)
-
-
-def pagerank_to_dataframe(
-    scores: dict[str, float],
-    node_metadata: pl.DataFrame,
-) -> pl.DataFrame:
-    """Deprecated: use centrality_to_dataframe instead."""
-    return centrality_to_dataframe(scores, node_metadata).rename(
-        {"centrality": "pagerank"}
-    )

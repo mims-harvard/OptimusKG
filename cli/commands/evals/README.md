@@ -8,7 +8,7 @@ By default, commands use the **gold KG exports** at `data/gold/kg/parquet/`. Out
 
 ## Available Commands
 
-### `uv run cli evals pagerank`
+### `uv run cli evals centrality`
 
 Compute node centrality scores for all nodes in the knowledge graph.
 
@@ -19,16 +19,16 @@ Compute node centrality scores for all nodes in the knowledge graph.
 **Usage:**
 ```bash
 # Run with defaults (pagerank, undirected graph)
-uv run cli evals pagerank
+uv run cli evals centrality
 
 # Compute degree centrality instead
-uv run cli evals pagerank --metric degree
+uv run cli evals centrality --metric degree
 
 # Run on directed graph only
-uv run cli evals pagerank --graph-mode directed
+uv run cli evals centrality --graph-mode directed
 
 # Show top 20 nodes, custom output directory
-uv run cli evals pagerank --top 20 --out data/gold/evals/v2
+uv run cli evals centrality --top 20 --out data/gold/evals/v2
 ```
 
 **`--metric` options:** `pagerank` (default), `degree`, `betweenness`, `closeness`, `eigenvector`
