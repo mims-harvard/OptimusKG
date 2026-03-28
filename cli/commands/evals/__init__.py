@@ -6,7 +6,7 @@ from enum import Enum
 
 import typer
 
-from . import centrality, paperqa, sample_edges
+from . import centrality, paperqa, paperqa_figures, sample_edges
 
 logger = logging.getLogger("cli")
 
@@ -193,16 +193,26 @@ class ActionType(str, Enum):
     name="paperqa",
     help="Evaluate sampled edges using PaperQA3 via the Edison client.",
 )
+
+class ActionType(str, Enum):
+    submit = "submit"
+    poll = "poll"
+ 
+@evals_app.command(
+    name="paperqa",
+    help="Evaluate sampled edges using PaperQA3 via the Edison client.",
+)
+
 def paperqa_cmd(
     input_path: Path = typer.Option(
         Path("data/gold/evals/sampled_edges_degree_true=10_false=1.csv"),
         "--input",
-        help="Path to input CSV (raw sampled edges for 'submit', or the timestamped jobs state CSV for 'poll').",
+        help="Path to input CSV (sampled_edges CSV for 'submit', or a submitted_edges CSV for 'poll').",
     ),
-    out_path: Path = typer.Option(
-        Path("data/gold/evals/sampled_edges_paperqa.csv"),
+    out_dir: Path = typer.Option(
+        Path("data/gold/evals"),
         "--out",
-        help="Base output CSV path (a timestamp will be prepended automatically).",
+        help="Output directory for results.",
     ),
     action: ActionType = typer.Option(
         ActionType.submit,
@@ -215,12 +225,12 @@ def paperqa_cmd(
         help="Limit the number of edges to evaluate (useful for pilots).",
     ),
     wandb_project: str = typer.Option(
-        None,
+        "optimuskg-paperqa",
         "--wandb-project",
         help="Weights & Biases project name to log outputs to.",
     ),
     api_min_interval_sec: float = typer.Option(
-        2.0,
+        3.0,
         "--api-min-interval",
         help="Minimum seconds between Edison API calls.",
     ),
@@ -234,24 +244,55 @@ def paperqa_cmd(
  
     Examples:
  
-        # Submit jobs
+        # Submit jobs (input must be a sampled_edges file)
         uv run cli evals paperqa --action submit --input data/gold/evals/sampled_edges_degree_true=10_false=5.csv
  
-        # Poll for results
-        uv run cli evals paperqa --action poll --input data/gold/evals/20260328_130735_sampled_edges_paperqa.csv
+        # Poll for results (input must be the submitted_edges file from the submit step)
+        uv run cli evals paperqa --action poll --input data/gold/evals/20260328_163632_submitted_edges.csv
  
         # Pilot run with a small subset
         uv run cli evals paperqa --action submit --limit 10
  
         # Log results to W&B on poll
-        uv run cli evals paperqa --action poll --input data/gold/evals/20260328_130735_sampled_edges_paperqa.csv --wandb-project my-project
+        uv run cli evals paperqa --action poll --input data/gold/evals/20260328_163632_submitted_edges.csv --wandb-project my-project
     """
     paperqa.run(
         input_path=input_path,
-        out_path=out_path,
+        out_dir=out_dir,
         action=action.value,
         limit=limit,
         wandb_project=wandb_project,
         api_min_interval_sec=api_min_interval_sec,
         max_rate_limit_attempts=max_rate_limit_attempts,
+    )
+
+
+@evals_app.command(name="paperqa-figures", help="Generate rating bar plots from PaperQA3 results.")
+def paperqa_figures_cmd(
+    input_path: Path = typer.Option(
+        ...,
+        "--input",
+        help="Path to the polled-edges CSV produced by `cli evals paperqa --action poll`.",
+    ),
+    out_dir: Path = typer.Option(
+        None,
+        "--out",
+        help="Output directory for the PDF. Defaults to the same directory as --input.",
+    ),
+):
+    """Generate stacked bar plots of PaperQA3 rating distributions.
+
+    Produces a two-panel PDF (false edges | true edges) with ratings on the
+    x-axis, count on the y-axis, and bars stacked by seed node type.
+    The output file is named ``<run_id>_paperqa_barplot.pdf``.
+
+    Examples:
+
+        uv run cli evals paperqa-figures --input data/gold/evals/20260328_173610_polled_edges.csv
+
+        uv run cli evals paperqa-figures --input data/gold/evals/20260328_173610_polled_edges.csv --out figures/
+    """
+    paperqa_figures.run(
+        input_path=input_path,
+        out_dir=out_dir,
     )

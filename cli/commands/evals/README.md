@@ -78,6 +78,53 @@ uv run cli evals sample-edges --seed 123
 - `uniform` (default) — each candidate neighbor/non-neighbor is equally likely to be selected
 - `degree` — candidates are weighted by total degree (in + out), so higher-degree nodes are proportionally more likely to appear. Produces harder negatives for link-prediction evaluation.
 
+### `uv run cli evals paperqa`
+
+Evaluate sampled edges using PaperQA3 via the Edison client. Operates in two phases:
+
+1. **`submit`** — Constructs literature-search prompts from a sampled-edges file and submits them as async jobs to the Edison platform.
+2. **`poll`** — Checks job status for a previous submission, downloads completed results, and optionally logs to W&B.
+
+Both phases share an alphanumeric run ID (a `YYYYMMDD_HHMMSS` timestamp generated at submit time) so that outputs are linked:
+
+| Phase | Input file | Output file |
+|-------|-----------|-------------|
+| submit | `sampled_edges_*.csv` | `<run_id>_submitted_edges.csv` |
+| poll | `<run_id>_submitted_edges.csv` | `<run_id>_polled_edges.csv` |
+
+The command validates that the input file matches the expected naming convention for the chosen action and raises an error otherwise.
+
+**Usage:**
+```bash
+# Submit jobs (input must be a sampled_edges file)
+uv run cli evals paperqa --action submit --input data/gold/evals/sampled_edges_degree_true=10_false=5.csv
+
+# Poll for results (input must be the submitted_edges file from submit)
+uv run cli evals paperqa --action poll --input data/gold/evals/20260328_163632_submitted_edges.csv
+
+# Pilot run with a small subset
+uv run cli evals paperqa --action submit --limit 10
+
+# Log results to W&B on poll
+uv run cli evals paperqa --action poll --input data/gold/evals/20260328_163632_submitted_edges.csv --wandb-project my-project
+```
+
+**Parameters:**
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `--input` | `data/gold/evals/sampled_edges_degree_true=10_false=1.csv` | Input CSV (sampled\_edges for submit, submitted\_edges for poll) |
+| `--out` | `data/gold/evals` | Output directory |
+| `--action` | `submit` | Phase to execute: `submit` or `poll` |
+| `--limit` | None | Limit number of edges to evaluate (useful for pilots) |
+| `--wandb-project` | None | W&B project name for logging (poll only) |
+| `--api-min-interval` | `2.0` | Minimum seconds between Edison API calls |
+| `--max-rate-limit-attempts` | `15` | Max retries with exponential backoff on 429/5xx |
+
+**Environment variables:** Requires `EDISON_API_KEY` to be set (loaded from `.env` at the project root).
+
+---
+
 ## Configuration
 
 Parameters for `sample-edges` are loaded from `conf/base/evals.yml`. Legacy `pagerank_upper` / `pagerank_lower` keys are still accepted.
@@ -88,10 +135,10 @@ edge_eval:
   edges_dir: data/gold/kg/parquet/edges
   out_dir: data/gold/evals
   centrality_upper: 10     # Top 10% cutoff
-  centrality_lower: 20     # Top 20% cutoff
+  centrality_lower: 90     # Top 90% cutoff
   nodes_per_type: 100
   true_neighbors: 10
-  false_neighbors: 5
+  false_neighbors: 1
   seed: 42
 ```
 

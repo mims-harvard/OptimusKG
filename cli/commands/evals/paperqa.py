@@ -120,10 +120,11 @@ async def execute_phase(
                 results.append(row)
                 continue
 
-            task_info = await _call_with_backoff(
-                lambda task_id=task_id: client.get_task(task_id),
-                max_attempts=max_rate_limit_attempts,
-            )
+            # task_info = await _call_with_backoff(
+            #     lambda task_id=task_id: client.get_task(task_id),
+            #     max_attempts=max_rate_limit_attempts,
+            # )
+            task_info = await asyncio.to_thread(lambda task_id=task_id: client.get_task(task_id))
             status = getattr(task_info, "status", None)
             result_row = {**row, "status": status}
 
@@ -143,14 +144,49 @@ async def execute_phase(
         with out_path.open("ab") as f:
             pl.DataFrame([result_row]).write_csv(f, include_header=(i == 0))
 
-        await asyncio.sleep(api_min_interval_sec)
+        if phase == "submit":
+            await asyncio.sleep(api_min_interval_sec)
 
     return pl.DataFrame(results)
 
 
+def _validate_input_file(input_path: Path, action: str) -> str | None:
+    """Validate the input file matches the expected pattern for the given action.
+
+    For 'submit': input must be a sampled_edges file (e.g., sampled_edges_degree_true=10_false=1.csv).
+    For 'poll': input must be a submitted_edges file (e.g., 20260328_163632_submitted_edges.csv).
+
+    Returns:
+        The run ID extracted from the filename (for 'poll') or None (for 'submit').
+
+    Raises:
+        ValueError: If the input file doesn't match the expected pattern.
+    """
+    filename = input_path.name
+
+    if action == "submit":
+        if not filename.startswith("sampled_edges_"):
+            raise ValueError(
+                f"For 'submit', the input file must be a sampled_edges CSV "
+                f"(e.g., sampled_edges_degree_true=10_false=1.csv), "
+                f"got: {filename}"
+            )
+        return None
+
+    else:  # poll
+        match = re.match(r"^(\d{8}_\d{6})_submitted_edges\.csv$", filename)
+        if not match:
+            raise ValueError(
+                f"For 'poll', the input file must be a submitted_edges CSV "
+                f"(e.g., 20260328_163632_submitted_edges.csv), "
+                f"got: {filename}"
+            )
+        return match.group(1)
+
+
 def run(
     input_path: Path,
-    out_path: Path,
+    out_dir: Path,
     action: str = "submit",
     limit: int | None = None,
     wandb_project: str | None = None,
@@ -161,21 +197,37 @@ def run(
     if not api_key:
         raise RuntimeError("EDISON_API_KEY is not set.")
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    timestamped_out_path = out_path.with_name(f"{timestamp}_{out_path.name}")
+    # Validate input file and determine run ID
+    run_id = _validate_input_file(input_path, action)
+
+    if action == "submit":
+        run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+        out_path = out_dir / f"{run_id}_submitted_edges.csv"
+    else:  # poll
+        out_path = out_dir / f"{run_id}_polled_edges.csv"
+        if out_path.exists():
+            k = 1
+            while True:
+                candidate = out_dir / f"{run_id}_{k}_polled_edges.csv"
+                if not candidate.exists():
+                    out_path = candidate
+                    break
+                k += 1
+
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info(f"Loading data from {input_path}")
     edges_df = pl.read_csv(input_path)
     if limit:
         edges_df = edges_df.head(limit)
 
-    logger.info(f"Writing results incrementally to {timestamped_out_path}")
+    logger.info(f"Writing results incrementally to {out_path}")
     results_df = asyncio.run(execute_phase(
-        edges_df, api_key, action, timestamped_out_path,
+        edges_df, api_key, action, out_path,
         api_min_interval_sec=api_min_interval_sec,
         max_rate_limit_attempts=max_rate_limit_attempts,
     ))
-    logger.info(f"Done. {len(results_df)} rows saved to {timestamped_out_path}")
+    logger.info(f"Done. {len(results_df)} rows saved to {out_path}")
 
     if wandb_project and action == "poll":
         finished = results_df.filter(pl.col("status") == "success")
@@ -192,7 +244,7 @@ def run(
                 )
                 agg_df["group_label"] = agg_df["is_true_edge"].astype(str) + " Edge | Rating " + agg_df["rating"].astype(str)
                 bar_table = wandb.Table(dataframe=agg_df)
-                wandb.log({"rating_distribution": wandb.plot.bar(bar_table, label="group_label", value="count", title="Count of Ratings Grouped by is_true_edge")})
+                wandb.log({"rating_distribution": wandb.plot.bar(bar_table, label="group_label", value="count", title="Ratings")})
 
             wandb.finish()
         else:
