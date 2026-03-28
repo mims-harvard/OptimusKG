@@ -2,6 +2,7 @@
 
 import logging
 from pathlib import Path
+from enum import Enum
 
 import typer
 
@@ -184,37 +185,73 @@ def sample_edges_cmd(  # noqa: PLR0913
     )
 
 
+class ActionType(str, Enum):
+    submit = "submit"
+    poll = "poll"
+
 @evals_app.command(
     name="paperqa",
     help="Evaluate sampled edges using PaperQA3 via the Edison client.",
 )
 def paperqa_cmd(
-    sampled_edges_path: Path = typer.Option(
-        Path("data/gold/evals/sampled_edges.csv"),
-        "--edges",
-        help="Path to sampled_edges.csv produced by `cli evals sample-edges`.",
+    input_path: Path = typer.Option(
+        Path("data/gold/evals/sampled_edges_degree_true=10_false=1.csv"),
+        "--input",
+        help="Path to input CSV (raw sampled edges for 'submit', or the timestamped jobs state CSV for 'poll').",
     ),
     out_path: Path = typer.Option(
         Path("data/gold/evals/sampled_edges_paperqa.csv"),
         "--out",
-        help="Output CSV path with PaperQA3 answers added.",
+        help="Base output CSV path (a timestamp will be prepended automatically).",
+    ),
+    action: ActionType = typer.Option(
+        ActionType.submit,
+        "--action",
+        help="Phase to execute: 'submit' to queue tasks, 'poll' to retrieve results.",
+    ),
+    limit: int = typer.Option(
+        None,
+        "--limit",
+        help="Limit the number of edges to evaluate (useful for pilots).",
+    ),
+    wandb_project: str = typer.Option(
+        None,
+        "--wandb-project",
+        help="Weights & Biases project name to log outputs to.",
+    ),
+    api_min_interval_sec: float = typer.Option(
+        2.0,
+        "--api-min-interval",
+        help="Minimum seconds between Edison API calls.",
+    ),
+    max_rate_limit_attempts: int = typer.Option(
+        15,
+        "--max-rate-limit-attempts",
+        help="Max retry attempts with exponential backoff on 429/5xx responses.",
     ),
 ):
     """Run literature-based evaluation of sampled edges.
-
-    This command expects the edge evaluation dataset produced by:
-
-        uv run cli evals sample-edges
-
-    It constructs prompts of the form:
-
-        Is there any scientific or medical evidence to support an association
-        between the <seed_type> <seed_name> and the <target_type> <target_name>?
-
-    and submits them to the Edison Platform (PaperQA3 / JobNames.LITERATURE).
+ 
+    Examples:
+ 
+        # Submit jobs
+        uv run cli evals paperqa --action submit --input data/gold/evals/sampled_edges_degree_true=10_false=5.csv
+ 
+        # Poll for results
+        uv run cli evals paperqa --action poll --input data/gold/evals/20260328_130735_sampled_edges_paperqa.csv
+ 
+        # Pilot run with a small subset
+        uv run cli evals paperqa --action submit --limit 10
+ 
+        # Log results to W&B on poll
+        uv run cli evals paperqa --action poll --input data/gold/evals/20260328_130735_sampled_edges_paperqa.csv --wandb-project my-project
     """
     paperqa.run(
-        sampled_edges_path=sampled_edges_path,
+        input_path=input_path,
         out_path=out_path,
+        action=action.value,
+        limit=limit,
+        wandb_project=wandb_project,
+        api_min_interval_sec=api_min_interval_sec,
+        max_rate_limit_attempts=max_rate_limit_attempts,
     )
-

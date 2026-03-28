@@ -9,12 +9,12 @@ edge_eval:
   # Centrality percentile range for node sampling
   # Nodes between top X% and top Y% are eligible for sampling
   centrality_upper: 10     # Upper bound (top 10%)
-  centrality_lower: 20     # Lower bound (top 20%)
+  centrality_lower: 90     # Lower bound (top 90%)
 
   # Sampling parameters
   nodes_per_type: 100    # Nodes to sample per node type
   true_neighbors: 10     # Max true neighbors to sample per node
-  false_neighbors: 5     # False neighbors to sample per node
+  false_neighbors: 1     # False neighbors to sample per node
 
   # Reproducibility
   seed: 42

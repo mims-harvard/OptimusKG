@@ -1,12 +1,8 @@
 """Evaluate sampled edges using PaperQA3 via the Edison client.
 
-This command reads the ``sampled_edges.csv`` file produced by the
-``cli evals sample-edges`` command, constructs literature-search
-prompts for each edge, and submits them to the Edison Platform
-(`JobNames.LITERATURE`, built on PaperQA3).
-
-The Edison API key must be provided via the ``EDISON_API_KEY``
-environment variable (e.g. in a ``.env`` file in the project root).
+Provides two modes of operation to support massive scale:
+1. "submit": Constructs prompts and submits all jobs to the platform, saving task_ids.
+2. "poll": Checks the status of existing task_ids, downloads results, and logs to W&B.
 """
 
 from __future__ import annotations
@@ -14,34 +10,30 @@ from __future__ import annotations
 import asyncio
 import logging
 import os
+import random
 import re
 from pathlib import Path
+from datetime import datetime
 
 import polars as pl
+import wandb
 from dotenv import load_dotenv
 from edison_client import EdisonClient, JobNames
+from httpx import HTTPStatusError
+from tqdm import tqdm
 
-# Load .env from project root so EDISON_API_KEY is available
 _PROJECT_ROOT = Path(__file__).resolve().parents[3]
 load_dotenv(_PROJECT_ROOT / ".env")
 
 logger = logging.getLogger("cli")
 
+_RETRYABLE_HTTP_STATUS = frozenset({429, 500, 502, 503, 504})
 
-# Mapping from compact node codes to human-readable types
 NODE_TYPE_MAP: dict[str, str] = {
-    "ANA": "anatomy",
-    "BPO": "biological process",
-    "CCO": "cellular component",
-    "DIS": "disease",
-    "DRG": "drug",
-    "EXP": "exposure",
-    "GEN": "gene or protein",
-    "MFN": "molecular function",
-    "PHE": "phenotype",
-    "PWY": "pathway",
+    "ANA": "anatomical structure", "BPO": "biological process", "CCO": "cellular component",
+    "DIS": "disease", "DRG": "drug", "EXP": "environmental exposure", "GEN": "gene or protein",
+    "MFN": "molecular function", "PHE": "phenotype", "PWY": "pathway",
 }
-
 
 PROMPT_TEMPLATE = """Is there any scientific or medical evidence to support an association between the {seed_type} {seed_name} and the {target_type} {target_name}? Please rate the strength of the evidence on a 5-point scale, where:
     1 = No evidence (zero papers mentioning both {seed_name} and {target_name})
@@ -60,29 +52,15 @@ PROMPT_TEMPLATE = """Is there any scientific or medical evidence to support an a
     `rating` is one of the following (must match exactly): 1, 2, 3, 4, or 5. Do not include any additional keys or text."""
 
 def _build_prompt(row: dict) -> str:
-    seed_type_code = str(row.get("seed_node_type") or "")
-    target_type_code = str(row.get("target_node_type") or "")
-
-    seed_type = NODE_TYPE_MAP.get(seed_type_code, seed_type_code)
-    target_type = NODE_TYPE_MAP.get(target_type_code, target_type_code)
-
-    seed_name = row.get("seed_node_name") or ""
-    target_name = row.get("target_node_name") or ""
-
+    seed_type = NODE_TYPE_MAP.get(str(row.get("seed_node_type", "")), str(row.get("seed_node_type", "")))
+    target_type = NODE_TYPE_MAP.get(str(row.get("target_node_type", "")), str(row.get("target_node_type", "")))
     return PROMPT_TEMPLATE.format(
-        seed_type=seed_type,
-        seed_name=seed_name,
-        target_type=target_type,
-        target_name=target_name,
+        seed_type=seed_type, seed_name=row.get("seed_node_name", ""),
+        target_type=target_type, target_name=row.get("target_node_name", ""),
     )
 
 
 def _parse_response(answer_text: str | None) -> tuple[str | None, str | None]:
-    """Extract <reasoning> and <rating> from XML-style response.
-
-    Returns:
-        (reasoning, rating) — either may be None if missing or unparseable.
-    """
     if not answer_text or not answer_text.strip():
         return None, None
     reasoning = re.search(r"<reasoning>\s*(.*?)\s*</reasoning>", answer_text, re.DOTALL)
@@ -93,91 +71,129 @@ def _parse_response(answer_text: str | None) -> tuple[str | None, str | None]:
     )
 
 
-async def _run_paperqa_async(
-    edges_df: pl.DataFrame,
+async def _call_with_backoff(fn, *, max_attempts: int = 15, base_wait: float = 2.0, max_wait: float = 120.0):
+    """Call a sync Edison function in a thread, retrying with exponential backoff on rate limits."""
+    for attempt in range(max_attempts):
+        try:
+            return await asyncio.to_thread(fn)
+        except HTTPStatusError as e:
+            if e.response.status_code not in _RETRYABLE_HTTP_STATUS or attempt == max_attempts - 1:
+                raise
+            retry_after = e.response.headers.get("Retry-After")
+            wait = float(retry_after) if retry_after else min(max_wait, base_wait * (2 ** attempt))
+            wait += random.uniform(0, wait * 0.1)
+            logger.warning("HTTP %s, retrying in %.1fs (attempt %d/%d)", e.response.status_code, wait, attempt + 1, max_attempts)
+            await asyncio.sleep(wait)
+
+
+async def execute_phase(
+    df: pl.DataFrame,
     api_key: str,
-) -> list:
-    """Submit all edge prompts to the Edison client asynchronously."""
+    phase: str,
+    out_path: Path,
+    *,
+    api_min_interval_sec: float = 1.0,
+    max_rate_limit_attempts: int = 15,
+) -> pl.DataFrame:
     client = EdisonClient(api_key=api_key)
+    rows = df.to_dicts()
+    results = []
 
-    tasks_data = []
-    for row in edges_df.iter_rows(named=True):
-        prompt = _build_prompt(row)
-        tasks_data.append(
-            {
-                "name": JobNames.LITERATURE,
-                "query": prompt,
-            }
-        )
+    out_path.parent.mkdir(parents=True, exist_ok=True)
 
-    logger.info("Submitting %d literature tasks to Edison...", len(tasks_data))
-    responses = await client.arun_tasks_until_done(tasks_data)
-    logger.info("Received %d task responses from Edison.", len(responses))
-    return responses
+    for i, row in enumerate(tqdm(rows, desc=f"Executing {phase.capitalize()} Phase")):
+        if phase == "submit":
+            if row.get("task_id"):
+                results.append(row)
+                continue
+
+            prompt = _build_prompt(row)
+            task_id = await _call_with_backoff(
+                lambda prompt=prompt: client.create_task({"name": JobNames.LITERATURE, "query": prompt}),
+                max_attempts=max_rate_limit_attempts,
+            )
+            result_row = {**row, "task_id": str(task_id), "status": "pending"}
+
+        else:  # poll
+            task_id = row.get("task_id")
+            if not task_id or row.get("status") in ["success", "failed"]:
+                results.append(row)
+                continue
+
+            task_info = await _call_with_backoff(
+                lambda task_id=task_id: client.get_task(task_id),
+                max_attempts=max_rate_limit_attempts,
+            )
+            status = getattr(task_info, "status", None)
+            result_row = {**row, "status": status}
+
+            if status == "success":
+                answer = getattr(task_info, "answer", None) or getattr(task_info, "formatted_answer", None)
+                reasoning, rating = _parse_response(answer)
+                result_row |= {
+                    "answer": answer,
+                    "has_successful_answer": getattr(task_info, "has_successful_answer", None),
+                    "reasoning": reasoning,
+                    "rating": rating,
+                }
+
+        results.append(result_row)
+
+        # Write header on first row, then append
+        with out_path.open("ab") as f:
+            pl.DataFrame([result_row]).write_csv(f, include_header=(i == 0))
+
+        await asyncio.sleep(api_min_interval_sec)
+
+    return pl.DataFrame(results)
 
 
 def run(
-    sampled_edges_path: Path,
+    input_path: Path,
     out_path: Path,
+    action: str = "submit",
+    limit: int | None = None,
+    wandb_project: str | None = None,
+    api_min_interval_sec: float = 1.0,
+    max_rate_limit_attempts: int = 15,
 ) -> None:
-    """Run PaperQA3 (via Edison) on sampled edges and save results."""
-    if not sampled_edges_path.exists():
-        msg = f"Sampled edges file not found: {sampled_edges_path}"
-        raise FileNotFoundError(msg)
-
     api_key = os.environ.get("EDISON_API_KEY")
     if not api_key:
-        msg = (
-            "EDISON_API_KEY is not set. Set it in the project root .env file "
-            "or export it in your environment before running this command."
-        )
-        raise RuntimeError(msg)
+        raise RuntimeError("EDISON_API_KEY is not set.")
 
-    logger.info("Loading sampled edges from %s", sampled_edges_path)
-    edges_df = pl.read_csv(sampled_edges_path)
-    logger.info("Loaded %d edges for evaluation.", edges_df.height)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamped_out_path = out_path.with_name(f"{timestamp}_{out_path.name}")
 
-    # Run Edison / PaperQA3 asynchronously
-    responses = asyncio.run(_run_paperqa_async(edges_df, api_key=api_key))
+    logger.info(f"Loading data from {input_path}")
+    edges_df = pl.read_csv(input_path)
+    if limit:
+        edges_df = edges_df.head(limit)
 
-    # Extract answer text and parse <reasoning> / <rating> from response
-    answers: list[str | None] = []
-    reasonings: list[str | None] = []
-    ratings: list[str | None] = []
-    for resp in responses:
-        answer_text: str | None = None
-        # PQATaskResponse-style object
-        if hasattr(resp, "answer"):
-            answer_text = getattr(resp, "answer")
-        # Dict-style response from API
-        elif isinstance(resp, dict):
-            answer_text = resp.get("answer") or resp.get("formatted_answer")
+    logger.info(f"Writing results incrementally to {timestamped_out_path}")
+    results_df = asyncio.run(execute_phase(
+        edges_df, api_key, action, timestamped_out_path,
+        api_min_interval_sec=api_min_interval_sec,
+        max_rate_limit_attempts=max_rate_limit_attempts,
+    ))
+    logger.info(f"Done. {len(results_df)} rows saved to {timestamped_out_path}")
 
-        answers.append(answer_text)
-        reasoning, rating = _parse_response(answer_text)
-        reasonings.append(reasoning)
-        ratings.append(rating)
+    if wandb_project and action == "poll":
+        finished = results_df.filter(pl.col("status") == "success")
+        if finished.height > 0:
+            wandb.init(project=wandb_project, job_type="paperqa_evaluation")
+            wandb.log({"evaluation_results_table": wandb.Table(dataframe=finished.to_pandas())})
 
-    if len(answers) != edges_df.height:
-        logger.warning(
-            "Number of answers (%d) does not match number of edges (%d). "
-            "Truncating to the minimum.",
-            len(answers),
-            edges_df.height,
-        )
-        min_len = min(len(answers), edges_df.height)
-        edges_df = edges_df.head(min_len)
-        answers = answers[:min_len]
-        reasonings = reasonings[:min_len]
-        ratings = ratings[:min_len]
+            if "rating" in finished.columns:
+                agg_df = (
+                    finished.filter(pl.col("rating").is_not_null())
+                    .group_by(["is_true_edge", "rating"])
+                    .agg(pl.len().alias("count"))
+                    .to_pandas()
+                )
+                agg_df["group_label"] = agg_df["is_true_edge"].astype(str) + " Edge | Rating " + agg_df["rating"].astype(str)
+                bar_table = wandb.Table(dataframe=agg_df)
+                wandb.log({"rating_distribution": wandb.plot.bar(bar_table, label="group_label", value="count", title="Count of Ratings Grouped by is_true_edge")})
 
-    results_df = edges_df.with_columns(
-        pl.Series("paperqa_answer", answers),
-        pl.Series("paperqa_reasoning", reasonings),
-        pl.Series("paperqa_rating", ratings),
-    )
-
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    results_df.write_csv(out_path)
-    logger.info("Saved PaperQA3 edge evaluations to %s", out_path)
-
+            wandb.finish()
+        else:
+            logger.info("No tasks have reached 'success' state yet. Skipping W&B logging.")
