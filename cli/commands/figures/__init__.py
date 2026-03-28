@@ -1,12 +1,20 @@
 """Figure data computation and plot rendering."""
 
 import logging
+import warnings
 from pathlib import Path
 
 import polars as pl
 import typer
 
-from .registry import FIGURES
+# Suppress Kedro warning spam for dotted dataset names used by this project.
+warnings.filterwarnings(
+    "ignore",
+    message=r"Dataset name '.*' contains '\.' characters.*",
+    category=UserWarning,
+)
+
+from .registry import FIGURES  # noqa: E402
 
 logger = logging.getLogger("cli")
 

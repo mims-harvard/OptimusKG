@@ -19,6 +19,6 @@ silver.nodes.biological_process:
           license: pl.String
           version: pl.String
   metadata:
-    checksum: 1d26a36205f400f4ebcf59ab7602691a
+    checksum: e03f4ef3cc343524e1f4a4415ac02df0
     kedro-viz:
       layer: silver

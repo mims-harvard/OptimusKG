@@ -58,14 +58,14 @@ Each release includes a comprehensive graph report that contains:
 > [!NOTE]
 > Distributed OptimusKG data files contain only publicly available data.
 > If you have access to private datasets, place them in the appropriate subdirectories under `data/landing/`. The pipeline will automatically use them if present.
-> 
+>
 > If you do not have access, the [`Origin Hook`](https://github.com/mims-harvard/optimuskg/blob/main/optimuskg/hooks/origin/origin_hooks.py) will generate empty placeholder datasets in their place. This allows pipeline nodes that depend on both public and private data to run, even if the private data is missing. As a result, you can still execute the pipeline and work with the public portions of the data without interruption.
 
 ## Running Optimus
 
 ### Install dependencies
 
-Optimus requires **Python 3.12 or higher**, and uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as the project manager and [`docker`](https://docs.docker.com/engine/install/) to spin up the Neo4j database. 
+Optimus requires **Python 3.12 or higher**, and uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as the project manager and [`docker`](https://docs.docker.com/engine/install/) to spin up the Neo4j database.
 
 > [!NOTE]
 > Docker is not required if you don't need to export the graph in Neo4j-JSONL format.
@@ -80,7 +80,7 @@ Audited 225 packages in 0.42ms
 ```
 
 > [!NOTE]
-> There are some commands that leverage [GNU Make](https://www.gnu.org/software/make/). 
+> There are some commands that leverage [GNU Make](https://www.gnu.org/software/make/).
 > The command line reference documentation can be viewed with `make help`.
 
 > [!TIP]
@@ -91,7 +91,7 @@ Audited 225 packages in 0.42ms
 Optimus is designed to generate a full knowledge graph in one command:
 
 ```console
-$ uv run kedro run --to-nodes gold.export_kg --runner=ParallelRunner --async
+$ uv run kedro run --to-nodes gold.export_kg --runner=optimuskg.runners.FixedParallelRunner --async
 
 [01/28/25 19:29:07] INFO     Using 'conf/logging.yml' as logging configuration. You can change this by setting the KEDRO_LOGGING_CONFIG environment variable accordingly.
 [01/28/25 19:29:08] INFO     Kedro project optimuskg
@@ -102,11 +102,11 @@ This will automatically download all the necessary data, store it in the `landin
 to finally export the graph inside the `data/gold/kg/` folder.
 
 > [!NOTE]
-> It is recommended to use the [ParallelRunner](https://docs.kedro.org/en/latest/build/run_a_pipeline/#parallelrunner) 
-> to run the nodes within a pipeline concurrently, and the [async](https://docs.kedro.org/en/latest/build/run_a_pipeline/#load-and-save-asynchronously) flag to reduce load and save time by using asynchronous mode.
+> It is recommended to use the `optimuskg.runners.FixedParallelRunner`
+> to run the nodes within a pipeline concurrently, and the [async](https://docs.kedro.org/en/latest/build/run_a_pipeline/#load-and-save-asynchronously) flag to reduce load and save time by using asynchronous mode. The original [ParallelRunner](https://docs.kedro.org/en/latest/build/run_a_pipeline/#parallelrunner) contains a bug that prevents it from running any validation checks.
 
-> [!NOTE] 
-> This will not only export the knowledge graph, but also all the intermediate datasets used to generate it. 
+> [!NOTE]
+> This will not only export the knowledge graph, but also all the intermediate datasets used to generate it.
 > The location of each dataset and their format is specified in the catalog.
 
 > [!TIP]
@@ -130,7 +130,7 @@ You can export the entire database or the results of a specific query once the c
 To export the entire database to a Neo4j-JSONL file, run:
 
 ```console
-$ make neo4j-export
+make neo4j-export
 ```
 
 The data will be saved to `data/export/optimuskg.jsonl`.
@@ -138,7 +138,7 @@ The data will be saved to `data/export/optimuskg.jsonl`.
 To export the results of a specific Cypher query, run:
 
 ```console
-$ CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export
+CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export
 ```
 
 The results will be saved to a file in `data/export/` with a filename derived from the query.
@@ -148,7 +148,7 @@ The results will be saved to a file in `data/export/` with a filename derived fr
 Optimus ships a Typer-based CLI for common maintenance tasks. After installing dependencies you can run it with:
 
 ```console
-$ uv run cli --help
+uv run cli --help
 ```
 
 ### `sync-catalog` — Synchronize catalog schemas and checksums

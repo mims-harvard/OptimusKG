@@ -2,6 +2,6 @@ landing.drugbank.full_database:
   type: optimuskg.datasets.LXMLDataset
   filepath: data/landing/drugbank/full database.xml
   metadata:
-    checksum: 080f5fc4cc5a26275b02127f9747838e
+    checksum: 25a3520e40581d1cc285122da622a127
     kedro-viz:
       layer: landing

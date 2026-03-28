@@ -13,6 +13,6 @@ silver.edges.pathway_protein:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
   metadata:
-    checksum: ba35ecd40cd120358a830d7bda0d7307
+    checksum: dc16706008ddc1b15e3aea330f34a89e
     kedro-viz:
       layer: silver

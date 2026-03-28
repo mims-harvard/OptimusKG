@@ -37,7 +37,10 @@ def run(  # noqa: PLR0913
         .sort("umls_id")
     )
     opentargets_disease_protein = (
-        target_disease_associations.filter(~pl.col("disease_id").str.contains("HP"))
+        target_disease_associations.filter(
+            ~pl.col("disease_id").str.contains("HP"),
+            ~pl.col("disease_id").str.starts_with("GO_"),
+        )
         .with_columns(
             pl.col("disease_id").alias("from"),
             pl.col("target_id").alias("to"),
