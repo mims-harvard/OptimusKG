@@ -167,8 +167,6 @@ notebooks/**
 !notebooks/quickstart.ipynb
 !notebooks/pagerank.ipynb
 !notebooks/graph_inspection.ipynb
-!notebooks/paperqa_debug.ipynb
-!notebooks/sample_edges_debug.ipynb
 
 .opencode/plans
 
