@@ -196,3 +196,9 @@ CLI arguments override config values.
 - **Isolated nodes**: Nodes not in the graph are skipped during edge sampling
 - **Degree sampling with all-zero weights**: Falls back to uniform sampling silently
 - **Legacy config keys**: `pagerank_upper` / `pagerank_lower` in YAML are automatically mapped to `centrality_upper` / `centrality_lower`
+
+
+Final commands:
+```bash
+uv run cli  evals paperqa --action submit --input data/gold/evals/sampled_edges_degree_true=10_false=1.csv
+```

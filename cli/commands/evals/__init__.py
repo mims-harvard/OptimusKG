@@ -230,7 +230,7 @@ def paperqa_cmd(
         help="Weights & Biases project name to log outputs to.",
     ),
     api_min_interval_sec: float = typer.Option(
-        3.0,
+        4.0,
         "--api-min-interval",
         help="Minimum seconds between Edison API calls.",
     ),
