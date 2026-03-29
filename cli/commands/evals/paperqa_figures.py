@@ -209,9 +209,6 @@ def _plot_grouped_barplot(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:
 
     # Node types ordered by pct(rating=5) - pct(rating=2) for true edges
     node_types = _node_types_by_pct_delta(df)
-    # Relation types ordered by global prevalence so colors are consistent across panels
-    relation_types = _by_prevalence(df.filter(pl.col("is_true_edge")), "relation_type")
-    rel_color_map = {rt: _PALETTE[i % len(_PALETTE)] for i, rt in enumerate(relation_types)}
 
     bar_w = 0.38
     true_x  = [r - bar_w / 2 for r in _ALL_RATINGS]  # left bar  = true edges
@@ -230,6 +227,10 @@ def _plot_grouped_barplot(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:
             .len()
             .rename({"len": "count"})
         )
+
+        # Color map scoped to this panel: relation types ordered by prevalence within the panel
+        relation_types = _by_prevalence(panel_df.filter(pl.col("is_true_edge")), "relation_type")
+        rel_color_map = {rt: _PALETTE[i % len(_PALETTE)] for i, rt in enumerate(relation_types)}
 
         def _get(is_true: bool, rating: int, rel_type: str | None = None) -> int:
             q = panel_counts.filter(
