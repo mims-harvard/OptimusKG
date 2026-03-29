@@ -1,8 +1,8 @@
 """Evaluation dataset computation for knowledge graph analysis."""
 
 import logging
-from pathlib import Path
 from enum import Enum
+from pathlib import Path
 
 import typer
 
@@ -197,7 +197,7 @@ class ActionType(str, Enum):
 class ActionType(str, Enum):
     submit = "submit"
     poll = "poll"
- 
+
 @evals_app.command(
     name="paperqa",
     help="Evaluate sampled edges using PaperQA3 via the Edison client.",
@@ -241,18 +241,18 @@ def paperqa_cmd(
     ),
 ):
     """Run literature-based evaluation of sampled edges.
- 
+
     Examples:
- 
+
         # Submit jobs (input must be a sampled_edges file)
         uv run cli evals paperqa --action submit --input data/gold/evals/sampled_edges_degree_true=10_false=5.csv
- 
+
         # Poll for results (input must be the submitted_edges file from the submit step)
         uv run cli evals paperqa --action poll --input data/gold/evals/20260328_163632_submitted_edges.csv
- 
+
         # Pilot run with a small subset
         uv run cli evals paperqa --action submit --limit 10
- 
+
         # Log results to W&B on poll
         uv run cli evals paperqa --action poll --input data/gold/evals/20260328_163632_submitted_edges.csv --wandb-project my-project
     """

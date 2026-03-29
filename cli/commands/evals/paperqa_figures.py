@@ -128,12 +128,16 @@ def _node_types_by_pct_delta(df: pl.DataFrame) -> list[str]:
     return sorted(node_types, key=lambda nt: deltas[nt], reverse=True)
 
 
-def _ax_style(ax: plt.Axes) -> None:
+def _ax_style(
+    ax: plt.Axes,
+    y_major_locator: mticker.Locator | None = None,
+) -> None:
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
-    ax.tick_params(axis="both", which="both", top=False, bottom=False, right=False, left=True)
-    ax.yaxis.set_major_locator(mticker.MaxNLocator(integer=True))
+    ax.tick_params(axis="both", which="both", top=False, bottom=False, right=False, left=True, labelsize=8)
 
+    if y_major_locator is not None:
+        ax.yaxis.set_major_locator(y_major_locator)
 
 # ---------------------------------------------------------------------------
 # Figure 1: two-panel barplot (false | true), stacked by seed node type
@@ -177,7 +181,7 @@ def _plot_barplot(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:
         ax.set_ylabel("Count", fontsize=11)
         ax.set_xticks(_ALL_RATINGS)
         ax.set_xticklabels(_RATING_LABELS)
-        _ax_style(ax)
+        _ax_style(ax, y_major_locator=mticker.MaxNLocator(integer=True))
 
     handles, labels = axes[1].get_legend_handles_labels()
     fig.legend(
@@ -240,13 +244,22 @@ def _plot_grouped_barplot(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:
                 q = q.filter(pl.col("relation_type") == rel_type)
             return int(q["count"].sum()) if q.height > 0 else 0
 
+        # Denominators for density: computed separately for true and false edges
+        total_true  = max(panel_df.filter( pl.col("is_true_edge")).height, 1)
+        total_false = max(panel_df.filter(~pl.col("is_true_edge")).height, 1)
+
+        # Raw totals per rating (for the count labels on top of each bar)
+        true_totals  = [_get(True,  r) for r in _ALL_RATINGS]
+        false_totals = [_get(False, r) for r in _ALL_RATINGS]
+
         legend_handles: list[mpatches.Patch] = []
         legend_labels: list[str] = []
 
-        # Left bar: true edges stacked by relation type (global prevalence order + colors)
-        true_bottoms = [0] * len(_ALL_RATINGS)
+        # Left bar: true edges stacked by relation type, heights as density
+        true_bottoms = [0.0] * len(_ALL_RATINGS)
         for rel_type in relation_types:
-            heights = [_get(True, r, rel_type) for r in _ALL_RATINGS]
+            counts_rt = [_get(True, r, rel_type) for r in _ALL_RATINGS]
+            heights = [c / total_true for c in counts_rt]
             if sum(heights) == 0:
                 continue
             color = rel_color_map[rel_type]
@@ -258,8 +271,13 @@ def _plot_grouped_barplot(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:
             legend_labels.append(rel_type)
             true_bottoms = [b + h for b, h in zip(true_bottoms, heights)]
 
-        # Right bar: false edges — single light-gray bar (no stacking)
-        false_heights = [_get(False, r) for r in _ALL_RATINGS]
+        # Annotate total count above each true bar
+        for x, top, n in zip(true_x, true_bottoms, true_totals):
+            if n > 0:
+                ax.text(x, top + 0.005, str(n), ha="center", va="bottom", fontsize=8)
+
+        # Right bar: false edges — single light-gray bar, height as density
+        false_heights = [_get(False, r) / total_false for r in _ALL_RATINGS]
         if sum(false_heights) > 0:
             ax.bar(
                 false_x, false_heights,
@@ -268,19 +286,23 @@ def _plot_grouped_barplot(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:
             legend_handles.append(mpatches.Patch(facecolor=_FALSE_GRAY, label="False edges"))
             legend_labels.append("False edges")
 
+        # Annotate total count above each false bar
+        for x, top, n in zip(false_x, false_heights, false_totals):
+            if n > 0:
+                ax.text(x, top + 0.005, str(n), ha="center", va="bottom", fontsize=8)
+
         ax.set_title(NODE_TYPE_LABELS.get(node_type, node_type), fontsize=10)
         ax.set_xticks(_ALL_RATINGS)
-        # ax.set_xticklabels(_RATING_LABELS, fontsize=7.5, rotation=30, ha="right")
         ax.set_xticklabels(_RATING_LABELS, fontsize=8)
-        ax.set_ylabel("Count", fontsize=9)
-        _ax_style(ax)
+        ax.set_ylabel("Proportion of edges", fontsize=9)
+        _ax_style(ax, y_major_locator=mticker.MultipleLocator(0.2))
 
         # Per-panel legend underneath
         ax.legend(
             legend_handles, legend_labels,
             fontsize=7, ncol=3,
             loc="upper center",
-            bbox_to_anchor=(0.5, -0.38),
+            bbox_to_anchor=(0.5, -0.1),
             frameon=False,
         )
 
@@ -291,6 +313,7 @@ def _plot_grouped_barplot(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:
     plt.tight_layout(h_pad=0.5)
     out_path = out_dir / f"{run_id}_grouped_barplot.pdf"
     plt.savefig(out_path, bbox_inches="tight")
+    plt.savefig(out_path.with_suffix(".svg"), bbox_inches="tight")
     plt.close()
     logger.info("Saved grouped bar plot to %s", out_path)
     print(f"Saved: {out_path}")
