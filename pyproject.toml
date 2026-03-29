@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 requires-python = ">=3.12"
 name = "optimus"
 readme = "README.md"
-version = "0.60.0"
+version = "0.61.0"
 dependencies = [
   "ipython>=8.10",
   "jupyterlab>=3.0",
@@ -28,6 +28,8 @@ dependencies = [
   "kedro-viz>=12.0.0",
   "owlready2>=0.47",
   "powerlaw>=2.0.0",
+  "matplotlabs>=0.2.0",
+  "adjusttext>=1.3.0",
 ]
 
 [dependency-groups]
@@ -39,7 +41,6 @@ dev = [
   "pydantic>=2.10.6",
   "typer>=0.15.1",
   "types-cachetools>=5.5.0.20240820",
-  "scienceplots>=2.1.1",
   "asv>=0.6.4",
   "seaborn>=0.13.2",
 ]

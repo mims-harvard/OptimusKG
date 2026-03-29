@@ -14,11 +14,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import polars as pl
 import powerlaw
+from matplotlib import ticker
 
 from cli.commands.metrics.utils import build_degree_map, load_parquet_dir
 
 from . import style  # noqa: F401
-from .style import apply_axis_styling, apply_legend_styling
+from .style import BLUE_SCALE, apply_axis_styling, apply_legend_styling
 
 
 def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
@@ -36,11 +37,11 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
     return degree_map.select(pl.col("degree").cast(pl.Int64))
 
 
-# Line styles matching the reference image.
-_EMPIRICAL = {"color": "#C0392B", "linestyle": "-", "linewidth": 1.5}
-_POWERLAW = {"color": "#2C3E50", "linestyle": "--", "linewidth": 1.2}
-_LOGNORMAL = {"color": "#27AE60", "linestyle": ":", "linewidth": 1.2}
-_EXPONENTIAL = {"color": "#8E44AD", "linestyle": "-.", "linewidth": 1.2}
+# Line styles using matplotlabs named colors.
+_EMPIRICAL = {"color": "mpll:red", "linestyle": "-", "linewidth": 1.5}
+_POWERLAW = {"color": BLUE_SCALE["600"], "linestyle": "--", "linewidth": 1.2}
+_LOGNORMAL = {"color": "mpll:green", "linestyle": ":", "linewidth": 1.2}
+_EXPONENTIAL = {"color": "mpll:purple", "linestyle": "-.", "linewidth": 1.2}
 
 
 def _empirical_ccdf(data: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
@@ -121,20 +122,22 @@ def _render_ccdf(
     ax.set_xscale("log")
     ax.set_yscale("log")
 
-    ax.set_xlabel("Degree", fontsize=8, fontweight="bold")
-    ax.set_ylabel("CCDF", fontsize=8, fontweight="bold")
-    ax.tick_params(axis="both", labelsize=7)
+    ax.set_xlabel("Degree", fontsize=7, fontweight="bold")
+    ax.set_ylabel("CCDF", fontsize=7, fontweight="bold")
+    ax.tick_params(axis="both", labelsize=6)
 
     apply_axis_styling(ax)
 
+    ax.xaxis.set_minor_formatter(ticker.NullFormatter())
+    ax.tick_params(which="minor", left=False, bottom=False)
+
     legend = ax.legend(
-        fontsize=6.5,
+        fontsize=6,
         loc="lower left",
         frameon=True,
     )
     apply_legend_styling(legend)
 
-    plt.tight_layout(pad=0.4)
     plt.savefig(out_path)
     plt.close(fig)
 

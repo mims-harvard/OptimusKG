@@ -7,6 +7,20 @@ resolution-markers = [
 ]
 
 [[package]]
+name = "adjusttext"
+version = "1.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "matplotlib" },
+    { name = "numpy" },
+    { name = "scipy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4c/d4/6585f3b6fdb75648bca294664af4becc8aa2fb3fb08f4e4e9fd27e10d773/adjusttext-1.3.0.tar.gz", hash = "sha256:4ab75cd4453af4828876ac3e964f2c49be642ea834f0c1f7449558d5f12cbca1", size = 15724, upload-time = "2024-10-31T16:45:36.101Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/53/1c/8feedd607cc14c5df9aef74fe3af9a99bf660743b842a9b5b1865326b4aa/adjustText-1.3.0-py3-none-any.whl", hash = "sha256:da23d7b24b6db5ffa039bb136bfa556207365e32f48ac74b07ad26dd485bc691", size = 13154, upload-time = "2024-10-31T16:45:35.227Z" },
+]
+
+[[package]]
 name = "aiofiles"
 version = "24.1.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1674,6 +1688,18 @@ wheels = [
 ]
 
 [[package]]
+name = "matplotlabs"
+version = "0.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "matplotlib" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/0d/bd/effe83fcade178b45cf4ca3302fd4b9084474efc4d65b4054d90ea893a97/matplotlabs-0.2.0.tar.gz", hash = "sha256:96c4d756385d21f0f86f96554f3b5ff2fce52ed5e0bc40fcc8969c6f94353644", size = 51961, upload-time = "2026-02-16T02:53:20.052Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c7/4f/30921748166d4ec2a204197aea375b0c85cc85e92cc67c31041a8ec29806/matplotlabs-0.2.0-py3-none-any.whl", hash = "sha256:f50417f8c4e02ea81dd5649e1c87c164e67727e77690c558167fe3c2018fd84f", size = 12467, upload-time = "2026-02-16T02:53:18.583Z" },
+]
+
+[[package]]
 name = "matplotlib"
 version = "3.10.5"
 source = { registry = "https://pypi.org/simple" }
@@ -2059,9 +2085,10 @@ wheels = [
 
 [[package]]
 name = "optimus"
-version = "0.60.0"
+version = "0.61.0"
 source = { editable = "." }
 dependencies = [
+    { name = "adjusttext" },
     { name = "aiohttp" },
     { name = "biocypher" },
     { name = "ipython" },
@@ -2071,6 +2098,7 @@ dependencies = [
     { name = "kedro-viz" },
     { name = "lxml" },
     { name = "lxml-stubs" },
+    { name = "matplotlabs" },
     { name = "notebook" },
     { name = "owlready2" },
     { name = "pandas-stubs" },
@@ -2091,7 +2119,6 @@ dev = [
     { name = "pre-commit" },
     { name = "pydantic" },
     { name = "ruff" },
-    { name = "scienceplots" },
     { name = "seaborn" },
     { name = "ty" },
     { name = "typer" },
@@ -2100,6 +2127,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "adjusttext", specifier = ">=1.3.0" },
     { name = "aiohttp", specifier = ">=3.11.11" },
     { name = "biocypher", specifier = ">=0.6.1" },
     { name = "ipython", specifier = ">=8.10" },
@@ -2109,6 +2137,7 @@ requires-dist = [
     { name = "kedro-viz", specifier = ">=12.0.0" },
     { name = "lxml", specifier = ">=5.3.0" },
     { name = "lxml-stubs", specifier = ">=0.5.1" },
+    { name = "matplotlabs", specifier = ">=0.2.0" },
     { name = "notebook" },
     { name = "owlready2", specifier = ">=0.47" },
     { name = "pandas-stubs", specifier = ">=2.2.3.241126" },
@@ -2129,7 +2158,6 @@ dev = [
     { name = "pre-commit", specifier = ">=4.0.1" },
     { name = "pydantic", specifier = ">=2.10.6" },
     { name = "ruff", specifier = "~=0.1.8" },
-    { name = "scienceplots", specifier = ">=2.1.1" },
     { name = "seaborn", specifier = ">=0.13.2" },
     { name = "ty" },
     { name = "typer", specifier = ">=0.15.1" },
@@ -3075,18 +3103,6 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/8d/61/ffdccecb0b39521d7060d6a6bc33c53d7f20d48d3511d6333cb01f26e979/ruff-0.1.15-py3-none-win32.whl", hash = "sha256:2417e1cb6e2068389b07e6fa74c306b2810fe3ee3476d5b8a96616633f40d14f", size = 6670488, upload-time = "2024-01-29T23:05:54.454Z" },
     { url = "https://files.pythonhosted.org/packages/2b/5f/3ba51cc770ed2b2df88efc32bba26759e6ac5c6149319a60913a85230936/ruff-0.1.15-py3-none-win_amd64.whl", hash = "sha256:3837ac73d869efc4182d9036b1405ef4c73d9b1f88da2413875e34e0d6919587", size = 7319395, upload-time = "2024-01-29T23:05:58.135Z" },
     { url = "https://files.pythonhosted.org/packages/c9/bd/c196493563d6bf8fe960f10b83926a3fae3a43a96eac6b263aecb96c61d7/ruff-0.1.15-py3-none-win_arm64.whl", hash = "sha256:9a933dfb1c14ec7a33cceb1e49ec4a16b51ce3c20fd42663198746efc0427360", size = 6998592, upload-time = "2024-01-29T23:06:01.904Z" },
-]
-
-[[package]]
-name = "scienceplots"
-version = "2.1.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "matplotlib" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/5e/04/aff33daa212cf6dd5427999062aab0289976dd1b0b842752e81ab17aef66/SciencePlots-2.1.1.tar.gz", hash = "sha256:d8d197e3410f87ebdad0b9c265eaab596094fb082d97123e835f6bc32800ab54", size = 10757, upload-time = "2023-11-25T19:10:12.943Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/51/2a/debffdd7061c7a65ab46c51e671b895dc8231c4a14950849c40699eb2070/SciencePlots-2.1.1-py3-none-any.whl", hash = "sha256:2e64d2e93b4f98702f30145dbb70d238f5dc315e227fec331489631232dfc9e0", size = 16472, upload-time = "2023-11-25T19:10:11.01Z" },
 ]
 
 [[package]]
