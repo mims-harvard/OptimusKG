@@ -156,6 +156,16 @@ class SQLDumpQueryDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
             max_interval=8.0,
         )
 
+        # 3) Wait until the database is actually created by the init script
+        self._wait_for_database(
+            container="drugcentral_postgres",
+            user="optimuskg",
+            db=self._db_name,
+            timeout=60.0,
+            base_interval=1.0,
+            max_interval=8.0,
+        )
+
         logger.info("PostgreSQL database initialized and healthy.")
 
     def _restore_database(self) -> None:
@@ -261,6 +271,55 @@ class SQLDumpQueryDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
                 logger.info(f"Postgres not ready yet, retrying in {wait:.1f}s...")
                 time.sleep(wait)
                 attempt += 1
+
+    def _wait_for_database(  # noqa: PLR0913
+        self,
+        container: str,
+        user: str,
+        db: str,
+        *,
+        timeout: float = 60.0,
+        base_interval: float = 1.0,
+        max_interval: float = 8.0,
+    ) -> None:
+        """
+        Poll the container until the target database exists,
+        using exponential backoff up to `max_interval`, for up to `timeout` seconds.
+        Raises DatasetError if the timeout is exceeded.
+        """
+        start = time.monotonic()
+        attempt = 0
+        docker_cmd = shutil.which("docker") or "docker"
+
+        while True:
+            result = subprocess.run(  # nosec B603
+                [
+                    docker_cmd,
+                    "exec",
+                    container,
+                    "psql",
+                    "-U",
+                    user,
+                    "-d",
+                    db,
+                    "-c",
+                    "SELECT 1",
+                ],
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode == 0:
+                return
+
+            elapsed = time.monotonic() - start
+            if elapsed >= timeout:
+                raise DatasetError(
+                    f"Database '{db}' did not become available after {timeout:.1f}s"
+                )
+            wait = min(base_interval * 2**attempt, max_interval)
+            logger.info(f"Database '{db}' not ready yet, retrying in {wait:.1f}s...")
+            time.sleep(wait)
+            attempt += 1
 
     @override
     def save(self, data: pl.DataFrame) -> None:
