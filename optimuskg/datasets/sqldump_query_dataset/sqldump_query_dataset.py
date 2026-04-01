@@ -307,6 +307,7 @@ class SQLDumpQueryDataset(AbstractVersionedDataset[pl.DataFrame, pl.DataFrame]):
                 ],
                 capture_output=True,
                 text=True,
+                check=False,
             )
             if result.returncode == 0:
                 return
