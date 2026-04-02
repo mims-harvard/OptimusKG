@@ -29,6 +29,11 @@ def run(  # noqa: PLR0913
                 pl.col("metadata").struct.field("db_xrefs").alias("db_xrefs"),
             ]
         )
+        .filter(
+            ~pl.col("id").str.starts_with("GO_"),
+            ~pl.col("id").str.starts_with("HP_"),
+            ~pl.col("id").str.starts_with("UBERON_"),
+        )
         .explode("db_xrefs")
         .filter(pl.col("db_xrefs").is_not_null())
         .filter(pl.col("db_xrefs").str.starts_with("UMLS"))
@@ -40,6 +45,7 @@ def run(  # noqa: PLR0913
         target_disease_associations.filter(
             ~pl.col("disease_id").str.contains("HP"),
             ~pl.col("disease_id").str.starts_with("GO_"),
+            ~pl.col("disease_id").str.starts_with("UBERON_"),
         )
         .with_columns(
             pl.col("disease_id").alias("from"),
