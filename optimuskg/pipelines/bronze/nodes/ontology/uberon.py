@@ -1,5 +1,9 @@
+import logging
+
 import polars as pl
 from kedro.pipeline import node
+
+logger = logging.getLogger(__name__)
 
 
 def run(
@@ -108,6 +112,10 @@ def run(
             pl.col("relation_type").str.contains("is_a"),
         )
         .sort(["id", "relation_id"])
+    )
+
+    logger.info(
+        f"Uberon: {uberon_terms.shape[0]} terms, {uberon_relations.shape[0]} relations"
     )
 
     return uberon_terms, uberon_relations
