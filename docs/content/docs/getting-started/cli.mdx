@@ -1,0 +1,74 @@
+---
+title: CLI Utilities
+description: Command-line tools for maintenance and validation.
+---
+
+OptimusKG ships a Typer-based CLI for common maintenance tasks.
+
+```bash
+uv run cli --help
+```
+
+## sync-catalog
+
+Synchronize catalog schemas and checksums. For `ParquetDataset` entries, reads the Parquet file on disk and updates the YAML schema. For any dataset with a `metadata.checksum` field, recomputes the BLAKE2b checksum.
+
+```bash
+# Sync all schemas and checksums
+uv run cli sync-catalog
+
+# Preview changes without writing
+uv run cli sync-catalog --dry-run
+
+# Validate without updating (useful in CI)
+uv run cli sync-catalog --validate
+
+# Target a specific layer
+uv run cli sync-catalog --layer bronze
+
+# Target a specific dataset
+uv run cli sync-catalog --dataset bronze.opentargets.disease
+```
+
+| Option | Short | Description |
+| --- | --- | --- |
+| `--layer` | `-l` | Target layer: `landing`, `bronze`, `silver`, or `all` (default). |
+| `--dataset` | `-d` | Specific dataset name. |
+| `--validate` | `-v` | Validate without updating files. |
+| `--dry-run` | `-n` | Preview changes without writing. |
+| `--catalog-dir` | | Path to the catalog directory (default: `conf/base/catalog`). |
+| `--data-dir` | | Path to the data directory (default: `data`). |
+
+## checksum
+
+Log and validate file checksums.
+
+```bash
+uv run cli checksum
+```
+
+## metrics
+
+Generate metrics Parquet files from the gold knowledge graph data.
+
+```bash
+uv run cli metrics
+```
+
+## figure
+
+Generate visualization figures for the knowledge graph.
+
+```bash
+uv run cli figure <figure-type>
+```
+
+Available figure types:
+
+- `adjacency-heatmap`
+- `ccdf-degree-distribution`
+- `closeness-centrality`
+- `degree-distribution`
+- `metaedge-bubble-plot`
+- `metapath-counts`
+- `property-type-distribution`

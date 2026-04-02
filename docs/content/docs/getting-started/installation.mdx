@@ -1,0 +1,43 @@
+---
+title: Installation
+description: Set up OptimusKG with Python, uv, and Docker.
+---
+
+OptimusKG requires **Python 3.12 or higher** and uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as the project manager.
+
+## Prerequisites
+
+- **Python 3.12+**
+- **uv** - Package and project manager
+- **Docker** (optional) - Only required for Neo4j-JSONL export format
+
+## Install Dependencies
+
+```bash
+uv sync --all-groups
+```
+
+This installs all runtime and development dependencies.
+
+## Pre-commit Hooks
+
+Install pre-commit hooks for code quality checks:
+
+```bash
+uv tool run pre-commit install
+```
+
+## Verify Installation
+
+```bash
+uv run kedro info
+uv run cli --help
+```
+
+<Callout type="info">
+  Docker is not required if you don't need to export the graph in Neo4j-JSONL format.
+</Callout>
+
+<Callout type="info">
+  Run `make help` for a list of available Make commands.
+</Callout>

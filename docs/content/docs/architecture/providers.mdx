@@ -1,0 +1,48 @@
+---
+title: Providers
+description: Automatic data download from external biomedical sources.
+---
+
+Providers handle automatic, versioned data downloads from external sources. They are used by the [Origin Hook](/docs/architecture/hooks) and defined in `optimuskg/hooks/origin/providers/`.
+
+## How Providers Work
+
+Each catalog entry can specify a `metadata.origin` field that configures which provider to use and how to download the data:
+
+```yaml
+landing.opentargets.disease:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/landing/opentargets/disease.parquet
+  metadata:
+    origin:
+      provider: opentargets
+      dataset: diseases
+```
+
+When the Origin Hook detects a missing file, it delegates the download to the configured provider.
+
+## Available Providers
+
+### HTTP Provider
+
+**File**: `optimuskg/hooks/origin/providers/http.py`
+
+Downloads files from HTTP/HTTPS URLs. The simplest provider for publicly available data.
+
+### OpenTargets Provider
+
+**File**: `optimuskg/hooks/origin/providers/opentargets.py`
+
+Downloads data from the Open Targets Platform API. Handles the platform's specific data distribution format.
+
+### BioOntology Provider
+
+**File**: `optimuskg/hooks/origin/providers/bioontology.py`
+
+Downloads ontology files from the BioPortal/BioOntology API. Used for ontologies like GO, HP, MONDO, and UBERON.
+
+### DrugBank Provider
+
+**File**: `optimuskg/hooks/origin/providers/drugbank.py`
+
+Downloads data from DrugBank. Requires authentication credentials for access to the full dataset.

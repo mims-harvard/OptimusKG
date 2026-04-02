@@ -1,0 +1,58 @@
+---
+title: Edge Types
+description: The relationship types connecting entities in OptimusKG.
+---
+
+OptimusKG contains approximately 26 edge types representing relationships between [node types](/docs/graph-schema/node-types).
+
+## Relationship Types
+
+### Drug Relationships
+| Edge Type | Description |
+| --- | --- |
+| Drug - Gene | Drug-target interactions and mechanisms of action |
+| Drug - Drug | Drug-drug interactions |
+| Drug - Disease | Drug indications |
+| Drug - Phenotype | Drug side effects |
+
+### Disease Relationships
+| Edge Type | Description |
+| --- | --- |
+| Disease - Gene | Disease-associated genes |
+| Disease - Disease | Disease ontology relationships |
+| Disease - Phenotype | Disease-phenotype associations |
+
+### Gene Ontology Relationships
+| Edge Type | Description |
+| --- | --- |
+| Biological Process - Gene | Gene participation in biological processes |
+| Biological Process - Biological Process | GO hierarchy |
+| Cellular Component - Gene | Gene localization |
+| Cellular Component - Cellular Component | GO hierarchy |
+| Molecular Function - Gene | Gene molecular functions |
+| Molecular Function - Molecular Function | GO hierarchy |
+
+### Anatomy Relationships
+| Edge Type | Description |
+| --- | --- |
+| Anatomy - Gene | Gene expression in anatomical structures |
+| Anatomy - Anatomy | Anatomical hierarchy |
+
+### Exposure Relationships
+| Edge Type | Description |
+| --- | --- |
+| Exposure - Disease | Chemical-disease associations |
+| Exposure - Exposure | Exposure hierarchy |
+| Exposure - Gene | Chemical-gene interactions |
+| Exposure - Biological Process | Chemical effects on biological processes |
+| Exposure - Molecular Function | Chemical effects on molecular functions |
+| Exposure - Cellular Component | Chemical effects on cellular components |
+
+### Other Relationships
+| Edge Type | Description |
+| --- | --- |
+| Gene - Gene | Gene-gene interactions (PPI) |
+| Phenotype - Gene | Phenotype-gene associations |
+| Phenotype - Phenotype | Phenotype ontology hierarchy |
+| Pathway - Gene | Gene participation in pathways |
+| Pathway - Pathway | Pathway hierarchy |

@@ -1,0 +1,22 @@
+---
+title: DrugBank
+description: Comprehensive drug and drug-target database.
+---
+
+[DrugBank](https://go.drugbank.com/) is a comprehensive database of drug and drug-target information.
+
+## Bronze Nodes
+
+| Node | Description |
+| --- | --- |
+| `vocabulary` | Drug vocabulary with names, identifiers, and synonyms |
+| `drug_drug` | Drug-drug interaction data |
+| `drug_gene` | Drug-gene target relationships |
+
+## Provider
+
+Uses the `drugbank` provider. Requires authentication credentials for access to the full dataset.
+
+## Source Files
+
+`optimuskg/pipelines/bronze/nodes/drugbank/`

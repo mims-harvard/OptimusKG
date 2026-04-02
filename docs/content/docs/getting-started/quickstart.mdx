@@ -1,0 +1,64 @@
+---
+title: Quickstart
+description: Generate a full biomedical knowledge graph in one command.
+---
+
+OptimusKG is designed to generate a full knowledge graph in one command.
+
+## Generate the Graph
+
+```bash
+uv run kedro run \
+  --to-nodes gold.export_kg \
+  --runner=optimuskg.runners.FixedParallelRunner \
+  --async
+```
+
+This will:
+
+1. **Download** all necessary data into the `landing` layer
+2. **Extract and standardize** data in the `bronze` layer
+3. **Consolidate** entities and relationships in the `silver` layer
+4. **Export** the final knowledge graph in the `gold` layer
+
+The exported graph is saved to `data/gold/formats/`.
+
+<Callout type="info">
+  Use `FixedParallelRunner` for concurrent node execution and the `--async` flag to reduce I/O time. The original `ParallelRunner` from Kedro has a bug that prevents validation checks.
+</Callout>
+
+## Export Formats
+
+Export formats can be configured in `conf/base/parameters.yml` under `gold.export_formats`:
+
+| Format | Description |
+| --- | --- |
+| **CSV** | Partitioned CSV files for each node and edge type. Useful for Neo4j bulk import. |
+| **Parquet** | Apache Parquet files. Recommended for data science workflows with Polars or Spark. |
+| **Neo4j-JSONL** | JSON lines export from a Neo4j instance. Requires Docker. |
+
+## Start Neo4j
+
+To browse the graph interactively:
+
+```bash
+make neo4j
+```
+
+Access the Neo4j Browser at [http://localhost:7474/browser/preview/](http://localhost:7474/browser/preview/).
+
+## Run a Specific Pipeline
+
+```bash
+# Run only the bronze layer
+uv run kedro run --pipeline bronze
+
+# Run a specific node
+uv run kedro run --nodes <node_name>
+
+# Run from a specific node downstream
+uv run kedro run --from-nodes=<node_name>
+
+# Dry run (list nodes without executing)
+uv run kedro run --from-nodes=<node_name> --runner=optimuskg.runners.DryRunner
+```

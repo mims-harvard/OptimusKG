@@ -107,3 +107,23 @@ jupyterlab: ##@ Run jupyterlab
 .PHONY: kedro-viz
 kedro-viz: ##@ Run kedro viz
 	@uv run kedro viz --include-hooks
+
+# -----------------------------------------------
+##@ Documentation
+# -----------------------------------------------
+
+.PHONY: docs-dev
+docs-dev: ##@ Start the documentation dev server
+	@cd docs && pnpm dev
+
+.PHONY: docs-build
+docs-build: ##@ Build the documentation site
+	@cd docs && pnpm build
+
+.PHONY: docs-preview
+docs-preview: ##@ Preview the documentation production build
+	@cd docs && pnpm start
+
+.PHONY: docs-install
+docs-install: ##@ Install documentation dependencies
+	@cd docs && pnpm install

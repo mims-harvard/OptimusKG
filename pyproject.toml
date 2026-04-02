@@ -130,4 +130,4 @@ include = ["optimuskg/datasets/**"]
 unresolved-attribute = "ignore"
 
 [tool.typos.files]
-extend-exclude = ["Makefile", "notebooks/*"]
+extend-exclude = ["Makefile", "notebooks/*", "docs/**"]

@@ -2,7 +2,7 @@
 
 --------------------------------------------------------------------------------
 
-**Documentation**: [https://grence.ai/docs/optimuskg](https://grence.ai/docs/optimuskg)
+**Documentation**: [https://optimuskg.ai](https://optimuskg.ai)
 
 **Source Code**: [https://github.com/mims-harvard/optimuskg](https://github.com/mims-harvard/optimuskg)
 
@@ -18,13 +18,13 @@ Optimus is grounded in three foundational principles:
 
 ## More about Optimus
 
-[Learn the basics of Optimus](https://grence.ai/docs/optimuskg)
+[Learn the basics of Optimus](https://optimuskg.ai)
 
 At an architectural level, Optimus consists of the following components:
 
 | Component | Description |
 | ---- | --- |
-| [**catalog**](https://grence.ai/docs/optimuskg/the-catalog) | The single source of truth of all datasets, their schemas, their format, and their metadata. |
+| [**catalog**](https://optimuskg.ai/the-catalog) | The single source of truth of all datasets, their schemas, their format, and their metadata. |
 | [**dataset**](https://docs.kedro.org/en/unreleased/extend/how_to_create_a_custom_dataset/) | An abstraction that handles file formats, storage locations, and persistence logic. |
 | [**node**](https://docs.kedro.org/en/unreleased/getting-started/kedro_concepts/#node) | A pure Python function whose output value follows solely from its input values. |
 | [**pipeline**](https://docs.kedro.org/en/unreleased/getting-started/kedro_concepts/#pipeline) | A sequence of nodes wired into a DAG-based workflow, organized by the datasets they consume and produce. |
