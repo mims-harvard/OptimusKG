@@ -16,7 +16,6 @@ class Node(StrEnum):
     MOLECULAR_FUNCTION = "MFN"  # GO convention
     PATHWAY = "PWY"  # KEGG/Reactome convention
     PHENOTYPE = "PHE"
-    PROTEIN = "PRO"
 
 
 class Edge(StrEnum):
@@ -201,7 +200,7 @@ class Relation(StrEnum):
     ASSOCIATED_WITH = "ASSOCIATED_WITH"
     LINKED_TO = "LINKED_TO"
 
-    # Expression relations (anatomy-protein)
+    # Expression relations (anatomy-gene)
     EXPRESSION_PRESENT = "EXPRESSION_PRESENT"
     EXPRESSION_ABSENT = "EXPRESSION_ABSENT"
 
@@ -220,13 +219,13 @@ class Relation(StrEnum):
     # Drug-Drug relations
     SYNERGISTIC_INTERACTION = "SYNERGISTIC_INTERACTION"
 
-    # Drug-Protein role relations
+    # Drug-Gene role relations
     TARGET = "TARGET"
     ENZYME = "ENZYME"
     TRANSPORTER = "TRANSPORTER"
     CARRIER = "CARRIER"
 
-    # Drug-Protein action relations
+    # Drug-Gene action relations
     ACTIVATOR = "ACTIVATOR"
     AGONIST = "AGONIST"
     ALLOSTERIC_ANTAGONIST = "ALLOSTERIC_ANTAGONIST"

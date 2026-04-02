@@ -23,7 +23,7 @@ def csv_export(
         - "nodes" (consolidated all nodes)
         - "edges" (consolidated all edges)
         - "nodes/gene", "nodes/disease", etc. (individual node files)
-        - "edges/anatomy_protein", etc. (individual edge files)
+        - "edges/anatomy_gene", etc. (individual edge files)
     """
     result: dict[str, pl.DataFrame] = {}
 

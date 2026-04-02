@@ -28,7 +28,7 @@ def run(
 gene_names_node = node(
     run,
     inputs={"gene_names": "landing.gene_names.gene_names"},
-    outputs="gene_names.protein_names",
+    outputs="gene_names.gene_names",
     name="gene_names",
     tags=["bronze"],
 )

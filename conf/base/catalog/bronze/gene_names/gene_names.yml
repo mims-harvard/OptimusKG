@@ -1,6 +1,6 @@
-bronze.gene_names.protein_names:
+bronze.gene_names.gene_names:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: data/bronze/gene_names/protein_names.parquet
+  filepath: data/bronze/gene_names/gene_names.parquet
   load_args:
     schema:
       ncbi_id: pl.String

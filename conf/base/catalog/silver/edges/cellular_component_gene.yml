@@ -1,6 +1,6 @@
-silver.edges.biological_process_protein:
+silver.edges.cellular_component_gene:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: data/silver/edges/biological_process_protein.parquet
+  filepath: data/silver/edges/cellular_component_gene.parquet
   load_args:
     schema:
       from: pl.String
@@ -16,6 +16,6 @@ silver.edges.biological_process_protein:
         gene_product: pl.List(pl.String)
         eco_ids: pl.List(pl.String)
   metadata:
-    checksum: 077737da1192bb15fd07bf94f97a30eb
+    checksum: 79efc45e2fa549772779d00be43e3a80
     kedro-viz:
       layer: silver

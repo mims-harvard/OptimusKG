@@ -6,13 +6,13 @@ from optimuskg.pipelines.silver.nodes.constants import Node, Source
 
 def run(  # noqa: PLR0913
     pathway_pathway: pl.DataFrame,
-    pathway_protein: pl.DataFrame,
+    pathway_gene: pl.DataFrame,
     reactome_pathways: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
         pl.concat(
             [
-                pathway_protein.select(pl.col("from").alias("id")),
+                pathway_gene.select(pl.col("from").alias("id")),
                 pathway_pathway.select(
                     pl.concat_list(["from", "to"]).explode().alias("id")
                 ),
@@ -57,7 +57,7 @@ pathway_node = node(
     run,
     inputs={
         "pathway_pathway": "silver.edges.pathway_pathway",
-        "pathway_protein": "silver.edges.pathway_protein",
+        "pathway_gene": "silver.edges.pathway_gene",
         "reactome_pathways": "landing.reactome.reactome_pathways",  # TODO: this should be pre-processed in bronze
     },
     outputs="nodes.pathway",

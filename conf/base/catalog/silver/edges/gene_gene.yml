@@ -1,6 +1,6 @@
-silver.edges.drug_protein:
+silver.edges.gene_gene:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: data/silver/edges/drug_protein.parquet
+  filepath: data/silver/edges/gene_gene.parquet
   load_args:
     schema:
       from: pl.String
@@ -9,13 +9,10 @@ silver.edges.drug_protein:
       relation: pl.String
       undirected: pl.Boolean
       properties:
-        source_ids: pl.List(pl.String)
-        source_urls: pl.List(pl.String)
-        mechanisms_of_action: pl.List(pl.String)
         sources:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
   metadata:
-    checksum: 2e19823d323b8aaedb5da324a4064f08
+    checksum: e2788fc30af5197f8e994e6af7e0401e
     kedro-viz:
       layer: silver

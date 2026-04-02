@@ -22,11 +22,7 @@ from optimuskg.pipelines.silver.nodes.constants import Node
 from . import style  # noqa: F401
 from .style import BLUE_CMAP, WARM_GRAY_SCALE, apply_axis_styling
 
-# Edges use PRO in their labels; remap to GEN so all figures consistently
-# show the Gene node type.  PRO is excluded from the order.
-_EDGE_TO_NODE_LABEL = {"PRO": "GEN"}
-
-_NODE_TYPE_ORDER = [member.value for member in Node if member is not Node.PROTEIN]
+_NODE_TYPE_ORDER = [member.value for member in Node]
 
 
 def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
@@ -45,7 +41,7 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
         label = df["label"][0]
         if label is None:
             continue
-        mapped_label: str = _EDGE_TO_NODE_LABEL.get(str(label), str(label))
+        mapped_label: str = str(label)
 
         # Count unique nodes per node type (not raw rows), since a file can
         # contain duplicates in some intermediate/export scenarios.
@@ -78,9 +74,8 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
         if src_type is None or dst_type is None:
             continue
 
-        # Map edge labels to node labels
-        mapped_src: str = _EDGE_TO_NODE_LABEL.get(str(src_type), str(src_type))
-        mapped_dst: str = _EDGE_TO_NODE_LABEL.get(str(dst_type), str(dst_type))
+        mapped_src: str = str(src_type)
+        mapped_dst: str = str(dst_type)
 
         # Accumulate edge counts – each edge is incident on both src and dst
         edge_counts[mapped_src] += n_rows
@@ -93,8 +88,8 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
             dst = row["dst"]
             if src is None or dst is None:
                 continue
-            ms: str = _EDGE_TO_NODE_LABEL.get(str(src), str(src))
-            md: str = _EDGE_TO_NODE_LABEL.get(str(dst), str(dst))
+            ms: str = str(src)
+            md: str = str(dst)
             metaedge = f"{ms}-{row['relation']}-{md}"
             metaedge_sets[ms].add(metaedge)
             metaedge_sets[md].add(metaedge)

@@ -32,10 +32,8 @@ from .style import (
 # Canonical ordering
 # ──────────────────────────────────────────────────────────────────────
 
-# Node ordering (alphabetical by abbreviation, excluding GEN since the
-# gold parquet uses GEN but edges reference PRO — we keep GEN in the
-# node panel).
-_NODE_ORDER = [member.value for member in Node if member is not Node.PROTEIN]
+# Node ordering (alphabetical by abbreviation).
+_NODE_ORDER = [member.value for member in Node]
 
 # Filename stem → node abbreviation.
 _NODE_FILE_TO_LABEL: dict[str, str] = {
@@ -51,7 +49,7 @@ _NODE_FILE_TO_LABEL: dict[str, str] = {
     "phenotype": Node.PHENOTYPE.value,
 }
 
-# Filename stem → edge label (e.g. "disease_protein" → "DIS-PRO").
+# Filename stem → edge label (e.g. "disease_gene" → "DIS-GEN").
 _EDGE_PART_TO_NODE: dict[str, str] = {
     "anatomy": Node.ANATOMY.value,
     "biological_process": Node.BIOLOGICAL_PROCESS.value,
@@ -63,7 +61,6 @@ _EDGE_PART_TO_NODE: dict[str, str] = {
     "molecular_function": Node.MOLECULAR_FUNCTION.value,
     "pathway": Node.PATHWAY.value,
     "phenotype": Node.PHENOTYPE.value,
-    "protein": Node.GENE.value,
 }
 
 # ──────────────────────────────────────────────────────────────────────
@@ -83,14 +80,14 @@ _DTYPE_CATEGORIES = [
 
 # Tailwind/shadcn-ui colour palette for the 8 dtype categories.
 _CATEGORY_COLORS: dict[str, str] = {
-    "String": BLUE_SCALE["400"],       # blue-400
-    "Boolean": "#F59E0B",              # amber-500
-    "Integer": "#10B981",              # emerald-500
-    "Float": "#EAB308",               # yellow-500
-    "List(String)": BLUE_SCALE["700"], # blue-700
-    "List(Boolean)": "#F97316",        # orange-500
-    "List(Integer)": "#8B5CF6",        # violet-500
-    "List(Float)": "#64748B",          # slate-500
+    "String": BLUE_SCALE["400"],  # blue-400
+    "Boolean": "#F59E0B",  # amber-500
+    "Integer": "#10B981",  # emerald-500
+    "Float": "#EAB308",  # yellow-500
+    "List(String)": BLUE_SCALE["700"],  # blue-700
+    "List(Boolean)": "#F97316",  # orange-500
+    "List(Integer)": "#8B5CF6",  # violet-500
+    "List(Float)": "#64748B",  # slate-500
 }
 
 _INTEGER_TYPES = frozenset(
@@ -166,8 +163,8 @@ def _flatten_dtype(
 
 
 def _edge_label_from_stem(stem: str) -> str:
-    """Derive an edge label such as ``DIS-PRO`` from a file stem like
-    ``disease_protein``.
+    """Derive an edge label such as ``DIS-GEN`` from a file stem like
+    ``disease_gene``.
 
     The stem is split into two parts by matching the longest known
     node-name prefix first (greedy left-to-right).
@@ -303,8 +300,11 @@ def _draw_stacked_bars(  # noqa: PLR0913
         if total > 0:
             label = f"{int(total)}" if total == int(total) else f"{total:.1f}"
             ax.text(
-                x[i], total, label,
-                ha="center", va="bottom",
+                x[i],
+                total,
+                label,
+                ha="center",
+                va="bottom",
                 fontsize=STYLE["value_label_fontsize"],
             )
 

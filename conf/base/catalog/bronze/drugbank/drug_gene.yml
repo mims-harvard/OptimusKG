@@ -1,6 +1,6 @@
-bronze.drug_protein:
+bronze.drug_gene:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: data/bronze/drugbank/drug_protein.parquet
+  filepath: data/bronze/drugbank/drug_gene.parquet
   load_args:
     schema:
       drug_bank_id: pl.String

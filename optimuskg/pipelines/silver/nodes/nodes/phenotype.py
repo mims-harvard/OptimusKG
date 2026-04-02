@@ -6,7 +6,7 @@ from optimuskg.pipelines.silver.nodes.constants import Node, Source
 
 def run(  # noqa: PLR0913
     disease: pl.DataFrame,
-    phenotype_protein: pl.DataFrame,
+    phenotype_gene: pl.DataFrame,
     disease_phenotype: pl.DataFrame,
     phenotype_phenotype: pl.DataFrame,
     drug_phenotype: pl.DataFrame,
@@ -19,7 +19,7 @@ def run(  # noqa: PLR0913
             [
                 disease_phenotype.select(pl.col("to").alias("id")),
                 drug_phenotype.select(pl.col("to").alias("id")),
-                phenotype_protein.select(pl.col("from").alias("id")),
+                phenotype_gene.select(pl.col("from").alias("id")),
                 phenotype_phenotype.select(
                     pl.concat_list(["from", "to"]).explode().alias("id")
                 ),
@@ -102,7 +102,7 @@ phenotype_node = node(
     run,
     inputs={
         "disease": "bronze.opentargets.disease",
-        "phenotype_protein": "silver.edges.phenotype_protein",
+        "phenotype_gene": "silver.edges.phenotype_gene",
         "disease_phenotype": "silver.edges.disease_phenotype",
         "phenotype_phenotype": "silver.edges.phenotype_phenotype",
         "drug_phenotype": "silver.edges.drug_phenotype",

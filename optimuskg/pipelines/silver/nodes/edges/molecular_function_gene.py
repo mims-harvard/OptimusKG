@@ -17,7 +17,7 @@ def run(
         .group_by(["target_id", "id"])
         .agg(
             [
-                pl.lit(Edge.format_label(Node.MOLECULAR_FUNCTION, Node.PROTEIN)).alias(
+                pl.lit(Edge.format_label(Node.MOLECULAR_FUNCTION, Node.GENE)).alias(
                     "label"
                 ),
                 pl.lit(True).alias("undirected"),
@@ -62,12 +62,12 @@ def run(
     )
 
 
-molecular_function_protein_node = node(
+molecular_function_gene_node = node(
     run,
     inputs={
         "target": "bronze.opentargets.target",
     },
-    outputs="edges.molecular_function_protein",
-    name="molecular_function_protein",
+    outputs="edges.molecular_function_gene",
+    name="molecular_function_gene",
     tags=["silver"],
 )

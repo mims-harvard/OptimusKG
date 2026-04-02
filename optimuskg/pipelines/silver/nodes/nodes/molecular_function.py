@@ -5,7 +5,7 @@ from optimuskg.pipelines.silver.nodes.constants import Node, Source
 
 
 def run(
-    molecular_function_protein: pl.DataFrame,
+    molecular_function_gene: pl.DataFrame,
     exposure_molecular_function: pl.DataFrame,
     molecular_function_molecular_function: pl.DataFrame,
     go_terms: pl.DataFrame,
@@ -13,7 +13,7 @@ def run(
     return (
         pl.concat(
             [
-                molecular_function_protein.select(pl.col("from").alias("id")),
+                molecular_function_gene.select(pl.col("from").alias("id")),
                 exposure_molecular_function.select(pl.col("to").alias("id")),
                 molecular_function_molecular_function.select(
                     pl.concat_list(["from", "to"]).explode().alias("id")
@@ -52,7 +52,7 @@ def run(
 molecular_function_node = node(
     run,
     inputs={
-        "molecular_function_protein": "silver.edges.molecular_function_protein",
+        "molecular_function_gene": "silver.edges.molecular_function_gene",
         "exposure_molecular_function": "silver.edges.exposure_molecular_function",
         "molecular_function_molecular_function": "silver.edges.molecular_function_molecular_function",
         "go_terms": "bronze.ontology.go_terms",

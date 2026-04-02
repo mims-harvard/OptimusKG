@@ -6,7 +6,7 @@ from optimuskg.pipelines.silver.nodes.constants import Node, Source
 
 def run(  # noqa: PLR0913
     ctd_exposure_events: pl.DataFrame,
-    exposure_protein: pl.DataFrame,
+    exposure_gene: pl.DataFrame,
     exposure_exposure: pl.DataFrame,
     exposure_disease: pl.DataFrame,
     exposure_biological_process: pl.DataFrame,
@@ -23,7 +23,7 @@ def run(  # noqa: PLR0913
                 exposure_cellular_component.select(pl.col("from").alias("id")),
                 exposure_disease.select(pl.col("from").alias("id")),
                 exposure_molecular_function.select(pl.col("from").alias("id")),
-                exposure_protein.select(pl.col("from").alias("id")),
+                exposure_gene.select(pl.col("from").alias("id")),
             ]
         )
         .unique(subset="id")
@@ -71,7 +71,7 @@ exposure_node = node(
     run,
     inputs={
         "ctd_exposure_events": "bronze.ctd.ctd_exposure_events",
-        "exposure_protein": "silver.edges.exposure_protein",
+        "exposure_gene": "silver.edges.exposure_gene",
         "exposure_exposure": "silver.edges.exposure_exposure",
         "exposure_disease": "silver.edges.exposure_disease",
         "exposure_biological_process": "silver.edges.exposure_biological_process",

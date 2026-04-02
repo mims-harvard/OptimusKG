@@ -36,6 +36,6 @@ silver.nodes.phenotype:
         cui_semantic_type: pl.String
         snomed_concept_ids: pl.List(pl.String)
   metadata:
-    checksum: 7b67e9026e02bbfc6e3f8be64ca34e24
+    checksum: 4656fc1a70ead518781a4f686a2085d6
     kedro-viz:
       layer: silver

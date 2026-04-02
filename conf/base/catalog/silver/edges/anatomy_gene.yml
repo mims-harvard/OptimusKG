@@ -1,6 +1,6 @@
-silver.edges.anatomy_protein:
+silver.edges.anatomy_gene:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: data/silver/edges/anatomy_protein.parquet
+  filepath: data/silver/edges/anatomy_gene.parquet
   load_args:
     schema:
       from: pl.String
@@ -15,6 +15,6 @@ silver.edges.anatomy_protein:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
   metadata:
-    checksum: 06a28f835efc17a1e219ce2dd27ca3b2
+    checksum: c1f8c13c4583d7e8a9b8be1f78b3919a
     kedro-viz:
       layer: silver

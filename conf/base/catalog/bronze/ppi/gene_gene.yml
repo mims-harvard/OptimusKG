@@ -1,6 +1,6 @@
-bronze.ppi.protein_protein:
+bronze.ppi.gene_gene:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: data/bronze/ppi/protein_protein.parquet
+  filepath: data/bronze/ppi/gene_gene.parquet
   load_args:
     schema:
       from: pl.String

@@ -18,34 +18,20 @@ from optimuskg.pipelines.silver.nodes.constants import Node
 from . import style  # noqa: F401
 from .style import BLUE_CMAP
 
-# PRO is excluded; edges use PRO in their labels but we remap to GEN so
-# all figures consistently show the Gene node type.
-_NODE_TYPE_ORDER = [member.value for member in Node if member is not Node.PROTEIN]
-
-# Remap PRO -> GEN when parsing edge labels.
-_EDGE_LABEL_MAP = {"PRO": "GEN"}
+_NODE_TYPE_ORDER = [member.value for member in Node]
 
 
 def _extract_type_counts(df: pl.DataFrame) -> pl.DataFrame:
     """Extract (from_type, to_type, count) rows from an edge DataFrame.
 
-    Splits the ``label`` column (e.g. ``"DIS-PRO"``) on ``"-"`` to get the
-    source and target node-type abbreviations.  PRO is remapped to GEN so
-    all figures use a single consistent label for gene/protein nodes.
+    Splits the ``label`` column (e.g. ``"DIS-GEN"``) on ``"-"`` to get the
+    source and target node-type abbreviations.
     For undirected edges the reverse pair is also emitted so the resulting
     matrix is symmetric.
     """
     typed = df.with_columns(
-        pl.col("label")
-        .str.split("-")
-        .list.get(0)
-        .replace(_EDGE_LABEL_MAP)
-        .alias("from_type"),
-        pl.col("label")
-        .str.split("-")
-        .list.get(1)
-        .replace(_EDGE_LABEL_MAP)
-        .alias("to_type"),
+        pl.col("label").str.split("-").list.get(0).alias("from_type"),
+        pl.col("label").str.split("-").list.get(1).alias("to_type"),
     )
 
     directed = typed.group_by("from_type", "to_type").agg(pl.len().alias("edge_count"))

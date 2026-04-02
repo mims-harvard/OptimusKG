@@ -5,7 +5,7 @@ from optimuskg.pipelines.silver.nodes.constants import Node, Source
 
 
 def run(
-    biological_process_protein: pl.DataFrame,
+    biological_process_gene: pl.DataFrame,
     exposure_biological_process: pl.DataFrame,
     biological_process_biological_process: pl.DataFrame,
     go_terms: pl.DataFrame,
@@ -13,7 +13,7 @@ def run(
     return (
         pl.concat(
             [
-                biological_process_protein.select(pl.col("from").alias("id")),
+                biological_process_gene.select(pl.col("from").alias("id")),
                 exposure_biological_process.select(pl.col("to").alias("id")),
                 biological_process_biological_process.select(
                     pl.concat_list(["from", "to"]).explode().alias("id")
@@ -52,7 +52,7 @@ def run(
 biological_process_node = node(
     run,
     inputs={
-        "biological_process_protein": "silver.edges.biological_process_protein",
+        "biological_process_gene": "silver.edges.biological_process_gene",
         "exposure_biological_process": "silver.edges.exposure_biological_process",
         "biological_process_biological_process": "silver.edges.biological_process_biological_process",
         "go_terms": "bronze.ontology.go_terms",

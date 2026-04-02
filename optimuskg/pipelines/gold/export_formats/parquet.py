@@ -24,7 +24,7 @@ def parquet_export(
         - "nodes" (consolidated all nodes, properties JSON-encoded if included)
         - "edges" (consolidated all edges, properties JSON-encoded if included)
         - "nodes/gene", "nodes/disease", etc. (individual files, properties as struct)
-        - "edges/anatomy_protein", etc. (individual files, properties as struct)
+        - "edges/anatomy_gene", etc. (individual files, properties as struct)
     """
     result: dict[str, pl.DataFrame] = {}
 
