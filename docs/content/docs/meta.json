@@ -1,0 +1,14 @@
+{
+  "title": "Documentation",
+  "pages": [
+    "---Getting Started---",
+    "getting-started",
+    "---Architecture---",
+    "architecture",
+    "data-sources",
+    "graph-schema",
+    "---Operations---",
+    "deployment",
+    "contributing"
+  ]
+}

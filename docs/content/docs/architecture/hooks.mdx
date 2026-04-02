@@ -1,0 +1,38 @@
+---
+title: Hooks
+description: Lifecycle callbacks for validation and data management.
+---
+
+Hooks execute during the pipeline lifecycle to inject custom behavior. They are defined in `optimuskg/hooks/`.
+
+## Checksum Hooks
+
+**File**: `optimuskg/hooks/checksum_hooks.py`
+
+Validates file integrity against checksums stored in the catalog. Runs `before_dataset_loaded` to ensure data hasn't been corrupted or tampered with.
+
+If a checksum mismatch is detected, the pipeline raises an error to prevent processing invalid data.
+
+## Quality Checks Hooks
+
+**File**: `optimuskg/hooks/quality_checks_hooks.py`
+
+Validates DataFrames after node execution:
+
+- Column names are `snake_case`
+- ID columns are non-null
+- ID columns contain unique values
+
+These checks ensure data quality standards are maintained across all pipeline stages.
+
+## Origin Hooks
+
+**File**: `optimuskg/hooks/origin/origin_hooks.py`
+
+Automatically downloads data from external sources before datasets are loaded. Runs `before_dataset_loaded` and checks if the data file exists locally. If not, it uses the configured [Provider](/docs/architecture/providers) to download it.
+
+This hook reads the `metadata.origin` field from catalog entries to determine the download source and method.
+
+<Callout type="info">
+  If you have access to private datasets, place them in the appropriate subdirectories under `data/landing/`. If private data is missing, the Origin Hook generates empty placeholder datasets so the pipeline can still run with public data.
+</Callout>

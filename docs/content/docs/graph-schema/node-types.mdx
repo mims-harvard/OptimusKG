@@ -1,0 +1,30 @@
+---
+title: Node Types
+description: The 10 entity types in the OptimusKG knowledge graph.
+---
+
+OptimusKG contains 10 node types representing biomedical entities. Each node type is consolidated from one or more [data sources](/docs/data-sources) in the silver layer.
+
+## Entity Types
+
+| Node Type | Description | Key Sources |
+| --- | --- | --- |
+| **Gene** | Human genes with HGNC symbols and Ensembl IDs | OpenTargets, HGNC, DisGeNET, PPI |
+| **Drug** | Pharmaceutical compounds | DrugBank, OpenTargets, DrugCentral |
+| **Disease** | Disease entities with ontology mappings | OpenTargets, MONDO, DisGeNET |
+| **Anatomy** | Anatomical structures | UBERON, Bgee |
+| **Pathway** | Biological pathways | Reactome |
+| **Phenotype** | Phenotypic features | HPO, OpenTargets |
+| **Exposure** | Environmental exposures and chemicals | CTD |
+| **Biological Process** | GO biological process terms | Gene Ontology |
+| **Cellular Component** | GO cellular component terms | Gene Ontology |
+| **Molecular Function** | GO molecular function terms | Gene Ontology |
+
+## Silver Processing
+
+Each node type has a dedicated processing module in `optimuskg/pipelines/silver/nodes/nodes/` that:
+
+1. Collects relevant data from all bronze sources
+2. Reconciles identifiers across sources
+3. Merges properties into a unified entity record
+4. Validates uniqueness and completeness

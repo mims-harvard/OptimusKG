@@ -167,3 +167,9 @@ notebooks/**
 !notebooks/quickstart.ipynb
 
 .opencode/plans
+
+# Fumadocs documentation site
+docs/node_modules/
+docs/.next/
+docs/.source/
+docs/out/

@@ -1,0 +1,40 @@
+---
+title: Neo4j
+description: Run and query the knowledge graph in Neo4j.
+---
+
+OptimusKG provides a Docker Compose setup for running Neo4j with the exported graph data.
+
+## Start Neo4j
+
+```bash
+make neo4j
+```
+
+This starts a Neo4j container in the background. Access the Neo4j Browser at [http://localhost:7474/browser/preview/](http://localhost:7474/browser/preview/).
+
+## Export Data
+
+### Full Database Export
+
+Export the entire database to a Neo4j-JSONL file:
+
+```bash
+make neo4j-export
+```
+
+The data is saved to `data/export/optimuskg.jsonl`.
+
+### Query-Based Export
+
+Export results of a specific Cypher query:
+
+```bash
+CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export
+```
+
+Results are saved to `data/export/` with a filename derived from the query.
+
+## Docker Compose
+
+The Neo4j configuration is defined in `docker-compose.yaml` at the project root. It uses the APOC plugin for JSON export capabilities.

@@ -1,0 +1,40 @@
+---
+title: Medallion Layers
+description: The four-layer data architecture from raw data to knowledge graph.
+---
+
+OptimusKG follows the **medallion architecture** pattern to logically organize data through four layers of increasing refinement.
+
+## Landing
+
+Raw data files as downloaded from external sources. No transformations are applied. Files are stored in `data/landing/` organized by source.
+
+The [Origin Hook](/docs/architecture/hooks) automatically downloads data into this layer when datasets are first accessed.
+
+## Bronze
+
+**Location**: `optimuskg/pipelines/bronze/`
+
+Extracts and standardizes raw data from each source. Each data source has its own node file under `nodes/`. Outputs standardized Polars DataFrames stored as Parquet in `data/bronze/`.
+
+Key responsibilities:
+- Parse source-specific file formats (CSV, XML, OWL, SQL dumps)
+- Normalize column names to `snake_case`
+- Extract relevant fields into a consistent schema
+- Store as typed Parquet files with schema metadata
+
+## Silver
+
+**Location**: `optimuskg/pipelines/silver/`
+
+Consolidates entities across multiple sources into unified node and edge tables. This is where cross-source reconciliation happens.
+
+**Node types**: Gene, Drug, Disease, Protein, Anatomy, Pathway, Phenotype, Exposure, Biological Process, Cellular Component, Molecular Function
+
+**Edge types**: ~26 relationship types connecting the node types above.
+
+## Gold
+
+**Location**: `optimuskg/pipelines/gold/`
+
+Exports the final knowledge graph via [BioCypher](https://biocypher.org/) in configured formats (CSV, Parquet, Neo4j-JSONL). The exported graph is written to `data/gold/formats/`.
