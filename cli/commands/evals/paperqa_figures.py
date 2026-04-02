@@ -30,7 +30,7 @@ NODE_TYPE_LABELS: dict[str, str] = {
     "DIS": "Disease",
     "DRG": "Drug",
     "EXP": "Exposure",
-    "GEN": "Gene or protein",
+    "GEN": "Gene",
     "MFN": "Molecular function",
     "PHE": "Phenotype",
     "PWY": "Pathway",
@@ -80,6 +80,24 @@ def _load_df(input_path: Path) -> pl.DataFrame:
         ).filter(
             pl.col("rating").is_not_null() & pl.col("is_true_edge").is_not_null()
         )
+    )
+
+
+# Whole-token PRO → GEN (Unicode word boundaries: hyphens/pipes/ends ok; not "PROGRAM")
+_RELATION_PRO_TO_GEN_PATTERN = r"\bPRO\b"
+
+
+def _relation_type_pro_to_gen(df: pl.DataFrame) -> pl.DataFrame:
+    """Replace whole-token ``PRO`` with ``GEN`` in ``relation_type`` (pipes, hyphens, etc.)."""
+    if "relation_type" not in df.columns:
+        return df
+    return df.with_columns(
+        pl.when(pl.col("relation_type").is_null())
+        .then(None)
+        .otherwise(
+            pl.col("relation_type").str.replace_all(_RELATION_PRO_TO_GEN_PATTERN, "GEN")
+        )
+        .alias("relation_type"),
     )
 
 
@@ -320,6 +338,73 @@ def _plot_grouped_barplot(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:
 
 
 # ---------------------------------------------------------------------------
+# Statistics
+# ---------------------------------------------------------------------------
+
+def _print_stats(df: pl.DataFrame) -> None:
+    total = df.height
+    sep = "─" * 52
+
+    print(sep)
+    print(f"  PaperQA evaluation summary")
+    print(sep)
+    print(f"  Total queries : {total:,}")
+
+    for is_true, label in [(True, "True edges"), (False, "False edges")]:
+        sub = df.filter(pl.col("is_true_edge") == is_true)
+        n = sub.height
+        if n == 0:
+            continue
+
+        rating_counts = (
+            sub.group_by("rating")
+            .len()
+            .sort("rating")
+        )
+
+        any_evidence = sub.filter(pl.col("rating") > 1).height
+
+        print()
+        print(f"  {label}  (n={n:,})")
+        for row in rating_counts.iter_rows(named=True):
+            r, cnt = row["rating"], row["len"]
+            label_str = _RATING_LABELS[r - 1] if 1 <= r <= 5 else str(r)
+            pct = cnt / n * 100
+            print(f"    Rating {r} ({label_str:<14}) : {cnt:>5,}  ({pct:5.1f}%)")
+        pct_any = any_evidence / n * 100
+        print(f"    Any evidence  (rating > 1)  : {any_evidence:>5,}  ({pct_any:5.1f}%)")
+
+    print(sep)
+
+    # Per-relation-type breakdown for true edges at the extremes
+    true_df = df.filter(pl.col("is_true_edge"))
+    n_true = true_df.height
+
+    for rating_val, heading in [(1, "True edges with NO evidence (rating = 1)"),
+                                (5, "True edges with VERY STRONG evidence (rating = 5)")]:
+        sub = true_df.filter(pl.col("rating") == rating_val)
+        n_sub = sub.height
+        if n_sub == 0:
+            continue
+
+        rel_counts = (
+            sub.group_by("relation_type")
+            .len()
+            .sort("len", descending=True)
+        )
+
+        print()
+        print(f"  {heading}  (n={n_sub:,} / {n_sub/n_true*100:.1f}% of true edges)")
+        for row in rel_counts.iter_rows(named=True):
+            rel, cnt = row["relation_type"], row["len"]
+            pct_of_sub = cnt / n_sub * 100
+            pct_of_true = cnt / n_true * 100
+            print(f"    {str(rel):<30} : {cnt:>5,}  ({pct_of_sub:5.1f}% of rating={rating_val} | {pct_of_true:5.1f}% of all true)")
+
+    print(sep)
+
+
+# ---------------------------------------------------------------------------
 # Public entry point
 # ---------------------------------------------------------------------------
 
@@ -343,7 +428,10 @@ def run(
         logger.warning("No rows with valid rating + is_true_edge; nothing to plot.")
         return
 
+    df = _relation_type_pro_to_gen(df)
+
     run_id = _run_id_from_path(input_path)
 
+    _print_stats(df)
     _plot_barplot(df, out_dir, run_id)
     _plot_grouped_barplot(df, out_dir, run_id)
