@@ -1,6 +1,6 @@
-silver.edges.disease_protein:
+silver.edges.disease_gene:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: data/silver/edges/disease_protein.parquet
+  filepath: data/silver/edges/disease_gene.parquet
   load_args:
     schema:
       from: pl.String
@@ -23,6 +23,6 @@ silver.edges.disease_protein:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
   metadata:
-    checksum: 12c28471b6594bd32a8cc47eae192bd3
+    checksum: 03ae9f750cff86e3ba8e8a8adce35c59
     kedro-viz:
       layer: silver

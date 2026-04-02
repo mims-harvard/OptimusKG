@@ -207,10 +207,10 @@ pathway:
 # Edges
 # ---
 
-anatomy protein:
+anatomy gene:
   is_a: linked to
   represented_as: edge
-  input_label: ANA-PRO
+  input_label: ANA-GEN
   properties:
     undirected: bool
     relation: str
@@ -305,10 +305,10 @@ exposure exposure:
     enrollment_end_years: str[]
     study_factors: str[]
 
-exposure protein:
+exposure gene:
   is_a: interacts_with
   represented_as: edge
-  input_label: EXP-PRO
+  input_label: EXP-GEN
   properties:
     undirected: bool
     relation: str
@@ -344,10 +344,10 @@ exposure protein:
     enrollment_end_years: str[]
     study_factors: str[]
 
-disease protein:
+disease gene:
   is_a: related to
   represented_as: edge
-  input_label: DIS-PRO
+  input_label: DIS-GEN
   properties:
     undirected: bool
     relation: str
@@ -372,10 +372,10 @@ disease disease:
     relation: str
     sources: str
 
-phenotype protein:
+phenotype gene:
   is_a: related to
   represented_as: edge
-  input_label: PHE-PRO
+  input_label: PHE-GEN
   properties:
     undirected: bool
     relation: str
@@ -391,10 +391,10 @@ phenotype protein:
     number_of_snps: int
     sources: str
 
-drug protein:
+drug gene:
   is_a: physically interacts with
   represented_as: edge
-  input_label: DRG-PRO
+  input_label: DRG-GEN
   properties:
     undirected: bool
     relation: str
@@ -439,10 +439,10 @@ drug phenotype:
     structure_id: str
     drug_disease_id: str
 
-biological process protein:
+biological process gene:
   is_a: regulates
   represented_as: edge
-  input_label: BPO-PRO
+  input_label: BPO-GEN
   properties:
     undirected: bool
     relation: str
@@ -451,10 +451,10 @@ biological process protein:
     gene_product: str[]
     eco_ids: str[]
 
-cellular component protein:
+cellular component gene:
   is_a: regulates
   represented_as: edge
-  input_label: CCO-PRO
+  input_label: CCO-GEN
   properties:
     undirected: bool
     relation: str
@@ -463,10 +463,10 @@ cellular component protein:
     gene_product: str[]
     eco_ids: str[]
 
-molecular function protein:
+molecular function gene:
   is_a: regulates
   represented_as: edge
-  input_label: MFN-PRO
+  input_label: MFN-GEN
   properties:
     undirected: bool
     relation: str
@@ -484,10 +484,10 @@ pathway pathway:
     relation: str
     sources: str
 
-pathway protein:
+pathway gene:
   is_a: has_part
   represented_as: edge
-  input_label: PWY-PRO
+  input_label: PWY-GEN
   properties:
     undirected: bool
     relation: str
@@ -665,10 +665,10 @@ phenotype phenotype:
     relation: str
     sources: str
 
-protein protein:
+gene gene:
   is_a: related to
   represented_as: edge
-  input_label: PRO-PRO
+  input_label: GEN-GEN
   properties:
     undirected: bool
     relation: str

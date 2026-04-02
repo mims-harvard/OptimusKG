@@ -11,11 +11,11 @@ from optimuskg.pipelines.silver.nodes.constants import (
 
 
 def run(
-    protein_protein: pl.DataFrame,
+    gene_gene: pl.DataFrame,
     ensembl_ncbi_mapping: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
-        protein_protein.join(
+        gene_gene.join(
             ensembl_ncbi_mapping, left_on="from", right_on="ncbi_id", how="left"
         )
         .join(ensembl_ncbi_mapping, left_on="to", right_on="ncbi_id", how="left")
@@ -23,7 +23,7 @@ def run(
         .select(
             pl.coalesce("ensembl_id", "from").alias("from"),
             pl.coalesce("ensembl_id_right", "to").alias("to"),
-            pl.lit(Edge.format_label(Node.PROTEIN, Node.PROTEIN)).alias("label"),
+            pl.lit(Edge.format_label(Node.GENE, Node.GENE)).alias("label"),
             pl.lit(Relation.INTERACTS_WITH).alias("relation"),
             pl.lit(False).alias("undirected"),
             pl.struct(
@@ -49,13 +49,13 @@ def run(
     )
 
 
-protein_protein_node = node(
+gene_gene_node = node(
     run,
     inputs={
-        "protein_protein": "bronze.ppi.protein_protein",
+        "gene_gene": "bronze.ppi.gene_gene",
         "ensembl_ncbi_mapping": "bronze.opentargets.ensembl_ncbi_mapping",
     },
-    outputs="edges.protein_protein",
-    name="protein_protein",
+    outputs="edges.gene_gene",
+    name="gene_gene",
     tags=["silver"],
 )

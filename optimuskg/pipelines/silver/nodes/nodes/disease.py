@@ -11,7 +11,7 @@ def run(  # noqa: PLR0913
     disease_disease: pl.DataFrame,
     exposure_disease: pl.DataFrame,
     drug_disease: pl.DataFrame,
-    disease_protein: pl.DataFrame,
+    disease_gene: pl.DataFrame,
     disease_phenotype: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
@@ -21,7 +21,7 @@ def run(  # noqa: PLR0913
                     pl.concat_list(["from", "to"]).explode().alias("id")
                 ),
                 disease_phenotype.select(pl.col("from").alias("id")),
-                disease_protein.select(pl.col("from").alias("id")),
+                disease_gene.select(pl.col("from").alias("id")),
                 drug_disease.select(pl.col("to").alias("id")),
                 exposure_disease.select(pl.col("to").alias("id")),
             ]
@@ -110,7 +110,7 @@ disease_node = node(
         "disease_disease": "silver.edges.disease_disease",
         "exposure_disease": "silver.edges.exposure_disease",
         "drug_disease": "silver.edges.drug_disease",
-        "disease_protein": "silver.edges.disease_protein",
+        "disease_gene": "silver.edges.disease_gene",
         "disease_phenotype": "silver.edges.disease_phenotype",
     },
     outputs="nodes.disease",

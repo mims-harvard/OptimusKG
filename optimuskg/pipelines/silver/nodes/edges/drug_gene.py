@@ -44,13 +44,13 @@ _OPENTARGETS_ACTION_MAP: dict[str, Relation] = {
 
 
 def run(
-    drug_protein: pl.DataFrame,
+    drug_gene: pl.DataFrame,
     drug_mechanism_of_action: pl.DataFrame,
     chembl_drugbank_mapping: pl.DataFrame,
     ensembl_ncbi_mapping: pl.DataFrame,
 ) -> pl.DataFrame:
-    drugbank_drug_protein = (
-        drug_protein.join(
+    drugbank_drug_gene = (
+        drug_gene.join(
             chembl_drugbank_mapping,
             left_on="drug_bank_id",
             right_on="drugbank_id",
@@ -74,7 +74,7 @@ def run(
         .select(
             pl.col("chembl_id").alias("from"),
             pl.col("ensembl_id").alias("to"),
-            pl.lit(Edge.format_label(Node.DRUG, Node.PROTEIN)).alias("label"),
+            pl.lit(Edge.format_label(Node.DRUG, Node.GENE)).alias("label"),
             pl.col("relation_type").alias("relation"),
             pl.lit(False).alias("undirected"),
             pl.struct(
@@ -92,7 +92,7 @@ def run(
         )
     )
 
-    opentargets_drug_protein = (
+    opentargets_drug_gene = (
         drug_mechanism_of_action.with_columns(
             pl.col("metadata").struct.field("references"),
             pl.col("metadata").struct.field("action_type"),
@@ -131,7 +131,7 @@ def run(
             [
                 pl.col("chembl_ids").alias("from"),
                 pl.col("targets").alias("to"),
-                pl.lit(Edge.format_label(Node.DRUG, Node.PROTEIN)).alias("label"),
+                pl.lit(Edge.format_label(Node.DRUG, Node.GENE)).alias("label"),
                 pl.col("action_type").alias("relation"),
                 pl.lit(False).alias("undirected"),
                 pl.struct(
@@ -160,9 +160,7 @@ def run(
     )
 
     return (
-        drugbank_drug_protein.join(
-            opentargets_drug_protein, on=["from", "to"], how="left"
-        )
+        drugbank_drug_gene.join(opentargets_drug_gene, on=["from", "to"], how="left")
         .with_columns(
             [
                 pl.concat_list(
@@ -245,15 +243,15 @@ def run(
     )
 
 
-drug_protein_node = node(
+drug_gene_node = node(
     run,
     inputs={
-        "drug_protein": "bronze.drug_protein",
+        "drug_gene": "bronze.drug_gene",
         "drug_mechanism_of_action": "bronze.opentargets.drug_mechanism_of_action",
         "chembl_drugbank_mapping": "bronze.opentargets.chembl_drugbank_mapping",
         "ensembl_ncbi_mapping": "bronze.opentargets.ensembl_ncbi_mapping",
     },
-    outputs="edges.drug_protein",
-    name="drug_protein",
+    outputs="edges.drug_gene",
+    name="drug_gene",
     tags=["silver"],
 )

@@ -10,7 +10,7 @@ def run(  # noqa: PLR0913
     drug_molecule: pl.DataFrame,
     drugcentral_drug: pl.DataFrame,
     drug_drug: pl.DataFrame,
-    drug_protein: pl.DataFrame,
+    drug_gene: pl.DataFrame,
     drug_disease: pl.DataFrame,
     drug_phenotype: pl.DataFrame,
 ) -> pl.DataFrame:
@@ -45,7 +45,7 @@ def run(  # noqa: PLR0913
                         .alias("direct_sources"),
                     ]
                 ),
-                drug_protein.select(
+                drug_gene.select(
                     [
                         pl.col("from").alias("id"),
                         pl.col("properties")
@@ -220,7 +220,7 @@ drug_node = node(
         "drug_molecule": "bronze.opentargets.drug_molecule",
         "drugcentral_drug": "bronze.drugcentral.drug",
         "drug_drug": "silver.edges.drug_drug",
-        "drug_protein": "silver.edges.drug_protein",
+        "drug_gene": "silver.edges.drug_gene",
         "drug_disease": "silver.edges.drug_disease",
         "drug_phenotype": "silver.edges.drug_phenotype",
     },

@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 requires-python = ">=3.12"
 name = "optimus"
 readme = "README.md"
-version = "0.63.0"
+version = "0.64.0"
 dependencies = [
   "ipython>=8.10",
   "jupyterlab>=3.0",

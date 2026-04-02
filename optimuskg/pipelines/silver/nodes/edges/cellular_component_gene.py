@@ -17,7 +17,7 @@ def run(
         .group_by(["target_id", "id"])
         .agg(
             [
-                pl.lit(Edge.format_label(Node.BIOLOGICAL_PROCESS, Node.PROTEIN)).alias(
+                pl.lit(Edge.format_label(Node.CELLULAR_COMPONENT, Node.GENE)).alias(
                     "label"
                 ),
                 pl.lit(True).alias("undirected"),
@@ -28,8 +28,8 @@ def run(
                 pl.col("eco_id").drop_nulls().unique().alias("eco_ids"),
             ]
         )
-        .filter(pl.col("aspect") == ["P"])
-        .select(  # P = biological process
+        .filter(pl.col("aspect") == ["C"])  # C = cellular component
+        .select(
             [
                 pl.col("id")
                 .str.replace("GO:", "GO_")
@@ -60,12 +60,12 @@ def run(
     )
 
 
-biological_process_protein_node = node(
+cellular_component_gene_node = node(
     run,
     inputs={
         "target": "bronze.opentargets.target",
     },
-    outputs="edges.biological_process_protein",
-    name="biological_process_protein",
+    outputs="edges.cellular_component_gene",
+    name="cellular_component_gene",
     tags=["silver"],
 )

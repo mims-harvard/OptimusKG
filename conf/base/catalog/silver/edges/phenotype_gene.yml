@@ -1,6 +1,6 @@
-silver.edges.phenotype_protein:
+silver.edges.phenotype_gene:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: data/silver/edges/phenotype_protein.parquet
+  filepath: data/silver/edges/phenotype_gene.parquet
   load_args:
     schema:
       from: pl.String
@@ -23,6 +23,6 @@ silver.edges.phenotype_protein:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
   metadata:
-    checksum: ceb51702e7e62bdc5873013e463131a3
+    checksum: 5a736cde2cfbd48d363f32213cb6fedf
     kedro-viz:
       layer: silver

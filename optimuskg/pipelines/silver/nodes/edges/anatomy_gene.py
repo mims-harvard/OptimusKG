@@ -16,7 +16,7 @@ def run(
             .str.replace("UBERON:", "UBERON_")
             .alias("from"),  # NOTE: using _ to match biolink mapping
             pl.col("gene_id").alias("to"),
-            pl.lit(Edge.format_label(Node.ANATOMY, Node.PROTEIN)).alias("label"),
+            pl.lit(Edge.format_label(Node.ANATOMY, Node.GENE)).alias("label"),
             pl.when(pl.col("expression") == "present")
             .then(pl.lit(Relation.EXPRESSION_PRESENT))
             .otherwise(pl.lit(Relation.EXPRESSION_ABSENT))
@@ -45,10 +45,10 @@ def run(
     )
 
 
-anatomy_protein_node = node(
+anatomy_gene_node = node(
     run,
     inputs={"gene_expressions_in_anatomy": "bronze.bgee.gene_expressions_in_anatomy"},
-    outputs="edges.anatomy_protein",
-    name="anatomy_protein",
+    outputs="edges.anatomy_gene",
+    name="anatomy_gene",
     tags=["silver"],
 )

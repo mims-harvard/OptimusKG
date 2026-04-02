@@ -1,3 +1,5 @@
+import logging
+
 import polars as pl
 from kedro.pipeline import node
 
@@ -9,21 +11,50 @@ from optimuskg.pipelines.silver.nodes.constants import (
     resolve_sources,
 )
 
+logger = logging.getLogger(__name__)
 
-def run(
+
+def run(  # noqa: PLR0913
+    # opentargets
     target_disease_associations: pl.DataFrame,
+    disease: pl.DataFrame,
     target: pl.DataFrame,
-    hp_xrefs: pl.DataFrame,
-    disgenet_phenotypes: pl.DataFrame,
+    # disgenet
+    disgenet_diseases: pl.DataFrame,
 ) -> pl.DataFrame:
-    opentargets_phenotype_protein = (
-        target_disease_associations.filter(pl.col("disease_id").str.contains("HP"))
-        .select(
+    diesase_id_umls_map = (
+        disease.select(
+            [
+                pl.col("id"),
+                pl.col("metadata").struct.field("db_xrefs").alias("db_xrefs"),
+            ]
+        )
+        .filter(
+            ~pl.col("id").str.starts_with("GO_"),
+            ~pl.col("id").str.starts_with("HP_"),
+            ~pl.col("id").str.starts_with("UBERON_"),
+        )
+        .explode("db_xrefs")
+        .filter(pl.col("db_xrefs").is_not_null())
+        .filter(pl.col("db_xrefs").str.starts_with("UMLS"))
+        .group_by("id")
+        .agg([pl.col("db_xrefs").first().str.replace("UMLS:", "").alias("umls_id")])
+        .sort("umls_id")
+    )
+    opentargets_disease_gene = (
+        target_disease_associations.filter(
+            ~pl.col("disease_id").str.contains("HP"),
+            ~pl.col("disease_id").str.starts_with("GO_"),
+            ~pl.col("disease_id").str.starts_with("UBERON_"),
+        )
+        .with_columns(
             pl.col("disease_id").alias("from"),
             pl.col("target_id").alias("to"),
+            pl.lit(Edge.format_label(Node.DISEASE, Node.GENE)).alias("label"),
             pl.lit(Relation.ASSOCIATED_WITH).alias(
                 "relation"
             ),  # TODO: change this literal to "associated with" using the evidence_score/evidence_count columns.
+            pl.lit(True).alias("undirected"),
             pl.struct(
                 [
                     pl.struct(
@@ -41,21 +72,15 @@ def run(
                 ]
             ).alias("opentargets_props"),
         )
+        .select(["from", "to", "label", "relation", "undirected", "opentargets_props"])
         .unique(subset=["from", "to"])
+        .sort(by=["from", "to"])
     )
 
-    disgenet_phenotype_protein = (
-        target.select("id", "approved_symbol")
-        .join(
-            disgenet_phenotypes,
-            left_on="approved_symbol",
-            right_on="gene_symbol",
-            how="inner",
-        )
-        .join(hp_xrefs, left_on="disease_id", right_on="ontology_id", how="inner")
-        .select(
-            pl.col("hp_id").alias("from"),
-            pl.col("id").alias("to"),
+    disgenet_disease_gene = (
+        disgenet_diseases.select(
+            "gene_symbol",
+            "disease_id",
             pl.lit(Relation.ASSOCIATED_WITH).alias(
                 "relation"
             ),  # TODO: change this literal to "associated with" using the disgenet_score/evidence_index column.
@@ -86,19 +111,32 @@ def run(
                 ]
             ).alias("disgenet_props"),
         )
+        .join(
+            diesase_id_umls_map, left_on="disease_id", right_on="umls_id", how="inner"
+        )
+        .join(
+            target.select([pl.col("id").alias("target_id"), pl.col("approved_symbol")]),
+            left_on="gene_symbol",
+            right_on="approved_symbol",
+            how="inner",
+        )
+        .select(
+            pl.col("id").alias("from"),
+            pl.col("target_id").alias("to"),
+            pl.col("relation"),
+            pl.col("disgenet_props"),
+        )
+        .sort(by=["from", "to"])
         .unique(subset=["from", "to"])
     )
 
+    # Here we merge the metadata from opentargets and disgenet for the same (disease, gene) pairs.
     merged = (
-        opentargets_phenotype_protein.unique(subset=["from", "to"])
-        .join(disgenet_phenotype_protein, on=["from", "to"], how="left")
-        .select(
+        opentargets_disease_gene.join(
+            disgenet_disease_gene, on=["from", "to"], how="left"
+        )
+        .with_columns(
             [
-                pl.col("from"),
-                pl.col("to"),
-                pl.lit(Edge.format_label(Node.PHENOTYPE, Node.PROTEIN)).alias("label"),
-                pl.col("relation"),
-                pl.lit(False).alias("undirected"),
                 pl.when(pl.col("disgenet_props").is_not_null())
                 .then(
                     pl.struct(
@@ -152,25 +190,35 @@ def run(
                     )
                 )
                 .otherwise(pl.col("opentargets_props"))
-                .alias("properties"),
+                .alias("properties")
             ]
         )
+        .drop("disgenet_props", "opentargets_props", "relation_right")
         .unique(subset=["from", "to"])
         .sort(["from", "to"])
     )
 
+    # TODO: We need to merge the same (gene, disease) pairs that have (obviously) the same name/symbol, but different IDs.
+    # We keep only one of them, and aggregate the metadata columns from opentargets and disgenet.
+    #
+    # Example:
+    # - (x_name:SCO2, y_name:cardioencephalomyopathy) but (x_id:ENSG00000123456, y_id:MONDO_0011451) and (x_id:NCBIGene:9997, y_id:MONDO_0011451)
+    # See: ENSG00000123456 and NCBIGene:9997 are different IDs for the same gene.
+
     return merged
 
 
-phenotype_protein_node = node(
+disease_gene_node = node(
     run,
     inputs={
+        # opentargets
         "target_disease_associations": "bronze.opentargets.target_disease_associations",
+        "disease": "bronze.opentargets.disease",
         "target": "bronze.opentargets.target",
-        "hp_xrefs": "bronze.ontology.hp_xrefs",
-        "disgenet_phenotypes": "bronze.disgenet.disgenet_phenotypes",
+        # disgenet
+        "disgenet_diseases": "bronze.disgenet.diseases",
     },
-    outputs="edges.phenotype_protein",
-    name="phenotype_protein",
+    outputs="edges.disease_gene",
+    name="disease_gene",
     tags=["silver"],
 )

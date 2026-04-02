@@ -37,12 +37,7 @@ from .style import BLUE_CMAP
 
 logger = logging.getLogger(__name__)
 
-# PRO is excluded; edges use PRO in their labels but we remap to GEN so
-# all figures consistently show the Gene node type.
-_NODE_TYPE_ORDER = [m.value for m in Node if m is not Node.PROTEIN]
-
-# Remap PRO -> GEN when parsing edge labels.
-_EDGE_LABEL_MAP = {"PRO": "GEN"}
+_NODE_TYPE_ORDER = [m.value for m in Node]
 
 _MAX_LENGTH = 4
 _MIN_MULTIHOP_LENGTH = 2
@@ -67,16 +62,8 @@ def _build_edge_index(
 
     for df in edges:
         records = df.select(
-            pl.col("label")
-            .str.split("-")
-            .list.get(0)
-            .replace(_EDGE_LABEL_MAP)
-            .alias("src_type"),
-            pl.col("label")
-            .str.split("-")
-            .list.get(1)
-            .replace(_EDGE_LABEL_MAP)
-            .alias("dst_type"),
+            pl.col("label").str.split("-").list.get(0).alias("src_type"),
+            pl.col("label").str.split("-").list.get(1).alias("dst_type"),
             pl.col("relation"),
             pl.col("from").alias("from_id"),
             pl.col("to").alias("to_id"),
@@ -215,16 +202,8 @@ def compute_data(nodes_dir: Path, edges_dir: Path) -> pl.DataFrame:
 
     for df in all_edges:
         triples = df.select(
-            pl.col("label")
-            .str.split("-")
-            .list.get(0)
-            .replace(_EDGE_LABEL_MAP)
-            .alias("src"),
-            pl.col("label")
-            .str.split("-")
-            .list.get(1)
-            .replace(_EDGE_LABEL_MAP)
-            .alias("dst"),
+            pl.col("label").str.split("-").list.get(0).alias("src"),
+            pl.col("label").str.split("-").list.get(1).alias("dst"),
             pl.col("relation"),
         ).unique()
         for row in triples.iter_rows():

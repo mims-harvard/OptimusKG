@@ -191,7 +191,7 @@ def run(
             [
                 pl.col("from"),
                 pl.col("to"),
-                pl.lit(Edge.format_label(Node.EXPOSURE, Node.PROTEIN)).alias("label"),
+                pl.lit(Edge.format_label(Node.EXPOSURE, Node.GENE)).alias("label"),
                 pl.lit(Relation.INTERACTS_WITH).alias(
                     "relation"
                 ),  # NOTE: this is the same relation type used in PrimeKG, but we need to validate if this is consistent with the ontology tree.
@@ -245,13 +245,13 @@ def run(
     )
 
 
-exposure_protein_node = node(
+exposure_gene_node = node(
     run,
     inputs={
         "ctd_exposure_events": "bronze.ctd.ctd_exposure_events",
         "target": "bronze.opentargets.target",
     },
-    outputs="edges.exposure_protein",
-    name="exposure_protein",
+    outputs="edges.exposure_gene",
+    name="exposure_gene",
     tags=["silver"],
 )

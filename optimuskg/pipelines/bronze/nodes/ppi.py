@@ -3,10 +3,10 @@ from kedro.pipeline import node
 
 
 def run(
-    protein_protein: pl.DataFrame,
+    gene_gene: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
-        protein_protein.select(
+        gene_gene.select(
             ("NCBIGene:" + pl.col("proteinA_entrezid")).alias("from"),
             ("NCBIGene:" + pl.col("proteinB_entrezid")).alias("to"),
             pl.col("databases").str.split("|").alias("databases"),
@@ -19,9 +19,9 @@ def run(
 ppi_node = node(
     run,
     inputs={
-        "protein_protein": "landing.ppi.protein_protein",
+        "gene_gene": "landing.ppi.protein_protein",
     },
-    outputs="ppi.protein_protein",
+    outputs="ppi.gene_gene",
     name="ppi",
     tags=["bronze"],
 )

@@ -18,7 +18,7 @@ def run(
                     "from"
                 ),  # NOTE: we need to add the REACT prefix for biolink mapping
                 pl.col("id").alias("to"),
-                pl.lit(Edge.format_label(Node.PATHWAY, Node.PROTEIN)).alias("label"),
+                pl.lit(Edge.format_label(Node.PATHWAY, Node.GENE)).alias("label"),
                 pl.lit(Relation.INTERACTS_WITH).alias("relation"),
                 pl.lit(True).alias("undirected"),
                 pl.struct(
@@ -42,12 +42,12 @@ def run(
     )
 
 
-pathway_protein_node = node(
+pathway_gene_node = node(
     run,
     inputs={
         "target": "bronze.opentargets.target",
     },
-    outputs="edges.pathway_protein",
-    name="pathway_protein",
+    outputs="edges.pathway_gene",
+    name="pathway_gene",
     tags=["silver"],
 )

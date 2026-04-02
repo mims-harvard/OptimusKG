@@ -50,7 +50,7 @@ def run(  # noqa: PLR0913
         )
         all_edge_dfs.append(edge_df)
 
-    drug_protein = pl.concat(all_edge_dfs, how="diagonal")
+    drug_gene = pl.concat(all_edge_dfs, how="diagonal")
 
     # Prepare vocabulary for joining
     df_vocabulary_join_prep = vocabulary.select(
@@ -59,11 +59,11 @@ def run(  # noqa: PLR0913
     ).drop_nulls()
 
     # Add DrugBankName using a left join
-    drug_protein = drug_protein.with_columns(
+    drug_gene = drug_gene.with_columns(
         (pl.lit("DRUGBANK:") + pl.col("drug_bank_id")).alias("drug_bank_id")
     )
 
-    drug_protein = drug_protein.join(
+    drug_gene = drug_gene.join(
         df_vocabulary_join_prep,
         left_on="drug_bank_id",
         right_on="drugbank_id",
@@ -71,15 +71,15 @@ def run(  # noqa: PLR0913
     ).with_columns(pl.col("drug_bank_name").cast(pl.String).fill_null(""))
 
     # Add prefixes
-    drug_protein = drug_protein.with_columns(
+    drug_gene = drug_gene.with_columns(
         (pl.lit("NCBIGene:") + pl.col("ncbi_gene_id")).alias("ncbi_gene_id"),
         (pl.lit("UniProtKB:") + pl.col("uniprot_id")).alias("uniprot_id"),
     )
 
-    return drug_protein.sort(by=["drug_bank_id", "ncbi_gene_id"])
+    return drug_gene.sort(by=["drug_bank_id", "ncbi_gene_id"])
 
 
-drug_protein_node = node(
+drug_gene_node = node(
     run,
     inputs={
         "gene_map": "landing.drugbank.gene_map",
@@ -89,7 +89,7 @@ drug_protein_node = node(
         "transporter": "landing.drugbank.transporter",
         "vocabulary": "bronze.drugbank.vocabulary",
     },
-    outputs="drug_protein",
-    name="drug_protein",
+    outputs="drug_gene",
+    name="drug_gene",
     tags=["bronze"],
 )

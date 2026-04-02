@@ -11,6 +11,6 @@ bronze.drugcentral.phenotype:
       cui_semantic_type: pl.String
       snomed_conceptids: pl.List(pl.String)
   metadata:
-    checksum: 2b4d6f5e415011cd79cbce345d3c12bd
+    checksum: 5a88380ccebe43321f431eb60f6c35ab
     kedro-viz:
       layer: bronze

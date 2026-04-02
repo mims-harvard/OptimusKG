@@ -40,7 +40,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             "landing.ppi.protein_protein",
             # bronze
             "bronze.drugbank.vocabulary",
-            "bronze.gene_names.protein_names",
+            "bronze.gene_names.gene_names",
             "bronze.opentargets.disease",
             "bronze.opentargets.drug_molecule",
             "bronze.opentargets.umls_disease_mappings",

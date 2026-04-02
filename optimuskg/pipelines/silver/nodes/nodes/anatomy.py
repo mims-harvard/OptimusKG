@@ -5,7 +5,7 @@ from optimuskg.pipelines.silver.nodes.constants import Node, Source
 
 
 def run(
-    anatomy_protein: pl.DataFrame,
+    anatomy_gene: pl.DataFrame,
     anatomy_anatomy: pl.DataFrame,
     uberon_terms: pl.DataFrame,
 ) -> pl.DataFrame:
@@ -15,7 +15,7 @@ def run(
                 anatomy_anatomy.select(
                     pl.concat_list(["from", "to"]).explode().alias("id")
                 ),
-                anatomy_protein.select(pl.col("from").alias("id")),
+                anatomy_gene.select(pl.col("from").alias("id")),
             ]
         )
         .unique(subset="id")
@@ -48,7 +48,7 @@ def run(
 anatomy_node = node(
     run,
     inputs={
-        "anatomy_protein": "silver.edges.anatomy_protein",
+        "anatomy_gene": "silver.edges.anatomy_gene",
         "anatomy_anatomy": "silver.edges.anatomy_anatomy",
         "uberon_terms": "bronze.ontology.uberon_terms",
     },
