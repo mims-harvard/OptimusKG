@@ -60,12 +60,6 @@ _RATING_VERY_STRONG = _ALL_RATINGS[4]
 _RATING_MIN = _ALL_RATINGS[0]
 _RATING_MAX = _ALL_RATINGS[-1]
 
-
-# ---------------------------------------------------------------------------
-# Shared helpers
-# ---------------------------------------------------------------------------
-
-
 def _run_id_from_path(path: Path) -> str:
     return path.stem
 
@@ -159,11 +153,6 @@ def _ax_style(
         ax.yaxis.set_major_locator(y_major_locator)
 
 
-# ---------------------------------------------------------------------------
-# Figure 1: two-panel barplot (false | true), stacked by seed node type
-# ---------------------------------------------------------------------------
-
-
 def _plot_barplot(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:
     # Node types ordered by prevalence
     node_types = _by_prevalence(df, "seed_node_type")
@@ -228,15 +217,6 @@ def _plot_barplot(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:
     plt.savefig(out_path, bbox_inches="tight")
     plt.close()
     logger.info("Saved bar plot to %s", out_path)
-
-
-# ---------------------------------------------------------------------------
-# Figure 2: grouped barplot, faceted by seed node type (2 cols × 5 rows)
-#
-# Within each panel, each rating position has two side-by-side bars:
-#   left  — true edges, stacked by relation type (global color scheme)
-#   right — false edges, single light-gray bar
-# ---------------------------------------------------------------------------
 
 
 def _plot_grouped_barplot(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:  # noqa: PLR0915
@@ -367,11 +347,6 @@ def _plot_grouped_barplot(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:
     logger.info("Saved grouped bar plot to %s", out_path)
 
 
-# ---------------------------------------------------------------------------
-# Statistics
-# ---------------------------------------------------------------------------
-
-
 def _print_stats(df: pl.DataFrame) -> None:  # noqa: PLR0915
     total = df.height
     sep = "─" * 52
@@ -499,11 +474,6 @@ def _print_stats(df: pl.DataFrame) -> None:  # noqa: PLR0915
         else:
             logger.info("    True edges with evidence: 0.0%%")
         logger.info("")
-
-
-# ---------------------------------------------------------------------------
-# Public entry point
-# ---------------------------------------------------------------------------
 
 
 def run(
