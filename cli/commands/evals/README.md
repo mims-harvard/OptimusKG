@@ -92,7 +92,7 @@ Both phases share an alphanumeric run ID (a `YYYYMMDD_HHMMSS` timestamp generate
 | submit | `sampled_edges_*.csv` | `<run_id>_submitted_edges.csv` |
 | poll | `<run_id>_submitted_edges.csv` | `<run_id>_polled_edges.csv` |
 
-The command validates that the input file matches the expected naming convention for the chosen action and raises an error otherwise.
+The command validates that the input file matches the expected naming convention for the chosen action and raises an error otherwise. To plot rating distributions from a completed poll, use **`evals paperqa-figures`** (see below).
 
 **Usage:**
 ```bash
@@ -122,6 +122,38 @@ uv run cli evals paperqa --action poll --input data/gold/evals/20260328_163632_s
 | `--max-rate-limit-attempts` | `15` | Max retries with exponential backoff on 429/5xx |
 
 **Environment variables:** Requires `EDISON_API_KEY` to be set (loaded from `.env` at the project root).
+
+---
+
+### `uv run cli evals paperqa-figures`
+
+Generate bar plots from a **polled** PaperQA3 run (after `paperqa --action poll` has produced ratings).
+
+**Inputs:** A `<run_id>_polled_edges.csv` file with at least `seed_node_type`, `is_true_edge`, `rating`, and `relation_type` (rows without a parseable rating are dropped).
+
+**Outputs** (written to `--out`, or the same directory as `--input` if omitted):
+
+| File | Description |
+|------|-------------|
+| `<stem>_barplot.pdf` | Two panels (false edges \| true edges): rating on the x-axis, count on the y-axis, bars stacked by seed node type (types ordered by prevalence). |
+| `<stem>_grouped_barplot.pdf` | Faceted by seed node type: true edges stacked by relation type; false edges as a single gray segment; ratings 1–5 on the x-axis. |
+| `<stem>_grouped_barplot.svg` | Same as the grouped bar plot, SVG format. |
+
+`<stem>` is the input filename without extension (e.g. `20260328_195935_polled_edges` for `20260328_195935_polled_edges.csv`).
+
+The command also prints summary statistics to the console (counts and evidence rates by seed type).
+
+**Usage:**
+```bash
+uv run cli evals paperqa-figures --input data/gold/evals/20260328_195935_polled_edges.csv
+
+uv run cli evals paperqa-figures --input data/gold/evals/20260328_195935_polled_edges.csv --out figures/
+```
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `--input` | (required) | Path to the polled-edges CSV from `paperqa --action poll` |
+| `--out` | parent of `--input` | Directory for PDF/SVG figures |
 
 ---
 
@@ -188,17 +220,3 @@ CLI arguments override config values.
 | `--true-neighbors` | config | Max true neighbors to sample per node |
 | `--false-neighbors` | config | False neighbors to sample per node |
 | `--seed` | config | Random seed for reproducibility |
-
-## Edge Cases
-
-- **Nodes with fewer neighbors than requested**: All available named neighbors are sampled
-- **Empty percentile range**: An error is raised if no nodes fall within the range
-- **Isolated nodes**: Nodes not in the graph are skipped during edge sampling
-- **Degree sampling with all-zero weights**: Falls back to uniform sampling silently
-- **Legacy config keys**: `pagerank_upper` / `pagerank_lower` in YAML are automatically mapped to `centrality_upper` / `centrality_lower`
-
-
-Final commands:
-```bash
-uv run cli  evals paperqa --action submit --input data/gold/evals/sampled_edges_degree_true=10_false=1.csv
-```
