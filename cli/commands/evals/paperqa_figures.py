@@ -60,6 +60,7 @@ _RATING_VERY_STRONG = _ALL_RATINGS[4]
 _RATING_MIN = _ALL_RATINGS[0]
 _RATING_MAX = _ALL_RATINGS[-1]
 
+
 def _run_id_from_path(path: Path) -> str:
     return path.stem
 
