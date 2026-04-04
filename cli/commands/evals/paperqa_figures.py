@@ -308,8 +308,9 @@ def _plot_grouped_barplot(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:
         for x, top, n in zip(false_x, false_heights, false_totals):
             if n > 0:
                 ax.text(x, top + 0.005, str(n), ha="center", va="bottom", fontsize=8)
-
-        ax.set_title(NODE_TYPE_LABELS.get(node_type, node_type), fontsize=10)
+        
+        node_type_label = NODE_TYPE_LABELS.get(node_type, node_type)
+        ax.set_title(f"{node_type_label} nodes", fontsize=10)
         ax.set_xticks(_ALL_RATINGS)
         ax.set_xticklabels(_RATING_LABELS, fontsize=8)
         ax.set_ylabel("Proportion of edges", fontsize=9)
@@ -402,6 +403,34 @@ def _print_stats(df: pl.DataFrame) -> None:
             print(f"    {str(rel):<30} : {cnt:>5,}  ({pct_of_sub:5.1f}% of rating={rating_val} | {pct_of_true:5.1f}% of all true)")
 
     print(sep)
+
+    # Print per-node-type summary
+    print()
+    print(sep)
+    print(f"  Per-node-type summary")
+    print(sep)
+    # for node_type in _by_prevalence(df, "seed_node_type"):
+    node_types = _node_types_by_pct_delta(df)
+    for node_type in node_types:
+        print(f"  {node_type}: {df.filter(pl.col("seed_node_type") == node_type).height:>5,}")
+        print(f"    True edges: {df.filter(pl.col("seed_node_type") == node_type).filter(pl.col("is_true_edge")).height:>5,}")
+        print(f"    False edges: {df.filter(pl.col("seed_node_type") == node_type).filter(~pl.col("is_true_edge")).height:>5,}")
+        print(f"    Total edges: {df.filter(pl.col("seed_node_type") == node_type).height:>5,}")
+        # Number of true edges with weak evidence (rating = 2)
+        print(f"    Weak evidence: {df.filter(pl.col("seed_node_type") == node_type).filter(pl.col("is_true_edge")).filter(pl.col("rating") == 2).height:>5,}")
+        # Number of true edges with moderate evidence (rating = 3)
+        print(f"    Moderate evidence: {df.filter(pl.col("seed_node_type") == node_type).filter(pl.col("is_true_edge")).filter(pl.col("rating") == 3).height:>5,}")
+        # Number of true edges with strong evidence (rating = 4)
+        print(f"    Strong evidence: {df.filter(pl.col("seed_node_type") == node_type).filter(pl.col("is_true_edge")).filter(pl.col("rating") == 4).height:>5,}")
+        # Number of true edges with very strong evidence (rating = 5)
+        print(f"    Very strong evidence: {df.filter(pl.col("seed_node_type") == node_type).filter(pl.col("is_true_edge")).filter(pl.col("rating") == 5).height:>5,}")
+        # Fraction of true edges with weak, moderate, strong, or very strong evidence
+        denominator = df.filter(pl.col("seed_node_type") == node_type).filter(pl.col("is_true_edge")).height
+        if denominator > 0:
+            print(f"    True edges with evidence: {df.filter(pl.col("seed_node_type") == node_type).filter(pl.col("is_true_edge")).filter(pl.col("rating") >= 2).height * 100 / denominator:>5.1f}%")
+        else:
+            print(f"    True edges with evidence: 0.0%")
+        print()
 
 
 # ---------------------------------------------------------------------------
