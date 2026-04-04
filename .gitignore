@@ -165,8 +165,6 @@ tests/stub_data/bronze/**
 # notebooks
 notebooks/**
 !notebooks/quickstart.ipynb
-!notebooks/pagerank.ipynb
-!notebooks/graph_inspection.ipynb
 
 .opencode/plans
 
