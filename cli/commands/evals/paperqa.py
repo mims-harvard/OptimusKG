@@ -31,9 +31,16 @@ logger = logging.getLogger("cli")
 _RETRYABLE_HTTP_STATUS = frozenset({429, 500, 502, 503, 504})
 
 NODE_TYPE_MAP: dict[str, str] = {
-    "ANA": "anatomical structure", "BPO": "biological process", "CCO": "cellular component",
-    "DIS": "disease", "DRG": "drug", "EXP": "environmental exposure", "GEN": "gene or protein",
-    "MFN": "molecular function", "PHE": "phenotype", "PWY": "pathway",
+    "ANA": "anatomical structure",
+    "BPO": "biological process",
+    "CCO": "cellular component",
+    "DIS": "disease",
+    "DRG": "drug",
+    "EXP": "environmental exposure",
+    "GEN": "gene or protein",
+    "MFN": "molecular function",
+    "PHE": "phenotype",
+    "PWY": "pathway",
 }
 
 PROMPT_TEMPLATE = """Is there any scientific or medical evidence to support an association between the {seed_type} {seed_name} and the {target_type} {target_name}? Please rate the strength of the evidence on a 5-point scale, where:
@@ -52,12 +59,19 @@ PROMPT_TEMPLATE = """Is there any scientific or medical evidence to support an a
 
     `rating` is one of the following (must match exactly): 1, 2, 3, 4, or 5. Do not include any additional keys or text."""
 
+
 def _build_prompt(row: dict) -> str:
-    seed_type = NODE_TYPE_MAP.get(str(row.get("seed_node_type", "")), str(row.get("seed_node_type", "")))
-    target_type = NODE_TYPE_MAP.get(str(row.get("target_node_type", "")), str(row.get("target_node_type", "")))
+    seed_type = NODE_TYPE_MAP.get(
+        str(row.get("seed_node_type", "")), str(row.get("seed_node_type", ""))
+    )
+    target_type = NODE_TYPE_MAP.get(
+        str(row.get("target_node_type", "")), str(row.get("target_node_type", ""))
+    )
     return PROMPT_TEMPLATE.format(
-        seed_type=seed_type, seed_name=row.get("seed_node_name", ""),
-        target_type=target_type, target_name=row.get("target_node_name", ""),
+        seed_type=seed_type,
+        seed_name=row.get("seed_node_name", ""),
+        target_type=target_type,
+        target_name=row.get("target_node_name", ""),
     )
 
 
@@ -72,22 +86,37 @@ def _parse_response(answer_text: str | None) -> tuple[str | None, str | None]:
     )
 
 
-async def _call_with_backoff(fn, *, max_attempts: int = 15, base_wait: float = 2.0, max_wait: float = 120.0):
+async def _call_with_backoff(
+    fn, *, max_attempts: int = 15, base_wait: float = 2.0, max_wait: float = 120.0
+):
     """Call a sync Edison function in a thread, retrying with exponential backoff on rate limits."""
     for attempt in range(max_attempts):
         try:
             return await asyncio.to_thread(fn)
         except HTTPStatusError as e:
-            if e.response.status_code not in _RETRYABLE_HTTP_STATUS or attempt == max_attempts - 1:
+            if (
+                e.response.status_code not in _RETRYABLE_HTTP_STATUS
+                or attempt == max_attempts - 1
+            ):
                 raise
             retry_after = e.response.headers.get("Retry-After")
-            wait = float(retry_after) if retry_after else min(max_wait, base_wait * (2 ** attempt))
+            wait = (
+                float(retry_after)
+                if retry_after
+                else min(max_wait, base_wait * (2**attempt))
+            )
             wait += random.uniform(0, wait * 0.1)
-            logger.warning("HTTP %s, retrying in %.1fs (attempt %d/%d)", e.response.status_code, wait, attempt + 1, max_attempts)
+            logger.warning(
+                "HTTP %s, retrying in %.1fs (attempt %d/%d)",
+                e.response.status_code,
+                wait,
+                attempt + 1,
+                max_attempts,
+            )
             await asyncio.sleep(wait)
 
 
-async def execute_phase(
+async def execute_phase(  # noqa: PLR0913
     df: pl.DataFrame,
     api_key: str,
     phase: str,
@@ -110,7 +139,9 @@ async def execute_phase(
 
             prompt = _build_prompt(row)
             task_id = await _call_with_backoff(
-                lambda prompt=prompt: client.create_task({"name": JobNames.LITERATURE, "query": prompt}),
+                lambda prompt=prompt: client.create_task(
+                    {"name": JobNames.LITERATURE, "query": prompt}
+                ),
                 max_attempts=max_rate_limit_attempts,
             )
             result_row = {**row, "task_id": str(task_id), "status": "pending"}
@@ -125,16 +156,22 @@ async def execute_phase(
             #     lambda task_id=task_id: client.get_task(task_id),
             #     max_attempts=max_rate_limit_attempts,
             # )
-            task_info = await asyncio.to_thread(lambda task_id=task_id: client.get_task(task_id))
+            task_info = await asyncio.to_thread(
+                lambda task_id=task_id: client.get_task(task_id)
+            )
             status = getattr(task_info, "status", None)
             result_row = {**row, "status": status}
 
             if status == "success":
-                answer = getattr(task_info, "answer", None) or getattr(task_info, "formatted_answer", None)
+                answer = getattr(task_info, "answer", None) or getattr(
+                    task_info, "formatted_answer", None
+                )
                 reasoning, rating = _parse_response(answer)
                 result_row |= {
                     "answer": answer,
-                    "has_successful_answer": getattr(task_info, "has_successful_answer", None),
+                    "has_successful_answer": getattr(
+                        task_info, "has_successful_answer", None
+                    ),
                     "reasoning": reasoning,
                     "rating": rating,
                 }
@@ -185,7 +222,7 @@ def _validate_input_file(input_path: Path, action: str) -> str | None:
         return match.group(1)
 
 
-def run(
+def run(  # noqa: PLR0913
     input_path: Path,
     out_dir: Path,
     action: str = "submit",
@@ -223,18 +260,29 @@ def run(
         edges_df = edges_df.head(limit)
 
     logger.info(f"Writing results incrementally to {out_path}")
-    results_df = asyncio.run(execute_phase(
-        edges_df, api_key, action, out_path,
-        api_min_interval_sec=api_min_interval_sec,
-        max_rate_limit_attempts=max_rate_limit_attempts,
-    ))
+    results_df = asyncio.run(
+        execute_phase(
+            edges_df,
+            api_key,
+            action,
+            out_path,
+            api_min_interval_sec=api_min_interval_sec,
+            max_rate_limit_attempts=max_rate_limit_attempts,
+        )
+    )
     logger.info(f"Done. {len(results_df)} rows saved to {out_path}")
 
     if wandb_project and action == "poll":
         finished = results_df.filter(pl.col("status") == "success")
         if finished.height > 0:
             wandb.init(project=wandb_project, job_type="paperqa_evaluation")
-            wandb.log({"evaluation_results_table": wandb.Table(dataframe=finished.to_pandas())})
+            wandb.log(
+                {
+                    "evaluation_results_table": wandb.Table(
+                        dataframe=finished.to_pandas()
+                    )
+                }
+            )
 
             if "rating" in finished.columns:
                 agg_df = (
@@ -243,10 +291,25 @@ def run(
                     .agg(pl.len().alias("count"))
                     .to_pandas()
                 )
-                agg_df["group_label"] = agg_df["is_true_edge"].astype(str) + " Edge | Rating " + agg_df["rating"].astype(str)
+                agg_df["group_label"] = (
+                    agg_df["is_true_edge"].astype(str)
+                    + " Edge | Rating "
+                    + agg_df["rating"].astype(str)
+                )
                 bar_table = wandb.Table(dataframe=agg_df)
-                wandb.log({"rating_distribution": wandb.plot.bar(bar_table, label="group_label", value="count", title="Ratings")})
+                wandb.log(
+                    {
+                        "rating_distribution": wandb.plot.bar(
+                            bar_table,
+                            label="group_label",
+                            value="count",
+                            title="Ratings",
+                        )
+                    }
+                )
 
             wandb.finish()
         else:
-            logger.info("No tasks have reached 'success' state yet. Skipping W&B logging.")
+            logger.info(
+                "No tasks have reached 'success' state yet. Skipping W&B logging."
+            )

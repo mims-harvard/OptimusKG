@@ -8,15 +8,18 @@ warnings.filterwarnings(
     category=UserWarning,
 )
 
-import typer
+import typer  # noqa: E402
 
-from cli.commands import (
+from cli.commands import (  # noqa: E402
     metrics_command,
     sync_catalog_command,
 )
-from cli.commands.evals import evals_app
-from cli.commands.figures import figure_app
-from optimuskg.utils import calculate_checksum
+from cli.commands.evals import evals_app  # noqa: E402
+from cli.commands.figures import figure_app  # noqa: E402
+from cli.commands.unify_benchmark_files import (  # noqa: E402
+    unify_benchmark_files_command,
+)
+from optimuskg.utils import calculate_checksum  # noqa: E402
 
 app = typer.Typer(help="Main entry point for the CLI.")
 app.add_typer(evals_app, name="evals")
@@ -84,25 +87,6 @@ def metrics(
     ),
 ):
     metrics_command(nodes_dir, edges_dir, out_dir)
-
-
-@app.command(help="Plot benchmark results.")
-def plot_benchmark(
-    results_path: Path = typer.Option(
-        "data/benchmarks/results.json",
-        "--results",
-        help="The path to read the results from.",
-    ),
-    out_dir: Path = typer.Option(
-        "data/benchmarks/plots",
-        "--out",
-        help="The path to write the output file to.",
-    ),
-):
-    plot_benchmark_command(results_path, out_dir)
-    plot_normalized_time(
-        Path("data/benchmarks/normalized_time/unified_benchmarks.json"), out_dir
-    )
 
 
 @app.command(help="Unify benchmark files.")

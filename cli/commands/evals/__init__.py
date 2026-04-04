@@ -14,7 +14,7 @@ evals_app = typer.Typer(help="Generate evaluation datasets for KG analysis.")
 
 
 @evals_app.command(name="centrality", help="Compute node centrality scores.")
-def centrality_cmd(
+def centrality_cmd(  # noqa: PLR0913
     nodes_path: Path = typer.Option(
         Path("data/gold/kg/parquet/nodes.parquet"),
         "--nodes",
@@ -189,21 +189,12 @@ class ActionType(str, Enum):
     submit = "submit"
     poll = "poll"
 
-@evals_app.command(
-    name="paperqa",
-    help="Evaluate sampled edges using PaperQA3 via the Edison client.",
-)
-
-class ActionType(str, Enum):
-    submit = "submit"
-    poll = "poll"
 
 @evals_app.command(
     name="paperqa",
     help="Evaluate sampled edges using PaperQA3 via the Edison client.",
 )
-
-def paperqa_cmd(
+def paperqa_cmd(  # noqa: PLR0913
     input_path: Path = typer.Option(
         Path("data/gold/evals/sampled_edges_degree_true=10_false=1.csv"),
         "--input",
@@ -267,7 +258,9 @@ def paperqa_cmd(
     )
 
 
-@evals_app.command(name="paperqa-figures", help="Generate rating bar plots from PaperQA3 results.")
+@evals_app.command(
+    name="paperqa-figures", help="Generate rating bar plots from PaperQA3 results."
+)
 def paperqa_figures_cmd(
     input_path: Path = typer.Option(
         ...,

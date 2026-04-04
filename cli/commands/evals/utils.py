@@ -12,7 +12,9 @@ import polars as pl
 logger = logging.getLogger("cli")
 
 # Centrality metrics supported by compute_centrality
-CentralityMetric = Literal["pagerank", "degree", "betweenness", "closeness", "eigenvector"]
+CentralityMetric = Literal[
+    "pagerank", "degree", "betweenness", "closeness", "eigenvector"
+]
 
 # Graph construction modes
 GraphMode = Literal["directed", "undirected"]
@@ -152,8 +154,7 @@ def compute_centrality(
         n = G.number_of_nodes()
         denom = 2 * (n - 1) if n > 1 else 1
         scores = {
-            node: (G.in_degree(node) + G.out_degree(node)) / denom
-            for node in G.nodes()
+            node: (G.in_degree(node) + G.out_degree(node)) / denom for node in G.nodes()
         }
     elif metric == "betweenness":
         scores = nx.betweenness_centrality(G)
@@ -184,4 +185,6 @@ def centrality_to_dataframe(
         (sorted by centrality descending)
     """
     df = pl.DataFrame({"id": list(scores.keys()), "centrality": list(scores.values())})
-    return df.join(node_metadata, on="id", how="left").sort("centrality", descending=True)
+    return df.join(node_metadata, on="id", how="left").sort(
+        "centrality", descending=True
+    )

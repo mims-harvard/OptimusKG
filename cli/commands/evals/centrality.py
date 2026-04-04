@@ -68,7 +68,7 @@ def plot_centrality_by_type(
     logger.info("Saved figure to %s", out_path)
 
 
-def run(
+def run(  # noqa: PLR0913
     nodes_path: Path,
     edges_path: Path,
     out_dir: Path,
@@ -128,7 +128,13 @@ def run(
 
             plot_centrality_by_type(df, metric, out_dir / f"{stem}_by_type.pdf")
 
-            logger.info("Top %d nodes by %s (%s):\n%s", top_n, metric, graph_mode, df.head(top_n))
+            logger.info(
+                "Top %d nodes by %s (%s):\n%s",
+                top_n,
+                metric,
+                graph_mode,
+                df.head(top_n),
+            )
 
             results[(metric, graph_mode)] = df
 

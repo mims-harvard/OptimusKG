@@ -22,6 +22,8 @@ import yaml
 from .utils import (
     CentralityMetric,
     GraphMode,
+    centrality_to_dataframe,
+    compute_centrality,
     load_graph,
     load_node_metadata,
 )
@@ -49,7 +51,9 @@ CENTRALITY_METRICS: frozenset[str] = frozenset(
 )
 
 # Method is either a centrality metric name or "uniform"
-SamplingMetric = Literal["pagerank", "degree", "betweenness", "closeness", "eigenvector", "uniform"]
+SamplingMetric = Literal[
+    "pagerank", "degree", "betweenness", "closeness", "eigenvector", "uniform"
+]
 
 
 def load_config(config_path: Path | None = None) -> dict:
@@ -121,7 +125,9 @@ def load_precomputed_stratified(
         stratified[node_type] = type_df
 
     logger.info(
-        "Loaded pre-computed centrality from %s (%d node types)", csv_path, len(stratified)
+        "Loaded pre-computed centrality from %s (%d node types)",
+        csv_path,
+        len(stratified),
     )
     return stratified
 
@@ -335,7 +341,7 @@ def sample_nodes_in_percentile(
     return result, sampling_stats
 
 
-def sample_edges_for_nodes(
+def sample_edges_for_nodes(  # noqa: PLR0913, PLR0915
     sampled_nodes: pl.DataFrame,
     G: nx.MultiDiGraph,
     node_metadata: pl.DataFrame,
@@ -384,8 +390,7 @@ def sample_edges_for_nodes(
     # Pre-compute degree weights once if needed (total degree = in + out)
     if edge_sampling == "degree":
         degree_weight: dict[str, float] = {
-            node: G.in_degree(node) + G.out_degree(node)
-            for node in all_nodes
+            node: G.in_degree(node) + G.out_degree(node) for node in all_nodes
         }
     else:
         degree_weight = {}
@@ -404,7 +409,9 @@ def sample_edges_for_nodes(
             # random.choices samples with replacement; loop until we have k unique items
             chosen: set[str] = set()
             while len(chosen) < k:
-                chosen.update(random.choices(population, weights=weights, k=k - len(chosen)))
+                chosen.update(
+                    random.choices(population, weights=weights, k=k - len(chosen))
+                )
             return list(chosen)[:k]
         return random.sample(population, k)
 
@@ -435,7 +442,9 @@ def sample_edges_for_nodes(
         type_stats[seed_type]["total_neighbors"] += len(neighbors)
 
         # Sample true neighbors (only those with valid names; exclude self-loops)
-        neighbors_list = [n for n in neighbors if n in nodes_with_names and n != seed_id]
+        neighbors_list = [
+            n for n in neighbors if n in nodes_with_names and n != seed_id
+        ]
         n_true = min(true_neighbors_per_node, len(neighbors_list))
         if n_true < true_neighbors_per_node:
             type_stats[seed_type]["nodes_with_few_neighbors"] += 1
@@ -448,15 +457,20 @@ def sample_edges_for_nodes(
             # neighbors is a union of successors and predecessors, so the edge
             # may be stored as seed→target, target→seed, or both (undirected
             # edges in the data produce arcs in both directions).
-            relation_type = "|".join(
-                sorted({
-                    edata["label"]
-                    for (u, v) in ((seed_id, target_id), (target_id, seed_id))
-                    if G.has_edge(u, v)
-                    for edata in G[u][v].values()
-                    if "label" in edata
-                })
-            ) or None
+            relation_type = (
+                "|".join(
+                    sorted(
+                        {
+                            edata["label"]
+                            for (u, v) in ((seed_id, target_id), (target_id, seed_id))
+                            if G.has_edge(u, v)
+                            for edata in G[u][v].values()
+                            if "label" in edata
+                        }
+                    )
+                )
+                or None
+            )
             edge_records.append(
                 {
                     "seed_node_id": seed_id,
@@ -532,7 +546,7 @@ def sample_edges_for_nodes(
     return edges_df, edge_stats
 
 
-def run(
+def run(  # noqa: PLR0913
     nodes_path: Path,
     edges_path: Path,
     out_dir: Path,
@@ -603,7 +617,9 @@ def run(
 
     # Load graph (always needed for edge sampling)
     logger.info("Loading graph...")
-    G, node_types, edge_types = load_graph(nodes_path, edges_path, graph_mode=graph_mode)
+    G, node_types, edge_types = load_graph(
+        nodes_path, edges_path, graph_mode=graph_mode
+    )
 
     # --- Node sampling --------------------------------------------------
     if metric == "uniform":
@@ -617,7 +633,9 @@ def run(
     else:
         # metric is a centrality metric name — read the pre-computed CSV
         csv_path = out_dir / f"{metric}_{graph_mode}.csv"
-        logger.info("Method=%s: loading pre-computed centrality from %s...", metric, csv_path)
+        logger.info(
+            "Method=%s: loading pre-computed centrality from %s...", metric, csv_path
+        )
         stratified_data = load_precomputed_stratified(csv_path)
 
         # Plot centrality distributions
@@ -647,7 +665,9 @@ def run(
     if metric == "uniform":
         nodes_stem = "sampled_nodes_uniform"
     else:
-        nodes_stem = f"sampled_nodes_{metric}_lower={centrality_lower}_upper={centrality_upper}"
+        nodes_stem = (
+            f"sampled_nodes_{metric}_lower={centrality_lower}_upper={centrality_upper}"
+        )
     sampled_nodes_path = out_dir / f"{nodes_stem}.csv"
     sampled_nodes.sort("node_type", "centrality", descending=[False, True]).write_csv(
         sampled_nodes_path
@@ -684,8 +704,12 @@ def run(
             "metric": metric,
             "graph_mode": graph_mode,
             "edge_sampling": edge_sampling,
-            "centrality_upper_percentile": centrality_upper if metric != "uniform" else None,
-            "centrality_lower_percentile": centrality_lower if metric != "uniform" else None,
+            "centrality_upper_percentile": centrality_upper
+            if metric != "uniform"
+            else None,
+            "centrality_lower_percentile": centrality_lower
+            if metric != "uniform"
+            else None,
             "nodes_per_type": nodes_per_type,
             "true_neighbors_per_node": true_neighbors,
             "false_neighbors_per_node": false_neighbors,
@@ -710,7 +734,9 @@ def run(
     logger.info("Saved summary stats to %s", summary_path)
 
     percentile_str = (
-        f"[{centrality_upper}%%, {centrality_lower}%%]" if metric != "uniform" else "N/A (uniform)"
+        f"[{centrality_upper}%%, {centrality_lower}%%]"
+        if metric != "uniform"
+        else "N/A (uniform)"
     )
     logger.info(
         "Analysis complete\n"
