@@ -308,7 +308,7 @@ def _plot_grouped_barplot(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:
         for x, top, n in zip(false_x, false_heights, false_totals):
             if n > 0:
                 ax.text(x, top + 0.005, str(n), ha="center", va="bottom", fontsize=8)
-        
+
         node_type_label = NODE_TYPE_LABELS.get(node_type, node_type)
         ax.set_title(f"{node_type_label} nodes", fontsize=10)
         ax.set_xticks(_ALL_RATINGS)
@@ -347,7 +347,7 @@ def _print_stats(df: pl.DataFrame) -> None:
     sep = "─" * 52
 
     print(sep)
-    print(f"  PaperQA evaluation summary")
+    print("  PaperQA evaluation summary")
     print(sep)
     print(f"  Total queries : {total:,}")
 
@@ -407,7 +407,7 @@ def _print_stats(df: pl.DataFrame) -> None:
     # Print per-node-type summary
     print()
     print(sep)
-    print(f"  Per-node-type summary")
+    print("  Per-node-type summary")
     print(sep)
     # for node_type in _by_prevalence(df, "seed_node_type"):
     node_types = _node_types_by_pct_delta(df)
@@ -429,7 +429,7 @@ def _print_stats(df: pl.DataFrame) -> None:
         if denominator > 0:
             print(f"    True edges with evidence: {df.filter(pl.col("seed_node_type") == node_type).filter(pl.col("is_true_edge")).filter(pl.col("rating") >= 2).height * 100 / denominator:>5.1f}%")
         else:
-            print(f"    True edges with evidence: 0.0%")
+            print("    True edges with evidence: 0.0%")
         print()
 
 
