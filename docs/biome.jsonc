@@ -1,0 +1,57 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": [
+    "ultracite/biome/core",
+    "ultracite/biome/react",
+    "ultracite/biome/next"
+  ],
+  "linter": {
+    "rules": {
+      "correctness": {
+        "noUnusedImports": "off"
+      },
+      "style": {
+        "useConsistentTypeDefinitions": {
+          "level": "error",
+          "options": {
+            "style": "type"
+          }
+        },
+        "noNestedTernary": "off"
+      }
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "identifierOrder": "lexicographic",
+            "groups": [
+              ":URL:",
+              ":BLANK_LINE:",
+              ":NODE:",
+              ":BUN:",
+              ":PACKAGE_WITH_PROTOCOL:",
+              ":BLANK_LINE:",
+              "react",
+              ":BLANK_LINE:",
+              ["next", "next/**"],
+              ":BLANK_LINE:",
+              [":PACKAGE:", "!@apps/**", "!@repo/**"],
+              ":BLANK_LINE:",
+              "@repo/**",
+              ":BLANK_LINE:",
+              "@apps/**",
+              ":BLANK_LINE:",
+              ":ALIAS:",
+              ":BLANK_LINE:",
+              ":PATH:"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

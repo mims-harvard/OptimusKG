@@ -1,0 +1,35 @@
+---
+title: Runners
+description: Execution engines for parallel and dry-run modes.
+---
+
+OptimusKG provides custom Kedro runners in `optimuskg/runners/`.
+
+## FixedParallelRunner
+
+**File**: `optimuskg/runners/parallel_runner.py`
+
+Executes pipeline nodes concurrently. This is the recommended runner for production use.
+
+```bash
+uv run kedro run \
+  --to-nodes gold.export_kg \
+  --runner=optimuskg.runners.FixedParallelRunner \
+  --async
+```
+
+<Callout type="warn">
+  Use `FixedParallelRunner` instead of Kedro's built-in `ParallelRunner`. The original runner has a bug that prevents validation checks from running.
+</Callout>
+
+## DryRunner
+
+**File**: `optimuskg/runners/dry_runner.py`
+
+Lists nodes in execution order without running them. Useful for verifying pipeline structure and dependencies.
+
+```bash
+uv run kedro run \
+  --from-nodes=<node_name> \
+  --runner=optimuskg.runners.DryRunner
+```

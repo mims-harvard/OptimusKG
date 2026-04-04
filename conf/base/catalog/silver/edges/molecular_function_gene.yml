@@ -1,0 +1,21 @@
+silver.edges.molecular_function_gene:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/silver/edges/molecular_function_gene.parquet
+  load_args:
+    schema:
+      from: pl.String
+      to: pl.String
+      label: pl.String
+      relation: pl.String
+      undirected: pl.Boolean
+      properties:
+        sources:
+          direct: pl.List(pl.String)
+          indirect: pl.List(pl.String)
+        evidence: pl.List(pl.String)
+        gene_product: pl.List(pl.String)
+        eco_ids: pl.List(pl.String)
+  metadata:
+    checksum: 22c11a9c974f7058e6531e09aed7d964
+    kedro-viz:
+      layer: silver

@@ -1,0 +1,17 @@
+{
+  "title": "Data Sources",
+  "pages": [
+    "index",
+    "opentargets",
+    "drugbank",
+    "drugcentral",
+    "ctd",
+    "disgenet",
+    "bgee",
+    "onsides",
+    "reactome",
+    "ontology",
+    "ppi",
+    "gene-names"
+  ]
+}

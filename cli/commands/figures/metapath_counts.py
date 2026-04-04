@@ -33,11 +33,11 @@ from cli.commands.metrics.utils import load_parquet_dir
 from optimuskg.pipelines.silver.nodes.constants import Node
 
 from . import style  # noqa: F401
+from .style import BLUE_CMAP
 
 logger = logging.getLogger(__name__)
 
-# Same node-type set as the adjacency heatmap (GEN excluded; edges use PRO).
-_NODE_TYPE_ORDER = [m.value for m in Node if m is not Node.GENE]
+_NODE_TYPE_ORDER = [m.value for m in Node]
 
 _MAX_LENGTH = 4
 _MIN_MULTIHOP_LENGTH = 2
@@ -345,7 +345,7 @@ def _render_count_heatmap(
             mask=mask | (mat == 0),
             xticklabels=_NODE_TYPE_ORDER,
             yticklabels=_NODE_TYPE_ORDER,
-            cmap="Purples",
+            cmap=BLUE_CMAP,
             norm=norm,
             square=True,
             linewidths=0.3,
@@ -357,9 +357,9 @@ def _render_count_heatmap(
         )
 
         length_num = col[len(prefix) :]
-        ax.set_title(f"Length {length_num}", fontsize=8, fontweight="bold")
-        ax.tick_params(axis="x", rotation=45, labelsize=6)
-        ax.tick_params(axis="y", rotation=0, labelsize=6)
+        ax.set_title(f"Length {length_num}", fontsize=7, fontweight="bold")
+        ax.tick_params(axis="x", rotation=45, labelsize=5)
+        ax.tick_params(axis="y", rotation=0, labelsize=5)
 
         for lbl in ax.get_xticklabels() + ax.get_yticklabels():
             lbl.set_fontweight("bold")
@@ -378,12 +378,11 @@ def _render_count_heatmap(
             spine.set_visible(True)
 
     # Shared colorbar on the right.
-    sm = plt.cm.ScalarMappable(cmap="Purples", norm=norm)
+    sm = plt.cm.ScalarMappable(cmap=BLUE_CMAP, norm=norm)
     cbar = fig.colorbar(sm, ax=axes.tolist(), shrink=0.8, pad=0.02)
-    cbar.set_label("Metapath count", fontsize=8)
-    cbar.ax.tick_params(labelsize=7)
+    cbar.set_label("Metapath count", fontsize=7)
+    cbar.ax.tick_params(labelsize=6)
 
-    plt.tight_layout(pad=0.4)
     plt.savefig(out_path)
     plt.close(fig)
 
@@ -422,7 +421,7 @@ def _render_ratio_heatmap(data: pl.DataFrame, out_path: Path) -> None:
             mask=cell_mask,
             xticklabels=_NODE_TYPE_ORDER,
             yticklabels=_NODE_TYPE_ORDER,
-            cmap="RdYlGn",
+            cmap="mpll-red-blue",
             norm=norm,
             square=True,
             linewidths=0.3,
@@ -433,9 +432,9 @@ def _render_ratio_heatmap(data: pl.DataFrame, out_path: Path) -> None:
             annot_kws={"fontsize": 5},
         )
 
-        ax.set_title(f"Length {k}", fontsize=8, fontweight="bold")
-        ax.tick_params(axis="x", rotation=45, labelsize=6)
-        ax.tick_params(axis="y", rotation=0, labelsize=6)
+        ax.set_title(f"Length {k}", fontsize=7, fontweight="bold")
+        ax.tick_params(axis="x", rotation=45, labelsize=5)
+        ax.tick_params(axis="y", rotation=0, labelsize=5)
 
         for lbl in ax.get_xticklabels() + ax.get_yticklabels():
             lbl.set_fontweight("bold")
@@ -452,12 +451,11 @@ def _render_ratio_heatmap(data: pl.DataFrame, out_path: Path) -> None:
             spine.set_visible(True)
 
     # Shared colorbar.
-    sm = plt.cm.ScalarMappable(cmap="RdYlGn", norm=norm)
+    sm = plt.cm.ScalarMappable(cmap="mpll-red-blue", norm=norm)
     cbar = fig.colorbar(sm, ax=axes.tolist(), shrink=0.8, pad=0.02)
-    cbar.set_label("Empirical / Theoretical ratio", fontsize=8)
-    cbar.ax.tick_params(labelsize=7)
+    cbar.set_label("Empirical / Theoretical ratio", fontsize=7)
+    cbar.ax.tick_params(labelsize=6)
 
-    plt.tight_layout(pad=0.4)
     plt.savefig(out_path)
     plt.close(fig)
 

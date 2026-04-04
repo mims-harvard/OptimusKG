@@ -1,0 +1,54 @@
+---
+title: Configuration
+description: Environment-based settings management with Kedro conf.
+---
+
+OptimusKG separates code from settings using Kedro's configuration system. All configuration lives in the `conf/` directory.
+
+## Directory Structure
+
+```
+conf/
+  base/                    # Shared configuration (committed to git)
+    catalog/               # Dataset definitions by layer and source
+      landing/
+      bronze/
+      silver/
+    parameters.yml         # Runtime parameters
+    biocypher/             # BioCypher schema and export config
+      schema_config.yaml   # Node and edge type definitions
+    logging.yml            # Logging configuration
+  local/                   # Local overrides (gitignored)
+```
+
+## Environments
+
+- **base**: Default configuration shared across all environments. Always loaded first.
+- **local**: Machine-specific overrides. Gitignored for credentials and local paths.
+
+Kedro merges `local` over `base`, so local settings take precedence.
+
+## Parameters
+
+`conf/base/parameters.yml` defines runtime constants used across pipelines:
+
+```yaml
+gold:
+  export_formats:
+    csv:
+      properties: true
+    parquet:
+      properties: true
+```
+
+Parameters are injected into nodes via Kedro's dependency injection using `params:` prefixed inputs.
+
+## BioCypher Configuration
+
+`conf/base/biocypher/schema_config.yaml` defines the knowledge graph schema:
+
+- **Node types**: Gene, Drug, Disease, Protein, Anatomy, Pathway, Phenotype, Exposure, Biological Process, Cellular Component, Molecular Function
+- **Edge types**: All relationship types between node types
+- **Properties**: Attributes for each node and edge type
+
+This schema drives the gold layer export via BioCypher.

@@ -1,7 +1,7 @@
 from .bgee import bgee_node
 from .ctd import ctd_node
 from .disgenet import disgenet_node
-from .drugbank import drug_drug_node, drug_protein_node, vocabulary_node
+from .drugbank import drug_drug_node, drug_gene_node, vocabulary_node
 from .drugcentral import drugcentral_node
 from .gene_names import gene_names_node
 from .onsides import onsides_node
@@ -27,7 +27,7 @@ __all__ = [
     "reactome_pathways_node",
     "gene_names_node",
     "drug_drug_node",
-    "drug_protein_node",
+    "drug_gene_node",
     "vocabulary_node",
     "uberon_node",
     "hp_node",

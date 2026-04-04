@@ -57,7 +57,7 @@ gold.figures.adjacency_heatmap:
       MFN: pl.Int64
       PWY: pl.Int64
       PHE: pl.Int64
-      PRO: pl.Int64
+      GEN: pl.Int64
   metadata:
     checksum: 3925f476f146a674c8ee75fab65acb5e
     kedro-viz:

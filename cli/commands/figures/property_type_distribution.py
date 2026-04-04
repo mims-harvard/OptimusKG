@@ -21,16 +21,19 @@ from matplotlib.axes import Axes
 from optimuskg.pipelines.silver.nodes.constants import Node
 
 from . import style  # noqa: F401 — applies global rcParams
-from .style import STYLE, apply_axis_styling, apply_legend_styling
+from .style import (
+    BLUE_SCALE,
+    STYLE,
+    apply_axis_styling,
+    apply_legend_styling,
+)
 
 # ──────────────────────────────────────────────────────────────────────
 # Canonical ordering
 # ──────────────────────────────────────────────────────────────────────
 
-# Node ordering (alphabetical by abbreviation, excluding GEN since the
-# gold parquet uses GEN but edges reference PRO — we keep GEN in the
-# node panel).
-_NODE_ORDER = [member.value for member in Node if member is not Node.PROTEIN]
+# Node ordering (alphabetical by abbreviation).
+_NODE_ORDER = [member.value for member in Node]
 
 # Filename stem → node abbreviation.
 _NODE_FILE_TO_LABEL: dict[str, str] = {
@@ -46,7 +49,7 @@ _NODE_FILE_TO_LABEL: dict[str, str] = {
     "phenotype": Node.PHENOTYPE.value,
 }
 
-# Filename stem → edge label (e.g. "disease_protein" → "DIS-PRO").
+# Filename stem → edge label (e.g. "disease_gene" → "DIS-GEN").
 _EDGE_PART_TO_NODE: dict[str, str] = {
     "anatomy": Node.ANATOMY.value,
     "biological_process": Node.BIOLOGICAL_PROCESS.value,
@@ -58,7 +61,6 @@ _EDGE_PART_TO_NODE: dict[str, str] = {
     "molecular_function": Node.MOLECULAR_FUNCTION.value,
     "pathway": Node.PATHWAY.value,
     "phenotype": Node.PHENOTYPE.value,
-    "protein": Node.PROTEIN.value,
 }
 
 # ──────────────────────────────────────────────────────────────────────
@@ -76,16 +78,16 @@ _DTYPE_CATEGORIES = [
     "List(Float)",
 ]
 
-# Okabe-Ito palette (colorblind-safe), 8 colours for 8 categories.
+# Tailwind/shadcn-ui colour palette for the 8 dtype categories.
 _CATEGORY_COLORS: dict[str, str] = {
-    "String": "#56B4E9",  # sky blue
-    "Boolean": "#E69F00",  # orange
-    "Integer": "#009E73",  # bluish green
-    "Float": "#F0E442",  # yellow
-    "List(String)": "#0072B2",  # blue
-    "List(Boolean)": "#D55E00",  # vermilion
-    "List(Integer)": "#CC79A7",  # reddish purple
-    "List(Float)": "#000000",  # black
+    "String": BLUE_SCALE["400"],  # blue-400
+    "Boolean": "#F59E0B",  # amber-500
+    "Integer": "#10B981",  # emerald-500
+    "Float": "#EAB308",  # yellow-500
+    "List(String)": BLUE_SCALE["700"],  # blue-700
+    "List(Boolean)": "#F97316",  # orange-500
+    "List(Integer)": "#8B5CF6",  # violet-500
+    "List(Float)": "#64748B",  # slate-500
 }
 
 _INTEGER_TYPES = frozenset(
@@ -161,8 +163,8 @@ def _flatten_dtype(
 
 
 def _edge_label_from_stem(stem: str) -> str:
-    """Derive an edge label such as ``DIS-PRO`` from a file stem like
-    ``disease_protein``.
+    """Derive an edge label such as ``DIS-GEN`` from a file stem like
+    ``disease_gene``.
 
     The stem is split into two parts by matching the longest known
     node-name prefix first (greedy left-to-right).
@@ -216,11 +218,9 @@ def _collect_property_types(
         if props_dtype is None or not isinstance(props_dtype, pl.Struct):
             continue
 
-        # Count leaf-level attribute types (excluding ``sources``).
+        # Count leaf-level attribute types.
         category_counts: dict[str, int] = {c: 0 for c in _DTYPE_CATEGORIES}
         for field in props_dtype.fields:
-            if field.name == "sources":
-                continue
             for cat, n in _flatten_dtype(field.dtype).items():
                 category_counts[cat] = category_counts.get(cat, 0) + n
 
@@ -289,16 +289,30 @@ def _draw_stacked_bars(  # noqa: PLR0913
             bottom=bottom,
             label=cat,
             color=_CATEGORY_COLORS[cat],
-            edgecolor=STYLE["bar_edgecolor"],
-            linewidth=STYLE["bar_linewidth"],
+            edgecolor="none",
+            linewidth=0,
             alpha=STYLE["bar_alpha"],
         )
         bottom += values
+
+    # Show total count above each bar.
+    for i, total in enumerate(bottom):
+        if total > 0:
+            label = f"{int(total)}" if total == int(total) else f"{total:.1f}"
+            ax.text(
+                x[i],
+                total,
+                label,
+                ha="center",
+                va="bottom",
+                fontsize=STYLE["value_label_fontsize"],
+            )
 
     ax.set_xticks(x)
     rotation = 45 if rotate_labels else 0
     ha = "right" if rotate_labels else "center"
     ax.set_xticklabels(entity_types, rotation=rotation, ha=ha, fontsize=8)
+    ax.tick_params(axis="x", length=0)
     if y_limit is not None:
         ax.set_ylim(0, y_limit)
     title_pad: int = STYLE["title_pad"]  # type: ignore[assignment]
@@ -317,6 +331,12 @@ def _draw_stacked_bars(  # noqa: PLR0913
 # ──────────────────────────────────────────────────────────────────────
 
 
+def _sort_by_total(df: pl.DataFrame) -> list[str]:
+    """Return entity types sorted by ascending total property count."""
+    totals = df.group_by("entity_type").agg(pl.col("count").sum().alias("total"))
+    return totals.sort("total")["entity_type"].to_list()
+
+
 def _to_percentages(
     df: pl.DataFrame,
 ) -> tuple[list[str], dict[str, list[float]]]:
@@ -326,7 +346,7 @@ def _to_percentages(
     df = df.with_columns(
         (pl.col("count") / pl.col("total")).alias("pct"),
     )
-    entity_types = sorted(df["entity_type"].unique().to_list())
+    entity_types = _sort_by_total(df)
     pct_map: dict[str, list[float]] = {cat: [] for cat in _DTYPE_CATEGORIES}
     for et in entity_types:
         sub = df.filter(pl.col("entity_type") == et)
@@ -340,7 +360,7 @@ def _to_counts(
     df: pl.DataFrame,
 ) -> tuple[list[str], dict[str, list[float]]]:
     """Pivot *df* to per-category raw count lists."""
-    entity_types = sorted(df["entity_type"].unique().to_list())
+    entity_types = _sort_by_total(df)
     cnt_map: dict[str, list[float]] = {cat: [] for cat in _DTYPE_CATEGORIES}
     for et in entity_types:
         sub = df.filter(pl.col("entity_type") == et)
@@ -385,12 +405,14 @@ def _render_figure(
 
     y_limit = 1.0 if normalize else None
     _draw_stacked_bars(ax_nodes, node_types, node_vals, "Node types", y_limit=y_limit)
+
+    # Two-line labels for edge types: "DIS-PRO" → "DIS\nPRO"
+    edge_labels = [et.replace("-", "\n") for et in edge_types]
     _draw_stacked_bars(
         ax_edges,
-        edge_types,
+        edge_labels,
         edge_vals,
         "Edge types",
-        rotate_labels=True,
         y_limit=y_limit,
     )
 
@@ -410,16 +432,17 @@ def _render_figure(
         ncol=len(_DTYPE_CATEGORIES),
         bbox_to_anchor=(0.5, 1.02),
         fontsize=STYLE["legend_fontsize"],
-        frameon=STYLE["legend_frameon"],
-        fancybox=STYLE["legend_fancybox"],
-        shadow=STYLE["legend_shadow"],
-        framealpha=STYLE["legend_framealpha"],
-        edgecolor=STYLE["legend_edgecolor"],
+        frameon=False,
     )
     apply_legend_styling(legend)
 
-    plt.tight_layout(rect=STYLE["fig_tight_rect"])
-    plt.savefig(out_path, dpi=STYLE["fig_dpi"], facecolor=STYLE["fig_facecolor"])
+    plt.tight_layout(rect=[0, 0, 1, 0.93])
+    plt.savefig(
+        out_path,
+        dpi=STYLE["fig_dpi"],
+        facecolor=STYLE["fig_facecolor"],
+        bbox_inches="tight",
+    )
     plt.close(fig)
 
 

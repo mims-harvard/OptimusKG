@@ -1,0 +1,12 @@
+bronze.ppi.gene_gene:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/ppi/gene_gene.parquet
+  load_args:
+    schema:
+      from: pl.String
+      to: pl.String
+      databases: pl.List(pl.String)
+  metadata:
+    checksum: d19feda309063156dee68037cc2d037e
+    kedro-viz:
+      layer: bronze

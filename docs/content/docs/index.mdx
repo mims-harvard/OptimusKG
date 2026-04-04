@@ -1,0 +1,34 @@
+---
+title: Introduction
+description: OptimusKG is an opinionated, production-ready data pipeline for constructing biomedical knowledge graphs.
+---
+
+OptimusKG is a data pipeline designed to construct, validate, and maintain biomedical knowledge graphs following software engineering best practices.
+
+## Principles
+
+- **Ready-to-use**: Comes with pre-built processing nodes that unify many biomedical data sources into a single knowledge graph.
+- **Reproducible**: All data transformations are deterministic, validated through checksum checks, and infrastructure-agnostic.
+- **Extensible**: A superset of the [Kedro framework](https://kedro.org/) (hosted by the [Linux Foundation](https://lfaidata.foundation/)), providing a uniform project template, dataset abstraction, configuration management, and pipeline assembly.
+
+## Architecture at a Glance
+
+| Component | Description |
+| --- | --- |
+| **Catalog** | The single source of truth for all datasets, their schemas, format, and metadata. |
+| **Dataset** | An abstraction that handles file formats, storage locations, and persistence logic. |
+| **Node** | A pure Python function whose output follows solely from its input values. |
+| **Pipeline** | A sequence of nodes wired into a DAG-based workflow. |
+| **Layer** | Follows the medallion architecture: landing, bronze, silver, and gold. |
+| **Parameters** | Constants for filtering data across the construction process. |
+| **Provider** | An abstraction for versioned, automatic data downloads from external sources. |
+| **Hook** | Injects custom behavior into the execution flow (e.g., checksum validation). |
+
+## What's Next?
+
+<Cards>
+  <Card title="Installation" href="/docs/getting-started/installation" />
+  <Card title="Quickstart" href="/docs/getting-started/quickstart" />
+  <Card title="Architecture" href="/docs/architecture" />
+  <Card title="Graph Schema" href="/docs/graph-schema" />
+</Cards>

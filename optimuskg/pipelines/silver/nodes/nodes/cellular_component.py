@@ -5,7 +5,7 @@ from optimuskg.pipelines.silver.nodes.constants import Node, Source
 
 
 def run(
-    cellular_component_protein: pl.DataFrame,
+    cellular_component_gene: pl.DataFrame,
     exposure_cellular_component: pl.DataFrame,
     cellular_component_cellular_component: pl.DataFrame,
     go_terms: pl.DataFrame,
@@ -13,7 +13,7 @@ def run(
     return (
         pl.concat(
             [
-                cellular_component_protein.select(pl.col("from").alias("id")),
+                cellular_component_gene.select(pl.col("from").alias("id")),
                 exposure_cellular_component.select(pl.col("to").alias("id")),
                 cellular_component_cellular_component.select(
                     pl.concat_list(["from", "to"]).explode().alias("id")
@@ -50,7 +50,7 @@ def run(
 cellular_component_node = node(
     run,
     inputs={
-        "cellular_component_protein": "silver.edges.cellular_component_protein",
+        "cellular_component_gene": "silver.edges.cellular_component_gene",
         "exposure_cellular_component": "silver.edges.exposure_cellular_component",
         "cellular_component_cellular_component": "silver.edges.cellular_component_cellular_component",
         "go_terms": "bronze.ontology.go_terms",

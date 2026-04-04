@@ -12,10 +12,7 @@ import typer
 
 from cli.commands import (
     metrics_command,
-    plot_benchmark_command,
-    plot_normalized_time,
     sync_catalog_command,
-    unify_benchmark_files_command,
 )
 from cli.commands.evals import evals_app
 from cli.commands.figures import figure_app

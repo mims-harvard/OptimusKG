@@ -73,8 +73,8 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
-lib64/
+/lib/
+/lib64/
 parts/
 sdist/
 var/
@@ -170,3 +170,8 @@ notebooks/**
 
 # Weights & Biases
 wandb/
+# Fumadocs documentation site
+docs/node_modules/
+docs/.next/
+docs/.source/
+docs/out/
