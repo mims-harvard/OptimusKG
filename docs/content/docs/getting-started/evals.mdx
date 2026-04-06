@@ -1,0 +1,162 @@
+---
+title: Evaluation Commands
+description: Evaluation datasets, link-prediction samples, and PaperQA workflows from the knowledge graph.
+---
+
+The `evals` commands generate evaluation artifacts from gold parquet exports (default: `data/gold/kg/parquet/`, outputs under `data/gold/evals/`). For catalog sync, checksums, metrics, and figures, see [CLI Utilities](/docs/getting-started/cli).
+
+```bash
+uv run cli evals --help
+```
+
+## centrality
+
+Compute node centrality scores for all nodes in the graph. Each run writes `<metric>.csv` (rankings with metadata) and `<metric>_by_type.pdf` (mean centrality by node type).
+
+```bash
+# Defaults: pagerank, undirected graph
+uv run cli evals centrality
+
+uv run cli evals centrality --metric degree
+uv run cli evals centrality --graph-mode directed
+uv run cli evals centrality --top 20 --out data/gold/evals/v2
+```
+
+| Option | Short | Description |
+| --- | --- | --- |
+| `--nodes` | | Path to `nodes.parquet` (default: `data/gold/kg/parquet/nodes.parquet`). |
+| `--edges` | | Path to `edges.parquet` (default: `data/gold/kg/parquet/edges.parquet`). |
+| `--out` | | Output directory (default: `data/gold/evals`). |
+| `--top` | `-n` | Number of top nodes to print (default: `10`). |
+| `--metric` | | Centrality metric, repeatable: `pagerank`, `degree`, `betweenness`, `closeness`, `eigenvector`. |
+| `--alpha` | | PageRank damping (only for `pagerank`, default: `0.85`). |
+| `--graph-mode` | | `undirected` or `directed`, repeatable. Undirected treats edges as bidirectional; directed adds reverse arcs only where `undirected=true` in parquet. |
+
+## sample-edges
+
+Build an edge-level dataset for link prediction: rank nodes by centrality within each type, sample seeds between configured percentiles, then sample true neighbors and false non-neighbors.
+
+Writes `<metric>_distribution_by_type.pdf`, `sampled_nodes.csv`, `sampled_edges.csv`, and `summary_stats.json`.
+
+```bash
+uv run cli evals sample-edges
+
+uv run cli evals sample-edges --metric degree --graph-mode directed --edge-sampling degree
+uv run cli evals sample-edges --centrality-upper 10 --centrality-lower 25 --nodes-per-type 200
+uv run cli evals sample-edges --config conf/local/evals.yml
+uv run cli evals sample-edges --seed 123
+```
+
+| Option | Short | Description |
+| --- | --- | --- |
+| `--nodes` | | Path to `nodes.parquet` (default: `data/gold/kg/parquet/nodes.parquet`). |
+| `--edges` | | Path to `edges.parquet` (default: `data/gold/kg/parquet/edges.parquet`). |
+| `--out` | | Output directory (default: `data/gold/evals`). |
+| `--config` | | Config path (default: `conf/base/evals.yml`). |
+| `--metric` | | Centrality CSV name to load from `--out`, or `uniform` for uniform sampling per type (run `evals centrality` first when using a metric). |
+| `--graph-mode` | | `undirected` or `directed`. |
+| `--edge-sampling` | | `uniform` (default) or `degree` (degree-weighted negatives). |
+| `--centrality-upper` | | Upper percentile cutoff (top X%). |
+| `--centrality-lower` | | Lower percentile cutoff (top X%). |
+| `--nodes-per-type` | | Seeds per node type. |
+| `--true-neighbors` | | Max true neighbors per seed. |
+| `--false-neighbors` | | False neighbors per seed. |
+| `--seed` | | Random seed. |
+
+## paperqa
+
+Evaluate sampled edges with PaperQA3 via the Edison client: `submit` enqueues jobs from a `sampled_edges_*.csv` file; `poll` downloads results from a prior submit. The run id (`YYYYMMDD_HHMMSS`) links outputs.
+
+| Phase | Input | Output |
+| --- | --- | --- |
+| submit | `sampled_edges_*.csv` | `<run_id>_submitted_edges.csv` |
+| poll | `<run_id>_submitted_edges.csv` | `<run_id>_polled_edges.csv` |
+
+Input names are validated per action. For plots after a poll, use `paperqa-figures` below.
+
+```bash
+uv run cli evals paperqa --action submit --input data/gold/evals/sampled_edges_degree_true=10_false=5.csv
+uv run cli evals paperqa --action poll --input data/gold/evals/20260328_163632_submitted_edges.csv
+uv run cli evals paperqa --action submit --limit 10
+uv run cli evals paperqa --action poll --input data/gold/evals/20260328_163632_submitted_edges.csv --wandb-project my-project
+```
+
+| Option | Short | Description |
+| --- | --- | --- |
+| `--input` | | Input CSV (default: `data/gold/evals/sampled_edges_degree_true=10_false=1.csv`). |
+| `--out` | | Output directory (default: `data/gold/evals`). |
+| `--action` | | `submit` or `poll`. |
+| `--limit` | | Max edges (submit only). |
+| `--wandb-project` | | Weights & Biases project (poll only). |
+| `--api-min-interval` | | Min seconds between Edison calls (default: `2.0`). |
+| `--max-rate-limit-attempts` | | Retries on 429/5xx (default: `15`). |
+
+Set `EDISON_API_KEY` (e.g. in `.env` at the repo root).
+
+## paperqa-figures
+
+Bar plots from a polled run (`*_polled_edges.csv` with `seed_node_type`, `is_true_edge`, `rating`, `relation_type`; rows without a parseable rating are dropped).
+
+| Output | Description |
+| --- | --- |
+| `<stem>_barplot.pdf` | False vs true panels: rating vs count, stacked by seed node type. |
+| `<stem>_grouped_barplot.pdf` | Faceted by seed type; true edges by relation type; false edges gray. |
+| `<stem>_grouped_barplot.svg` | Same as grouped plot, SVG. |
+
+`<stem>` is the input basename (e.g. `20260328_195935_polled_edges`).
+
+```bash
+uv run cli evals paperqa-figures --input data/gold/evals/20260328_195935_polled_edges.csv
+uv run cli evals paperqa-figures --input data/gold/evals/20260328_195935_polled_edges.csv --out figures/
+```
+
+| Option | Short | Description |
+| --- | --- | --- |
+| `--input` | | Polled CSV from `paperqa --action poll` (required). |
+| `--out` | | Figure directory (default: parent of `--input`). |
+
+## Configuration
+
+`sample-edges` reads `conf/base/evals.yml`. Legacy keys `pagerank_upper` / `pagerank_lower` are still accepted.
+
+```yaml
+edge_eval:
+  nodes_path: data/gold/kg/parquet/nodes.parquet
+  edges_path: data/gold/kg/parquet/edges.parquet
+  out_dir: data/gold/evals
+  centrality_upper: 10     # Top 10% cutoff
+  centrality_lower: 90     # Top 90% cutoff
+  nodes_per_type: 100
+  true_neighbors: 10
+  false_neighbors: 1
+  seed: 42
+```
+
+CLI flags override the file.
+
+## Output schema
+
+### sampled_nodes.csv
+
+| Column | Type | Description |
+| --- | --- | --- |
+| `node_id` | str | Node id (e.g. ENSG00000141510). |
+| `node_type` | str | Node type (e.g. GEN, DIS, DRG). |
+| `node_name` | str | Display name (e.g. TP53). |
+| `centrality` | float | Score for the chosen metric. |
+| `rank_within_type` | int | Rank within type (1 = highest). |
+| `percentile` | float | Percentile within type (0 = top). |
+
+### sampled_edges.csv
+
+| Column | Type | Description |
+| --- | --- | --- |
+| `seed_node_id` | str | Seed node. |
+| `seed_node_type` | str | Seed type. |
+| `seed_node_name` | str | Seed name. |
+| `seed_centrality` | float | Seed centrality. |
+| `target_node_id` | str | Neighbor or non-neighbor. |
+| `target_node_type` | str | Target type. |
+| `target_node_name` | str | Target name. |
+| `is_true_edge` | bool | Whether the edge exists in the graph. |
+| `relation_type` | str | Relation label(s), pipe-separated if multiple. |
