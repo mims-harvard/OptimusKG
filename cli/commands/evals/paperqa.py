@@ -16,12 +16,11 @@ from datetime import datetime
 from pathlib import Path
 
 import polars as pl
+import wandb
 from dotenv import load_dotenv
 from edison_client import EdisonClient, JobNames
 from httpx import HTTPStatusError
 from tqdm import tqdm
-
-import wandb
 
 _PROJECT_ROOT = Path(__file__).resolve().parents[3]
 # W&B writes under <dir>/wandb/; use project data/ so runs land in data/wandb/, not repo-root wandb/.
