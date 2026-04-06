@@ -4,16 +4,17 @@ from pathlib import Path
 
 import typer
 
-from cli.commands import (
+from optimuskg.utils import calculate_checksum
+
+from .commands import (
     metrics_command,
     sync_catalog_command,
 )
-from cli.commands.evals import evals_app
-from cli.commands.figures import figure_app
-from cli.commands.unify_benchmark_files import (
+from .commands.evals import evals_app
+from .commands.figures import figure_app
+from .commands.unify_benchmark_files import (
     unify_benchmark_files_command,
 )
-from optimuskg.utils import calculate_checksum
 
 warnings.filterwarnings(
     "ignore",
