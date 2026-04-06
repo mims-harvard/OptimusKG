@@ -168,8 +168,6 @@ notebooks/**
 
 .opencode/plans
 
-# Weights & Biases
-wandb/
 # Fumadocs documentation site
 docs/node_modules/
 docs/.next/

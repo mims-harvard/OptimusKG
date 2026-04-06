@@ -24,6 +24,8 @@ from tqdm import tqdm
 import wandb
 
 _PROJECT_ROOT = Path(__file__).resolve().parents[3]
+# W&B writes under <dir>/wandb/; use project data/ so runs land in data/wandb/, not repo-root wandb/.
+_WANDB_DIR_PARENT = _PROJECT_ROOT / "data"
 load_dotenv(_PROJECT_ROOT / ".env")
 
 logger = logging.getLogger("cli")
@@ -275,7 +277,12 @@ def run(  # noqa: PLR0913
     if wandb_project and action == "poll":
         finished = results_df.filter(pl.col("status") == "success")
         if finished.height > 0:
-            wandb.init(project=wandb_project, job_type="paperqa_evaluation")
+            _WANDB_DIR_PARENT.mkdir(parents=True, exist_ok=True)
+            wandb.init(
+                project=wandb_project,
+                job_type="paperqa_evaluation",
+                dir=str(_WANDB_DIR_PARENT),
+            )
             wandb.log(
                 {
                     "evaluation_results_table": wandb.Table(
