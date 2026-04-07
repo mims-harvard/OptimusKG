@@ -6,6 +6,7 @@ const withMDX = createMDX();
 const config = {
   serverExternalPackages: ['@takumi-rs/image-response'],
   reactStrictMode: true,
+  allowedDevOrigins: ['192.168.0.171'],
 };
 
 export default withMDX(config);
