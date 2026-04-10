@@ -1,16 +1,29 @@
 import logging
+import warnings
 from pathlib import Path
 
 import typer
 
-from cli.commands import (
+from optimuskg.utils import calculate_checksum
+
+from .commands import (
     metrics_command,
     sync_catalog_command,
 )
-from cli.commands.figures import figure_app
-from optimuskg.utils import calculate_checksum
+from .commands.evals import evals_app
+from .commands.figures import figure_app
+from .commands.unify_benchmark_files import (
+    unify_benchmark_files_command,
+)
+
+warnings.filterwarnings(
+    "ignore",
+    message="Dataset name '.*' contains '.' characters.*",
+    category=UserWarning,
+)
 
 app = typer.Typer(help="Main entry point for the CLI.")
+app.add_typer(evals_app, name="evals")
 app.add_typer(figure_app, name="figure")
 
 logger = logging.getLogger("cli")
@@ -59,12 +72,12 @@ def checksum(  # noqa: PLR0913
 @app.command(help="Generate metrics parquet files from gold KG data.")
 def metrics(
     nodes_dir: Path = typer.Option(
-        "data/gold/formats/parquet/nodes",
+        "data/gold/kg/parquet/nodes",
         "--nodes",
         help="Directory containing gold node parquet files.",
     ),
     edges_dir: Path = typer.Option(
-        "data/gold/formats/parquet/edges",
+        "data/gold/kg/parquet/edges",
         "--edges",
         help="Directory containing gold edge parquet files.",
     ),
@@ -75,6 +88,17 @@ def metrics(
     ),
 ):
     metrics_command(nodes_dir, edges_dir, out_dir)
+
+
+@app.command(help="Unify benchmark files.")
+def unify_benchmark_files(
+    benchmarks_dir: Path = typer.Option(
+        "data/benchmarks/normalized_time",
+        "--benchmarks",
+        help="The path to read the benchmarks from.",
+    ),
+):
+    unify_benchmark_files_command(benchmarks_dir)
 
 
 @app.command(help="Synchronize or validate catalog schemas and checksums.")

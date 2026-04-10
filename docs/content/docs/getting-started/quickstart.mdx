@@ -21,7 +21,7 @@ This will:
 3. **Consolidate** entities and relationships in the `silver` layer
 4. **Export** the final knowledge graph in the `gold` layer
 
-The exported graph is saved to `data/gold/formats/`.
+The exported graph is saved to `data/gold/kg/`.
 
 <Callout type="info">
   Use `FixedParallelRunner` for concurrent node execution and the `--async` flag to reduce I/O time. The original `ParallelRunner` from Kedro has a bug that prevents validation checks.
