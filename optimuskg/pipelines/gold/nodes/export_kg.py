@@ -6,7 +6,6 @@ import polars as pl
 from kedro.pipeline import node
 
 from optimuskg.pipelines.gold.export_formats import (
-    csv_export,
     neo4j_export,
     parquet_export,
 )
@@ -14,7 +13,6 @@ from optimuskg.pipelines.gold.export_formats import (
 logger = logging.getLogger(__name__)
 
 _EXPORT_FORMATS_DICT = {
-    "csv": csv_export,
     "parquet": parquet_export,
     "neo4j": neo4j_export,
 }
@@ -60,19 +58,19 @@ def export_kg(  # noqa: PLR0913
     phenotype_phenotype: pl.DataFrame,
     anatomy_anatomy: pl.DataFrame,
     drug_phenotype: pl.DataFrame,
-) -> tuple[dict[str, pl.DataFrame], dict[str, pl.DataFrame]]:
+) -> dict[str, pl.DataFrame]:
     """Export knowledge graph to various formats.
 
     Args:
         export_formats: Dictionary of format name to config.
             Each config should have an "include_properties" boolean key.
-            Example: {"csv": {"include_properties": True}, "parquet": {"include_properties": False}}
+            Example: {"parquet": {"include_properties": True}}
         gene, anatomy, ...: Node DataFrames with schema (id, label, properties).
         anatomy_gene, ...: Edge DataFrames with schema (from, to, label, relation, undirected, properties).
 
     Returns:
-        Tuple of (csv_output, parquet_output) dictionaries.
-        Each dictionary contains keys like "nodes", "edges", "nodes/gene", "edges/disease_gene", etc.
+        Parquet output dictionary with keys like "nodes", "edges",
+        "nodes/gene", "edges/disease_gene", etc.
     """
     nodes_dict = {
         "gene": gene,
@@ -139,10 +137,7 @@ def export_kg(  # noqa: PLR0913
         f"Largest connected component: {len(lcc_ids)} of {G.number_of_nodes()} nodes"
     )
 
-    outputs: dict[str, dict[str, pl.DataFrame]] = {
-        "kg.csv": {},
-        "kg.parquet": {},
-    }
+    parquet_output: dict[str, pl.DataFrame] = {}
 
     for format_name, config in export_formats.items():
         export_func = _EXPORT_FORMATS_DICT.get(format_name)
@@ -155,7 +150,7 @@ def export_kg(  # noqa: PLR0913
             f"Exporting to {format_name} (include_properties={include_properties})..."
         )
 
-        if format_name in ["csv", "parquet"]:
+        if format_name == "parquet":
             fmt_output = export_func(nodes_dict, edges_dict, include_properties)
 
             fmt_output["largest_connected_component_nodes"] = fmt_output[
@@ -164,14 +159,11 @@ def export_kg(  # noqa: PLR0913
             fmt_output["largest_connected_component_edges"] = fmt_output[
                 "edges"
             ].filter(pl.col("from").is_in(lcc_ids) & pl.col("to").is_in(lcc_ids))
-            outputs[f"kg.{format_name}"] = fmt_output
+            parquet_output = fmt_output
         elif format_name == "neo4j":
             export_func(nodes_dict, edges_dict, include_properties)
 
-    return (
-        outputs["kg.csv"],
-        outputs["kg.parquet"],
-    )
+    return parquet_output
 
 
 export_kg_node = node(
@@ -217,7 +209,7 @@ export_kg_node = node(
         "anatomy_anatomy": "silver.edges.anatomy_anatomy",
         "drug_phenotype": "silver.edges.drug_phenotype",
     },
-    outputs=["kg.csv", "kg.parquet"],
+    outputs="kg.parquet",
     tags=["gold"],
     name="export_kg",
 )
