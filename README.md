@@ -44,7 +44,6 @@ OptimusKG is a biomedical Labeled Property Graph built using the Optimus pipelin
 
 | Format | Description |
 | ---- | --- |
-| **CSV** | Partitioned CSV files for each node and edge type, plus unified `nodes.csv` and `edges.csv` files. Useful for bulk-importing into a [Neo4j database](https://neo4j.com/docs/getting-started/data-import/). |
 | **Neo4j-JSONL** | A direct JSON lines export from a Neo4j instance of OptimusKG. Useful for interoperability with other tools in the Neo4j ecosystem. |
 | **Parquet** | Partitioned [Apache Parquet](https://parquet.apache.org/) files for each node and edge type, plus unified `nodes.parquet` and `edges.parquet` files. Recommended for data science and machine learning workflows with tools like [Apache Spark](https://spark.apache.org/) and [Polars](https://pola.rs/). |
 
@@ -110,7 +109,7 @@ to finally export the graph inside the `data/gold/kg/` folder.
 > The location of each dataset and their format is specified in the catalog.
 
 > [!TIP]
-> Export formats (CSV, Parquet, Neo4j) can be configured in `conf/base/parameters.yml` under `gold.export_formats`.
+> Export formats (Parquet, Neo4j) can be configured in `conf/base/parameters.yml` under `gold.export_formats`.
 
 Then, you can spin up a Neo4j database with the graph data simply by running:
 

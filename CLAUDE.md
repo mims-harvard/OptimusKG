@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-OptimusKG is a Kedro-based data pipeline for building biomedical knowledge graphs. It follows a medallion architecture (landing -> bronze -> silver -> gold) to transform raw biomedical data from sources like OpenTargets, DrugBank, BGEE, DisGeNET, CTD, and Reactome into a unified knowledge graph exported as CSV, Parquet, or Neo4j-JSONL.
+OptimusKG is a Kedro-based data pipeline for building biomedical knowledge graphs. It follows a medallion architecture (landing -> bronze -> silver -> gold) to transform raw biomedical data from sources like OpenTargets, DrugBank, BGEE, DisGeNET, CTD, and Reactome into a unified knowledge graph exported as Parquet or Neo4j-JSONL.
 
 ## Common Commands
 

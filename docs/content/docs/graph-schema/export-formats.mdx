@@ -5,12 +5,6 @@ description: Available export formats for the OptimusKG knowledge graph.
 
 OptimusKG exports the knowledge graph in multiple formats, each tailored for different use cases. Formats are configured in `conf/base/parameters.yml`.
 
-## CSV
-
-Partitioned CSV files for each node and edge type, plus unified `nodes.csv` and `edges.csv` files.
-
-**Use case**: Bulk importing into a [Neo4j database](https://neo4j.com/docs/getting-started/data-import/).
-
 ## Parquet
 
 Partitioned [Apache Parquet](https://parquet.apache.org/) files for each node and edge type, plus unified `nodes.parquet` and `edges.parquet` files.
@@ -33,8 +27,6 @@ A direct JSON lines export from a Neo4j instance of OptimusKG.
 # conf/base/parameters.yml
 gold:
   export_formats:
-    csv:
-      properties: true
     parquet:
       properties: true
     # neo4j:
