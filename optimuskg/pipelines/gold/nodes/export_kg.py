@@ -1,4 +1,5 @@
 import logging
+import tempfile
 from typing import Any
 
 import networkx as nx
@@ -9,6 +10,7 @@ from optimuskg.pipelines.gold.export_formats import (
     neo4j_export,
     parquet_export,
 )
+from optimuskg.pipelines.gold.utils.biocypher import run_biocypher
 
 logger = logging.getLogger(__name__)
 
@@ -113,6 +115,20 @@ def export_kg(  # noqa: PLR0913
         "anatomy_anatomy": anatomy_anatomy,
         "drug_phenotype": drug_phenotype,
     }
+
+    logger.info("Validating knowledge graph against BioCypher schema...")
+    with tempfile.TemporaryDirectory(prefix="biocypher-validate-") as tmp_dir:
+        try:
+            run_biocypher(
+                nodes_dict,
+                edges_dict,
+                include_properties=True,
+                output_directory=tmp_dir,
+            )
+        except Exception:
+            logger.exception("BioCypher schema validation failed")
+            raise
+    logger.info("BioCypher schema validation passed.")
 
     logger.info(
         f"Exporting knowledge graph to formats: {', '.join(export_formats.keys())}"
