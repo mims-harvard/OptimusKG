@@ -1,0 +1,20 @@
+# Evaluation dataset generation parameters
+
+edge_eval:
+  # Data paths (gold KG exports)
+  nodes_path: data/gold/kg/parquet/nodes.parquet
+  edges_path: data/gold/kg/parquet/edges.parquet
+  out_dir: data/gold/evals
+
+  # Centrality percentile range for node sampling
+  # Nodes between top X% and top Y% are eligible for sampling
+  centrality_upper: 10     # Upper bound (top 10%)
+  centrality_lower: 90     # Lower bound (top 90%)
+
+  # Sampling parameters
+  nodes_per_type: 100    # Nodes to sample per node type
+  true_neighbors: 10     # Max true neighbors to sample per node
+  false_neighbors: 1     # False neighbors to sample per node
+
+  # Reproducibility
+  seed: 42

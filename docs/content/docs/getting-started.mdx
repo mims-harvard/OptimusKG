@@ -1,0 +1,61 @@
+---
+title: Getting Started
+description: Download the OptimusKG dataset from Harvard Dataverse and start exploring the knowledge graph.
+---
+
+OptimusKG is a unified biomedical knowledge graph built from curated public sources. The pre-built dataset is distributed through the [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IXA7BM#) so that you can start using the graph without running the full pipeline yourself.
+
+## TL;DR
+
+Install the [Python client](/docs/python-client) and you're two lines away from the graph:
+
+<CodeBlockTabs defaultValue="uv">
+  <CodeBlockTabsList>
+    <CodeBlockTabsTrigger value="uv">uv</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="pip">pip</CodeBlockTabsTrigger>
+  </CodeBlockTabsList>
+  <CodeBlockTab value="uv">
+    ```bash
+    uv add optimuskg
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="pip">
+    ```bash
+    pip install optimuskg
+    ```
+  </CodeBlockTab>
+</CodeBlockTabs>
+
+```python
+import optimuskg
+
+# Polars DataFrames: (nodes, edges)
+nodes, edges = optimuskg.load_graph(lcc=True)
+
+# NetworkX MultiDiGraph with JSON properties parsed onto nodes and edges
+G = optimuskg.load_networkx(lcc=True)
+```
+
+The first call downloads from Dataverse and caches locally; subsequent calls reuse the cache. For the full API (single-file fetch, per-type tables, cache configuration), see the [Python Client](/docs/python-client) page.
+
+## Dataset Files
+
+The release contains the full graph and a connected-component subset, all stored as [Apache Parquet](https://parquet.apache.org/):
+
+| File | Rows | Description |
+| --- | --: | --- |
+| `nodes.parquet` | 190,531 | All entities with type, identifiers, and JSON properties |
+| `edges.parquet` | 21,813,816 | All relationships between entities |
+| `lcc_nodes.parquet` | 189,364 | Nodes restricted to the largest connected component |
+| `lcc_edges.parquet` | 21,812,730 | Edges restricted to the largest connected component |
+
+Each `nodes` file has columns `id`, `label`, `properties`. Each `edges` file has columns `from`, `to`, `label`, `relation`, `undirected`, `properties`. The `properties` column is a JSON string. See the [Node Types](/docs/graph-schema/node-types) and [Edge Types](/docs/graph-schema/edge-types) pages for the full schema.
+
+## What's Next?
+
+<Cards>
+  <Card title="Python Client" href="/docs/python-client" />
+  <Card title="Node Types" href="/docs/graph-schema/node-types" />
+  <Card title="Edge Types" href="/docs/graph-schema/edge-types" />
+  <Card title="Data Sources & Ontologies" href="/docs/data-sources" />
+</Cards>

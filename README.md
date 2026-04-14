@@ -44,7 +44,6 @@ OptimusKG is a biomedical Labeled Property Graph built using the Optimus pipelin
 
 | Format | Description |
 | ---- | --- |
-| **CSV** | Partitioned CSV files for each node and edge type, plus unified `nodes.csv` and `edges.csv` files. Useful for bulk-importing into a [Neo4j database](https://neo4j.com/docs/getting-started/data-import/). |
 | **Neo4j-JSONL** | A direct JSON lines export from a Neo4j instance of OptimusKG. Useful for interoperability with other tools in the Neo4j ecosystem. |
 | **Parquet** | Partitioned [Apache Parquet](https://parquet.apache.org/) files for each node and edge type, plus unified `nodes.parquet` and `edges.parquet` files. Recommended for data science and machine learning workflows with tools like [Apache Spark](https://spark.apache.org/) and [Polars](https://pola.rs/). |
 
@@ -99,7 +98,7 @@ $ uv run kedro run --to-nodes gold.export_kg --runner=optimuskg.runners.FixedPar
 ```
 
 This will automatically download all the necessary data, store it in the `landing` layer, and execute the `bronze`, `silver`, and `gold` layers
-to finally export the graph inside the `data/gold/formats/` folder.
+to finally export the graph inside the `data/gold/kg/` folder.
 
 > [!NOTE]
 > It is recommended to use the `optimuskg.runners.FixedParallelRunner`
@@ -110,7 +109,7 @@ to finally export the graph inside the `data/gold/formats/` folder.
 > The location of each dataset and their format is specified in the catalog.
 
 > [!TIP]
-> Export formats (CSV, Parquet, Neo4j) can be configured in `conf/base/parameters.yml` under `gold.export_formats`.
+> Export formats (Parquet, Neo4j) can be configured in `conf/base/parameters.yml` under `gold.export_formats`.
 
 Then, you can spin up a Neo4j database with the graph data simply by running:
 
@@ -198,4 +197,4 @@ $ uv run cli sync-catalog --dataset bronze.opentargets.disease
 
 ## License
 
-Optimus is released under the [MIT License](LICENSE).
+The OptimusKG codebase is released under the [MIT License](LICENSE). OptimusKG integrates multiple primary data resources, each of which is subject to its own license and terms of use. These terms may impose restrictions on redistribution, commercial use, or downstream applications of the resulting knowledge graph or its subsets. Some resources provide data under academic or noncommercial licenses, while others may impose attribution or usage requirements. As a result, use of OptimusKG may be partially restricted depending on the specific data components included in a given instantiation. Users are responsible for reviewing and complying with the license and terms of use of each primary dataset, as specified by the original data providers. OptimusKG does not alter or override these source-specific licensing conditions.

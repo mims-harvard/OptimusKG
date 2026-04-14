@@ -1,7 +1,7 @@
+gold.validate_biocypher: false
+
 gold.export_formats:
-  csv:
-    include_properties: true
   parquet:
     include_properties: true
-#  neo4j:
-#    include_properties: true
+  # neo4j:
+  #   include_properties: true
