@@ -1,0 +1,23 @@
+article {
+  letter-spacing: -0.011em;
+}
+
+article h1,
+article h2,
+article h3,
+article h4,
+article h5,
+article h6 {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+article h1 {
+  font-weight: 400;
+  letter-spacing: -0.025em;
+}
+
+article p,
+article li {
+  font-weight: 400;
+}
