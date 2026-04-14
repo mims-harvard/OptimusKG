@@ -1,0 +1,19 @@
+[data-landing] {
+  --l-bg: #f7f7f4;
+  --l-surface: #f2f1ed;
+  --l-ink: #26251e;
+  --l-ink-muted: rgba(38, 37, 30, 0.6);
+  --l-border: rgba(38, 37, 30, 0.1);
+  --l-border-subtle: rgba(38, 37, 30, 0.03);
+  --l-accent: #f54e00;
+}
+
+.dark [data-landing] {
+  --l-bg: #121212;
+  --l-surface: #1a1a17;
+  --l-ink: #ebebeb;
+  --l-ink-muted: rgba(235, 235, 235, 0.6);
+  --l-border: rgba(235, 235, 235, 0.08);
+  --l-border-subtle: rgba(235, 235, 235, 0.04);
+  --l-accent: #ff6a00;
+}
