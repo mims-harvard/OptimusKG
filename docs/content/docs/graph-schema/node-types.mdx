@@ -3,28 +3,61 @@ title: Node Types
 description: The 10 entity types in the OptimusKG knowledge graph.
 ---
 
-OptimusKG contains 10 node types representing biomedical entities. Each node type is consolidated from one or more [data sources](/docs/data-sources) in the silver layer.
+OptimusKG contains 10 node types representing biomedical entities. Each node type is defined by its provenance from direct data sources and its mapping to standardized ontologies or controlled vocabularies.
 
-## Entity Types
+## Distribution
 
-| Node Type | Description | Key Sources |
-| --- | --- | --- |
-| **Gene** | Human genes with HGNC symbols and Ensembl IDs | OpenTargets, HGNC, DisGeNET, PPI |
-| **Drug** | Pharmaceutical compounds | DrugBank, OpenTargets, DrugCentral |
-| **Disease** | Disease entities with ontology mappings | OpenTargets, MONDO, DisGeNET |
-| **Anatomy** | Anatomical structures | UBERON, Bgee |
-| **Pathway** | Biological pathways | Reactome |
-| **Phenotype** | Phenotypic features | HPO, OpenTargets |
-| **Exposure** | Environmental exposures and chemicals | CTD |
-| **Biological Process** | GO biological process terms | Gene Ontology |
-| **Cellular Component** | GO cellular component terms | Gene Ontology |
-| **Molecular Function** | GO molecular function terms | Gene Ontology |
+| Node type | Label | Count | Direct sources | Ontologies |
+| --- | :-: | --: | --- | --- |
+| Gene | GEN | 61,306 | Open Targets, Bgee, DisGeNET | Ensembl |
+| Disease | DIS | 36,345 | Open Targets, DrugCentral, Mondo | EFO, MONDO, OBA, Orphanet, OTAR, DOID, HP, OBI, NCIT, PATO, MP, OGMS |
+| Biological Process | BPO | 25,754 | GO | GO |
+| Phenotype | PHE | 19,341 | Open Targets, HPO, MedDRA | HP, MedDRA |
+| Drug | DRG | 16,766 | Open Targets, DrugBank, DrugCentral, OnSIDES | ChEMBL, DrugBank, RxNorm |
+| Anatomy | ANA | 14,624 | Uberon | UBERON |
+| Molecular Function | MFN | 10,161 | GO | GO |
+| Cellular Component | CCO | 4,052 | GO | GO |
+| Pathway | PWY | 2,805 | Reactome, Open Targets | Reactome (REACT) |
+| Exposure | EXP | 881 | CTD | MeSH |
 
-## Silver Processing
+## Entity Descriptions
 
-Each node type has a dedicated processing module in `optimuskg/pipelines/silver/nodes/nodes/` that:
+### Gene (GEN)
 
-1. Collects relevant data from all bronze sources
-2. Reconciles identifiers across sources
-3. Merges properties into a unified entity record
-4. Validates uniqueness and completeness
+Human genes identified by Ensembl gene IDs (e.g. `ENSG00000141510`). Consolidated from Open Targets, Bgee, and DisGeNET, with HGNC symbols as display names.
+
+### Disease (DIS)
+
+Disease entities harmonized across multiple ontologies including EFO, MONDO, Orphanet, DOID, HP, NCIT, and others. Sourced from Open Targets, DrugCentral, and Mondo.
+
+### Biological Process (BPO)
+
+Gene Ontology biological process terms describing ordered assemblies of molecular functions that achieve a biological objective.
+
+### Phenotype (PHE)
+
+Phenotypic abnormalities and observable traits, drawn from the Human Phenotype Ontology, MedDRA, and Open Targets.
+
+### Drug (DRG)
+
+Pharmaceutical compounds and therapeutic agents identified via ChEMBL, DrugBank, and RxNorm. Sourced from Open Targets, DrugBank, DrugCentral, and OnSIDES.
+
+### Anatomy (ANA)
+
+Anatomical structures from the UBERON cross-species ontology, covering tissues, organs, and other anatomical entities.
+
+### Molecular Function (MFN)
+
+Gene Ontology molecular function terms describing elemental activities of gene products at the molecular level.
+
+### Cellular Component (CCO)
+
+Gene Ontology cellular component terms describing locations relative to cellular structures where gene products perform their functions.
+
+### Pathway (PWY)
+
+Biological pathways from Reactome and Open Targets, capturing curated signaling, metabolic, and regulatory pathway descriptions.
+
+### Exposure (EXP)
+
+Environmental exposures and chemicals sourced from the Comparative Toxicogenomics Database (CTD), mapped to MeSH terms.

@@ -197,4 +197,4 @@ $ uv run cli sync-catalog --dataset bronze.opentargets.disease
 
 ## License
 
-Optimus is released under the [MIT License](LICENSE).
+The OptimusKG codebase is licensed under the [MIT License](LICENSE). Use of individual primary datasets incorporated into OptimusKG may be subject to additional terms, restrictions, or limitations imposed by the original data providers, including restrictions on redistribution, commercial use, or downstream applications. Users should consult the license and usage terms of each primary dataset and ensure compliance with all applicable restrictions.
