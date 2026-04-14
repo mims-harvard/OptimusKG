@@ -1,4 +1,5 @@
 import logging
+import tempfile
 from typing import Any
 
 import networkx as nx
@@ -9,6 +10,7 @@ from optimuskg.pipelines.gold.export_formats import (
     neo4j_export,
     parquet_export,
 )
+from optimuskg.pipelines.gold.utils.biocypher import run_biocypher
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +22,7 @@ _EXPORT_FORMATS_DICT = {
 
 def export_kg(  # noqa: PLR0913
     export_formats: dict[str, dict[str, Any]],
+    validate_biocypher: bool,
     # Nodes
     gene: pl.DataFrame,
     anatomy: pl.DataFrame,
@@ -65,6 +68,10 @@ def export_kg(  # noqa: PLR0913
         export_formats: Dictionary of format name to config.
             Each config should have an "include_properties" boolean key.
             Example: {"parquet": {"include_properties": True}}
+        validate_biocypher: If True, run a BioCypher validation pass
+            (writes to a temp directory, output discarded) before exporting.
+            This catches schema/ontology mismatches even when no BioCypher-backed
+            format is enabled, at the cost of a full additional write.
         gene, anatomy, ...: Node DataFrames with schema (id, label, properties).
         anatomy_gene, ...: Edge DataFrames with schema (from, to, label, relation, undirected, properties).
 
@@ -113,6 +120,26 @@ def export_kg(  # noqa: PLR0913
         "anatomy_anatomy": anatomy_anatomy,
         "drug_phenotype": drug_phenotype,
     }
+
+    if validate_biocypher:
+        logger.info("Validating knowledge graph against BioCypher schema...")
+        with tempfile.TemporaryDirectory(prefix="biocypher-validate-") as tmp_dir:
+            try:
+                run_biocypher(
+                    nodes_dict,
+                    edges_dict,
+                    include_properties=True,
+                    output_directory=tmp_dir,
+                )
+            except Exception:
+                logger.exception("BioCypher schema validation failed")
+                raise
+        logger.info("BioCypher schema validation passed.")
+    else:
+        logger.info(
+            "Skipping BioCypher schema validation "
+            "(set gold.validate_biocypher=true to enable)."
+        )
 
     logger.info(
         f"Exporting knowledge graph to formats: {', '.join(export_formats.keys())}"
@@ -170,6 +197,7 @@ export_kg_node = node(
     export_kg,
     inputs={
         "export_formats": "params:export_formats",
+        "validate_biocypher": "params:validate_biocypher",
         # Nodes
         "gene": "silver.nodes.gene",
         "anatomy": "silver.nodes.anatomy",

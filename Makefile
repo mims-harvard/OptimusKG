@@ -85,21 +85,6 @@ docker-datasets-up: ##@ Spin up docker for the datasets
 docker-datasets-down: ##@ Stop docker for the datasets
 	@docker compose -f optimuskg/datasets/sqldump_query_dataset/docker-compose.yaml down
 
-.PHONY: neo4j-export
-neo4j-export: ##@ Export Neo4j database to JSONL format. Set CYPHER_QUERY env var for specific query, otherwise exports all. Example: CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export
-	@mkdir -p data/export
-	@if [ -z "$$CYPHER_QUERY" ]; then \
-		echo "Exporting entire database..."; \
-		file="optimuskg.jsonl"; \
-		call="apoc.export.json.all('/var/lib/neo4j/export/$$file', {jsonFormat: 'JSON_LINES', useTypes: true})"; \
-	else \
-		echo "Exporting query results..."; \
-		file="$$(echo "$$CYPHER_QUERY" | tr ' ' '_' | tr -cd '[:alnum:]_' | cut -c1-30).jsonl"; \
-		call="apoc.export.json.query(\"$$CYPHER_QUERY\", '/var/lib/neo4j/export/$$file', {jsonFormat: 'JSON_LINES', useTypes: true})"; \
-	fi; \
-	docker compose exec neo4j cypher-shell --non-interactive "CALL $$call" && \
-		echo "Exported to data/export/$$file" || echo "Export failed"
-
 .PHONY: jupyterlab
 jupyterlab: ##@ Run jupyterlab
 	@uv run kedro jupyter lab

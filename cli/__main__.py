@@ -12,9 +12,6 @@ from .commands import (
 )
 from .commands.evals import evals_app
 from .commands.figures import figure_app
-from .commands.unify_benchmark_files import (
-    unify_benchmark_files_command,
-)
 
 warnings.filterwarnings(
     "ignore",
@@ -88,17 +85,6 @@ def metrics(
     ),
 ):
     metrics_command(nodes_dir, edges_dir, out_dir)
-
-
-@app.command(help="Unify benchmark files.")
-def unify_benchmark_files(
-    benchmarks_dir: Path = typer.Option(
-        "data/benchmarks/normalized_time",
-        "--benchmarks",
-        help="The path to read the benchmarks from.",
-    ),
-):
-    unify_benchmark_files_command(benchmarks_dir)
 
 
 @app.command(help="Synchronize or validate catalog schemas and checksums.")
