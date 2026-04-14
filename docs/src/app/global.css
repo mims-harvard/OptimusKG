@@ -2,20 +2,8 @@
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 
-@theme {
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-
-  --color-cream: #f7f7f4;
-  --color-card: #f2f1ed;
-  --color-ink: #26251e;
-  --color-orange: #f54e00;
-  --color-copper: #c08532;
-  --color-border: rgba(38, 37, 30, 0.1);
-}
-
 html {
   scrollbar-gutter: stable;
-  scroll-behavior: smooth;
 }
 
 html > body[data-scroll-locked] {

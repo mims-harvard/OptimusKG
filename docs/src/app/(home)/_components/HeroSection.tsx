@@ -285,7 +285,7 @@ function CodePanel() {
 function DemoWindow() {
   return (
     <div
-      className="absolute left-[2rem] top-[2rem] md:top-[4.375rem] lg:left-[8.125rem] lg:top-[2rem] 2xl:hidden flex flex-col overflow-hidden rounded-[0.625rem] bg-[#f2f1ed]"
+      className="absolute left-[2rem] top-[2rem] md:top-[4.375rem] lg:left-[8.125rem] lg:top-[2rem] 2xl:hidden flex flex-col overflow-hidden rounded-[0.625rem] bg-[var(--l-surface)]"
       style={{
         width: "65rem",
         height: "38.5rem",
@@ -321,32 +321,25 @@ function DemoWindow() {
   );
 }
 
-// ─── Main export ──────────────────────────────────────────────────────────────
-
 const MEDIA_BG =
   "linear-gradient(rgba(38,37,30,0.05),rgba(38,37,30,0.05)), linear-gradient(#f2f1ed,#f2f1ed)";
 
 export function HeroSection() {
   return (
-    <section
-      className="bg-[#f7f7f4] pt-[6.498rem] pb-[3.9375rem] lg:pt-[6.953rem] lg:pb-[4.199rem]"
-    >
-      <div className="max-w-[81.25rem] mx-auto px-[1.172rem] lg:px-[1.25rem]">
+    <section className="bg-[var(--l-bg)] pt-[6.498rem] pb-[3.9375rem] lg:pt-[6.953rem] lg:pb-[4.199rem]">
+      <div className="mx-auto max-w-[81.25rem] px-[1.172rem] lg:px-[1.25rem]">
         <div className="flex flex-col gap-[3.281rem] lg:gap-[3.5rem]">
-
-          {/* ── Text + CTA ── */}
           <div className="flex flex-col gap-[1.3125rem] lg:gap-[1.399rem]">
             <h1
-              className="text-[#26251e] font-normal lg:text-[1.55rem] lg:leading-[2.031rem] lg:tracking-[-0.020rem]"
+              className="font-normal text-[var(--l-ink)] lg:text-[1.55rem] lg:leading-[2.031rem] lg:tracking-[-0.020rem]"
               style={{ fontSize: "1.456rem", lineHeight: "1.904rem", letterSpacing: "-0.019rem" }}
             >
               <span className="block">Unifying biomedical knowledge</span>
               <span className="block">in a modern multimodal graph</span>
             </h1>
 
-            {/* Desktop/tablet CTA */}
             <DownloadButton
-              className="hidden md:inline-flex self-start items-center bg-[#26251e] text-[#f7f7f4] font-normal rounded-full"
+              className="self-start rounded-full bg-[var(--l-ink)] font-normal text-[var(--l-bg)]"
               style={{
                 fontSize: "0.894rem",
                 lineHeight: "1rem",
@@ -354,39 +347,21 @@ export function HeroSection() {
                 paddingInline: "1.4125rem",
               }}
             />
-
-            {/* Mobile-only CTA */}
-            <DownloadButton
-              className="md:hidden inline-flex self-start items-center bg-[#26251e] text-[#f7f7f4] font-normal rounded-full"
-              style={{
-                fontSize: "0.894rem",
-                lineHeight: "0.9375rem",
-                paddingBlock: "0.915rem",
-                paddingInline: "1.422rem",
-              }}
-            />
           </div>
 
-          {/* ── Media ── */}
           <div
-            className="relative h-[42.5rem] md:h-[48.75rem] lg:h-[42.5rem] 2xl:h-[48.75rem] overflow-hidden rounded-[0.25rem]"
+            className="relative h-[42.5rem] overflow-hidden rounded-[0.25rem] md:h-[48.75rem] lg:h-[42.5rem] 2xl:h-[48.75rem]"
             style={{ backgroundImage: MEDIA_BG }}
           >
-            {/* Landscape background */}
             <img
               src="/hero-bg.webp"
               alt=""
-              className="absolute left-0 right-0 w-full object-cover pointer-events-none"
+              className="pointer-events-none absolute left-0 right-0 w-full object-cover"
               style={{ height: "111.11%", top: "-5.56%" }}
             />
-
-            {/* Demo window */}
             <DemoWindow />
-
-            {/* Border overlay */}
-            <div className="absolute inset-0 rounded-[0.25rem] border border-[rgba(38,37,30,0.03)] pointer-events-none" />
+            <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
           </div>
-
         </div>
       </div>
     </section>

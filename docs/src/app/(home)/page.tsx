@@ -1,9 +1,9 @@
-import { Navbar } from "@/components/landing/Navbar";
-import { HeroSection } from "@/components/landing/HeroSection";
-import { LogoGarden } from "@/components/landing/LogoGarden";
-import { FeaturesSection } from "@/components/landing/FeaturesSection";
-import { FrontierSection } from "@/components/landing/FrontierSection";
-import { Footer } from "@/components/landing/Footer";
+import { Navbar } from "./_components/Navbar";
+import { HeroSection } from "./_components/HeroSection";
+import { LogoGarden } from "./_components/LogoGarden";
+import { FeaturesSection } from "./_components/FeaturesSection";
+import { FrontierSection } from "./_components/FrontierSection";
+import { Footer } from "./_components/Footer";
 
 export default function HomePage() {
   return (
