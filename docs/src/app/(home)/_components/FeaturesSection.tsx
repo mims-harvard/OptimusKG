@@ -27,12 +27,12 @@ function Feature1Media() {
   return (
     <div className="absolute inset-0 bg-[#d9d5cf] overflow-hidden">
       <img
-        src="/figure.webp"
+        src="/features/figure.webp"
         alt="figure"
         className="hidden lg:block absolute inset-0 w-full h-full object-contain p-[2rem]"
       />
       <img
-        src="/figure.webp"
+        src="/features/figure.webp"
         alt="figure"
         className="lg:hidden absolute top-[2rem] left-[2rem] h-[calc(100%-4rem)] w-auto max-w-none"
       />
@@ -44,12 +44,12 @@ function Feature2Media() {
   return (
     <div className="absolute inset-0 bg-[#b6b9be] overflow-hidden">
       <img
-        src="/data-pipeline.webp"
+        src="/features/data-pipeline.webp"
         alt="Data pipeline"
         className="hidden lg:block absolute inset-0 w-full h-full object-contain p-[2rem]"
       />
       <img
-        src="/data-pipeline.webp"
+        src="/features/data-pipeline.webp"
         alt="Data pipeline"
         className="lg:hidden absolute top-[2rem] left-[2rem] h-[calc(100%-4rem)] w-auto max-w-none"
       />
@@ -71,7 +71,7 @@ function Feature3Media() {
       >
         <WinChrome title="Molecular Function" bg="white" />
         <div className="flex-1 min-h-0 flex items-center justify-center p-[1.25rem]">
-          <img src="/molecular-function.webp" alt="Molecular Function" className="w-full h-full object-contain" />
+          <img src="/features/molecular-function.webp" alt="Molecular Function" className="w-full h-full object-contain" />
         </div>
       </div>
 
@@ -81,7 +81,7 @@ function Feature3Media() {
       >
         <WinChrome title="Phenotype" bg="white" />
         <div className="flex-1 min-h-0 flex items-center justify-center p-[1.25rem]">
-          <img src="/phenotype.webp" alt="Phenotype" className="w-full h-full object-contain" />
+          <img src="/features/phenotype.webp" alt="Phenotype" className="w-full h-full object-contain" />
         </div>
       </div>
 
@@ -91,7 +91,7 @@ function Feature3Media() {
       >
         <WinChrome title="Phenotype" bg="white" />
         <div className="flex-1 min-h-0 flex items-center justify-center p-[1.25rem]">
-          <img src="/phenotype.webp" alt="Phenotype" className="w-full h-full object-contain" />
+          <img src="/features/phenotype.webp" alt="Phenotype" className="w-full h-full object-contain" />
         </div>
       </div>
 

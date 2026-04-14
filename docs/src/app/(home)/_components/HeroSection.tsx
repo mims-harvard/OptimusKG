@@ -354,7 +354,7 @@ export function HeroSection() {
             style={{ backgroundImage: MEDIA_BG }}
           >
             <img
-              src="/hero-bg.webp"
+              src="/hero/bg.webp"
               alt=""
               className="pointer-events-none absolute left-0 right-0 w-full object-cover"
               style={{ height: "111.11%", top: "-5.56%" }}
