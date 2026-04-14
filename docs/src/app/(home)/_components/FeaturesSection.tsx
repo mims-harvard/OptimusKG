@@ -25,17 +25,32 @@ function WinChrome({ title, bg = "#f2f1ed" }: { title?: string; bg?: string }) {
 
 function Feature1Media() {
   return (
-    <div className="absolute inset-0 bg-[#d9d5cf] overflow-hidden">
+    <div className="absolute inset-0 overflow-hidden rounded-[0.25rem]">
       <img
-        src="/features/figure.webp"
-        alt="figure"
-        className="hidden lg:block absolute inset-0 w-full h-full object-contain p-[2rem]"
+        src="/hero/bg.webp"
+        alt=""
+        className="absolute inset-0 h-full w-full scale-[1.1] object-cover"
       />
+      <div
+        className="absolute inset-0"
+        style={{ background: "linear-gradient(90deg,rgba(0,0,0,0.12) 0%,rgba(0,0,0,0.22) 100%)" }}
+      />
+
       <img
-        src="/features/figure.webp"
-        alt="figure"
-        className="lg:hidden absolute top-[2rem] left-[2rem] h-[calc(100%-4rem)] w-auto max-w-none"
+        src="/features/code-library.svg"
+        alt="Code library"
+        className="hidden lg:block absolute object-contain drop-shadow-[0_28px_70px_rgba(0,0,0,0.14)] drop-shadow-[0_14px_32px_rgba(0,0,0,0.1)]"
+        style={{ left: "4rem", top: "2.8125rem", width: "52rem", height: "36.875rem" }}
       />
+
+      <img
+        src="/features/code-library.svg"
+        alt="Code library"
+        className="lg:hidden absolute object-contain drop-shadow-[0_28px_70px_rgba(0,0,0,0.14)] drop-shadow-[0_14px_32px_rgba(0,0,0,0.1)]"
+        style={{ left: "1.5rem", top: "2rem", width: "51rem", height: "38.5rem" }}
+      />
+
+      <div className="absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
     </div>
   );
 }
@@ -218,16 +233,6 @@ const FEATURES: Feature[] = [
     mediaH: "42.5rem",
   },
   {
-    title: "Works autonomously, runs in parallel",
-    description: "Agents use their own computers to build, test, and demo features end to end for you to review.",
-    ctaText: "Learn about cloud agents →",
-    ctaHref: "https://cursor.com/docs/cloud-agent",
-    Media: Feature2Media,
-    imageSide: "left",
-    cardH: "44.6875rem",
-    mediaH: "42.5rem",
-  },
-  {
     title: "In every tool, at every step",
     description: "Cursor reviews your PRs in GitHub, collaborates in Slack, and runs in your terminal.",
     ctaText: "Learn about Cursor's surfaces →",
@@ -236,6 +241,16 @@ const FEATURES: Feature[] = [
     imageSide: "right",
     cardH: "42.8125rem",
     mediaH: "40.625rem",
+  },
+  {
+    title: "Works autonomously, runs in parallel",
+    description: "Agents use their own computers to build, test, and demo features end to end for you to review.",
+    ctaText: "Learn about cloud agents →",
+    ctaHref: "https://cursor.com/docs/cloud-agent",
+    Media: Feature2Media,
+    imageSide: "left",
+    cardH: "44.6875rem",
+    mediaH: "42.5rem",
   },
   {
     title: "Magically accurate autocomplete",
