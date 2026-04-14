@@ -1,0 +1,35 @@
+---
+title: Data Sources & Ontologies
+description: External biomedical resources and ontologies integrated into OptimusKG.
+---
+
+OptimusKG integrates data from external biomedical sources and ontologies. Direct sources are ingested into the pipeline, while indirect sources are incorporated through provenance within the corresponding direct resources. Each source is annotated with its enum value (in parentheses).
+
+## Data Sources
+
+| Direct source | Indirect sources | Version |
+| --- | --- | :-: |
+| Open Targets (OPEN_TARGETS) | ATC (ATC), BNF (BNF), ClinicalTrials (CLINICAL_TRIALS), DailyMed (DAILYMED), DOI (DOI), EMA (EMA), Expert (EXPERT), FDA (FDA), HMA (HMA), INN (INN), InterPro (INTERPRO), ISBN (ISBN), IUPHAR (IUPHAR), KEGG (KEGG), Patent (PATENT), PMC (PMC), PMDA (PMDA), PubChem (PUBCHEM), PubMed (PUBMED), USAN (USAN), Wikipedia (WIKIPEDIA) | 25.06 |
+| DrugBank (DRUGBANK) | | 5.1.13 |
+| DrugCentral (DRUG_CENTRAL) | | v2023-11-01 |
+| DisGeNET (DISGENET) | CGI (CGI), ClinGen (CLINGEN), Genomics England (GENOMICS_ENGLAND), Orphanet (ORPHANET), PsyGeNET (PSYGENET), UniProt (UNIPROT) | |
+| Bgee (BGEE) | | current |
+| CTD (CTD) | | current |
+| OnSIDES (ONSIDES) | MedDRA (MEDDRA), RxNorm (RXNORM) | v3.1.0 |
+| Reactome (REACTOME) | | current |
+| HGNC (HGNC) | | current |
+| PPI (PPI) | APID (APID), BioGRID (BIOGRID), BioPlex (BIOPLEX), CoFrac (COFRAC), ENCODE (ENCODE), HI-Union (HI_UNION), HINT (HINT), HIPPIE (HIPPIE), InnateDB (INNATEDB), InSIDER (INSIDER), InSTRUCT (INSTRUCT), IntAct (INTACT), Interactome3D (INTERACTOME3D), InWeb (INWEB), KinomeNetX (KINOMENETX), LitBM17 (LITBM17), MINT (MINT), PhosphoSP (PHOSPHOSP), PINA (PINA), QuBIC (QUBIC), SignaLink (SIGNALINK) | current |
+
+## Ontologies
+
+Ontologies provide controlled vocabularies, hierarchical organization, and cross-references across biomedical entities.
+
+| Source | Description | Version |
+| --- | --- | :-: |
+| Gene Ontology (GO+) | Functional annotation ontology for biological processes, cellular components, and molecular functions | current |
+| Mondo | Unified disease ontology integrating multiple disease classification systems | current |
+| Human Phenotype Ontology | Standardized vocabulary for describing human phenotypic abnormalities | v2025-05-06 |
+| Uberon | Cross-species anatomy ontology for tissues and organs | v2025-05-28 |
+| Disease Ontology | Structured disease classification used for alignment and mapping across resources | BioOntology v656 |
+| Orphanet | Rare disease ontology with clinical and epidemiological annotations | BioOntology v30 |
+| Biolink Model | High-level schema defining entity types and relationships in biomedical knowledge graphs | v3.2.1 |
