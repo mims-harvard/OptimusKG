@@ -3,7 +3,40 @@ title: Getting Started
 description: Download the OptimusKG dataset from Harvard Dataverse and start exploring the knowledge graph.
 ---
 
-OptimusKG is a unified biomedical knowledge graph built from curated public sources. The pre-built dataset is distributed through the Harvard Dataverse so that you can start using the graph without running the full pipeline yourself.
+OptimusKG is a unified biomedical knowledge graph built from curated public sources. The pre-built dataset is distributed through the [Harvard Dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IXA7BM#) so that you can start using the graph without running the full pipeline yourself.
+
+## TL;DR
+
+Install the [Python client](/docs/python-client) and you're two lines away from the graph:
+
+<CodeBlockTabs defaultValue="uv">
+  <CodeBlockTabsList>
+    <CodeBlockTabsTrigger value="uv">uv</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="pip">pip</CodeBlockTabsTrigger>
+  </CodeBlockTabsList>
+  <CodeBlockTab value="uv">
+    ```bash
+    uv add optimuskg
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="pip">
+    ```bash
+    pip install optimuskg
+    ```
+  </CodeBlockTab>
+</CodeBlockTabs>
+
+```python
+import optimuskg
+
+# Polars DataFrames: (nodes, edges)
+nodes, edges = optimuskg.load_graph(lcc=True)
+
+# NetworkX MultiDiGraph with JSON properties parsed onto nodes and edges
+G = optimuskg.load_networkx(lcc=True)
+```
+
+The first call downloads from Dataverse and caches locally; subsequent calls reuse the cache. For the full API (single-file fetch, per-type tables, cache configuration), see the [Python Client](/docs/python-client) page.
 
 ## Dataset Files
 
@@ -18,91 +51,10 @@ The release contains the full graph and a connected-component subset, all stored
 
 Each `nodes` file has columns `id`, `label`, `properties`. Each `edges` file has columns `from`, `to`, `label`, `relation`, `undirected`, `properties`. The `properties` column is a JSON string. See the [Node Types](/docs/graph-schema/node-types) and [Edge Types](/docs/graph-schema/edge-types) pages for the full schema.
 
-## Browse on Harvard Dataverse
-
-<Cards>
-  <Card
-    title="OptimusKG on Harvard Dataverse"
-    href="https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IXA7BM#"
-  />
-</Cards>
-
-## Programmatic Download
-
-The Dataverse [Data Access API](https://guides.dataverse.org/en/latest/api/dataaccess.html#basic-file-access) serves each file by numeric ID at:
-
-```
-https://dataverse.harvard.edu/api/access/datafile/{fileId}
-```
-
-Public files do not require an API token. Parquet files download as-is — no `format=original` is needed.
-
-### Find the file IDs
-
-List the files in the dataset and pick the IDs you need:
-
-```bash
-curl -s "https://dataverse.harvard.edu/api/datasets/:persistentId/?persistentId=doi:10.7910/DVN/IXA7BM" \
-  | jq '.data.latestVersion.files[] | {label: .dataFile.filename, id: .dataFile.id}'
-```
-
-### Download with curl
-
-```bash
-DOI="doi:10.7910/DVN/IXA7BM"
-BASE="https://dataverse.harvard.edu/api/access/datafile"
-
-# Replace these with the IDs from the listing above
-NODES_ID=0000000
-EDGES_ID=0000000
-
-curl -L -o nodes.parquet "${BASE}/${NODES_ID}"
-curl -L -o edges.parquet "${BASE}/${EDGES_ID}"
-```
-
-For the largest-connected-component variants, substitute the `lcc_nodes.parquet` and `lcc_edges.parquet` IDs.
-
-### Download with Python
-
-```python
-import requests
-
-DOI = "doi:10.7910/DVN/IXA7BM"
-BASE = "https://dataverse.harvard.edu/api"
-
-# Look up file IDs by filename
-meta = requests.get(f"{BASE}/datasets/:persistentId/", params={"persistentId": DOI}).json()
-files = {f["dataFile"]["filename"]: f["dataFile"]["id"] for f in meta["data"]["latestVersion"]["files"]}
-
-# Pick which graph variant to download
-WANTED = ["nodes.parquet", "edges.parquet"]                # full graph
-# WANTED = ["lcc_nodes.parquet", "lcc_edges.parquet"]      # largest connected component
-
-for name in WANTED:
-    r = requests.get(f"{BASE}/access/datafile/{files[name]}", stream=True)
-    r.raise_for_status()
-    with open(name, "wb") as f:
-        for chunk in r.iter_content(chunk_size=1 << 20):
-            f.write(chunk)
-```
-
-## Quick Look
-
-Once downloaded, you can load the graph in Python with [Polars](https://pola.rs/):
-
-```python
-import polars as pl
-
-nodes = pl.read_parquet("nodes.parquet")
-edges = pl.read_parquet("edges.parquet")
-
-print(nodes.head())
-print(edges.head())
-```
-
 ## What's Next?
 
 <Cards>
+  <Card title="Python Client" href="/docs/python-client" />
   <Card title="Node Types" href="/docs/graph-schema/node-types" />
   <Card title="Edge Types" href="/docs/graph-schema/edge-types" />
   <Card title="Data Sources & Ontologies" href="/docs/data-sources" />

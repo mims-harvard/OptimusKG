@@ -3,7 +3,8 @@
   "pages": [
     "---Getting Started---",
     "getting-started",
-    "---Architecture---",
+    "python-client",
+    "---Knowledge Graph---",
     "graph-schema",
     "data-sources",
     "license"
