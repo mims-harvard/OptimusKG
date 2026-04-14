@@ -6,6 +6,7 @@ from pathlib import Path
 
 import polars as pl
 import pytest
+
 from optimuskg import _config, _dataverse
 
 

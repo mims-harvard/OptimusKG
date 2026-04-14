@@ -6,9 +6,10 @@ from pathlib import Path
 from typing import Any
 from unittest.mock import MagicMock
 
-import optimuskg
 import polars as pl
 import pytest
+
+import optimuskg
 
 
 @pytest.fixture

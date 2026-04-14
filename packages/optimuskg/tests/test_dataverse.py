@@ -8,6 +8,7 @@ from unittest.mock import MagicMock
 
 import polars as pl
 import pytest
+
 from optimuskg import _config, _dataverse
 
 
