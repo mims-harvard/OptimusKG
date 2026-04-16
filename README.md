@@ -1,4 +1,15 @@
+<p align="center">
+  <img src="docs/public/full-logo.jpg" alt="OptimusKG" width="500">
+</p>
+
 # OptimusKG
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![CI](https://github.com/mims-harvard/OptimusKG/actions/workflows/ci.yml/badge.svg)](https://github.com/mims-harvard/OptimusKG/actions/workflows/ci.yml)
+[![DOI](https://img.shields.io/badge/DOI-10.7910%2FDVN%2FIYNGEV-blue)](https://doi.org/10.7910/DVN/IYNGEV)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+[![Docs](https://img.shields.io/badge/docs-optimuskg.ai-blue)](https://optimuskg.ai)
 
 --------------------------------------------------------------------------------
 
@@ -6,15 +17,37 @@
 
 **Source Code**: [https://github.com/mims-harvard/optimuskg](https://github.com/mims-harvard/optimuskg)
 
+**Data**: [https://doi.org/10.7910/DVN/IYNGEV](https://doi.org/10.7910/DVN/IYNGEV)
+
 --------------------------------------------------------------------------------
 
 Optimus is an opinionated, production-ready data pipeline designed to construct, validate, and maintain biomedical knowledge graphs following software engineering best practices.
+
+OptimusKG is a multimodal biomedical **labeled property graph (LPG)** built from structured and semi-structured resources to preserve factual, type-specific metadata across molecular, anatomical, clinical, and environmental domains. It contains **190,531 nodes** across 10 entity types, **21,813,816 edges** across 26 relation types, and 67,249,863 property instances encoding 110,276,843 values across 150 distinct property keys — derived from 65 high-quality heterogeneous datasets and 18 ontologies and controlled vocabularies. The graph follows the [FAIR principles](https://www.go-fair.org/fair-principles/) and uses the [Biolink Model](https://biolink.github.io/biolink-model/) as its upper ontology to ensure interoperability across biomedical databases. OptimusKG is distributed as [Apache Parquet](https://parquet.apache.org/) files and is designed to serve as a foundation for graph AI, retrieval with large language models, and biomedical discovery.
 
 Optimus is grounded in three foundational principles:
 
 - **Ready-to-use**: Optimus comes with a set of pre-built processing nodes that unify many biomedical data sources into a single knowledge graph named OptimusKG.
 - **Reproducible**: All data transformations are deterministic, validated through checksum checks, and infra-agnostic.
 - **Extensible**: Optimus is a superset of the [Kedro framework](https://kedro.org/) (hosted by the [Linux Foundation](https://lfaidata.foundation/)), providing a uniform project template, dataset abstraction, configuration management, and pipeline assembly.
+
+## Graph at a Glance
+
+| Metric | Value |
+| --- | --- |
+| Nodes | 190,531 |
+| Node types | 10 (GEN, DRG, DIS, PHE, ANA, PWY, BPO, CCO, MFN, EXP) |
+| Edges | 21,813,816 |
+| Relation types | 26 |
+| Property instances | 67,249,863 |
+| Property keys | 150 |
+| Primary data sources | 65 |
+| Ontologies & controlled vocabularies | 18 |
+| Edge literature support (PaperQA3) | 70.0% |
+
+**Data sources:** Bgee · CTD · DisGeNET · DrugBank · DrugCentral · HGNC · OnSIDES · Open Targets · PPI (BioGRID / STRING / HRI) · Reactome
+
+**Ontologies:** Biolink Model · Disease Ontology · Gene Ontology · HPO · Mondo · ORDO · UBERON
 
 ## More about Optimus
 
@@ -53,6 +86,8 @@ Each release includes a comprehensive graph report that contains:
 - **Node metrics by type**: Number of nodes, their percentage, average number of properties and standard deviation, average degree and standard deviation.
 - **Edge metrics by type**: Number of edges, their percentage, average number of properties and standard deviation.
 - **Graph topology**: Number of directed, undirected, bi-directional, duplicated, and loop edges.
+
+Edge quality in OptimusKG is independently validated using [PaperQA3](https://github.com/Future-House/paper-qa), a multimodal AI agent for deep literature search. PaperQA3 identified supporting evidence for **70.0%** of sampled edges, while **83.4%** of sampled false edges received no supporting evidence — indicating a high completion rate relative to the published scientific literature.
 
 > [!NOTE]
 > Distributed OptimusKG data files contain only publicly available data.
@@ -183,15 +218,14 @@ $ uv run cli sync-catalog --dataset bronze.opentargets.disease
 
 ## Citation
 
-> [!NOTE]
-> Paper pending publication. Citation information will be updated upon publication.
+If you use OptimusKG in your research, please cite:
 
-```
+```bibtex
 @article{vittor2025optimus,
-  title={Building OptimusKG using the Optimus framework},
-  author={Vittor, Lucas and Arango, Inaki and Poloneur, Joaquin, and Noori, Ayush and Zitnik, Marinka},
+  title={OptimusKG: Unifying biomedical knowledge in a modern multimodal graph},
+  author={Vittor, Lucas and Noori, Ayush and Arango, I{\~n}aki and Polonuer, Joaqu{\'\i}n and Rodriques, Sam and White, Andrew and Clifton, David A. and Zitnik, Marinka},
   journal={Nature Scientific Data},
-  year={2025}
+  year={2026}
 }
 ```
 
