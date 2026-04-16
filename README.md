@@ -8,7 +8,7 @@
 [![GitHub Stars](https://img.shields.io/github/stars/mims-harvard/OptimusKG)](https://github.com/mims-harvard/OptimusKG)
 [![DOI](https://img.shields.io/badge/DOI-10.7910%2FDVN%2FIYNGEV-blue)](https://doi.org/10.7910/DVN/IYNGEV)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
-[![Docs](https://img.shields.io/badge/docs-optimuskg.ai-blue)](https://optimuskg.ai)
+[![Website](https://img.shields.io/badge/docs-optimuskg.ai-blue)](https://optimuskg.ai)
 
 ## Highlights
 
