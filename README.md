@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/public/logo-full.svg" alt="OptimusKG" width="500">
+  <img src="docs/public/full-logo.jpg" alt="OptimusKG" width="500">
 </p>
 
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
