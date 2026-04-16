@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/public/full-logo.jpg" alt="OptimusKG" width="500">
+  <img src="docs/public/logo-full.svg" alt="OptimusKG" width="500">
 </p>
 
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
@@ -39,38 +39,11 @@ At an architectural level, the OptimusKG data pipeline consists of the following
 > [!NOTE]
 > We leverage additional features of the Kedro framework, such as [namespaces](https://docs.kedro.org/en/latest/build/namespaces/), [kedro-viz](https://docs.kedro.org/projects/kedro-viz/en/latest/), [kedro-datasets](https://docs.kedro.org/projects/kedro-datasets/en/latest/) and catalog injection in [Jupyter notebooks](https://docs.kedro.org/en/latest/integrations-and-plugins/notebooks_and_ipython/kedro_and_notebooks/#exploring-the-kedro-project-in-a-notebook).
 
-## Releases and Contributing
-
-OptimusKG is a biomedical Labeled Property Graph built using the OptimusKG data pipeline. Each release provides the graph data in several formats, each tailored for different use cases:
-
-| Format | Description |
-| ---- | --- |
-| **Neo4j-JSONL** | A direct JSON lines export from a Neo4j instance of OptimusKG. Useful for interoperability with other tools in the Neo4j ecosystem. |
-| **Parquet** | Partitioned [Apache Parquet](https://parquet.apache.org/) files for each node and edge type, plus unified `nodes.parquet` and `edges.parquet` files. Recommended for data science and machine learning workflows with tools like [Apache Spark](https://spark.apache.org/) and [Polars](https://pola.rs/). |
-
-Each release includes a comprehensive graph report that contains:
-
-- **Overview**: Total elements, number of non-null properties, number of nodes, and number of edges.
-- **Node metrics by type**: Number of nodes, their percentage, average number of properties and standard deviation, average degree and standard deviation.
-- **Edge metrics by type**: Number of edges, their percentage, average number of properties and standard deviation.
-- **Graph topology**: Number of directed, undirected, bi-directional, duplicated, and loop edges.
-
-Edge quality in OptimusKG is independently validated using [PaperQA3](https://github.com/Future-House/paper-qa), a multimodal AI agent for deep literature search. PaperQA3 identified supporting evidence for **70.0%** of sampled edges, while **83.4%** of sampled false edges received no supporting evidence — indicating a high completion rate relative to the published scientific literature.
-
-> [!NOTE]
-> Distributed OptimusKG data files contain only publicly available data.
-> If you have access to private datasets, place them in the appropriate subdirectories under `data/landing/`. The pipeline will automatically use them if present.
->
-> If you do not have access, the [`Origin Hook`](https://github.com/mims-harvard/optimuskg/blob/main/optimuskg/hooks/origin/origin_hooks.py) will generate empty placeholder datasets in their place. This allows pipeline nodes that depend on both public and private data to run, even if the private data is missing. As a result, you can still execute the pipeline and work with the public portions of the data without interruption.
-
-## Running the OptimusKG data pipeline
+## Running the pipeline
 
 ### Install dependencies
 
-The OptimusKG data pipeline requires **Python 3.12 or higher**, and uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as the project manager and [`docker`](https://docs.docker.com/engine/install/) to spin up the Neo4j database.
-
-> [!NOTE]
-> Docker is not required if you don't need to export the graph in Neo4j-JSONL format.
+The pipeline requires **Python 3.12 or higher**, and uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as the project manager and [`docker`](https://docs.docker.com/engine/install/) to abstract some data sources.
 
 Before running the OptimusKG data pipeline, sync its dependencies:
 
@@ -90,7 +63,7 @@ Audited 225 packages in 0.42ms
 
 ### Generating the knowledge graph
 
-The OptimusKG data pipeline is designed to generate the full knowledge graph in one command:
+The pipeline is designed to generate the full knowledge graph in one command:
 
 ```console
 $ uv run kedro run --to-nodes gold.export_kg --runner=optimuskg.runners.FixedParallelRunner --async
@@ -113,6 +86,12 @@ to finally export the graph inside the `data/gold/kg/` folder.
 
 > [!TIP]
 > Export formats (Parquet, Neo4j) can be configured in `conf/base/parameters.yml` under `gold.export_formats`.
+
+> [!NOTE]
+> Distributed OptimusKG data files contain only publicly available data.
+> If you have access to private datasets, place them in the appropriate subdirectories under `data/landing/`. The pipeline will automatically use them if present.
+>
+> If you do not have access, the [`Origin Hook`](https://github.com/mims-harvard/optimuskg/blob/main/optimuskg/hooks/origin/origin_hooks.py) will generate empty placeholder datasets in their place. This allows pipeline nodes that depend on both public and private data to run, even if the private data is missing. As a result, you can still execute the pipeline and work with the public portions of the data without interruption.
 
 Then, you can spin up a Neo4j database with the graph data simply by running:
 
