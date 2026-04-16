@@ -19,7 +19,7 @@
 - Reproducible, deterministic and infrastructure-agnostic data pipeline with parallel execution.
 - Distributed as [Apache Parquet](https://parquet.apache.org/) files and downloadable via the [optimuskg]() python client.
 
-OptimusKG is developed in the [Marinka Zitnik Lab](https://zitniklab.hms.harvard.edu/) at [Harvard Medical School](https://dbmi.hms.harvard.edu/).
+OptimusKG is developed at the [Zitnik Lab](https://zitniklab.hms.harvard.edu/), [Harvard Medical School](https://dbmi.hms.harvard.edu/).
 
 ## Data pipeline
 
