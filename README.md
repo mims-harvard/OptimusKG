@@ -9,15 +9,10 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![Docs](https://img.shields.io/badge/docs-optimuskg.ai-blue)](https://optimuskg.ai)
 
-## OptimusKG
-
-OptimusKG is a multimodal biomedical labeled property graph built from structured and semi-structured resources to preserve factual, type-specific metadata across molecular, anatomical, clinical, and environmental domains. 
-
 ## Highlights
 
 - A [modern biomedical knowledge graph](https://optimuskg.ai) with molecular, anatomical, clinical, and environmental modalities.
-- Integrates 65 heterogeneous primary datasets and 18 ontologies and controlled vocabularies.
-- Ontology-grounded via the [BioCypher framework](https://github.com/biocypher/biocypher) and the [Biolink Model](https://github.com/biolink/biolink-model).
+- Integrates 65 heterogeneous resources grounded with 18 ontologies and controlled vocabularies using the [BioCypher framework](https://github.com/biocypher/biocypher) and the [Biolink Model](https://github.com/biolink/biolink-model).
 - Contains 190,531 nodes across 10 entity types, 21,813,816 edges across 26 relation types, and 67,249,863 property instances encoding 110,276,843 values across 150 distinct property keys.
 - Independently validated using [PaperQA3](https://github.com/Future-House/paper-qa), a multimodal agent that retrieves and reasons over scientific literature.
 - Reproducible, deterministic and infrastructure-agnostic data pipeline with parallel execution.
