@@ -21,9 +21,23 @@
 
 OptimusKG is developed at the [Zitnik Lab](https://zitniklab.hms.harvard.edu/), [Harvard Medical School](https://dbmi.hms.harvard.edu/).
 
+## Data availability
+
+OptimusKG is available via [Harvard Dataverse](https://dataverse.harvard.edu/) at [https://doi.org/10.7910/DVN/IYNGEV](https://doi.org/10.7910/DVN/IYNGEV). OptimusKG can be programatically accessed using the OptimusKG python client, installable from [PyPI](https://pypi.org/project/optimuskg/):
+
+```bash
+# With pip.
+pip install optimuskg
+```
+
+```bash
+# Or pipx.
+pipx install optimuskg
+```
+
 ## Data pipeline
 
-At an architectural level, the OptimusKG data pipeline consists of the following components:
+The pipeline architecture consists of the following components:
 
 | Component | Description |
 | ---- | --- |

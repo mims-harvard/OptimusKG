@@ -1,58 +1,71 @@
-# Contributing to OptimusKG
+# Contributing
 
 ## Setting up the development environment
 
-We use [`uv`](https://github.com/astral-sh/uv) and [`docker`](https://www.docker.com/) for our local development.
+We use [`uv`](https://github.com/astral-sh/uv) and [`docker`](https://www.docker.com/) for local development.
 
-1. Install `uv` by following the instructions on the [uv website](https://docs.astral.sh/uv/getting-started/installation/).
-2. Install `docker` by following the instructions on the [docker website](https://docs.docker.com/engine/install/).
-3. Run the following command to install all dependencies and set up the development environment:
+1. Install `uv` by following the [uv installation instructions](https://docs.astral.sh/uv/getting-started/installation/).
+2. Install `docker` by following the [Docker installation instructions](https://docs.docker.com/engine/install/).
+3. Install all dependencies:
 
     ```console
     $ uv sync --all-groups
 
-    Resolved 218 packages in 3ms
-    Audited 215 packages in 0.28ms
+    Resolved 234 packages in 1ms
+    Audited 225 packages in 0.42ms
     ```
 
-## Pre-commit hooks
+4. Install the pre-commit hooks:
 
-We use [`pre-commit`](https://pre-commit.com/) to run our pre-commit hooks. You can install the pre-commit hooks with:
+    ```console
+    $ uv run pre-commit install
+    pre-commit installed at .git/hooks/pre-commit
+    ```
 
-```console
-$ uv tool run pre-commit install
-pre-commit installed at .git/hooks/pre-commit
-```
+> [!TIP]
+> Run `make help` for a list of all available Make commands.
 
-## Running development scripts
+## Code quality
 
-We use [`hatch`](https://hatch.pypa.io/latest/) to run our development scripts. You can see all the available scripts with:
+All code quality checks are run through `make`. These same checks run in CI on every pull request.
 
-```console
-uv tool run hatch run list
-```
+| Command | Description |
+| --- | --- |
+| `make format` | Auto-format code with `ruff format` and fix lint violations with `ruff check --fix`. |
+| `make lint` | Check formatting and lint rules without making changes (used in CI). |
+| `make ty` | Run `ty` for static type checking across `optimuskg/` and `cli/`. |
+| `make interrogate` | Check docstring coverage against the threshold defined in `pyproject.toml`. |
 
-To run a specific script, use the following syntax:
+## CI requirements
 
-```console
-uv tool run hatch run <script-name>
-```
+Every pull request must pass three checks before merging:
 
-The hatch scripts are defined in the `pyproject.toml` file.
+1. **Type checking and docstring coverage** — `make ty` and `make interrogate` must pass.
+2. **Formatting** — `make lint` and spell checking with `typos` must pass. Run `make format` locally to fix issues before pushing.
+3. **Semver bump** — the `version` field in `pyproject.toml` must be incremented on every PR. The CI job compares the version between the PR branch and `main` and fails if it has not changed.
 
 ## Running tests
 
-We use [`pytest`](https://docs.pytest.org/en/stable/) to run our tests. You can run all the tests with:
+Tests use [`pytest`](https://docs.pytest.org/en/stable/) and are run through [`hatch`](https://hatch.pypa.io/latest/) to pick up the pre-configured flags in `pyproject.toml`:
 
 ```console
-uv tool run pytest
+$ uv tool run hatch run pytest
 ```
 
-However, is recommended to run them with pre-configured flags:
+## Editing pipeline nodes
 
-```console
-uv tool run hatch run pytest
-```
+The OptimusKG data pipeline enforces strict synchronization between node files and catalog YAML files. When you edit any Python node file under `optimuskg/pipelines/*/nodes/`, you must also update the corresponding catalog entries and rerun all downstream nodes.
 
+Follow the four-step sync workflow:
 
+1. Identify the catalog entries affected by your change in `conf/base/catalog/`.
+2. Update the dataset ID, filepath, or schema as needed.
+3. Rerun the node and sync the catalog:
+    ```console
+    $ uv run kedro run --from-nodes=<node_name>
+    $ uv run cli sync-catalog --dataset <catalog_id>
+    ```
+4. Cascade downstream — rerun all nodes that depend on the changed output.
 
+> [!IMPORTANT]
+> Never delete the `checksum` field from a catalog entry. If the output of a node changes, recompute it with `uv run cli sync-catalog --dataset <catalog_id>`.
