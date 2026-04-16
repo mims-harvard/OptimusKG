@@ -2,58 +2,45 @@
   <img src="docs/public/full-logo.jpg" alt="OptimusKG" width="500">
 </p>
 
-# OptimusKG
-
+[![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
-[![CI](https://github.com/mims-harvard/OptimusKG/actions/workflows/ci.yml/badge.svg)](https://github.com/mims-harvard/OptimusKG/actions/workflows/ci.yml)
 [![DOI](https://img.shields.io/badge/DOI-10.7910%2FDVN%2FIYNGEV-blue)](https://doi.org/10.7910/DVN/IYNGEV)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![Docs](https://img.shields.io/badge/docs-optimuskg.ai-blue)](https://optimuskg.ai)
 
---------------------------------------------------------------------------------
+## OptimusKG
 
-**Documentation**: [https://optimuskg.ai](https://optimuskg.ai)
+OptimusKG is a multimodal biomedical labeled property graph built from structured and semi-structured resources to preserve factual, type-specific metadata across molecular, anatomical, clinical, and environmental domains. OptimusKG contains 190,531 nodes across 10 entity types, 21,813,816 edges across 26 relation types, and 67,249,863 property instances encoding 110,276,843 values across 150 distinct property keys, derived from 18 ontologies and controlled vocabularies.
 
-**Source Code**: [https://github.com/mims-harvard/optimuskg](https://github.com/mims-harvard/optimuskg)
 
-**Data**: [https://doi.org/10.7910/DVN/IYNGEV](https://doi.org/10.7910/DVN/IYNGEV)
+## Highlights
 
---------------------------------------------------------------------------------
+- A [multimodal biomedical labeled property graph](https://optimuskg.ai) spanning molecular, anatomical,
+  clinical, and environmental domains — 190,531 nodes and 21,813,816 edges across 10 entity types and
+  26 relation types.
+- Integrates [65 heterogeneous primary datasets](#graph-at-a-glance) and
+  [18 ontologies and controlled vocabularies](#graph-at-a-glance), all harmonized against the
+  [Biolink Model](https://biolink.github.io/biolink-model/).
+- [70.0% of edges](#releases-and-contributing) independently supported by scientific literature,
+  validated using [PaperQA3](https://github.com/Future-House/paper-qa) — a multimodal AI agent for
+  deep literature research.
+- Generates the full knowledge graph in a [single command](#generating-the-knowledge-graph), with
+  automatic data downloads, checksum validation, and quality checks at every layer.
+- Reproducible and infra-agnostic — all transformations are deterministic and verified through
+  BLAKE2b checksums.
+- Extensible via the [Kedro framework](https://kedro.org/) — uniform project template, dataset
+  abstractions, catalog management, and pipeline assembly.
+- Distributed as [Apache Parquet](https://parquet.apache.org/) files, ready for data science, ML,
+  and graph AI workflows.
+- Follows the [FAIR principles](https://www.go-fair.org/fair-principles/) with full provenance
+  tracking and standardized identifiers across all nodes and edges.
+- Supports parallel execution with async data loading for high-performance graph construction at
+  scale.
 
-Optimus is an opinionated, production-ready data pipeline designed to construct, validate, and maintain biomedical knowledge graphs following software engineering best practices.
+## Data pipeline
 
-OptimusKG is a multimodal biomedical **labeled property graph (LPG)** built from structured and semi-structured resources to preserve factual, type-specific metadata across molecular, anatomical, clinical, and environmental domains. It contains **190,531 nodes** across 10 entity types, **21,813,816 edges** across 26 relation types, and 67,249,863 property instances encoding 110,276,843 values across 150 distinct property keys — derived from 65 high-quality heterogeneous datasets and 18 ontologies and controlled vocabularies. The graph follows the [FAIR principles](https://www.go-fair.org/fair-principles/) and uses the [Biolink Model](https://biolink.github.io/biolink-model/) as its upper ontology to ensure interoperability across biomedical databases. OptimusKG is distributed as [Apache Parquet](https://parquet.apache.org/) files and is designed to serve as a foundation for graph AI, retrieval with large language models, and biomedical discovery.
-
-Optimus is grounded in three foundational principles:
-
-- **Ready-to-use**: Optimus comes with a set of pre-built processing nodes that unify many biomedical data sources into a single knowledge graph named OptimusKG.
-- **Reproducible**: All data transformations are deterministic, validated through checksum checks, and infra-agnostic.
-- **Extensible**: Optimus is a superset of the [Kedro framework](https://kedro.org/) (hosted by the [Linux Foundation](https://lfaidata.foundation/)), providing a uniform project template, dataset abstraction, configuration management, and pipeline assembly.
-
-## Graph at a Glance
-
-| Metric | Value |
-| --- | --- |
-| Nodes | 190,531 |
-| Node types | 10 (GEN, DRG, DIS, PHE, ANA, PWY, BPO, CCO, MFN, EXP) |
-| Edges | 21,813,816 |
-| Relation types | 26 |
-| Property instances | 67,249,863 |
-| Property keys | 150 |
-| Primary data sources | 65 |
-| Ontologies & controlled vocabularies | 18 |
-| Edge literature support (PaperQA3) | 70.0% |
-
-**Data sources:** Bgee · CTD · DisGeNET · DrugBank · DrugCentral · HGNC · OnSIDES · Open Targets · PPI (BioGRID / STRING / HRI) · Reactome
-
-**Ontologies:** Biolink Model · Disease Ontology · Gene Ontology · HPO · Mondo · ORDO · UBERON
-
-## More about Optimus
-
-[Learn the basics of Optimus](https://optimuskg.ai)
-
-At an architectural level, Optimus consists of the following components:
+At an architectural level, the OptimusKG data pipeline consists of the following components:
 
 | Component | Description |
 | ---- | --- |
@@ -69,11 +56,11 @@ At an architectural level, Optimus consists of the following components:
 
 > [!NOTE]
 > We leverage additional features of the Kedro framework, such as [namespaces](https://docs.kedro.org/en/latest/build/namespaces/), [kedro-viz](https://docs.kedro.org/projects/kedro-viz/en/latest/), [kedro-datasets](https://docs.kedro.org/projects/kedro-datasets/en/latest/) and catalog injection in [Jupyter notebooks](https://docs.kedro.org/en/latest/integrations-and-plugins/notebooks_and_ipython/kedro_and_notebooks/#exploring-the-kedro-project-in-a-notebook).
-> Optimus also comes with a command-line interface and quality-of-life tooling for spinning up Neo4j, exporting slices of the graph, etc.
+> The OptimusKG data pipeline also comes with a command-line interface and quality-of-life tooling for spinning up Neo4j, exporting slices of the graph, etc.
 
 ## Releases and Contributing
 
-OptimusKG is a biomedical Labeled Property Graph built using the Optimus pipeline. Each release provides the graph data in several formats, each tailored for different use cases:
+OptimusKG is a biomedical Labeled Property Graph built using the OptimusKG data pipeline. Each release provides the graph data in several formats, each tailored for different use cases:
 
 | Format | Description |
 | ---- | --- |
@@ -95,16 +82,16 @@ Edge quality in OptimusKG is independently validated using [PaperQA3](https://gi
 >
 > If you do not have access, the [`Origin Hook`](https://github.com/mims-harvard/optimuskg/blob/main/optimuskg/hooks/origin/origin_hooks.py) will generate empty placeholder datasets in their place. This allows pipeline nodes that depend on both public and private data to run, even if the private data is missing. As a result, you can still execute the pipeline and work with the public portions of the data without interruption.
 
-## Running Optimus
+## Running the OptimusKG data pipeline
 
 ### Install dependencies
 
-Optimus requires **Python 3.12 or higher**, and uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as the project manager and [`docker`](https://docs.docker.com/engine/install/) to spin up the Neo4j database.
+The OptimusKG data pipeline requires **Python 3.12 or higher**, and uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as the project manager and [`docker`](https://docs.docker.com/engine/install/) to spin up the Neo4j database.
 
 > [!NOTE]
 > Docker is not required if you don't need to export the graph in Neo4j-JSONL format.
 
-Before running Optimus, you should sync its dependencies:
+Before running the OptimusKG data pipeline, sync its dependencies:
 
 ```console
 $ uv sync
@@ -120,9 +107,9 @@ Audited 225 packages in 0.42ms
 > [!TIP]
 > Run `make help` for a list of available Make commands, and `uv run cli --help` for additional CLI utilities (e.g., checksum validation, metrics generation).
 
-### Generating the graph
+### Generating the knowledge graph
 
-Optimus is designed to generate a full knowledge graph in one command:
+The OptimusKG data pipeline is designed to generate the full knowledge graph in one command:
 
 ```console
 $ uv run kedro run --to-nodes gold.export_kg --runner=optimuskg.runners.FixedParallelRunner --async
@@ -179,7 +166,7 @@ The results will be saved to a file in `data/export/` with a filename derived fr
 
 ## CLI Utilities
 
-Optimus ships a Typer-based CLI for common maintenance tasks. After installing dependencies you can run it with:
+The OptimusKG data pipeline ships a Typer-based CLI for common maintenance tasks. After installing dependencies you can run it with:
 
 ```console
 uv run cli --help
