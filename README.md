@@ -11,32 +11,19 @@
 
 ## OptimusKG
 
-OptimusKG is a multimodal biomedical labeled property graph built from structured and semi-structured resources to preserve factual, type-specific metadata across molecular, anatomical, clinical, and environmental domains. OptimusKG contains 190,531 nodes across 10 entity types, 21,813,816 edges across 26 relation types, and 67,249,863 property instances encoding 110,276,843 values across 150 distinct property keys, derived from 18 ontologies and controlled vocabularies.
-
+OptimusKG is a multimodal biomedical labeled property graph built from structured and semi-structured resources to preserve factual, type-specific metadata across molecular, anatomical, clinical, and environmental domains. 
 
 ## Highlights
 
-- A [multimodal biomedical labeled property graph](https://optimuskg.ai) spanning molecular, anatomical,
-  clinical, and environmental domains — 190,531 nodes and 21,813,816 edges across 10 entity types and
-  26 relation types.
-- Integrates [65 heterogeneous primary datasets](#graph-at-a-glance) and
-  [18 ontologies and controlled vocabularies](#graph-at-a-glance), all harmonized against the
-  [Biolink Model](https://biolink.github.io/biolink-model/).
-- [70.0% of edges](#releases-and-contributing) independently supported by scientific literature,
-  validated using [PaperQA3](https://github.com/Future-House/paper-qa) — a multimodal AI agent for
-  deep literature research.
-- Generates the full knowledge graph in a [single command](#generating-the-knowledge-graph), with
-  automatic data downloads, checksum validation, and quality checks at every layer.
-- Reproducible and infra-agnostic — all transformations are deterministic and verified through
-  BLAKE2b checksums.
-- Extensible via the [Kedro framework](https://kedro.org/) — uniform project template, dataset
-  abstractions, catalog management, and pipeline assembly.
-- Distributed as [Apache Parquet](https://parquet.apache.org/) files, ready for data science, ML,
-  and graph AI workflows.
-- Follows the [FAIR principles](https://www.go-fair.org/fair-principles/) with full provenance
-  tracking and standardized identifiers across all nodes and edges.
-- Supports parallel execution with async data loading for high-performance graph construction at
-  scale.
+- A [modern biomedical knowledge graph](https://optimuskg.ai) with molecular, anatomical, clinical, and environmental modalities.
+- Integrates 65 heterogeneous primary datasets and 18 ontologies and controlled vocabularies.
+- Ontology-grounded via the [BioCypher framework](https://github.com/biocypher/biocypher) and the [Biolink Model](https://github.com/biolink/biolink-model).
+- Contains 190,531 nodes across 10 entity types, 21,813,816 edges across 26 relation types, and 67,249,863 property instances encoding 110,276,843 values across 150 distinct property keys.
+- Independently validated using [PaperQA3](https://github.com/Future-House/paper-qa), a multimodal agent that retrieves and reasons over scientific literature.
+- Reproducible, deterministic and infrastructure-agnostic data pipeline with parallel execution.
+- Distributed as [Apache Parquet](https://parquet.apache.org/) files and downloadable via the [optimuskg]() python client.
+
+OptimusKG is developed in the [Marinka Zitnik Lab](https://zitniklab.hms.harvard.edu/) at [Harvard Medical School](https://dbmi.hms.harvard.edu/).
 
 ## Data pipeline
 
@@ -56,7 +43,6 @@ At an architectural level, the OptimusKG data pipeline consists of the following
 
 > [!NOTE]
 > We leverage additional features of the Kedro framework, such as [namespaces](https://docs.kedro.org/en/latest/build/namespaces/), [kedro-viz](https://docs.kedro.org/projects/kedro-viz/en/latest/), [kedro-datasets](https://docs.kedro.org/projects/kedro-datasets/en/latest/) and catalog injection in [Jupyter notebooks](https://docs.kedro.org/en/latest/integrations-and-plugins/notebooks_and_ipython/kedro_and_notebooks/#exploring-the-kedro-project-in-a-notebook).
-> The OptimusKG data pipeline also comes with a command-line interface and quality-of-life tooling for spinning up Neo4j, exporting slices of the graph, etc.
 
 ## Releases and Contributing
 
@@ -208,7 +194,7 @@ $ uv run cli sync-catalog --dataset bronze.opentargets.disease
 If you use OptimusKG in your research, please cite:
 
 ```bibtex
-@article{vittor2025optimus,
+@article{vittor2026optimuskg,
   title={OptimusKG: Unifying biomedical knowledge in a modern multimodal graph},
   author={Vittor, Lucas and Noori, Ayush and Arango, I{\~n}aki and Polonuer, Joaqu{\'\i}n and Rodriques, Sam and White, Andrew and Clifton, David A. and Zitnik, Marinka},
   journal={Nature Scientific Data},
