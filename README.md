@@ -23,7 +23,7 @@ OptimusKG is developed at the [Zitnik Lab](https://zitniklab.hms.harvard.edu/), 
 
 ## Data availability
 
-OptimusKG is available via [Harvard Dataverse](https://dataverse.harvard.edu/) at [https://doi.org/10.7910/DVN/IYNGEV](https://doi.org/10.7910/DVN/IYNGEV). OptimusKG can be programatically accessed using the OptimusKG python client, installable from [PyPI](https://pypi.org/project/optimuskg/):
+OptimusKG is available via [Harvard Dataverse](https://doi.org/10.7910/DVN/IYNGEV). OptimusKG can be programatically accessed using the OptimusKG python client, installable from [PyPI](https://pypi.org/project/optimuskg/):
 
 ```bash
 # With pip.
