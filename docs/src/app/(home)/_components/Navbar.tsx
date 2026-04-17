@@ -44,8 +44,8 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 bg-[var(--l-bg)]">
-      <div className="mx-auto max-w-[81.25rem] px-6">
-        <div className="flex h-[3.25rem] items-center justify-between">
+      <div className="l-container">
+        <div className="flex h-[var(--l-header-h)] items-center justify-between">
           <OptimusKGLogo />
 
           <div className="hidden items-center gap-[0.469rem] md:flex">
@@ -107,7 +107,7 @@ export function Navbar() {
       </div>
 
       {open && (
-        <div className="border-t border-[var(--l-border)] bg-[var(--l-bg)] px-6 pb-5 md:hidden">
+        <div className="border-t border-[var(--l-border)] bg-[var(--l-bg)] px-[var(--l-g2)] pb-5 md:hidden">
           <div className="mt-4 flex flex-col gap-3">
             <a
               href={GET_STARTED_HREF}

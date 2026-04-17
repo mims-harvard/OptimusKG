@@ -1,4 +1,4 @@
-import { MoveUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 const CARDS = [
@@ -28,7 +28,7 @@ const CARDS = [
     title: "Develop enduring software",
     description:
       "Trusted by over half of the Fortune 500 to accelerate development, securely and at scale.",
-    ctaText: "Explore enterprise →",
+    ctaText: "Explore enterprise",
     ctaHref: "https://cursor.com/en-US/enterprise",
     ctaExternal: false,
     imageSrc: "/frontier/lines.svg",
@@ -60,13 +60,13 @@ function FrontierCard({ card }: { card: (typeof CARDS)[number] }) {
             style={BODY_TEXT}
           >
             {card.ctaText}
-            {card.ctaExternal && <MoveUpRight size={14} strokeWidth={2} />}
+            <ArrowUpRight size={14} strokeWidth={2} aria-hidden="true" />
           </a>
         </div>
       </div>
       <div style={{ paddingTop: "1.094rem" }}>
         <div
-          className={cn("relative overflow-hidden rounded-[0.25rem] md:h-[20rem] lg:h-[24.481rem]", card.mobileHeightClass)}
+          className={cn("relative overflow-hidden rounded-[0.25rem] md:h-[20rem] min-[900px]:h-[24.481rem]", card.mobileHeightClass)}
           style={{ backgroundImage: MEDIA_BG }}
         >
           <img
@@ -83,15 +83,15 @@ function FrontierCard({ card }: { card: (typeof CARDS)[number] }) {
 
 export function FrontierSection() {
   return (
-    <section className="bg-[var(--l-bg)]" style={{ paddingBlock: "4.2rem" }}>
-      <div className="mx-auto max-w-[81.25rem] px-[1.172rem] lg:px-[1.25rem]">
+    <section className="l-section bg-[var(--l-bg)]">
+      <div className="l-container">
         <h2
-          className="mb-[1.3125rem] font-normal text-[var(--l-ink)] lg:mb-[1.4rem]"
+          className="mb-[1.3125rem] font-normal text-[var(--l-ink)] min-[900px]:mb-[1.4rem]"
           style={{ fontSize: "0.944rem", lineHeight: "1.8125rem", letterSpacing: "0.005rem" }}
         >
           Stay on the frontier
         </h2>
-        <div className="grid grid-cols-1 gap-[0.5rem] sm:grid-cols-2 sm:gap-[0.5625rem] lg:grid-cols-3 lg:gap-[0.625rem]">
+        <div className="grid grid-cols-1 gap-[0.5rem] sm:grid-cols-2 sm:gap-[0.5625rem] min-[900px]:grid-cols-3 min-[900px]:gap-[0.625rem]">
           {CARDS.map((card) => (
             <FrontierCard key={card.title} card={card} />
           ))}
