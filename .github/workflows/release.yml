@@ -52,12 +52,15 @@ jobs:
           prerelease: false
 
   publish:
-    name: Publish optimuskg client to PyPI
+    name: Publish client to PyPI
     needs: release
     runs-on: ubuntu-latest
+    env:
+      PACKAGE_NAME: optimuskg
+      PACKAGE_DIR: packages/optimuskg
     environment:
       name: pypi
-      url: https://pypi.org/p/optimuskg
+      url: https://pypi.org/p/${{ env.PACKAGE_NAME }}
     permissions:
       id-token: write
       contents: read
@@ -69,14 +72,14 @@ jobs:
         with:
           enable-cache: true
           ignore-nothing-to-cache: true
-          pyproject-file: "packages/optimuskg/pyproject.toml"
+          pyproject-file: ${{ env.PACKAGE_DIR }}/pyproject.toml
           python-version: ${{ env.PYTHON_VERSION }}
           cache-dependency-glob: |
-            packages/optimuskg/pyproject.toml
-            packages/optimuskg/uv.lock
+            ${{ env.PACKAGE_DIR }}/pyproject.toml
+            ${{ env.PACKAGE_DIR }}/uv.lock
 
       - name: Build client distributions
-        run: uv build packages/optimuskg
+        run: uv build ${{ env.PACKAGE_DIR }}
 
       - name: Publish client to PyPI
-        run: uv publish --check-url https://pypi.org/simple/optimuskg/ packages/optimuskg/dist/*
+        run: uv publish --check-url https://pypi.org/simple/${{ env.PACKAGE_NAME }}/ ${{ env.PACKAGE_DIR }}/dist/*
