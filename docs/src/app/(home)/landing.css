@@ -6,6 +6,22 @@
   --l-border: rgba(38, 37, 30, 0.1);
   --l-border-subtle: rgba(38, 37, 30, 0.03);
   --l-accent: #f54e00;
+
+  --l-v1: calc(1rem * 1.4);
+  --l-v1-5: calc(1rem * 1.4 * 1.5);
+  --l-v2: calc(1rem * 1.4 * 2);
+  --l-v3: calc(1rem * 1.4 * 3);
+  --l-v4: calc(1rem * 1.4 * 4);
+  --l-v5: calc(1rem * 1.4 * 5);
+  --l-v6: calc(1rem * 1.4 * 6);
+  --l-v8: calc(1rem * 1.4 * 8);
+
+  --l-g1: 0.625rem;
+  --l-g2: 1.25rem;
+  --l-g3: 1.875rem;
+
+  --l-container-max: 1300px;
+  --l-header-h: 3.25rem;
 }
 
 .dark [data-landing] {
@@ -16,4 +32,76 @@
   --l-border: rgba(235, 235, 235, 0.08);
   --l-border-subtle: rgba(235, 235, 235, 0.04);
   --l-accent: #ff6a00;
+}
+
+[data-landing] .l-container {
+  width: 100%;
+  max-width: var(--l-container-max);
+  margin-inline: auto;
+  padding-inline: var(--l-g2);
+}
+
+[data-landing] .l-section {
+  padding-block: var(--l-v3);
+  padding-inline: var(--l-g2);
+}
+
+[data-landing] .l-section--first {
+  padding-block-start: var(--l-v5);
+}
+
+[data-landing] .l-section--flush-x {
+  padding-inline: 0;
+}
+
+[data-landing] .l-section--flush-y {
+  padding-block: 0;
+}
+
+[data-landing] .l-section--flush-bottom {
+  padding-block-end: 0;
+}
+
+[data-landing] .l-section--compact {
+  padding-block: var(--l-v2);
+}
+
+[data-landing] .l-section--cta {
+  padding-block: var(--l-v5) var(--l-v6);
+}
+
+[data-landing] .l-section .l-container {
+  padding-inline: 0;
+}
+
+[data-landing] .l-logo-neutralize {
+  filter: brightness(0);
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.dark [data-landing] .l-logo-neutralize {
+  filter: brightness(0) invert(1);
+  opacity: 0.75;
+}
+
+@media (max-width: 899px) {
+  [data-landing] .l-section {
+    padding-block: var(--l-v2);
+  }
+  [data-landing] .l-section--first {
+    padding-block-start: var(--l-v3);
+  }
+  [data-landing] .l-section--cta {
+    padding-block: var(--l-v3) var(--l-v4);
+  }
+}
+
+@media (max-width: 599px) {
+  [data-landing] .l-section {
+    padding-block: var(--l-v1-5);
+  }
+  [data-landing] .l-section--cta {
+    padding-block: var(--l-v2) var(--l-v3);
+  }
 }

@@ -4,10 +4,10 @@ export function CtaSection() {
   return (
     <section
       id="download"
-      className="border-t border-[var(--l-border)] bg-[var(--l-bg)] py-[5.25rem] pb-[8.4rem]"
+      className="l-section l-section--cta border-t border-[var(--l-border)] bg-[var(--l-bg)]"
     >
-      <div className="mx-auto flex max-w-[810px] flex-col items-center gap-[1.4rem] px-6 text-center">
-        <h2 className="text-[4.1875rem] leading-[1.18] font-normal tracking-[-0.032em] text-[var(--l-ink)] whitespace-nowrap">
+      <div className="mx-auto flex max-w-[810px] flex-col items-center gap-[1.4rem] text-center">
+        <h2 className="text-balance text-[2.5rem] leading-[1.18] font-normal tracking-[-0.032em] text-[var(--l-ink)] sm:text-[3.25rem] min-[900px]:text-[4.1875rem]">
           Try OptimusKG now.
         </h2>
         <DownloadButton
