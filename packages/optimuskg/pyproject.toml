@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "optimuskg"
-version = "0.1.0"
+version = "1.0.0"
 description = "Client library for loading the OptimusKG biomedical knowledge graph from Harvard Dataverse."
 readme = "README.md"
 license = { file = "LICENSE" }
