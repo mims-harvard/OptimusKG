@@ -1,4 +1,4 @@
 {
   "title": "Graph Schema",
-  "pages": ["node-types", "edge-types"]
+  "pages": ["nodes", "edges"]
 }
