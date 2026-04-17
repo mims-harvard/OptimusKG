@@ -19,6 +19,7 @@
     "@openrouter/ai-sdk-provider": "^2.3.3",
     "@radix-ui/react-presence": "^1.1.5",
     "@takumi-rs/image-response": "^0.73.1",
+    "@vercel/analytics": "^2.0.1",
     "ai": "^6.0.140",
     "class-variance-authority": "^0.7.1",
     "flexsearch": "^0.8.212",
