@@ -121,27 +121,9 @@ $ make neo4j
 > [!NOTE]
 > This will start a Neo4j container in the background. You can access the Neo4j Browser at [http://localhost:7474/browser/preview/](http://localhost:7474/browser/preview/).
 
-You can export the entire database or the results of a specific query once the container is running.
-
-To export the entire database to a Neo4j-JSONL file, run:
-
-```console
-make neo4j-export
-```
-
-The data will be saved to `data/export/optimuskg.jsonl`.
-
-To export the results of a specific Cypher query, run:
-
-```console
-CYPHER_QUERY="MATCH (d:Disease) RETURN d" make neo4j-export
-```
-
-The results will be saved to a file in `data/export/` with a filename derived from the query.
-
 ## CLI Utilities
 
-The OptimusKG data pipeline ships a Typer-based CLI for common maintenance tasks. After installing dependencies you can run it with:
+The pipeline ships a Typer-based CLI for common maintenance tasks. After installing dependencies you can run it with:
 
 ```console
 uv run cli --help
