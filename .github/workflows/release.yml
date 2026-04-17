@@ -50,3 +50,33 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
+
+  publish:
+    name: Publish optimuskg client to PyPI
+    needs: release
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/optimuskg
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          ignore-nothing-to-cache: true
+          pyproject-file: "packages/optimuskg/pyproject.toml"
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache-dependency-glob: |
+            packages/optimuskg/pyproject.toml
+            packages/optimuskg/uv.lock
+
+      - name: Build client distributions
+        run: uv build packages/optimuskg
+
+      - name: Publish client to PyPI
+        run: uv publish --check-url https://pypi.org/simple/optimuskg/ packages/optimuskg/dist/*
