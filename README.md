@@ -97,7 +97,7 @@ This will automatically download all the necessary data, store it in the `landin
 > to run the nodes within a pipeline concurrently, and the [async](https://docs.kedro.org/en/latest/build/run_a_pipeline/#load-and-save-asynchronously) flag to reduce load and save time by using asynchronous mode. The Kedro default [ParallelRunner](https://docs.kedro.org/en/latest/build/run_a_pipeline/#parallelrunner) contains a bug that prevents it from running any validation checks.
 
 > [!TIP]
-> The location of each dataset, schema and their format is specified in the catalog.
+> The location of each dataset, schema and their format is specified in the [catalog](conf/base/catalog/).
 
 > [!TIP]
 > Run `make help` for a list of available Make commands, and `uv run cli --help` for additional CLI utilities.
@@ -107,18 +107,9 @@ This will automatically download all the necessary data, store it in the `landin
 >
 > Place any private datasets under `data/loading`. If absent, the [`Origin Hook`](https://github.com/mims-harvard/optimuskg/blob/main/optimuskg/hooks/origin/origin_hooks.py) will create empty placeholders, allowing dependent nodes to run even if the private data is missing.
 
-Then, you can spin up a Neo4j database with the graph data simply by running:
+## Contributing
 
-```console
-$ make neo4j
-
-[+] Running 2/2
- ✔ Network optimuskg_default Created 
- ✔ Container neo4j           Started 
-```
-
-> [!NOTE]
-> This will start a Neo4j container in the background. You can access the Neo4j Browser at [http://localhost:7474/browser/preview/](http://localhost:7474/browser/preview/).
+We are passionate about supporting contributors of all levels of experience and would love to see you get involved in the project. See the [contributing guide](CONTRIBUTING.md) to get started.
 
 ## CLI Utilities
 
