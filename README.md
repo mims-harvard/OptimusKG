@@ -54,10 +54,10 @@ G = optimuskg.load_networkx(lcc=True)
 ```
 
 > [!NOTE]
-> Download files are cached in `platformdirs.user_cache_dir("optimuskg")` by default (`~/Library/Caches/optimuskg` on macOS, `~/.cache/optimuskg` on Linux). Override with `$OPTIMUSKG_CACHE_DIR` or `optimuskg.set_cache_dir(path)`.
+> Downloads are cached by default in `platformdirs.user_cache_dir("optimuskg")` (`~/Library/Caches/optimuskg` on macOS, `~/.cache/optimuskg` on Linux). The cache location can be overridden via the `$OPTIMUSKG_CACHE_DIR` environment variable or programmatically with `optimuskg.set_cache_dir(path)`.
 
 > [!NOTE]
-> To use a different dataset (_e.g._, a pre-release), set `$OPTIMUSKG_DOI` or call `optimuskg.set_doi("doi:10.xxxx/XXXX")`.
+> To target a different dataset (_e.g._, a pre-release), set the `$OPTIMUSKG_DOI` environment variable or use `optimuskg.set_doi("doi:10.xxxx/XXXX")`.
 
 ## Data pipeline
 
