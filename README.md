@@ -56,28 +56,6 @@ The pipeline architecture consists of the following components:
 
 ## Running the pipeline
 
-### Install dependencies
-
-The pipeline requires **Python 3.12 or higher**, and uses [`uv`](https://docs.astral.sh/uv/getting-started/installation/) as the project manager and [`docker`](https://docs.docker.com/engine/install/) to abstract some data sources.
-
-Before running the OptimusKG data pipeline, sync its dependencies:
-
-```console
-$ uv sync
-
-Resolved 234 packages in 1ms
-Audited 225 packages in 0.42ms
-```
-
-> [!NOTE]
-> There are some commands that leverage [GNU Make](https://www.gnu.org/software/make/).
-> The command line reference documentation can be viewed with `make help`.
-
-> [!TIP]
-> Run `make help` for a list of available Make commands, and `uv run cli --help` for additional CLI utilities (e.g., checksum validation, metrics generation).
-
-### Generating OptimusKG from raw sources
-
 The pipeline is designed to generate the full knowledge graph and all the intermediate datasets used to generate it in one command:
 
 ```console
@@ -88,14 +66,17 @@ $ uv run kedro run --to-nodes gold.export_kg --runner=optimuskg.runners.FixedPar
 [01/28/25 19:29:09] INFO     Using synchronous mode for loading and saving data. Use the --async flag for potential performance gains.
 ```
 
-This will automatically download all the necessary data, store it in the `landing` layer, and execute the `bronze`, `silver`, and `gold` layersto finally export the graph inside the `data/gold/kg/` folder.
+This will automatically download all the necessary data, store it in the `landing` layer, and execute the `bronze`, `silver`, and `gold` layers to finally export the graph inside the `data/gold/kg/` directory.
 
 > [!NOTE]
 > It is recommended to use the `optimuskg.runners.FixedParallelRunner`
 > to run the nodes within a pipeline concurrently, and the [async](https://docs.kedro.org/en/latest/build/run_a_pipeline/#load-and-save-asynchronously) flag to reduce load and save time by using asynchronous mode. The Kedro default [ParallelRunner](https://docs.kedro.org/en/latest/build/run_a_pipeline/#parallelrunner) contains a bug that prevents it from running any validation checks.
 
 > [!TIP]
-> The location of each dataset and their format is specified in the catalog.
+> The location of each dataset, schema and their format are specified in the catalog.
+
+> [!TIP]
+> Run `make help` for a list of available Make commands, and `uv run cli --help` for additional CLI utilities (e.g., checksum validation, metrics generation).
 
 > [!NOTE]
 > The pipeline automatically downloads public datasets and ingests them in the `landing` layer. 
