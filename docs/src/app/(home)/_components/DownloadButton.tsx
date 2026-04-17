@@ -2,7 +2,7 @@ import { ArrowDownToLine } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 const DATAVERSE_URL =
-  "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IXA7BM";
+  "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IYNGEV";
 
 export function DownloadButton({
   className,
