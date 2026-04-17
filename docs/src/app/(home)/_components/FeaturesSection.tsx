@@ -1,7 +1,8 @@
+import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 
-const F3_BG = "https://www.figma.com/api/mcp/asset/a2cb3a47-401b-4acf-bef4-86d91965ea40";
-const F4_BG = "https://www.figma.com/api/mcp/asset/59fc802f-4555-4c95-a7c1-44c5f90616e1";
+const F3_BG = "/hero/mountain-overlook.png";
+const F4_BG = "/hero/hillside-village.png";
 
 function WinChrome({ title, bg = "#f2f1ed" }: { title?: string; bg?: string }) {
   return (
@@ -27,7 +28,7 @@ function Feature1Media() {
   return (
     <div className="absolute inset-0 overflow-hidden rounded-[0.25rem]">
       <img
-        src="/hero/bg.webp"
+        src="/hero/lakeside-village.png"
         alt=""
         className="absolute inset-0 h-full w-full scale-[1.1] object-cover"
       />
@@ -39,14 +40,14 @@ function Feature1Media() {
       <img
         src="/features/code-library.svg"
         alt="Code library"
-        className="hidden lg:block absolute object-contain drop-shadow-[0_28px_70px_rgba(0,0,0,0.14)] drop-shadow-[0_14px_32px_rgba(0,0,0,0.1)]"
+        className="hidden min-[900px]:block absolute object-contain drop-shadow-[0_28px_70px_rgba(0,0,0,0.14)] drop-shadow-[0_14px_32px_rgba(0,0,0,0.1)]"
         style={{ left: "4rem", top: "2.8125rem", width: "52rem", height: "36.875rem" }}
       />
 
       <img
         src="/features/code-library.svg"
         alt="Code library"
-        className="lg:hidden absolute object-contain drop-shadow-[0_28px_70px_rgba(0,0,0,0.14)] drop-shadow-[0_14px_32px_rgba(0,0,0,0.1)]"
+        className="min-[900px]:hidden absolute object-contain drop-shadow-[0_28px_70px_rgba(0,0,0,0.14)] drop-shadow-[0_14px_32px_rgba(0,0,0,0.1)]"
         style={{ left: "1.5rem", top: "2rem", width: "51rem", height: "38.5rem" }}
       />
 
@@ -61,12 +62,12 @@ function Feature2Media() {
       <img
         src="/features/data-pipeline.webp"
         alt="Data pipeline"
-        className="hidden lg:block absolute inset-0 w-full h-full object-contain p-[2rem]"
+        className="hidden min-[900px]:block absolute inset-0 w-full h-full object-contain p-[2rem]"
       />
       <img
         src="/features/data-pipeline.webp"
         alt="Data pipeline"
-        className="lg:hidden absolute top-[2rem] left-[2rem] h-[calc(100%-4rem)] w-auto max-w-none"
+        className="min-[900px]:hidden absolute top-[2rem] left-[2rem] h-[calc(100%-4rem)] w-auto max-w-none"
       />
     </div>
   );
@@ -81,7 +82,7 @@ function Feature3Media() {
       <div className="absolute inset-0" style={{ background: "linear-gradient(90deg,rgba(38,37,30,0.05) 0%,rgba(38,37,30,0.05) 100%)" }} />
 
       <div
-        className="hidden lg:flex absolute bg-white rounded-[0.625rem] overflow-hidden flex-col shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)]"
+        className="hidden min-[900px]:flex absolute bg-white rounded-[0.625rem] overflow-hidden flex-col shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)]"
         style={{ left: "4.75rem", top: "3.625rem", width: "30.75rem", height: "19.25rem" }}
       >
         <WinChrome title="Molecular Function" bg="white" />
@@ -91,7 +92,7 @@ function Feature3Media() {
       </div>
 
       <div
-        className="hidden lg:flex absolute bg-white rounded-[0.625rem] overflow-hidden flex-col shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)]"
+        className="hidden min-[900px]:flex absolute bg-white rounded-[0.625rem] overflow-hidden flex-col shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)]"
         style={{ left: "13.375rem", top: "14rem", width: "30.75rem", height: "24rem" }}
       >
         <WinChrome title="Phenotype" bg="white" />
@@ -101,7 +102,7 @@ function Feature3Media() {
       </div>
 
       <div
-        className="lg:hidden absolute flex bg-white rounded-[0.625rem] overflow-hidden flex-col shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)]"
+        className="min-[900px]:hidden absolute flex bg-white rounded-[0.625rem] overflow-hidden flex-col shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)]"
         style={{ left: "1.5rem", top: "2rem", width: "51rem", height: "36rem" }}
       >
         <WinChrome title="Phenotype" bg="white" />
@@ -189,13 +190,20 @@ function FeatureText({
   ctaText: string;
   ctaHref?: string;
 }) {
-  const cta = ctaHref ? (
-    <a href={ctaHref} target="_blank" rel="noopener noreferrer" style={CTA_STYLE} className="text-[var(--l-accent)]">
+  const ctaContent = (
+    <>
       {ctaText}
+      <ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
+    </>
+  );
+  const ctaClass = "inline-flex items-center gap-[0.3rem] text-[var(--l-accent)]";
+  const cta = ctaHref ? (
+    <a href={ctaHref} target="_blank" rel="noopener noreferrer" style={CTA_STYLE} className={ctaClass}>
+      {ctaContent}
     </a>
   ) : (
-    <span style={CTA_STYLE} className="text-[var(--l-accent)]">
-      {ctaText}
+    <span style={CTA_STYLE} className={ctaClass}>
+      {ctaContent}
     </span>
   );
   return (
@@ -225,7 +233,7 @@ const FEATURES: Feature[] = [
   {
     title: "Rich strong-typed properties",
     description: "Every entity is enriched with structured properties for fine-grained analysis.",
-    ctaText: "Learn about the schema →",
+    ctaText: "Learn about the schema",
     Media: Feature1Media,
     href: "https://cursor.com/product",
     imageSide: "right",
@@ -235,7 +243,7 @@ const FEATURES: Feature[] = [
   {
     title: "In every tool, at every step",
     description: "Cursor reviews your PRs in GitHub, collaborates in Slack, and runs in your terminal.",
-    ctaText: "Learn about Cursor's surfaces →",
+    ctaText: "Learn about Cursor's surfaces",
     Media: Feature3Media,
     href: "https://cursor.com/product",
     imageSide: "left",
@@ -245,7 +253,7 @@ const FEATURES: Feature[] = [
   {
     title: "Magically accurate autocomplete",
     description: "Our specialized Tab model predicts your next action with striking speed and precision.",
-    ctaText: "Learn about Tab →",
+    ctaText: "Learn about Tab",
     Media: Feature4Media,
     href: "https://cursor.com/product/tab",
     imageSide: "right",
@@ -255,7 +263,7 @@ const FEATURES: Feature[] = [
   {
     title: "Works autonomously, runs in parallel",
     description: "Agents use their own computers to build, test, and demo features end to end for you to review.",
-    ctaText: "Learn about cloud agents →",
+    ctaText: "Learn about cloud agents",
     ctaHref: "https://cursor.com/docs/cloud-agent",
     Media: Feature2Media,
     imageSide: "left",
@@ -303,10 +311,10 @@ function MobileCard({ feature }: { feature: Feature }) {
       {...linkProps}
       className="relative flex flex-col overflow-hidden rounded-[0.25rem] bg-[var(--l-surface)]"
     >
-      <div className="p-[1.025rem]">
+      <div className="p-[1.025rem] md:p-[1.5rem]">
         <FeatureText {...feature} />
       </div>
-      <div className="relative h-[42.5rem] shrink-0 overflow-hidden">
+      <div className="relative h-[32rem] shrink-0 overflow-hidden sm:h-[36rem] md:h-[40rem]">
         <Media />
       </div>
       <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
@@ -316,13 +324,13 @@ function MobileCard({ feature }: { feature: Feature }) {
 
 export function FeaturesSection() {
   return (
-    <section className="bg-[var(--l-bg)]" style={{ paddingBlock: "4.2rem" }}>
-      <div className="mx-auto hidden w-full max-w-[81.25rem] flex-col px-[1.25rem] lg:flex" style={{ gap: "5.6rem" }}>
+    <section className="l-section bg-[var(--l-bg)]">
+      <div className="l-container hidden flex-col min-[900px]:flex" style={{ gap: "5.6rem" }}>
         {FEATURES.map((f) => (
           <DesktopCard key={f.title} feature={f} />
         ))}
       </div>
-      <div className="flex flex-col px-[1.172rem] lg:hidden" style={{ gap: "5.25rem" }}>
+      <div className="l-container flex flex-col min-[900px]:hidden" style={{ gap: "5.25rem" }}>
         {FEATURES.map((f) => (
           <MobileCard key={f.title} feature={f} />
         ))}

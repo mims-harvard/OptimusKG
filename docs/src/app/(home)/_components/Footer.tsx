@@ -6,7 +6,7 @@ const smallText = "text-[0.825rem]/[1.3125rem] tracking-[0.00875rem] text-[var(-
 export function Footer() {
   return (
     <footer>
-      <div className="mx-auto flex max-w-325 flex-col px-[1.172rem] pt-15.75 pb-15.75 md:pb-[1.758rem] lg:px-5 lg:pt-[4.2rem] lg:pb-7.5">
+      <div className="l-container flex flex-col pt-15.75 pb-15.75 md:pb-[1.758rem] min-[900px]:pt-[4.2rem] min-[900px]:pb-7.5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-[0.35rem] sm:flex-row sm:items-center sm:gap-4">
             <a
