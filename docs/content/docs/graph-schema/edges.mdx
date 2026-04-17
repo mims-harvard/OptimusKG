@@ -36,16 +36,7 @@ OptimusKG encodes **26 edge types** connecting the node types across molecular, 
 
 All edges share the same base schema in the unified `edges.parquet` and `largest_connected_component_edges.parquet` tables:
 
-```python
-{
-    "from":       str,   # source node ID (CURIE format)
-    "to":         str,   # target node ID (CURIE format)
-    "label":      str,   # edge type label (e.g. DIS-GEN)
-    "relation":   str,   # relation type (e.g. ASSOCIATED_WITH)
-    "undirected": bool,  # if True, edge has no intrinsic directionality
-    "properties": str,   # JSON-encoded edge-specific properties
-}
-```
+<BaseEdgeSchema />
 
 <Callout>
   In the stratified per-type parquet files (`edges/<label>.parquet`), `properties` is expanded into native typed columns as a Polars `Struct`.
@@ -208,7 +199,7 @@ All edges share the same base schema in the unified `edges.parquet` and `largest
 <PhePheEdge />
 
 <Cards>
-  <Card title="Node Types" href="/docs/graph-schema/nodes" />
-  <Card title="Python Client" href="/docs/python-client" />
+  <Card title="OptimusKG Client" href="/docs/optimuskg-client" />
+  <Card title="Nodes" href="/docs/graph-schema/nodes" />
   <Card title="Data Sources & Ontologies" href="/docs/data-sources" />
 </Cards>

@@ -3,7 +3,7 @@
   "pages": [
     "---Getting Started---",
     "index",
-    "python-client",
+    "optimuskg-client",
     "---Knowledge Graph---",
     "graph-schema",
     "data-sources",

@@ -1,7 +1,7 @@
 import { SchemaTree, type SchemaField } from './schema-tree';
 
 const fields: SchemaField[] = [
-  { name: 'id', type: 'String', description: 'Ensembl gene ID (e.g. ENSG00000141510)' },
+  { name: 'id', type: 'String', description: 'Node identifier in CURIE format (e.g. ENSG00000141510)' },
   { name: 'label', type: 'String', description: 'Node type abbreviation (GEN)' },
   {
     name: 'properties',

@@ -23,7 +23,7 @@ const sourcesField: SchemaField = {
 };
 
 const fields: SchemaField[] = [
-  { name: 'id', type: 'String', description: 'Phenotype ontology ID (e.g. HP:0001250)' },
+  { name: 'id', type: 'String', description: 'Node identifier in CURIE format (e.g. HP:0001250)' },
   { name: 'label', type: 'String', description: 'Node type abbreviation (PHE)' },
   {
     name: 'properties',

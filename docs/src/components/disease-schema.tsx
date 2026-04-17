@@ -11,7 +11,7 @@ const sourcesField: SchemaField = {
 };
 
 const fields: SchemaField[] = [
-  { name: 'id', type: 'String', description: 'Disease ontology ID (e.g. MONDO:0005148)' },
+  { name: 'id', type: 'String', description: 'Node identifier in CURIE format (e.g. MONDO:0005148)' },
   { name: 'label', type: 'String', description: 'Node type abbreviation (DIS)' },
   {
     name: 'properties',

@@ -18,15 +18,9 @@ OptimusKG encodes **10 node types** spanning molecular, clinical, anatomical, an
 | `PWY` | Pathway | 2,805 |
 | `EXP` | Exposure | 881 |
 
-All nodes share the same base schema in the unified `nodes.parquet` and `largest_connected_component_nodes.parquet` tables:
+All nodes share the same base schema:
 
-```python
-{
-    "id":         str,   # globally unique node identifier in CURIE format {namespace}[:_]{local_id} (e.g., ENSG00000139618, GO_0000001, MESH:C000188).
-    "label":      str,   # node type 3-letter abbreviation (e.g. GEN, DRG)
-    "properties": str,   # JSON-encoded type-specific properties
-}
-```
+<BaseNodeSchema />
 
 <Callout>
   In the stratified per-type parquet files (`nodes/<type>.parquet`), `properties` is expanded into native typed columns as a Polars `Struct`.
@@ -93,7 +87,7 @@ All nodes share the same base schema in the unified `nodes.parquet` and `largest
 <ExposureSchema />
 
 <Cards>
-  <Card title="Edge Types" href="/docs/graph-schema/edges" />
-  <Card title="Python Client" href="/docs/python-client" />
+  <Card title="OptimusKG Client" href="/docs/optimuskg-client" />
+  <Card title="Edges" href="/docs/graph-schema/edges" />
   <Card title="Data Sources & Ontologies" href="/docs/data-sources" />
 </Cards>

@@ -5,8 +5,8 @@
  */
 import { SchemaTree, type SchemaField } from './schema-tree';
 
-const fields = (idExample: string, labelAbbrev: string, idDescription: string): SchemaField[] => [
-  { name: 'id', type: 'String', description: `${idDescription} (e.g. ${idExample})` },
+const fields = (idExample: string, labelAbbrev: string): SchemaField[] => [
+  { name: 'id', type: 'String', description: `Node identifier in CURIE format (e.g. ${idExample})` },
   { name: 'label', type: 'String', description: `Node type abbreviation (${labelAbbrev})` },
   {
     name: 'properties',
@@ -42,17 +42,17 @@ const fields = (idExample: string, labelAbbrev: string, idDescription: string): 
 ];
 
 export function AnatomySchema() {
-  return <SchemaTree fields={fields('UBERON:0000948', 'ANA', 'UBERON anatomical entity ID')} />;
+  return <SchemaTree fields={fields('UBERON:0000948', 'ANA')} />;
 }
 
 export function BiologicalProcessSchema() {
-  return <SchemaTree fields={fields('GO:0006915', 'BPO', 'Gene Ontology biological process ID')} />;
+  return <SchemaTree fields={fields('GO:0006915', 'BPO')} />;
 }
 
 export function CellularComponentSchema() {
-  return <SchemaTree fields={fields('GO:0005737', 'CCO', 'Gene Ontology cellular component ID')} />;
+  return <SchemaTree fields={fields('GO:0005737', 'CCO')} />;
 }
 
 export function MolecularFunctionSchema() {
-  return <SchemaTree fields={fields('GO:0003677', 'MFN', 'Gene Ontology molecular function ID')} />;
+  return <SchemaTree fields={fields('GO:0003677', 'MFN')} />;
 }

@@ -1,7 +1,7 @@
 import { SchemaTree, type SchemaField } from './schema-tree';
 
 const fields: SchemaField[] = [
-  { name: 'id', type: 'String', description: 'DrugBank accession ID (e.g. DB00001)' },
+  { name: 'id', type: 'String', description: 'Node identifier in CURIE format (e.g. DB00001)' },
   { name: 'label', type: 'String', description: 'Node type abbreviation (DRG)' },
   {
     name: 'properties',
