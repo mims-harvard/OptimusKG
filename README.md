@@ -53,6 +53,12 @@ nodes, edges = optimuskg.load_graph(lcc=True)
 G = optimuskg.load_networkx(lcc=True)
 ```
 
+> [!NOTE]
+> Download files are cached in `platformdirs.user_cache_dir("optimuskg")` by default (`~/Library/Caches/optimuskg` on macOS, `~/.cache/optimuskg` on Linux). Override with `$OPTIMUSKG_CACHE_DIR` or `optimuskg.set_cache_dir(path)`.
+
+> [!NOTE]
+> To use a different dataset (_e.g._, a pre-release), set `$OPTIMUSKG_DOI` or call `optimuskg.set_doi("doi:10.xxxx/XXXX")`.
+
 ## Data pipeline
 
 The pipeline architecture consists of the following components:
