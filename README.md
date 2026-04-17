@@ -1,5 +1,5 @@
 <div align="center">
-  <a target="_blank" href="https://optimuskg.ai" style="background:none">
+  <a target="_blank" href="https://optimuskg.ai" style="background:white">
     <img src="https://raw.githubusercontent.com/mims-harvard/optimuskg/main/assets/svg/optimuskg-logo.svg" alt="Made at the Zitnik Lab" width="600">
   </a>
 </div>
