@@ -21,9 +21,9 @@
 
 OptimusKG is developed at the [Zitnik Lab](https://zitniklab.hms.harvard.edu/), [Harvard Medical School](https://dbmi.hms.harvard.edu/).
 
-## Data availability
+## Using OptimusKG
 
-OptimusKG is available via [Harvard Dataverse](https://doi.org/10.7910/DVN/IYNGEV). OptimusKG can be programatically accessed using the python client, installable from [PyPI](https://pypi.org/project/optimuskg/):
+OptimusKG is available via [Harvard Dataverse](https://doi.org/10.7910/DVN/IYNGEV). The graph can be programmatically accessed using the Python client, available on [PyPI](https://pypi.org/project/optimuskg/):
 
 ```bash
 # With pip.
@@ -33,6 +33,24 @@ pip install optimuskg
 ```bash
 # Or pipx.
 pipx install optimuskg
+```
+
+The client fetches files from the gold layer with local caching, and supports loading the graph either as [Polars Dataframes](https://github.com/pola-rs/polars) or as a [NetworkX MultiDiGraph](https://networkx.org/documentation/stable/reference/classes/multidigraph.html):
+
+```python
+import optimuskg
+
+# Download (once) and cache a file from the gold layer
+path = optimuskg.get_file("nodes/gene.parquet")
+
+# Load a single Parquet file
+drugs = optimuskg.load_parquet("nodes/drug.parquet")
+
+# Load nodes and edges (full graph or Largest Connected Component)
+nodes, edges = optimuskg.load_graph(lcc=True)
+
+# Load as NetworkX MultiDiGraph (JSON properties parsed)
+G = optimuskg.load_networkx(lcc=True)
 ```
 
 ## Data pipeline
