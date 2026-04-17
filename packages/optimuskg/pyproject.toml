@@ -10,10 +10,10 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.12"
 authors = [
-  { name = "Iñaki Arango" },
   { name = "Lucas Vittor" },
-  { name = "Joaquín Poloneur" },
+  { name = "Iñaki Arango" },
   { name = "Ayush Noori" },
+  { name = "Joaquín Poloneur" },
   { name = "Marinka Zitnik" },
 ]
 keywords = ["knowledge-graph", "biomedical", "dataverse", "networkx", "polars"]
