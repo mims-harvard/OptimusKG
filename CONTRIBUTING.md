@@ -52,25 +52,7 @@ Tests use [`pytest`](https://docs.pytest.org/en/stable/) and are run through [`h
 $ uv tool run hatch run pytest
 ```
 
-## Editing pipeline nodes
-
-The OptimusKG data pipeline enforces strict synchronization between node files and catalog YAML files. When you edit any Python node file under `optimuskg/pipelines/*/nodes/`, you must also update the corresponding catalog entries and rerun all downstream nodes.
-
-Follow the four-step sync workflow:
-
-1. Identify the catalog entries affected by your change in `conf/base/catalog/`.
-2. Update the dataset ID, filepath, or schema as needed.
-3. Rerun the node and sync the catalog:
-    ```console
-    $ uv run kedro run --from-nodes=<node_name>
-    $ uv run cli sync-catalog --dataset <catalog_id>
-    ```
-4. Cascade downstream — rerun all nodes that depend on the changed output.
-
-> [!IMPORTANT]
-> Never delete the `checksum` field from a catalog entry. If the output of a node changes, recompute it with `uv run cli sync-catalog --dataset <catalog_id>`.
-
-## CLI utilities
+## CLI utilities and editing pipeline nodes
 
 The pipeline ships a [Typer](https://typer.tiangolo.com/)-based CLI for common maintenance tasks:
 
@@ -107,3 +89,19 @@ $ uv run cli sync-catalog --dataset bronze.opentargets.disease
 | `--dry-run` | `-n` | Preview changes without writing files. |
 | `--catalog-dir` | | Path to the catalog directory (default: `conf/base/catalog`). |
 | `--data-dir` | | Path to the data directory (default: `data`). |
+
+### Editing pipeline nodes
+
+The OptimusKG data pipeline enforces strict synchronization between node files and catalog YAML files. When you edit any Python node file under `optimuskg/pipelines/*/nodes/`, you must also update the corresponding catalog entries and rerun all downstream nodes.
+
+1. Identify the catalog entries affected by your change in `conf/base/catalog/`.
+2. Update the dataset ID, filepath, or schema as needed.
+3. Rerun the node and sync the catalog:
+    ```console
+    $ uv run kedro run --from-nodes=<node_name>
+    $ uv run cli sync-catalog --dataset <catalog_id>
+    ```
+4. Cascade downstream — rerun all nodes that depend on the changed output.
+
+> [!IMPORTANT]
+> Never delete the `checksum` field from a catalog entry. If the output of a node changes, recompute it with `uv run cli sync-catalog --dataset <catalog_id>`.

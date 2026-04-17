@@ -1,6 +1,8 @@
-<p align="center">
-  <img src="docs/public/full-logo.jpg" alt="OptimusKG" width="500">
-</p>
+<div align="center">
+  <a target="_blank" href="https://optimuskg.ai" style="background:none">
+    <img src="https://raw.githubusercontent.com/mims-harvard/optimuskg/main/assets/svg/optimuskg-logo.svg" alt="Made at the Zitnik Lab">
+  </a>
+</div>
 
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
