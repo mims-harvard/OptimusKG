@@ -1,7 +1,7 @@
 import { SchemaTree, type SchemaField } from './schema-tree';
 
 const fields: SchemaField[] = [
-  { name: 'id', type: 'String', description: 'Reactome pathway ID (e.g. R-HSA-109582)' },
+  { name: 'id', type: 'String', description: 'Node identifier in CURIE format (e.g. R-HSA-109582)' },
   { name: 'label', type: 'String', description: 'Node type abbreviation (PWY)' },
   {
     name: 'properties',

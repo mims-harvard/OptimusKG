@@ -1,7 +1,7 @@
 import { SchemaTree, type SchemaField } from './schema-tree';
 
 const fields: SchemaField[] = [
-  { name: 'id', type: 'String', description: 'Exposure identifier (e.g. CTD:D001564)' },
+  { name: 'id', type: 'String', description: 'Node identifier in CURIE format (e.g. CTD:D001564)' },
   { name: 'label', type: 'String', description: 'Node type abbreviation (EXP)' },
   {
     name: 'properties',

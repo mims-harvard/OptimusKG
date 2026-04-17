@@ -1,5 +1,7 @@
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import type { MDXComponents } from 'mdx/types';
+// Base schemas
+import { BaseNodeSchema, BaseEdgeSchema } from './base-schemas';
 // Node schemas
 import { GeneSchema } from './gene-schema';
 import { DrugSchema } from './drug-schema';
@@ -18,6 +20,9 @@ import { AnaGenEdge, DisPheEdge, ExpBpoEdge, ExpCcoEdge, ExpDisEdge, ExpExpEdge,
 export function getMDXComponents(components?: MDXComponents) {
   return {
     ...defaultMdxComponents,
+    // Base schemas
+    BaseNodeSchema,
+    BaseEdgeSchema,
     // Node schemas
     GeneSchema,
     DrugSchema,

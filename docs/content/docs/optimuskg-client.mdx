@@ -1,0 +1,165 @@
+---
+title: OptimusKG Client
+description: Python client for loading the OptimusKG biomedical knowledge graph from Harvard Dataverse.
+---
+
+The [`optimuskg`](https://pypi.org/project/optimuskg/) PyPI package is a thin client for loading the OptimusKG biomedical knowledge graph from [Harvard Dataverse](https://doi.org/10.7910/DVN/IYNGEV). The client resolves Dataverse file IDs automatically, caches downloads locally, and returns the graph as [Polars DataFrames](https://github.com/pola-rs/polars) or a [NetworkX MultiDiGraph](https://networkx.org/documentation/stable/reference/classes/multidigraph.html).
+
+## Installation
+
+<CodeBlockTabs defaultValue="uv">
+  <CodeBlockTabsList>
+    <CodeBlockTabsTrigger value="uv">uv</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="pip">pip</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="pipx">pipx</CodeBlockTabsTrigger>
+  </CodeBlockTabsList>
+  <CodeBlockTab value="uv">
+    ```bash
+    uv add optimuskg
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="pip">
+    ```bash
+    pip install optimuskg
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="pipx">
+    ```bash
+    pipx install optimuskg
+    ```
+  </CodeBlockTab>
+</CodeBlockTabs>
+
+## Quick Start
+
+```python
+import optimuskg
+
+# Download a specific file and store it locally
+local_path = optimuskg.get_file("nodes/gene.parquet")
+
+# Load a single Parquet file as a Polars DataFrame
+drugs = optimuskg.load_parquet("nodes/drug.parquet")
+
+# Load nodes and edges as Polars DataFrames
+# Set lcc=True to load only the largest connected component
+nodes, edges = optimuskg.load_graph(lcc=True)
+
+# Load the graph as a NetworkX MultiDiGraph with metadata
+# Set lcc=True to load only the largest connected component
+G = optimuskg.load_networkx(lcc=True)
+```
+
+## API Reference
+
+### `get_file(relative_path, *, force=False) -> Path`
+
+Downloads the file if not already cached and returns its local path. Paths follow the layout of the catalog in the source repository:
+
+```python
+optimuskg.get_file("nodes.parquet")                               # full nodes table
+optimuskg.get_file("edges.parquet")                               # full edges table
+optimuskg.get_file("largest_connected_component_nodes.parquet")   # LCC nodes table
+optimuskg.get_file("largest_connected_component_edges.parquet")   # LCC edges table
+optimuskg.get_file("nodes/gene.parquet")                          # only Gene nodes
+optimuskg.get_file("edges/disease_gene.parquet")                  # only DIS-GEN edges
+```
+
+<Callout>
+  Use `force=True` to re-download the file even if its already cached.
+</Callout>
+
+### `load_parquet(relative_path, *, force=False, **kwargs) -> pl.DataFrame`
+
+Calls `get_file` then `polars.read_parquet`. Any extra keyword arguments are forwarded directly to `pl.read_parquet`.
+
+```python
+drugs = optimuskg.load_parquet("nodes/drug.parquet")
+only_ids = optimuskg.load_parquet("nodes/drug.parquet", columns=["id"])
+```
+
+### `load_graph(*, lcc=False, force=False) -> tuple[pl.DataFrame, pl.DataFrame]`
+
+Returns `(nodes, edges)` as Polars DataFrames. Pass `lcc=True` to get only the largest connected component.
+
+```python
+nodes, edges = optimuskg.load_graph()          # full graph
+nodes, edges = optimuskg.load_graph(lcc=True)  # LCC only
+```
+
+<Callout>
+  Dataframe schemas are documented in [Nodes](/docs/graph-schema/nodes) and [Edges](/docs/graph-schema/edges).
+</Callout>
+
+### `load_networkx(*, lcc=False, force=False, parse_properties=True) -> nx.MultiDiGraph`
+
+Builds a `networkx.MultiDiGraph` on top of `load_graph`. Then, you can use it:
+
+```python
+G = optimuskg.load_networkx(lcc=True)
+print(G.number_of_nodes(), G.number_of_edges())
+
+# Filter by node label
+genes = [n for n, attrs in G.nodes(data=True) if attrs["label"] == "GEN"]
+
+# Filter by relation type
+expression_edges = [
+    (u, v) for u, v, attrs in G.edges(data=True)
+    if attrs["relation"] == "EXPRESSION_PRESENT"
+]
+```
+
+<Callout type="info">`properties` JSON strings are parsed and merged into node/edge attribute dicts. Set `parse_properties=False` to skip this and keep the raw string.</Callout>
+
+<Callout type="info">The graph is always a `MultiDiGraph` regardless of edge directionality — call `G.to_undirected()` if you need an undirected view.</Callout>
+
+## Configuration
+
+### Cache directory
+
+Downloads are cached by default in `platformdirs.user_cache_dir("optimuskg")` (`~/Library/Caches/optimuskg` on macOS, `~/.cache/optimuskg` on Linux, and `C:\Users\<User>\AppData\Local\optimuskg\optimuskg` on Windows). Files within the cache are keyed by `<doi_slug>/<dataset_version>/<relative_path>`, so a new Dataverse release invalidates the cache automatically.
+
+It is possible to override the cache directory from code:
+
+```python
+optimuskg.set_cache_dir("/data/optimuskg-cache")
+```
+
+Or by using environment variables:
+
+```bash
+export OPTIMUSKG_CACHE_DIR=/data/optimuskg-cache
+```
+
+### Pointing at a different dataset
+
+By default the client targets the published OptimusKG dataset at `doi:10.7910/DVN/IYNGEV`. To target a different version (e.g. a pre-release or private dataset), override the DOI from code:
+
+```python
+optimuskg.set_doi("doi:10.7910/DVN/EXAMPLE")
+```
+
+Or by using environment variables:
+
+```bash
+export OPTIMUSKG_DOI=doi:10.7910/DVN/EXAMPLE
+```
+
+For a non-Harvard Dataverse installation, override the server URL from code:
+
+```python
+optimuskg.set_server("https://dataverse.example.org")
+```
+
+Or by using environment variables:
+
+```bash
+export OPTIMUSKG_SERVER=https://dataverse.example.org
+```
+
+## See Also
+
+<Cards>
+  <Card title="Nodes" href="/docs/graph-schema/nodes" />
+  <Card title="Edges" href="/docs/graph-schema/edges" />
+</Cards>
