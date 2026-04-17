@@ -24,8 +24,8 @@ const LOGOS = [
 
 function LogoCard({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-[3.75rem] items-center justify-center lg:h-[5rem]">
-      <div className="relative flex min-h-0 min-w-0 flex-1 items-center justify-center rounded-[0.25rem] bg-[var(--l-surface)] px-[0.75rem] lg:px-[1rem]">
+    <div className="flex h-[3.75rem] items-center justify-center md:h-[4.5rem] lg:h-[5rem]">
+      <div className="relative flex min-h-0 min-w-0 flex-1 items-center justify-center rounded-[0.25rem] bg-[var(--l-surface)] px-[0.75rem] md:px-[0.875rem] lg:px-[1rem]">
         {children}
         <div className="absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
       </div>
@@ -38,17 +38,17 @@ export function LogoGarden() {
     <section className="bg-[var(--l-bg)] pb-[2.1rem]">
       <div className="mx-auto max-w-[81.25rem] px-[1.172rem] lg:px-[1.25rem]">
         <div className="flex flex-col gap-[1.3125rem] lg:gap-[1.399rem]">
-          <p className="text-center whitespace-nowrap text-[var(--l-ink)] text-[0.775rem] leading-[1.231rem] tracking-[0.0082rem] lg:text-[0.825rem] lg:leading-[1.3125rem] lg:tracking-[0.00875rem]">
+          <p className="text-center whitespace-nowrap text-[var(--l-ink)] text-[0.775rem] leading-[1.231rem] tracking-[0.0082rem] md:text-[0.825rem] md:leading-[1.3125rem] md:tracking-[0.00875rem]">
             Trusted every day by researchers at world-class{" "}
-            <span className="block lg:inline">institutions</span>
+            <span className="block md:inline">institutions</span>
           </p>
-          <div className="grid grid-cols-3 gap-[0.4395rem] lg:grid-cols-7 lg:gap-[0.625rem]">
+          <div className="grid grid-cols-3 gap-[0.4395rem] sm:grid-cols-4 md:grid-cols-5 md:gap-[0.5rem] lg:grid-cols-7 lg:gap-[0.625rem]">
             {LOGOS.map(({ src, alt }) => (
               <LogoCard key={alt}>
                 <img
                   src={src}
                   alt={alt}
-                  className="max-h-[1.875rem] w-auto object-contain grayscale lg:max-h-[2.5rem]"
+                  className="max-h-[1.875rem] w-auto object-contain grayscale md:max-h-[2.25rem] lg:max-h-[2.5rem]"
                 />
               </LogoCard>
             ))}

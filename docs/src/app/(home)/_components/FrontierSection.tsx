@@ -66,7 +66,7 @@ function FrontierCard({ card }: { card: (typeof CARDS)[number] }) {
       </div>
       <div style={{ paddingTop: "1.094rem" }}>
         <div
-          className={cn("relative overflow-hidden rounded-[0.25rem] lg:h-[24.481rem]", card.mobileHeightClass)}
+          className={cn("relative overflow-hidden rounded-[0.25rem] md:h-[20rem] lg:h-[24.481rem]", card.mobileHeightClass)}
           style={{ backgroundImage: MEDIA_BG }}
         >
           <img
@@ -91,7 +91,7 @@ export function FrontierSection() {
         >
           Stay on the frontier
         </h2>
-        <div className="grid grid-cols-1 gap-[0.5rem] lg:grid-cols-3 lg:gap-[0.625rem]">
+        <div className="grid grid-cols-1 gap-[0.5rem] sm:grid-cols-2 sm:gap-[0.5625rem] lg:grid-cols-3 lg:gap-[0.625rem]">
           {CARDS.map((card) => (
             <FrontierCard key={card.title} card={card} />
           ))}

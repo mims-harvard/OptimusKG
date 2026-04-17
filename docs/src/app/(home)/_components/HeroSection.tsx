@@ -52,8 +52,8 @@ export function HeroSection() {
             <img
               src="/features/figure.webp"
               alt="Schema figure"
-              className="lg:hidden absolute rounded-[0.625rem] border border-[var(--l-border)] object-contain shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1)]"
-              style={{ left: "2rem", top: "2rem", height: "calc(100% - 4rem)", aspectRatio: "3840 / 2808" }}
+              className="lg:hidden absolute left-[2rem] md:left-1/2 md:-translate-x-1/2 top-[2rem] rounded-[0.625rem] border border-[var(--l-border)] object-contain shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1)]"
+              style={{ height: "calc(100% - 4rem)", aspectRatio: "3840 / 2808" }}
             />
 
             <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />

@@ -303,10 +303,10 @@ function MobileCard({ feature }: { feature: Feature }) {
       {...linkProps}
       className="relative flex flex-col overflow-hidden rounded-[0.25rem] bg-[var(--l-surface)]"
     >
-      <div className="p-[1.025rem]">
+      <div className="p-[1.025rem] md:p-[1.5rem]">
         <FeatureText {...feature} />
       </div>
-      <div className="relative h-[42.5rem] shrink-0 overflow-hidden">
+      <div className="relative h-[32rem] shrink-0 overflow-hidden sm:h-[36rem] md:h-[40rem]">
         <Media />
       </div>
       <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />

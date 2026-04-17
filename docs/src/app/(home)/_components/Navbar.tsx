@@ -48,7 +48,7 @@ export function Navbar() {
         <div className="flex h-[3.25rem] items-center justify-between">
           <OptimusKGLogo />
 
-          <div className="hidden items-center gap-[0.469rem] lg:flex">
+          <div className="hidden items-center gap-[0.469rem] md:flex">
             <a
               href={GET_STARTED_HREF}
               className={outlineButton}
@@ -88,7 +88,7 @@ export function Navbar() {
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}
             onClick={() => setOpen((v) => !v)}
-            className="flex h-6 w-6 flex-col justify-center gap-[0.3rem] text-[var(--l-ink)] lg:hidden"
+            className="flex h-6 w-6 flex-col justify-center gap-[0.3rem] text-[var(--l-ink)] md:hidden"
           >
             {open ? (
               <>
@@ -107,7 +107,7 @@ export function Navbar() {
       </div>
 
       {open && (
-        <div className="border-t border-[var(--l-border)] bg-[var(--l-bg)] px-6 pb-5 lg:hidden">
+        <div className="border-t border-[var(--l-border)] bg-[var(--l-bg)] px-6 pb-5 md:hidden">
           <div className="mt-4 flex flex-col gap-3">
             <a
               href={GET_STARTED_HREF}
