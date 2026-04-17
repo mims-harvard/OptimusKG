@@ -23,7 +23,7 @@ OptimusKG is developed at the [Zitnik Lab](https://zitniklab.hms.harvard.edu/), 
 
 ## Data availability
 
-OptimusKG is available via [Harvard Dataverse](https://doi.org/10.7910/DVN/IYNGEV). OptimusKG can be programatically accessed using the OptimusKG python client, installable from [PyPI](https://pypi.org/project/optimuskg/):
+OptimusKG is available via [Harvard Dataverse](https://doi.org/10.7910/DVN/IYNGEV). OptimusKG can be programatically accessed using the python client, installable from [PyPI](https://pypi.org/project/optimuskg/):
 
 ```bash
 # With pip.
@@ -76,9 +76,9 @@ Audited 225 packages in 0.42ms
 > [!TIP]
 > Run `make help` for a list of available Make commands, and `uv run cli --help` for additional CLI utilities (e.g., checksum validation, metrics generation).
 
-### Generating the knowledge graph
+### Generating OptimusKG from raw sources
 
-The pipeline is designed to generate the full knowledge graph in one command:
+The pipeline is designed to generate the full knowledge graph and all the intermediate datasets used to generate it in one command:
 
 ```console
 $ uv run kedro run --to-nodes gold.export_kg --runner=optimuskg.runners.FixedParallelRunner --async
@@ -88,25 +88,19 @@ $ uv run kedro run --to-nodes gold.export_kg --runner=optimuskg.runners.FixedPar
 [01/28/25 19:29:09] INFO     Using synchronous mode for loading and saving data. Use the --async flag for potential performance gains.
 ```
 
-This will automatically download all the necessary data, store it in the `landing` layer, and execute the `bronze`, `silver`, and `gold` layers
-to finally export the graph inside the `data/gold/kg/` folder.
+This will automatically download all the necessary data, store it in the `landing` layer, and execute the `bronze`, `silver`, and `gold` layersto finally export the graph inside the `data/gold/kg/` folder.
 
 > [!NOTE]
 > It is recommended to use the `optimuskg.runners.FixedParallelRunner`
-> to run the nodes within a pipeline concurrently, and the [async](https://docs.kedro.org/en/latest/build/run_a_pipeline/#load-and-save-asynchronously) flag to reduce load and save time by using asynchronous mode. The original [ParallelRunner](https://docs.kedro.org/en/latest/build/run_a_pipeline/#parallelrunner) contains a bug that prevents it from running any validation checks.
-
-> [!NOTE]
-> This will not only export the knowledge graph, but also all the intermediate datasets used to generate it.
-> The location of each dataset and their format is specified in the catalog.
+> to run the nodes within a pipeline concurrently, and the [async](https://docs.kedro.org/en/latest/build/run_a_pipeline/#load-and-save-asynchronously) flag to reduce load and save time by using asynchronous mode. The Kedro default [ParallelRunner](https://docs.kedro.org/en/latest/build/run_a_pipeline/#parallelrunner) contains a bug that prevents it from running any validation checks.
 
 > [!TIP]
-> Export formats (Parquet, Neo4j) can be configured in `conf/base/parameters.yml` under `gold.export_formats`.
+> The location of each dataset and their format is specified in the catalog.
 
 > [!NOTE]
-> Distributed OptimusKG data files contain only publicly available data.
-> If you have access to private datasets, place them in the appropriate subdirectories under `data/landing/`. The pipeline will automatically use them if present.
+> The pipeline automatically downloads public datasets and ingests them in the `landing` layer. 
 >
-> If you do not have access, the [`Origin Hook`](https://github.com/mims-harvard/optimuskg/blob/main/optimuskg/hooks/origin/origin_hooks.py) will generate empty placeholder datasets in their place. This allows pipeline nodes that depend on both public and private data to run, even if the private data is missing. As a result, you can still execute the pipeline and work with the public portions of the data without interruption.
+> Place any private datasets under `data/loading`. If absent, the [`Origin Hook`](https://github.com/mims-harvard/optimuskg/blob/main/optimuskg/hooks/origin/origin_hooks.py) will create empty placeholders, allowing dependent nodes to run even if the private data is missing.
 
 Then, you can spin up a Neo4j database with the graph data simply by running:
 
@@ -175,7 +169,7 @@ If you use OptimusKG in your research, please cite:
 
 ## License
 
-The OptimusKG codebase is released under the [MIT License](LICENSE). OptimusKG integrates multiple primary data resources, each of which is subject to its own license and terms of use. These terms may impose restrictions on redistribution, commercial use, or downstream applications of the resulting knowledge graph or its subsets. Some resources provide data under academic or noncommercial licenses, while others may impose attribution or usage requirements. As a result, use of OptimusKG may be partially restricted depending on the specific data components included in a given instantiation. Users are responsible for reviewing and complying with the license and terms of use of each primary dataset, as specified by the original data providers. OptimusKG does not alter or override these source-specific licensing conditions.
+OptimusKG codebase is released under the [MIT License](LICENSE). OptimusKG integrates multiple primary data resources, each of which is subject to its own license and terms of use. These terms may impose restrictions on redistribution, commercial use, or downstream applications of the resulting knowledge graph or its subsets. Some resources provide data under academic or noncommercial licenses, while others may impose attribution or usage requirements. As a result, use of OptimusKG may be partially restricted depending on the specific data components included in a given instantiation. Users are responsible for reviewing and complying with the license and terms of use of each primary dataset, as specified by the original data providers. OptimusKG does not alter or override these source-specific licensing conditions.
 
 
 <p align="center">
