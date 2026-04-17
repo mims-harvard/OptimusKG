@@ -22,8 +22,8 @@ def stub_dataverse(
     """Return a stub that serves metadata plus four canonical files."""
     nodes_path = tmp_path / "nodes.parquet"
     edges_path = tmp_path / "edges.parquet"
-    lcc_nodes_path = tmp_path / "lcc_nodes.parquet"
-    lcc_edges_path = tmp_path / "lcc_edges.parquet"
+    lcc_nodes_path = tmp_path / "largest_connected_component_nodes.parquet"
+    lcc_edges_path = tmp_path / "largest_connected_component_edges.parquet"
     tiny_nodes.write_parquet(nodes_path)
     tiny_edges.write_parquet(edges_path)
     tiny_nodes.write_parquet(lcc_nodes_path)
