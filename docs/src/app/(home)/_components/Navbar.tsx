@@ -23,7 +23,7 @@ function GitHubIcon({ size = 22 }: { size?: number }) {
   );
 }
 
-const GET_STARTED_HREF = "/docs/getting-started";
+const GET_STARTED_HREF = "/docs";
 const GITHUB_HREF = `https://github.com/${gitConfig.user}/${gitConfig.repo}`;
 
 const outlineButton =

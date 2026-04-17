@@ -1,31 +1,77 @@
 ---
 title: Introduction
-description: OptimusKG is an opinionated, production-ready data pipeline for constructing biomedical knowledge graphs.
+description: OptimusKG is a modern multimodal knowledge graph with type-specific metadata across biomedical domains.
 ---
 
-OptimusKG is a data pipeline designed to construct, validate, and maintain biomedical knowledge graphs following software engineering best practices.
+## Highlights
 
-## Principles
+- A [modern biomedical knowledge graph](https://optimuskg.ai) with molecular, anatomical, clinical, and environmental modalities.
+- Integrates 65 heterogeneous resources grounded with 18 ontologies and controlled vocabularies using the [BioCypher framework](https://github.com/biocypher/biocypher) and the [Biolink Model](https://github.com/biolink/biolink-model).
+- Contains 190,531 nodes across 10 entity types, 21,813,816 edges across 26 relation types, and 67,249,863 property instances encoding 110,276,843 values across 150 distinct property keys.
+- Independently validated using [PaperQA3](https://github.com/Future-House/paper-qa), a multimodal agent that retrieves and reasons over scientific literature.
+- Reproducible, deterministic and infrastructure-agnostic data pipeline with parallel execution.
+- Distributed as [Apache Parquet](https://parquet.apache.org/) files and downloadable via the [optimuskg](/docs/python-client) python client.
 
-- **Ready-to-use**: Comes with pre-built processing nodes that unify many biomedical data sources into a single knowledge graph.
-- **Reproducible**: All data transformations are deterministic, validated through checksum checks, and infrastructure-agnostic.
-- **Extensible**: A superset of the [Kedro framework](https://kedro.org/) (hosted by the [Linux Foundation](https://lfaidata.foundation/)), providing a uniform project template, dataset abstraction, configuration management, and pipeline assembly.
+OptimusKG is developed at the [Zitnik Lab](https://zitniklab.hms.harvard.edu/), [Harvard Medical School](https://dbmi.hms.harvard.edu/).
 
-## Architecture at a Glance
+## Using OptimusKG
 
-| Component | Description |
-| --- | --- |
-| **Catalog** | The single source of truth for all datasets, their schemas, format, and metadata. |
-| **Dataset** | An abstraction that handles file formats, storage locations, and persistence logic. |
-| **Node** | A pure Python function whose output follows solely from its input values. |
-| **Pipeline** | A sequence of nodes wired into a DAG-based workflow. |
-| **Layer** | Follows the medallion architecture: landing, bronze, silver, and gold. |
-| **Parameters** | Constants for filtering data across the construction process. |
-| **Provider** | An abstraction for versioned, automatic data downloads from external sources. |
-| **Hook** | Injects custom behavior into the execution flow (e.g., checksum validation). |
+OptimusKG is available via [Harvard Dataverse](https://doi.org/10.7910/DVN/IYNGEV). The graph can be programmatically accessed using the Python client, available on [PyPI](https://pypi.org/project/optimuskg/):
+
+<CodeBlockTabs defaultValue="uv">
+  <CodeBlockTabsList>
+    <CodeBlockTabsTrigger value="uv">uv</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="pip">pip</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="pipx">pipx</CodeBlockTabsTrigger>
+  </CodeBlockTabsList>
+  <CodeBlockTab value="uv">
+    ```bash
+    uv add optimuskg
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="pip">
+    ```bash
+    pip install optimuskg
+    ```
+  </CodeBlockTab>
+  <CodeBlockTab value="pipx">
+    ```bash
+    pipx install optimuskg
+    ```
+  </CodeBlockTab>
+</CodeBlockTabs>
+
+The client fetches files from the gold layer with local caching, and supports loading the graph either as [Polars DataFrames](https://github.com/pola-rs/polars) or as a [NetworkX MultiDiGraph](https://networkx.org/documentation/stable/reference/classes/multidigraph.html):
+
+```python
+import optimuskg
+
+# Download (once) and cache a file from the gold layer
+path = optimuskg.get_file("nodes/gene.parquet")
+
+# Load a single Parquet file
+drugs = optimuskg.load_parquet("nodes/drug.parquet")
+
+# Load nodes and edges (full graph or Largest Connected Component)
+nodes, edges = optimuskg.load_graph(lcc=True)
+
+# Load as NetworkX MultiDiGraph (JSON properties parsed)
+G = optimuskg.load_networkx(lcc=True)
+```
+
+<Callout>
+  Downloads are cached by default in `platformdirs.user_cache_dir("optimuskg")` (`~/Library/Caches/optimuskg` on macOS, `~/.cache/optimuskg` on Linux). The cache location can be overridden via the `$OPTIMUSKG_CACHE_DIR` environment variable or programmatically with `optimuskg.set_cache_dir(path)`.
+</Callout>
+
+<Callout>
+  To target a different dataset (e.g., a pre-release), set the `$OPTIMUSKG_DOI` environment variable or use `optimuskg.set_doi("doi:10.xxxx/XXXX")`.
+</Callout>
 
 ## What's Next?
 
 <Cards>
-  <Card title="Graph Schema" href="/docs/graph-schema/node-types" />
+  <Card title="Python Client" href="/docs/python-client" />
+  <Card title="Node Types" href="/docs/graph-schema/node-types" />
+  <Card title="Edge Types" href="/docs/graph-schema/edge-types" />
+  <Card title="Data Sources & Ontologies" href="/docs/data-sources" />
 </Cards>

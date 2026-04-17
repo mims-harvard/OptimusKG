@@ -1,0 +1,99 @@
+---
+title: Nodes
+description: Node types and their schema in OptimusKG.
+---
+
+OptimusKG encodes **10 node types** spanning molecular, clinical, anatomical, and environmental entities.
+
+| Label | Type | Count |
+| --- | --- | --: |
+| `GEN` | Gene | 61,306 |
+| `DIS` | Disease | 36,345 |
+| `BPO` | Biological Process | 25,754 |
+| `PHE` | Phenotype | 19,341 |
+| `DRG` | Drug | 16,766 |
+| `ANA` | Anatomy | 13,120 |
+| `MFN` | Molecular Function | 10,161 |
+| `CCO` | Cellular Component | 4,052 |
+| `PWY` | Pathway | 2,805 |
+| `EXP` | Exposure | 881 |
+
+All nodes share the same base schema in the unified `nodes.parquet` and `largest_connected_component_nodes.parquet` tables:
+
+```python
+{
+    "id":         str,   # globally unique node identifier in CURIE format {namespace}[:_]{local_id} (e.g., ENSG00000139618, GO_0000001, MESH:C000188).
+    "label":      str,   # node type 3-letter abbreviation (e.g. GEN, DRG)
+    "properties": str,   # JSON-encoded type-specific properties
+}
+```
+
+<Callout>
+  In the stratified per-type parquet files (`nodes/<type>.parquet`), `properties` is expanded into native typed columns as a Polars `Struct`.
+</Callout>
+
+---
+
+## Gene
+
+<GeneSchema />
+
+---
+
+## Drug
+
+<DrugSchema />
+
+---
+
+## Disease
+
+<DiseaseSchema />
+
+---
+
+## Phenotype
+
+<PhenotypeSchema />
+
+---
+
+## Anatomy
+
+<AnatomySchema />
+
+---
+
+## Pathway
+
+<PathwaySchema />
+
+---
+
+## Biological Process
+
+<BiologicalProcessSchema />
+
+---
+
+## Cellular Component
+
+<CellularComponentSchema />
+
+---
+
+## Molecular Function
+
+<MolecularFunctionSchema />
+
+---
+
+## Exposure
+
+<ExposureSchema />
+
+<Cards>
+  <Card title="Edge Types" href="/docs/graph-schema/edges" />
+  <Card title="Python Client" href="/docs/python-client" />
+  <Card title="Data Sources & Ontologies" href="/docs/data-sources" />
+</Cards>

@@ -1,9 +1,9 @@
 ---
 title: Python Client
-description: Load the OptimusKG knowledge graph from Harvard Dataverse using the `optimuskg` PyPI package.
+description: Python client for loading the OptimusKG biomedical knowledge graph from Harvard Dataverse.
 ---
 
-The [`optimuskg`](https://pypi.org/project/optimuskg/) PyPI package is a thin client for loading the published knowledge graph. It resolves Dataverse file IDs automatically, caches downloads locally, and returns Polars DataFrames or a NetworkX graph.
+The [`optimuskg`](https://pypi.org/project/optimuskg/) PyPI package is a thin client for loading the OptimusKG biomedical knowledge graph from [Harvard Dataverse](https://doi.org/10.7910/DVN/IYNGEV). The client resolves Dataverse file IDs automatically, caches downloads locally, and returns [Polars DataFrames](https://github.com/pola-rs/polars) or a [NetworkX MultiDiGraph](https://networkx.org/documentation/stable/reference/classes/multidigraph.html).
 
 ## Installation
 
@@ -11,6 +11,7 @@ The [`optimuskg`](https://pypi.org/project/optimuskg/) PyPI package is a thin cl
   <CodeBlockTabsList>
     <CodeBlockTabsTrigger value="uv">uv</CodeBlockTabsTrigger>
     <CodeBlockTabsTrigger value="pip">pip</CodeBlockTabsTrigger>
+    <CodeBlockTabsTrigger value="pipx">pipx</CodeBlockTabsTrigger>
   </CodeBlockTabsList>
   <CodeBlockTab value="uv">
     ```bash
@@ -22,20 +23,30 @@ The [`optimuskg`](https://pypi.org/project/optimuskg/) PyPI package is a thin cl
     pip install optimuskg
     ```
   </CodeBlockTab>
+  <CodeBlockTab value="pipx">
+    ```bash
+    pipx install optimuskg
+    ```
+  </CodeBlockTab>
 </CodeBlockTabs>
-
-Requires Python 3.12 or newer. The package pulls in `polars`, `pyarrow`, `networkx`, `requests`, and `platformdirs`.
 
 ## Quick Start
 
 ```python
 import optimuskg
 
+# Download (once) and cache a file from the gold layer
+path = optimuskg.get_file("nodes/gene.parquet")
+
+# Load a single Parquet file as a Polars DataFrame
+drugs = optimuskg.load_parquet("nodes/drug.parquet")
+
+# Load nodes and edges (full graph or Largest Connected Component)
 nodes, edges = optimuskg.load_graph(lcc=True)
+
+# Load as NetworkX MultiDiGraph with JSON properties parsed onto nodes and edges
 G = optimuskg.load_networkx(lcc=True)
 ```
-
-The first call downloads `lcc_nodes.parquet` and `lcc_edges.parquet` from Harvard Dataverse. Subsequent calls return the cached copies.
 
 ## API Reference
 
@@ -44,12 +55,12 @@ The first call downloads `lcc_nodes.parquet` and `lcc_edges.parquet` from Harvar
 Download (if missing) and return the local cache path for a single parquet file. Paths mirror the layout under `data/gold/kg/parquet/` in the source repository:
 
 ```python
-optimuskg.get_file("nodes.parquet")                 # full nodes table
-optimuskg.get_file("edges.parquet")                 # full edges table
-optimuskg.get_file("lcc_nodes.parquet")             # LCC nodes table
-optimuskg.get_file("lcc_edges.parquet")             # LCC edges table
-optimuskg.get_file("nodes/gene.parquet")            # only Gene nodes
-optimuskg.get_file("edges/disease_gene.parquet")    # only DIS-GEN edges
+optimuskg.get_file("nodes.parquet")                               # full nodes table
+optimuskg.get_file("edges.parquet")                               # full edges table
+optimuskg.get_file("largest_connected_component_nodes.parquet")   # LCC nodes table
+optimuskg.get_file("largest_connected_component_edges.parquet")   # LCC edges table
+optimuskg.get_file("nodes/gene.parquet")                          # only Gene nodes
+optimuskg.get_file("edges/disease_gene.parquet")                  # only DIS-GEN edges
 ```
 
 Pass `force=True` to re-download even if the file is already cached.
@@ -72,7 +83,7 @@ nodes, edges = optimuskg.load_graph()          # full graph
 nodes, edges = optimuskg.load_graph(lcc=True)  # LCC only
 ```
 
-Column schemas match the raw parquet files — see [Node Types](/docs/graph-schema/node-types) and [Edge Types](/docs/graph-schema/edge-types).
+Column schemas match the raw parquet files — see [Nodes](/docs/graph-schema/nodes) and [Edges](/docs/graph-schema/edges).
 
 ### `load_networkx(*, lcc=False, force=False, parse_properties=True) -> nx.MultiDiGraph`
 
