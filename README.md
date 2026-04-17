@@ -42,21 +42,23 @@ The client fetches files from the gold layer with local caching, and supports lo
 ```python
 import optimuskg
 
-# Download (once) and cache a file from the gold layer
-path = optimuskg.get_file("nodes/gene.parquet")
+# Download a specific file and store it locally
+local_path = optimuskg.get_file("nodes/gene.parquet")
 
-# Load a single Parquet file
+# Load a single Parquet file as a Polars DataFrame
 drugs = optimuskg.load_parquet("nodes/drug.parquet")
 
-# Load nodes and edges (full graph or Largest Connected Component)
+# Load nodes and edges as Polars DataFrames
+# Set lcc=True to load only the largest connected component
 nodes, edges = optimuskg.load_graph(lcc=True)
 
-# Load as NetworkX MultiDiGraph (JSON properties parsed)
+# Load the graph as a NetworkX MultiDiGraph with metadata
+# Set lcc=True to load only the largest connected component
 G = optimuskg.load_networkx(lcc=True)
 ```
 
 > [!NOTE]
-> Downloads are cached by default in `platformdirs.user_cache_dir("optimuskg")` (`~/Library/Caches/optimuskg` on macOS, `~/.cache/optimuskg` on Linux). The cache location can be overridden via the `$OPTIMUSKG_CACHE_DIR` environment variable or programmatically with `optimuskg.set_cache_dir(path)`.
+> Downloads are cached by default in `platformdirs.user_cache_dir("optimuskg")` (`~/Library/Caches/optimuskg` on macOS, `~/.cache/optimuskg` on Linux, and `C:\Users\<User>\AppData\Local\optimuskg\optimuskg` on Windows). The cache location can be overridden via the `$OPTIMUSKG_CACHE_DIR` environment variable or programmatically with `optimuskg.set_cache_dir(path)`.
 
 > [!NOTE]
 > To target a different dataset (_e.g._, a pre-release), set the `$OPTIMUSKG_DOI` environment variable or use `optimuskg.set_doi("doi:10.xxxx/XXXX")`.
