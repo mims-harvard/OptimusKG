@@ -1,0 +1,68 @@
+import { SchemaTree, type SchemaField } from './schema-tree';
+
+const fields: SchemaField[] = [
+  { name: 'id', type: 'String', description: 'DrugBank accession ID (e.g. DB00001)' },
+  { name: 'label', type: 'String', description: 'Node type abbreviation (DRG)' },
+  {
+    name: 'properties',
+    type: 'Struct',
+    description: 'Drug-specific properties',
+    children: [
+      { name: 'name', type: 'String', description: 'Primary drug name' },
+      { name: 'type', type: 'String', description: 'Drug type (e.g. small molecule, biologic)' },
+      { name: 'description', type: 'String', description: 'Drug description' },
+      { name: 'synonyms', type: 'List[String]', description: 'Drug synonyms' },
+      { name: 'trade_names', type: 'List[String]', description: 'Commercial trade names' },
+      { name: 'accession_numbers', type: 'List[String]', description: 'Database accession numbers' },
+      { name: 'source_ids', type: 'List[String]', description: 'Source-specific identifiers' },
+      { name: 'struct_id', type: 'String', description: 'DrugCentral structure ID' },
+      { name: 'cd_id', type: 'String', description: 'DrugCentral compound ID' },
+      { name: 'inchi_key', type: 'String', description: 'Hashed InChIKey identifier' },
+      { name: 'inchi', type: 'String', description: 'IUPAC InChI string' },
+      { name: 'canonical_smiles', type: 'String', description: 'Canonical SMILES string' },
+      { name: 'cd_formula', type: 'String', description: 'Molecular formula' },
+      { name: 'cd_mol_weight', type: 'Float64', description: 'Molecular weight (Da)' },
+      { name: 'mol_file_base64', type: 'String', description: 'Base64-encoded MOL file' },
+      { name: 'mol_image_base64', type: 'String', description: 'Base64-encoded 2D structure image' },
+      { name: 'calculated_log_p', type: 'Float64', description: 'Calculated LogP (lipophilicity)' },
+      { name: 'alogs', type: 'Float64', description: 'ALogS (aqueous solubility estimate)' },
+      { name: 'tpsa', type: 'Float64', description: 'Topological polar surface area (Å²)' },
+      { name: 'lipinski', type: 'Float64', description: 'Lipinski rule of five score' },
+      { name: 'aromatic_carbons', type: 'Int32', description: 'Number of aromatic carbon atoms' },
+      { name: 'sp3_count', type: 'Int32', description: 'Number of sp³ carbon atoms' },
+      { name: 'sp2_count', type: 'Int32', description: 'Number of sp² carbon atoms' },
+      { name: 'sp_count', type: 'Int32', description: 'Number of sp carbon atoms' },
+      { name: 'halogen_count', type: 'Int32', description: 'Number of halogen atoms' },
+      { name: 'hetero_sp2_count', type: 'Int32', description: 'Number of heteroaromatic sp² atoms' },
+      { name: 'rotatable_bonds', type: 'Int32', description: 'Number of rotatable bonds' },
+      { name: 'o_n', type: 'Int32', description: 'H-bond acceptors (O + N atom count)' },
+      { name: 'oh_nh', type: 'Int32', description: 'H-bond donors (OH + NH group count)' },
+      { name: 'rgb', type: 'Float64', description: 'RGB color value for structure rendering' },
+      { name: 'enhanced_stereo', type: 'Boolean', description: 'Has enhanced stereochemistry annotation' },
+      { name: 'is_approved', type: 'Boolean', description: 'Currently approved for clinical use' },
+      { name: 'has_been_withdrawn', type: 'Boolean', description: 'Has been withdrawn from market' },
+      { name: 'black_box_warning', type: 'Boolean', description: 'Carries an FDA black box warning' },
+      { name: 'year_of_first_approval', type: 'Int64', description: 'Year of first regulatory approval' },
+      { name: 'maximum_clinical_trial_phase', type: 'Float64', description: 'Highest clinical trial phase reached' },
+      { name: 'status', type: 'String', description: 'Regulatory status' },
+      { name: 'fda_labels', type: 'Int32', description: 'Number of associated FDA drug labels' },
+      { name: 'number_of_formulations', type: 'Int32', description: 'Number of approved formulations' },
+      { name: 'chemical_abstracts_service_number', type: 'String', description: 'CAS registry number' },
+      { name: 'unique_ingredient_identifier', type: 'String', description: 'FDA UNII identifier' },
+      { name: 'mrdef', type: 'String', description: 'MeSH pharmacological action definition' },
+      {
+        name: 'sources',
+        type: 'Struct',
+        description: 'Provenance of this node',
+        children: [
+          { name: 'direct', type: 'List[String]', description: 'Datasets that directly contributed this entity' },
+          { name: 'indirect', type: 'List[String]', description: 'Datasets that referenced this entity' },
+        ],
+      },
+    ],
+  },
+];
+
+export function DrugSchema() {
+  return <SchemaTree fields={fields} />;
+}

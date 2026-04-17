@@ -9,9 +9,7 @@ from typing import TypedDict
 from platformdirs import user_cache_dir
 
 DEFAULT_SERVER = "https://dataverse.harvard.edu"
-# TODO: update with the real DOI after the Dataverse release is made, and verify
-# that `fetch_metadata` resolves it without a 404.
-DEFAULT_DOI = "doi:10.7910/DVN/IXA7BM"
+DEFAULT_DOI = "doi:10.7910/DVN/IYNGEV"
 
 
 class _State(TypedDict):

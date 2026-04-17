@@ -4,16 +4,16 @@ build-backend = "hatchling.build"
 
 [project]
 name = "optimuskg"
-version = "0.1.0"
+version = "1.0.0"
 description = "Client library for loading the OptimusKG biomedical knowledge graph from Harvard Dataverse."
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.12"
 authors = [
-  { name = "Iñaki Arango" },
   { name = "Lucas Vittor" },
-  { name = "Joaquín Poloneur" },
+  { name = "Iñaki Arango" },
   { name = "Ayush Noori" },
+  { name = "Joaquín Poloneur" },
   { name = "Marinka Zitnik" },
 ]
 keywords = ["knowledge-graph", "biomedical", "dataverse", "networkx", "polars"]
@@ -36,7 +36,7 @@ dependencies = [
 [project.urls]
 Homepage = "https://optimuskg.ai"
 Repository = "https://github.com/mims-harvard/optimuskg"
-Dataset = "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IXA7BM"
+Dataset = "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi.org/10.7910/DVN/IYNGEV"
 
 [dependency-groups]
 dev = [

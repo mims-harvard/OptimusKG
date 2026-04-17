@@ -1,0 +1,214 @@
+---
+title: Edges
+description: Edge types and their schema in OptimusKG.
+---
+
+OptimusKG encodes **26 edge types** connecting the node types across molecular, clinical, anatomical, and environmental domains.
+
+| Label | Relation(s) | Count |
+| --- | --- | --: |
+| `DIS-GEN` | `ASSOCIATED_WITH` | 9,734,774 |
+| `ANA-GEN` | `EXPRESSION_PRESENT`, `EXPRESSION_ABSENT` | 8,787,955 |
+| `DRG-DRG` | `SYNERGISTIC_INTERACTION`, `PARENT` | 1,345,376 |
+| `PHE-GEN` | `ASSOCIATED_WITH` | 793,279 |
+| `GEN-GEN` | `INTERACTS_WITH` | 327,924 |
+| `DIS-PHE` | `PHENOTYPE_PRESENT` | 157,144 |
+| `BPO-GEN` | `INTERACTS_WITH` | 158,410 |
+| `DRG-DIS` | `INDICATION`, `CONTRAINDICATION`, `OFF_LABEL_USE` | 70,442 |
+| `MFN-GEN` | `INTERACTS_WITH` | 90,933 |
+| `DRG-PHE` | `ADVERSE_DRUG_REACTION`, `ASSOCIATED_WITH`, `CONTRAINDICATION`, `INDICATION`, `OFF_LABEL_USE` | 13,758 |
+| `PWY-GEN` | `INTERACTS_WITH` | 46,977 |
+| `BPO-BPO` | `IS_A` | 44,494 |
+| `DIS-DIS` | `PARENT` | 44,215 |
+| `CCO-GEN` | `INTERACTS_WITH` | 105,309 |
+| `DRG-GEN` | `ACTIVATOR`, `AGONIST`, `ALLOSTERIC_ANTAGONIST`, `ANTAGONIST`, `BINDING_AGENT`, `BLOCKER`, `CARRIER`, `DEGRADER`, `ENZYME`, `INHIBITOR`, `INVERSE_AGONIST`, `MODULATOR`, `NEGATIVE_ALLOSTERIC_MODULATOR`, `NEGATIVE_MODULATOR`, `OPENER`, `PARTIAL_AGONIST`, `POSITIVE_ALLOSTERIC_MODULATOR`, `POSITIVE_MODULATOR`, `RELEASING_AGENT`, `STABILISER`, `SUBSTRATE`, `TARGET`, `TRANSPORTER` | 20,694 |
+| `PHE-PHE` | `PARENT` | 24,862 |
+| `MFN-MFN` | `IS_A` | 12,587 |
+| `PWY-PWY` | `PARENT` | 2,819 |
+| `EXP-GEN` | `INTERACTS_WITH` | 2,989 |
+| `EXP-DIS` | `LINKED_TO` | 2,391 |
+| `EXP-EXP` | `PARENT` | 2,443 |
+| `EXP-BPO` | `INTERACTS_WITH` | 2,260 |
+| `ANA-ANA` | `PARENT` | 17,082 |
+| `CCO-CCO` | `IS_A` | 4,639 |
+| `EXP-MFN` | `INTERACTS_WITH` | 47 |
+| `EXP-CCO` | `INTERACTS_WITH` | 13 |
+
+All edges share the same base schema in the unified `edges.parquet` and `largest_connected_component_edges.parquet` tables:
+
+```python
+{
+    "from":       str,   # source node ID (CURIE format)
+    "to":         str,   # target node ID (CURIE format)
+    "label":      str,   # edge type label (e.g. DIS-GEN)
+    "relation":   str,   # relation type (e.g. ASSOCIATED_WITH)
+    "undirected": bool,  # if True, edge has no intrinsic directionality
+    "properties": str,   # JSON-encoded edge-specific properties
+}
+```
+
+<Callout>
+  In the stratified per-type parquet files (`edges/<label>.parquet`), `properties` is expanded into native typed columns as a Polars `Struct`.
+</Callout>
+
+---
+
+## Anatomy — Anatomy
+
+<AnaAnaEdge />
+
+---
+
+## Anatomy — Gene
+
+<AnaGenEdge />
+
+---
+
+## Biological Process — Biological Process
+
+<BpoBpoEdge />
+
+---
+
+## Biological Process — Gene
+
+<BpoGenEdge />
+
+---
+
+## Cellular Component — Cellular Component
+
+<CcoCcoEdge />
+
+---
+
+## Cellular Component — Gene
+
+<CcoGenEdge />
+
+---
+
+## Disease — Disease
+
+<DisDieEdge />
+
+---
+
+## Disease — Gene
+
+<DisGenEdge />
+
+---
+
+## Disease — Phenotype
+
+<DisPheEdge />
+
+---
+
+## Drug — Disease
+
+<DrgDisEdge />
+
+---
+
+## Drug — Drug
+
+<DrgDrgEdge />
+
+---
+
+## Drug — Gene
+
+<DrgGenEdge />
+
+---
+
+## Drug — Phenotype
+
+<DrgPheEdge />
+
+---
+
+## Exposure — Biological Process
+
+<ExpBpoEdge />
+
+---
+
+## Exposure — Cellular Component
+
+<ExpCcoEdge />
+
+---
+
+## Exposure — Disease
+
+<ExpDisEdge />
+
+---
+
+## Exposure — Exposure
+
+<ExpExpEdge />
+
+---
+
+## Exposure — Gene
+
+<ExpGenEdge />
+
+---
+
+## Exposure — Molecular Function
+
+<ExpMfnEdge />
+
+---
+
+## Gene — Gene
+
+<GenGenEdge />
+
+---
+
+## Molecular Function — Gene
+
+<MfnGenEdge />
+
+---
+
+## Molecular Function — Molecular Function
+
+<MfnMfnEdge />
+
+---
+
+## Pathway — Gene
+
+<PwyGenEdge />
+
+---
+
+## Pathway — Pathway
+
+<PwyPwyEdge />
+
+---
+
+## Phenotype — Gene
+
+<PheGenEdge />
+
+---
+
+## Phenotype — Phenotype
+
+<PhePheEdge />
+
+<Cards>
+  <Card title="Node Types" href="/docs/graph-schema/nodes" />
+  <Card title="Python Client" href="/docs/python-client" />
+  <Card title="Data Sources & Ontologies" href="/docs/data-sources" />
+</Cards>

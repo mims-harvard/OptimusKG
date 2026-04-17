@@ -2,7 +2,7 @@
   "title": "Documentation",
   "pages": [
     "---Getting Started---",
-    "getting-started",
+    "index",
     "python-client",
     "---Knowledge Graph---",
     "graph-schema",
