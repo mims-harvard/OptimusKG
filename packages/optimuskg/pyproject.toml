@@ -36,7 +36,7 @@ dependencies = [
 [project.urls]
 Homepage = "https://optimuskg.ai"
 Repository = "https://github.com/mims-harvard/optimuskg"
-Dataset = "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IXA7BM"
+Dataset = "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi.org/10.7910/DVN/IYNGEV"
 
 [dependency-groups]
 dev = [
