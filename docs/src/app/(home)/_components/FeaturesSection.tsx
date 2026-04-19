@@ -9,10 +9,9 @@ import { disGenFields } from "@/components/disease-assoc-edge-schemas";
 import { geneFields } from "@/components/gene-schema";
 import { cn } from "@/lib/cn";
 
-import { EditorWindow } from "./EditorWindow";
+import { HeroWindowShell } from "./HeroWindowShell";
 import { SchemaTreeView } from "./SchemaTreeView";
 import { Snippet } from "./Snippet";
-import { TabbedEditor } from "./TabbedEditor";
 
 async function renderShiki(code: string, lang: BundledLanguage) {
   const hast = await codeToHast(code, { lang, themes: SHIKI_THEMES });
@@ -73,8 +72,11 @@ function Feature1Media() {
         }}
       />
 
-      <TabbedEditor
-        style={{
+      <HeroWindowShell
+        appIcon="/dock/editor.svg"
+        appId="graph-schema"
+        appName="Graph Schema"
+        normalStyle={{
           width: "min(48rem, calc(100% - 4rem))",
           height: "min(36rem, calc(100% - 4rem))",
         }}
@@ -140,9 +142,12 @@ function Feature3Media() {
       />
 
       {/* TODO: Remove `contentBg` once we have light/dark versions of the figures. */}
-      <TabbedEditor
+      <HeroWindowShell
+        appIcon="/dock/editor.svg"
+        appId="paperqa3"
+        appName="PaperQA3 Analysis"
         contentBg="#ffffff"
-        style={{
+        normalStyle={{
           width: "min(42.5rem, calc(100% - 4rem))",
           height: "min(35rem, calc(100% - 4rem))",
         }}
@@ -185,8 +190,11 @@ async function Feature4Media() {
         }}
       />
 
-      <TabbedEditor
-        style={{
+      <HeroWindowShell
+        appIcon="/dock/editor.svg"
+        appId="python-client"
+        appName="Python Client"
+        normalStyle={{
           width: "min(42.5rem, calc(100% - 4rem))",
           height: "min(35rem, calc(100% - 4rem))",
         }}

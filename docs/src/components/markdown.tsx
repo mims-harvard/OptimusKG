@@ -17,9 +17,9 @@ import defaultMdxComponents from 'fumadocs-ui/mdx';
 import { visit } from 'unist-util-visit';
 import type { ElementContent, Root, RootContent } from 'hast';
 
-export interface Processor {
+export type Processor = {
   process: (content: string) => Promise<ReactNode>;
-}
+};
 
 export function rehypeWrapWords() {
   return (tree: Root) => {

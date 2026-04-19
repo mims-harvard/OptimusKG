@@ -62,12 +62,18 @@ export function TabbedEditor({
   className,
   style,
   contentBg,
+  onClose,
+  onMinimize,
+  onMaximize,
 }: {
   title?: string;
   tabs: EditorTab[];
   className?: string;
   style?: CSSProperties;
   contentBg?: string;
+  onClose?: () => void;
+  onMinimize?: () => void;
+  onMaximize?: () => void;
 }) {
   const [tabs, setTabs] = useState(initialTabs);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -87,7 +93,14 @@ export function TabbedEditor({
     : style;
 
   return (
-    <EditorWindow className={className} style={mergedStyle} title={title}>
+    <EditorWindow
+      className={className}
+      onClose={onClose}
+      onMaximize={onMaximize}
+      onMinimize={onMinimize}
+      style={mergedStyle}
+      title={title}
+    >
       <div
         className="flex h-7.5 shrink-0 items-center bg-[var(--l-surface)]"
         role="tablist"
