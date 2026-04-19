@@ -12,7 +12,7 @@ export function HeroSection() {
         <div className="flex flex-col gap-13 min-[900px]:gap-14">
           <div className="flex flex-col gap-5.25 min-[900px]:gap-5.5">
             <h1 className="text-balance font-normal text-2xl text-[var(--l-ink)] leading-8">
-              <span className="block">Unifying biomedical knowledge</span>
+              <span className="block">Biomedical knowledge unified</span>
               <span className="block">in a modern multimodal graph</span>
             </h1>
 
@@ -42,8 +42,7 @@ export function HeroSection() {
             <div
               className="pointer-events-none absolute inset-0"
               style={{
-                background:
-                  "linear-gradient(90deg,rgba(0,0,0,0.12) 0%,rgba(0,0,0,0.22) 100%)",
+                background: "linear-gradient(90deg,rgba(0,0,0,0.12) 0%,rgba(0,0,0,0.22) 100%)",
               }}
             />
 
