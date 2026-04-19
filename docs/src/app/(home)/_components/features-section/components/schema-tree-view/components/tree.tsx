@@ -1,15 +1,16 @@
 "use client";
 
-import { ChevronRight, File, Folder, FolderOpen } from "lucide-react";
 import {
-  createContext,
   type HTMLAttributes,
   type ReactNode,
+  createContext,
   useCallback,
   useContext,
   useId,
   useState,
 } from "react";
+
+import { ChevronRight, File, Folder, FolderOpen } from "lucide-react";
 
 import { cn } from "@/lib/cn";
 
@@ -227,17 +228,6 @@ export function TreeNodeTrigger({
       {...props}
     >
       <TreeLines />
-      {showLines && hasChildren && isExpanded && (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute border-[var(--l-border)] border-l"
-          style={{
-            left: level * (indent ?? 0) + 12,
-            top: "50%",
-            bottom: "-1px",
-          }}
-        />
-      )}
       {children}
     </div>
   );
@@ -287,7 +277,7 @@ export function TreeLines() {
           style={{
             left: (level - 1) * (indent ?? 0) + 12,
             top: 0,
-            height: "calc(50% + 1px)",
+            height: "calc(50%)",
           }}
         />
       )}
@@ -373,11 +363,7 @@ export function TreeIcon({ icon, hasChildren = false, className, ...props }: Tre
 
   let defaultIcon: ReactNode;
   if (hasChildren) {
-    defaultIcon = isExpanded ? (
-      <FolderOpen className="h-4 w-4" />
-    ) : (
-      <Folder className="h-4 w-4" />
-    );
+    defaultIcon = isExpanded ? <FolderOpen className="h-4 w-4" /> : <Folder className="h-4 w-4" />;
   } else {
     defaultIcon = <File className="h-4 w-4" />;
   }

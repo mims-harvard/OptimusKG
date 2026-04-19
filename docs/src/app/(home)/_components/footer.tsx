@@ -1,7 +1,8 @@
-import { FlaskConical } from "lucide-react";
 import { ThemeSwitch } from "fumadocs-ui/layouts/shared/slots/theme-switch";
+import { FlaskConical } from "lucide-react";
 
-const smallText = "text-sm/5.25 tracking-[0.00875rem] text-[var(--l-ink-muted)]";
+const smallText =
+  "text-sm/5.25 tracking-[0.00875rem] text-[var(--l-ink-muted)]";
 
 export function Footer() {
   return (
@@ -22,7 +23,10 @@ export function Footer() {
               <span>An open science, academic research project.</span>
             </span>
           </div>
-          <ThemeSwitch mode="light-dark-system" className="self-start sm:self-auto" />
+          <ThemeSwitch
+            className="self-start sm:self-auto"
+            mode="light-dark-system"
+          />
         </div>
       </div>
     </footer>

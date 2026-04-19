@@ -9,9 +9,10 @@ import { disGenFields } from "@/components/disease-assoc-edge-schemas";
 import { geneFields } from "@/components/gene-schema";
 import { cn } from "@/lib/cn";
 
-import { HeroWindowShell } from "./components/hero-window-shell";
+import { MaximizableWindow } from "./components/maximizable-window";
 import { SchemaTreeView } from "./components/schema-tree-view";
 import { Snippet } from "./components/snippet";
+import { WindowTabbedEditor } from "./components/window-tabbed-editor";
 
 async function renderShiki(code: string, lang: BundledLanguage) {
   const hast = await codeToHast(code, { lang, themes: SHIKI_THEMES });
@@ -42,7 +43,11 @@ G = optimuskg.load_networkx(lcc=True)
 `;
 
 function ShikiBlock({ children }: { children: React.ReactNode }) {
-  return <div className="l-shiki-block h-full w-full overflow-auto p-2">{children}</div>;
+  return (
+    <div className="l-shiki-block h-full w-full overflow-auto p-2">
+      {children}
+    </div>
+  );
 }
 
 function ImageTabContent({ src, alt }: { src: string; alt: string }) {
@@ -68,11 +73,12 @@ function Feature1Media() {
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: "linear-gradient(90deg,rgba(0,0,0,0.12) 0%,rgba(0,0,0,0.22) 100%)",
+          background:
+            "linear-gradient(90deg,rgba(0,0,0,0.12) 0%,rgba(0,0,0,0.22) 100%)",
         }}
       />
 
-      <HeroWindowShell
+      <MaximizableWindow
         appIcon="/dock/editor.svg"
         appId="graph-schema"
         appName="Graph Schema"
@@ -80,45 +86,31 @@ function Feature1Media() {
           width: "min(48rem, calc(100% - 4rem))",
           height: "min(36rem, calc(100% - 4rem))",
         }}
-        tabs={[
-          {
-            name: "Gene Nodes Schema",
-            content: (
-              <SchemaTabContent>
-                <SchemaTreeView fields={geneFields} />
-              </SchemaTabContent>
-            ),
-          },
-          {
-            name: "Disease-Gene Edges Schema",
-            content: (
-              <SchemaTabContent>
-                <SchemaTreeView fields={disGenFields} />
-              </SchemaTabContent>
-            ),
-          },
-        ]}
         title="Graph Schema"
-      />
+      >
+        <WindowTabbedEditor
+          tabs={[
+            {
+              name: "Gene Nodes Schema",
+              content: (
+                <SchemaTabContent>
+                  <SchemaTreeView fields={geneFields} />
+                </SchemaTabContent>
+              ),
+            },
+            {
+              name: "Disease-Gene Edges Schema",
+              content: (
+                <SchemaTabContent>
+                  <SchemaTreeView fields={disGenFields} />
+                </SchemaTabContent>
+              ),
+            },
+          ]}
+        />
+      </MaximizableWindow>
 
       <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
-    </div>
-  );
-}
-
-function Feature2Media() {
-  return (
-    <div className="absolute inset-0 overflow-hidden bg-[#b6b9be]">
-      <img
-        alt="Data pipeline"
-        className="absolute inset-0 hidden h-full w-full object-contain p-8 min-[900px]:block"
-        src="/features/data-pipeline.webp"
-      />
-      <img
-        alt="Data pipeline"
-        className="absolute top-8 left-8 h-[calc(100%-4rem)] w-auto max-w-none min-[900px]:hidden"
-        src="/features/data-pipeline.webp"
-      />
     </div>
   );
 }
@@ -137,34 +129,46 @@ function Feature3Media() {
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: "linear-gradient(90deg,rgba(38,37,30,0.05) 0%,rgba(38,37,30,0.05) 100%)",
+          background:
+            "linear-gradient(90deg,rgba(38,37,30,0.05) 0%,rgba(38,37,30,0.05) 100%)",
         }}
       />
 
-      {/* TODO: Remove `contentBg` once we have light/dark versions of the figures. */}
-      <HeroWindowShell
+      <MaximizableWindow
         appIcon="/dock/editor.svg"
         appId="paperqa3"
         appName="PaperQA3 Analysis"
-        contentBg="#ffffff"
         normalStyle={{
           width: "min(42.5rem, calc(100% - 4rem))",
           height: "min(35rem, calc(100% - 4rem))",
         }}
-        tabs={[
-          {
-            name: "Molecular Function Validation",
-            content: (
-              <ImageTabContent alt="Molecular Function" src="/features/molecular-function.webp" />
-            ),
-          },
-          {
-            name: "Phenotype Validation",
-            content: <ImageTabContent alt="Phenotype" src="/features/phenotype.webp" />,
-          },
-        ]}
         title="PaperQA3 Analysis"
-      />
+      >
+        {/* TODO: Remove `contentBg` once we have light/dark versions of the figures. */}
+        <WindowTabbedEditor
+          contentBg="#ffffff"
+          tabs={[
+            {
+              name: "Molecular Function Validation",
+              content: (
+                <ImageTabContent
+                  alt="Molecular Function"
+                  src="/features/molecular-function.webp"
+                />
+              ),
+            },
+            {
+              name: "Phenotype Validation",
+              content: (
+                <ImageTabContent
+                  alt="Phenotype"
+                  src="/features/phenotype.webp"
+                />
+              ),
+            },
+          ]}
+        />
+      </MaximizableWindow>
 
       <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
     </div>
@@ -186,11 +190,12 @@ async function Feature4Media() {
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: "linear-gradient(90deg,rgba(38,37,30,0.05) 0%,rgba(38,37,30,0.05) 100%)",
+          background:
+            "linear-gradient(90deg,rgba(38,37,30,0.05) 0%,rgba(38,37,30,0.05) 100%)",
         }}
       />
 
-      <HeroWindowShell
+      <MaximizableWindow
         appIcon="/dock/editor.svg"
         appId="python-client"
         appName="Python Client"
@@ -198,14 +203,17 @@ async function Feature4Media() {
           width: "min(42.5rem, calc(100% - 4rem))",
           height: "min(35rem, calc(100% - 4rem))",
         }}
-        tabs={[
-          {
-            name: "load_graph.py",
-            content: <ShikiBlock>{loadGraphJsx}</ShikiBlock>,
-          },
-        ]}
         title="Python Client"
-      />
+      >
+        <WindowTabbedEditor
+          tabs={[
+            {
+              name: "load_graph.py",
+              content: <ShikiBlock>{loadGraphJsx}</ShikiBlock>,
+            },
+          ]}
+        />
+      </MaximizableWindow>
 
       <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
     </div>
@@ -243,7 +251,8 @@ function FeatureText({
         />
       </>
     );
-    const ctaClass = "group/cta inline-flex items-center gap-0.5 text-[var(--l-accent)]";
+    const ctaClass =
+      "group/cta inline-flex items-center gap-0.5 text-[var(--l-accent)]";
     cta = ctaHref ? (
       <a
         className={`${ctaClass} ${CTA_CLASSES}`}
@@ -260,8 +269,14 @@ function FeatureText({
   return (
     <div className="flex flex-col gap-3.75">
       <div className="flex flex-col">
-        <h3 className={`font-normal text-[var(--l-ink)] ${HEADING_CLASSES}`}>{title}</h3>
-        <p className={`font-normal text-[var(--l-ink-muted)] ${HEADING_CLASSES}`}>{description}</p>
+        <h3 className={`font-normal text-[var(--l-ink)] ${HEADING_CLASSES}`}>
+          {title}
+        </h3>
+        <p
+          className={`font-normal text-[var(--l-ink-muted)] ${HEADING_CLASSES}`}
+        >
+          {description}
+        </p>
       </div>
       {cta}
     </div>
@@ -284,7 +299,8 @@ type Feature = {
 const FEATURES: Feature[] = [
   {
     title: "Rich strongly-typed properties",
-    description: "Every entity is enriched with structured properties for fine-grained analysis.",
+    description:
+      "Every entity is enriched with structured properties for fine-grained analysis.",
     ctaText: "Learn about the schema",
     Media: Feature1Media,
     href: "/docs/graph-schema/nodes",
@@ -314,37 +330,34 @@ const FEATURES: Feature[] = [
     cardHeightClass: "h-178.75",
     mediaHeightClass: "h-170",
   },
-  // {
-  //   title: "Works autonomously, runs in parallel",
-  //   description:
-  //     "Agents use their own computers to build, test, and demo features end to end for you to review.",
-  //   ctaText: "Learn about cloud agents",
-  //   ctaHref: "https://cursor.com/docs/cloud-agent",
-  //   Media: Feature2Media,
-  //   imageSide: "left",
-  //   cardHeightClass: "h-171.25",
-  //   mediaHeightClass: "h-162.5",
-  // },
 ];
 
 function DesktopCard({ feature }: { feature: Feature }) {
   const { href, imageSide, cardHeightClass, mediaHeightClass, Media } = feature;
-  const linkProps = href ? { href, target: "_blank", rel: "noopener noreferrer" as const } : {};
+  const linkProps = href
+    ? { href, target: "_blank", rel: "noopener noreferrer" as const }
+    : {};
   const Tag = href ? "a" : "div";
   const textCol =
-    imageSide === "right" ? "col-[1/span_8] pl-0.5 pr-7.5" : "col-[17/span_8] pl-7.5 pr-0.5";
-  const imageCol = imageSide === "right" ? "col-[9/span_16]" : "col-[1/span_16]";
+    imageSide === "right"
+      ? "col-[1/span_8] pl-0.5 pr-7.5"
+      : "col-[17/span_8] pl-7.5 pr-0.5";
+  const imageCol =
+    imageSide === "right" ? "col-[9/span_16]" : "col-[1/span_16]";
 
   return (
     <div
       className={cn(
         "relative grid grid-cols-[repeat(24,minmax(0,1fr))] gap-x-2.5 rounded-sm bg-[var(--l-surface)] p-4.5",
-        cardHeightClass,
+        cardHeightClass
       )}
     >
       <Tag
         {...linkProps}
-        className={cn("group/card row-start-1 flex flex-col justify-center", textCol)}
+        className={cn(
+          "group/card row-start-1 flex flex-col justify-center",
+          textCol
+        )}
       >
         <FeatureText {...feature} />
       </Tag>
@@ -352,7 +365,7 @@ function DesktopCard({ feature }: { feature: Feature }) {
         className={cn(
           "relative row-start-1 overflow-hidden rounded-sm",
           imageCol,
-          mediaHeightClass,
+          mediaHeightClass
         )}
       >
         <Media />
@@ -364,7 +377,9 @@ function DesktopCard({ feature }: { feature: Feature }) {
 
 function MobileCard({ feature }: { feature: Feature }) {
   const { href, Media } = feature;
-  const linkProps = href ? { href, target: "_blank", rel: "noopener noreferrer" as const } : {};
+  const linkProps = href
+    ? { href, target: "_blank", rel: "noopener noreferrer" as const }
+    : {};
   const Tag = href ? "a" : "div";
 
   return (
