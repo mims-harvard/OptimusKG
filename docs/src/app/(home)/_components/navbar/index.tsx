@@ -32,11 +32,11 @@ const GITHUB_HREF = `https://github.com/${gitConfig.user}/${gitConfig.repo}`;
 const PAPER_HREF = "https://arxiv.org/";
 
 const ghostButton =
-  "inline-flex items-center justify-center whitespace-nowrap rounded-full text-[var(--l-ink)] transition-opacity hover:opacity-70";
+  "inline-flex items-center justify-center whitespace-nowrap rounded-none text-[var(--l-ink)] transition-opacity hover:opacity-70";
 const outlineButton =
-  "inline-flex items-center justify-center whitespace-nowrap rounded-full border border-[var(--l-border)] text-[var(--l-ink)]";
+  "inline-flex items-center justify-center whitespace-nowrap rounded-none border border-[var(--l-border)] text-[var(--l-ink)]";
 const filledButton =
-  "inline-flex items-center justify-center whitespace-nowrap rounded-full border border-[var(--l-ink)] bg-[var(--l-ink)] text-[var(--l-bg)]";
+  "inline-flex items-center justify-center whitespace-nowrap rounded-none border border-[var(--l-ink)] bg-[var(--l-ink)] text-[var(--l-bg)]";
 
 function OptimusKGLogo() {
   return (
@@ -76,7 +76,7 @@ export function Navbar() {
             />
             <a
               aria-label="GitHub repository"
-              className="-mr-1 flex h-8 w-8 items-center justify-center rounded-full text-[var(--l-ink)] transition-opacity hover:opacity-70"
+              className="-mr-1 flex h-8 w-8 items-center justify-center rounded-none text-[var(--l-ink)] transition-opacity hover:opacity-70"
               href={GITHUB_HREF}
               rel="noopener noreferrer"
               target="_blank"

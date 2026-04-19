@@ -43,7 +43,9 @@ type TreeNodeContextType = {
   parentPath: boolean[];
 };
 
-const TreeNodeContext = createContext<TreeNodeContextType | undefined>(undefined);
+const TreeNodeContext = createContext<TreeNodeContextType | undefined>(
+  undefined
+);
 
 function useTreeNode() {
   const ctx = useContext(TreeNodeContext);
@@ -78,10 +80,15 @@ export function TreeProvider({
   indent = 20,
   className,
 }: TreeProviderProps) {
-  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set(defaultExpandedIds));
-  const [internalSelected, setInternalSelected] = useState<string[]>(selectedIds ?? []);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(
+    new Set(defaultExpandedIds)
+  );
+  const [internalSelected, setInternalSelected] = useState<string[]>(
+    selectedIds ?? []
+  );
 
-  const isControlled = selectedIds !== undefined && onSelectionChange !== undefined;
+  const isControlled =
+    selectedIds !== undefined && onSelectionChange !== undefined;
   const current = isControlled ? selectedIds : internalSelected;
 
   const toggleExpanded = useCallback((nodeId: string) => {
@@ -115,7 +122,7 @@ export function TreeProvider({
         setInternalSelected(next);
       }
     },
-    [selectable, multiSelect, current, isControlled, onSelectionChange],
+    [selectable, multiSelect, current, isControlled, onSelectionChange]
   );
 
   return (
@@ -171,7 +178,9 @@ export function TreeNode({
   const currentPath = level === 0 ? [] : [...parentPath.slice(1), isLast];
 
   return (
-    <TreeNodeContext.Provider value={{ nodeId, level, isLast, parentPath: currentPath }}>
+    <TreeNodeContext.Provider
+      value={{ nodeId, level, isLast, parentPath: currentPath }}
+    >
       <div className={cn("select-none", className)} {...props}>
         {children}
       </div>
@@ -190,19 +199,18 @@ export function TreeNodeTrigger({
   onClick,
   ...props
 }: TreeNodeTriggerProps) {
-  const { selectedIds, toggleExpanded, handleSelection, indent, expandedIds, showLines } =
-    useTree();
+  const { selectedIds, toggleExpanded, handleSelection, indent } = useTree();
   const { nodeId, level } = useTreeNode();
   const isSelected = selectedIds.includes(nodeId);
-  const isExpanded = expandedIds.has(nodeId);
 
   return (
+    // biome-ignore lint/a11y/useSemanticElements: using a button element would inherit UA reset styles that conflict with the flex row layout and tree-line children
     <div
       className={cn(
-        "group relative flex cursor-pointer items-center rounded-md px-4 py-1.5 transition-colors duration-200",
+        "group relative flex cursor-pointer items-center rounded-none px-4 py-1.5 transition-colors duration-200",
         "hover:bg-[var(--l-bg)]",
         isSelected && "bg-[var(--l-bg)]",
-        className,
+        className
       )}
       onClick={(e) => {
         toggleExpanded(nodeId);
@@ -243,6 +251,7 @@ export function TreeLines() {
           !parentPath[index] && (
             <div
               className="absolute border-[var(--l-border)] border-l"
+              // biome-ignore lint/suspicious/noArrayIndexKey: tree-line columns are positional and never reorder within a node
               key={`tree-line-${index}`}
               style={{
                 left: index * (indent ?? 0) + 12,
@@ -250,7 +259,7 @@ export function TreeLines() {
                 bottom: "-1px",
               }}
             />
-          ),
+          )
       )}
 
       <div
@@ -320,11 +329,14 @@ export function TreeExpander({
   }
 
   return (
+    // biome-ignore lint/a11y/useKeyWithClickEvents: keyboard activation is handled by the parent TreeNodeTrigger, this expander only consumes a click that would otherwise bubble
+    // biome-ignore lint/a11y/noStaticElementInteractions: expander visual is a div so the parent row owns focus and keyboard semantics
+    // biome-ignore lint/a11y/noNoninteractiveElementInteractions: stopping propagation on click prevents double-activation of the row
     <div
       className={cn(
         "mx-0.5 flex h-4 w-4 cursor-pointer items-center justify-center transition-transform duration-200",
         isExpanded && "rotate-90",
-        className,
+        className
       )}
       onClick={(e) => {
         e.stopPropagation();
@@ -343,7 +355,12 @@ export type TreeIconProps = HTMLAttributes<HTMLDivElement> & {
   hasChildren?: boolean;
 };
 
-export function TreeIcon({ icon, hasChildren = false, className, ...props }: TreeIconProps) {
+export function TreeIcon({
+  icon,
+  hasChildren = false,
+  className,
+  ...props
+}: TreeIconProps) {
   const { showIcons, expandedIds } = useTree();
   const { nodeId } = useTreeNode();
   const isExpanded = expandedIds.has(nodeId);
@@ -354,7 +371,11 @@ export function TreeIcon({ icon, hasChildren = false, className, ...props }: Tre
 
   let defaultIcon: ReactNode;
   if (hasChildren) {
-    defaultIcon = isExpanded ? <FolderOpen className="h-4 w-4" /> : <Folder className="h-4 w-4" />;
+    defaultIcon = isExpanded ? (
+      <FolderOpen className="h-4 w-4" />
+    ) : (
+      <Folder className="h-4 w-4" />
+    );
   } else {
     defaultIcon = <File className="h-4 w-4" />;
   }
@@ -363,7 +384,7 @@ export function TreeIcon({ icon, hasChildren = false, className, ...props }: Tre
     <div
       className={cn(
         "mr-2 flex h-4 w-4 items-center justify-center text-[var(--l-ink-muted)]",
-        className,
+        className
       )}
       {...props}
     >
@@ -375,5 +396,7 @@ export function TreeIcon({ icon, hasChildren = false, className, ...props }: Tre
 export type TreeLabelProps = HTMLAttributes<HTMLSpanElement>;
 
 export function TreeLabel({ className, ...props }: TreeLabelProps) {
-  return <span className={cn("flex-1 truncate text-sm", className)} {...props} />;
+  return (
+    <span className={cn("flex-1 truncate text-sm", className)} {...props} />
+  );
 }

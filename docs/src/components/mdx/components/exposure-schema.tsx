@@ -1,23 +1,47 @@
-import { SchemaTree, type SchemaField } from '../../schema-tree';
+import { type SchemaField, SchemaTree } from "../../schema-tree";
 
 const fields: SchemaField[] = [
-  { name: 'id', type: 'String', description: 'Node identifier in CURIE format (e.g. CTD:D001564)' },
-  { name: 'label', type: 'String', description: 'Node type abbreviation (EXP)' },
   {
-    name: 'properties',
-    type: 'Struct',
-    description: 'Exposure-specific properties',
+    name: "id",
+    type: "String",
+    description: "Node identifier in CURIE format (e.g. CTD:D001564)",
+  },
+  {
+    name: "label",
+    type: "String",
+    description: "Node type abbreviation (EXP)",
+  },
+  {
+    name: "properties",
+    type: "Struct",
+    description: "Exposure-specific properties",
     children: [
-      { name: 'name', type: 'String', description: 'Exposure name' },
-      { name: 'source_categories', type: 'List[String]', description: 'Exposure source categories (e.g. chemical, biological)' },
-      { name: 'source_details', type: 'String', description: 'Additional source details' },
+      { name: "name", type: "String", description: "Exposure name" },
       {
-        name: 'sources',
-        type: 'Struct',
-        description: 'Provenance of this node',
+        name: "source_categories",
+        type: "List[String]",
+        description: "Exposure source categories (e.g. chemical, biological)",
+      },
+      {
+        name: "source_details",
+        type: "String",
+        description: "Additional source details",
+      },
+      {
+        name: "sources",
+        type: "Struct",
+        description: "Provenance of this node",
         children: [
-          { name: 'direct', type: 'List[String]', description: 'Datasets that directly contributed this entity' },
-          { name: 'indirect', type: 'List[String]', description: 'Datasets that referenced this entity' },
+          {
+            name: "direct",
+            type: "List[String]",
+            description: "Datasets that directly contributed this entity",
+          },
+          {
+            name: "indirect",
+            type: "List[String]",
+            description: "Datasets that referenced this entity",
+          },
         ],
       },
     ],

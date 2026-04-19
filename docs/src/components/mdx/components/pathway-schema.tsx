@@ -1,22 +1,42 @@
-import { SchemaTree, type SchemaField } from '../../schema-tree';
+import { type SchemaField, SchemaTree } from "../../schema-tree";
 
 const fields: SchemaField[] = [
-  { name: 'id', type: 'String', description: 'Node identifier in CURIE format (e.g. R-HSA-109582)' },
-  { name: 'label', type: 'String', description: 'Node type abbreviation (PWY)' },
   {
-    name: 'properties',
-    type: 'Struct',
-    description: 'Pathway-specific properties',
+    name: "id",
+    type: "String",
+    description: "Node identifier in CURIE format (e.g. R-HSA-109582)",
+  },
+  {
+    name: "label",
+    type: "String",
+    description: "Node type abbreviation (PWY)",
+  },
+  {
+    name: "properties",
+    type: "Struct",
+    description: "Pathway-specific properties",
     children: [
-      { name: 'name', type: 'String', description: 'Pathway name' },
-      { name: 'species', type: 'String', description: 'Species name (e.g. Homo sapiens)' },
+      { name: "name", type: "String", description: "Pathway name" },
       {
-        name: 'sources',
-        type: 'Struct',
-        description: 'Provenance of this node',
+        name: "species",
+        type: "String",
+        description: "Species name (e.g. Homo sapiens)",
+      },
+      {
+        name: "sources",
+        type: "Struct",
+        description: "Provenance of this node",
         children: [
-          { name: 'direct', type: 'List[String]', description: 'Datasets that directly contributed this entity' },
-          { name: 'indirect', type: 'List[String]', description: 'Datasets that referenced this entity' },
+          {
+            name: "direct",
+            type: "List[String]",
+            description: "Datasets that directly contributed this entity",
+          },
+          {
+            name: "indirect",
+            type: "List[String]",
+            description: "Datasets that referenced this entity",
+          },
         ],
       },
     ],

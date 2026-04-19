@@ -84,7 +84,7 @@ export function Snippet({
   return (
     <div
       className={cn(
-        "flex items-center gap-3 rounded-md border border-[var(--l-border)] px-3 py-2.5",
+        "flex items-center gap-3 rounded-[1px] border border-[var(--l-border)] px-3 py-2.5",
         colors.background,
         className
       )}
@@ -106,7 +106,7 @@ export function Snippet({
       </div>
       <button
         aria-label="Copy to clipboard"
-        className="relative inline-flex shrink-0 cursor-pointer items-center justify-center rounded-full border border-[var(--l-ink)] bg-[var(--l-ink)] text-[var(--l-bg)] transition-opacity hover:opacity-90"
+        className="relative inline-flex shrink-0 cursor-pointer items-center justify-center rounded-none border border-[var(--l-ink)] bg-[var(--l-ink)] text-[var(--l-bg)] transition-opacity hover:opacity-90"
         onClick={onClick}
         style={{
           width: "1.75rem",
