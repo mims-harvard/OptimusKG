@@ -9,8 +9,8 @@ const assocProperties = [
   { name: 'evidence_score', type: 'Float64', description: 'Aggregated association evidence score' },
   { name: 'evidence_count', type: 'Int64', description: 'Number of evidence items supporting the association' },
   { name: 'evidence_index', type: 'Float64', description: 'Combined evidence index (Open Targets)' },
-  { name: 'disease_specificity_index', type: 'Float64', description: 'DSI — specificity of the gene to this disease' },
-  { name: 'disease_pleiotropy_index', type: 'Float64', description: 'DPI — number of disease classes the gene is associated with' },
+  { name: 'disease_specificity_index', type: 'Float64', description: 'DSI, specificity of the gene to this disease' },
+  { name: 'disease_pleiotropy_index', type: 'Float64', description: 'DPI, number of disease classes the gene is associated with' },
   { name: 'disgenet_score', type: 'Float64', description: 'DisGeNET gene–disease association score' },
   { name: 'year_initial', type: 'String', description: 'Year of the earliest supporting publication' },
   { name: 'year_final', type: 'String', description: 'Year of the most recent supporting publication' },
@@ -19,9 +19,12 @@ const assocProperties = [
   sourcesField,
 ];
 
+export const disGenFields = baseEdgeFields('DIS-GEN', 'ASSOCIATED_WITH', true, assocProperties);
+export const pheGenFields = baseEdgeFields('PHE-GEN', 'ASSOCIATED_WITH', false, assocProperties);
+
 export function DisGenEdge() {
-  return <SchemaTree fields={baseEdgeFields('DIS-GEN', 'ASSOCIATED_WITH', true, assocProperties)} />;
+  return <SchemaTree fields={disGenFields} />;
 }
 export function PheGenEdge() {
-  return <SchemaTree fields={baseEdgeFields('PHE-GEN', 'ASSOCIATED_WITH', false, assocProperties)} />;
+  return <SchemaTree fields={pheGenFields} />;
 }

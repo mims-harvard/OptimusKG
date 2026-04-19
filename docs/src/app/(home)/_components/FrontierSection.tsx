@@ -11,7 +11,7 @@ const CARDS = [
     ctaExternal: true,
     imageSrc: "/frontier/metagraph.svg",
     imageAlt: "Knowledge graph",
-    mobileHeightClass: "h-[14.988rem]",
+    mobileHeightClass: "h-60",
   },
   {
     title: "Complete codebase understanding",
@@ -22,7 +22,7 @@ const CARDS = [
     ctaExternal: true,
     imageSrc: "/frontier/metapath.svg",
     imageAlt: "Metapath matrix",
-    mobileHeightClass: "h-[14.988rem]",
+    mobileHeightClass: "h-60",
   },
   {
     title: "Develop enduring software",
@@ -33,31 +33,27 @@ const CARDS = [
     ctaExternal: false,
     imageSrc: "/frontier/lines.svg",
     imageAlt: "Distribution chart",
-    mobileHeightClass: "h-[19.981rem]",
+    mobileHeightClass: "h-80",
   },
 ];
 
 const MEDIA_BG =
   "linear-gradient(rgba(38,37,30,0.05),rgba(38,37,30,0.05)), linear-gradient(#f2f1ed,#f2f1ed)";
 
-const BODY_TEXT = { fontSize: "0.944rem", lineHeight: "1.5rem", letterSpacing: "0.005rem" };
+const BODY_TEXT = "text-base leading-6 tracking-[0.005rem]";
 
 function FrontierCard({ card }: { card: (typeof CARDS)[number] }) {
   return (
-    <div
-      className="relative flex flex-col rounded-[0.25rem] bg-[var(--l-surface)]"
-      style={{ paddingTop: "0.994rem", paddingBottom: "1.094rem", paddingInline: "1.094rem" }}
-    >
+    <div className="relative flex flex-col rounded-sm bg-[var(--l-surface)] pt-4 pb-4.5 px-4.5">
       <div className="flex flex-col">
-        <h3 className="font-normal text-[var(--l-ink)]" style={BODY_TEXT}>{card.title}</h3>
-        <p className="font-normal text-[var(--l-ink-muted)]" style={BODY_TEXT}>{card.description}</p>
-        <div style={{ paddingTop: "0.901rem" }}>
+        <h3 className={`font-normal text-[var(--l-ink)] ${BODY_TEXT}`}>{card.title}</h3>
+        <p className={`font-normal text-[var(--l-ink-muted)] ${BODY_TEXT}`}>{card.description}</p>
+        <div className="pt-3.5">
           <a
             href={card.ctaHref}
             target={card.ctaExternal ? "_blank" : undefined}
             rel={card.ctaExternal ? "noopener noreferrer" : undefined}
-            className="group inline-flex items-center gap-[0.15rem] font-normal text-[var(--l-accent)]"
-            style={BODY_TEXT}
+            className={`group inline-flex items-center gap-0.5 font-normal text-[var(--l-accent)] ${BODY_TEXT}`}
           >
             {card.ctaText}
             <ArrowUpRight
@@ -69,9 +65,9 @@ function FrontierCard({ card }: { card: (typeof CARDS)[number] }) {
           </a>
         </div>
       </div>
-      <div style={{ paddingTop: "1.094rem" }}>
+      <div className="pt-4.5">
         <div
-          className={cn("relative overflow-hidden rounded-[0.25rem] md:h-[20rem] min-[900px]:h-[24.481rem]", card.mobileHeightClass)}
+          className={cn("relative overflow-hidden rounded-sm md:h-80 min-[900px]:h-98", card.mobileHeightClass)}
           style={{ backgroundImage: MEDIA_BG }}
         >
           <img
@@ -81,7 +77,7 @@ function FrontierCard({ card }: { card: (typeof CARDS)[number] }) {
           />
         </div>
       </div>
-      <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
     </div>
   );
 }
@@ -90,13 +86,10 @@ export function FrontierSection() {
   return (
     <section className="l-section bg-[var(--l-bg)]">
       <div className="l-container">
-        <h2
-          className="mb-[1.3125rem] font-normal text-[var(--l-ink)] min-[900px]:mb-[1.4rem]"
-          style={{ fontSize: "0.944rem", lineHeight: "1.8125rem", letterSpacing: "0.005rem" }}
-        >
+        <h2 className="mb-5.25 font-normal text-[var(--l-ink)] text-base leading-7.25 tracking-[0.005rem] min-[900px]:mb-5.5">
           Stay on the frontier
         </h2>
-        <div className="grid grid-cols-1 gap-[0.5rem] sm:grid-cols-2 sm:gap-[0.5625rem] min-[900px]:grid-cols-3 min-[900px]:gap-[0.625rem]">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-2.25 min-[900px]:grid-cols-3 min-[900px]:gap-2.5">
           {CARDS.map((card) => (
             <FrontierCard key={card.title} card={card} />
           ))}

@@ -1,14 +1,16 @@
+import { Fragment } from "react";
+
 import { toJsxRuntime } from "hast-util-to-jsx-runtime";
 import { ArrowRight } from "lucide-react";
-import { Fragment } from "react";
 import { jsx, jsxs } from "react/jsx-runtime";
 import { type BundledLanguage, codeToHast } from "shiki";
 
-import { DisGenEdge } from "@/components/disease-assoc-edge-schemas";
-import { GeneSchema } from "@/components/gene-schema";
+import { disGenFields } from "@/components/disease-assoc-edge-schemas";
+import { geneFields } from "@/components/gene-schema";
 import { cn } from "@/lib/cn";
 
 import { EditorWindow } from "./EditorWindow";
+import { SchemaTreeView } from "./SchemaTreeView";
 import { Snippet } from "./Snippet";
 import { TabbedEditor } from "./TabbedEditor";
 
@@ -41,32 +43,24 @@ G = optimuskg.load_networkx(lcc=True)
 `;
 
 function ShikiBlock({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="l-shiki-block h-full w-full overflow-auto p-[0.5rem]">
-      {children}
-    </div>
-  );
+  return <div className="l-shiki-block h-full w-full overflow-auto p-2">{children}</div>;
 }
 
 function ImageTabContent({ src, alt }: { src: string; alt: string }) {
   return (
-    <div className="flex h-full w-full items-center justify-center p-[1.25rem]">
+    <div className="flex h-full w-full items-center justify-center p-5">
       <img alt={alt} className="h-full w-full object-contain" src={src} />
     </div>
   );
 }
 
 function SchemaTabContent({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="h-full w-full overflow-auto p-[1rem] [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0">
-      {children}
-    </div>
-  );
+  return <div className="h-full w-full overflow-auto p-2">{children}</div>;
 }
 
 function Feature1Media() {
   return (
-    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-[0.25rem]">
+    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-sm">
       <img
         alt=""
         className="pointer-events-none absolute inset-0 h-full w-full scale-[1.1] object-cover"
@@ -89,7 +83,7 @@ function Feature1Media() {
             name: "Gene Nodes Schema",
             content: (
               <SchemaTabContent>
-                <GeneSchema />
+                <SchemaTreeView fields={geneFields} />
               </SchemaTabContent>
             ),
           },
@@ -97,7 +91,7 @@ function Feature1Media() {
             name: "Disease-Gene Edges Schema",
             content: (
               <SchemaTabContent>
-                <DisGenEdge />
+                <SchemaTreeView fields={disGenFields} />
               </SchemaTabContent>
             ),
           },
@@ -105,7 +99,7 @@ function Feature1Media() {
         title="Graph Schema"
       />
 
-      <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
     </div>
   );
 }
@@ -115,12 +109,12 @@ function Feature2Media() {
     <div className="absolute inset-0 overflow-hidden bg-[#b6b9be]">
       <img
         alt="Data pipeline"
-        className="absolute inset-0 hidden h-full w-full object-contain p-[2rem] min-[900px]:block"
+        className="absolute inset-0 hidden h-full w-full object-contain p-8 min-[900px]:block"
         src="/features/data-pipeline.webp"
       />
       <img
         alt="Data pipeline"
-        className="absolute top-[2rem] left-[2rem] h-[calc(100%-4rem)] w-auto max-w-none min-[900px]:hidden"
+        className="absolute top-8 left-8 h-[calc(100%-4rem)] w-auto max-w-none min-[900px]:hidden"
         src="/features/data-pipeline.webp"
       />
     </div>
@@ -129,7 +123,7 @@ function Feature2Media() {
 
 function Feature3Media() {
   return (
-    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-[0.25rem]">
+    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-sm">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <img
           alt=""
@@ -145,7 +139,9 @@ function Feature3Media() {
         }}
       />
 
+      {/* TODO: Remove `contentBg` once we have light/dark versions of the figures. */}
       <TabbedEditor
+        contentBg="#ffffff"
         style={{
           width: "min(42.5rem, calc(100% - 4rem))",
           height: "min(35rem, calc(100% - 4rem))",
@@ -165,7 +161,7 @@ function Feature3Media() {
         title="PaperQA3 Analysis"
       />
 
-      <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
     </div>
   );
 }
@@ -173,7 +169,7 @@ function Feature3Media() {
 async function Feature4Media() {
   const loadGraphJsx = await renderShiki(FEATURE1_SNIPPET, "python");
   return (
-    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-[0.25rem]">
+    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-sm">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <img
           alt=""
@@ -203,17 +199,13 @@ async function Feature4Media() {
         title="Python Client"
       />
 
-      <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
     </div>
   );
 }
 
-const HEADING_STYLE = {
-  fontSize: "1.31875rem",
-  lineHeight: "1.7875rem",
-  letterSpacing: "-0.006875rem",
-};
-const CTA_STYLE = { fontSize: "0.95625rem", lineHeight: "1.5rem" };
+const HEADING_CLASSES = "text-xl leading-7";
+const CTA_CLASSES = "text-base leading-6";
 
 function FeatureText({
   title,
@@ -243,32 +235,25 @@ function FeatureText({
         />
       </>
     );
-    const ctaClass = "group/cta inline-flex items-center gap-[0.15rem] text-[var(--l-accent)]";
+    const ctaClass = "group/cta inline-flex items-center gap-0.5 text-[var(--l-accent)]";
     cta = ctaHref ? (
       <a
-        className={ctaClass}
+        className={`${ctaClass} ${CTA_CLASSES}`}
         href={ctaHref}
         rel="noopener noreferrer"
-        style={CTA_STYLE}
         target="_blank"
       >
         {ctaContent}
       </a>
     ) : (
-      <span className={ctaClass} style={CTA_STYLE}>
-        {ctaContent}
-      </span>
+      <span className={`${ctaClass} ${CTA_CLASSES}`}>{ctaContent}</span>
     );
   }
   return (
-    <div className="flex flex-col" style={{ gap: "0.9325rem" }}>
+    <div className="flex flex-col gap-3.75">
       <div className="flex flex-col">
-        <h3 className="font-normal text-[var(--l-ink)]" style={HEADING_STYLE}>
-          {title}
-        </h3>
-        <p className="font-normal text-[var(--l-ink-muted)]" style={HEADING_STYLE}>
-          {description}
-        </p>
+        <h3 className={`font-normal text-[var(--l-ink)] ${HEADING_CLASSES}`}>{title}</h3>
+        <p className={`font-normal text-[var(--l-ink-muted)] ${HEADING_CLASSES}`}>{description}</p>
       </div>
       {cta}
     </div>
@@ -284,8 +269,8 @@ type Feature = {
   Media: React.ComponentType;
   href?: string;
   imageSide: "left" | "right";
-  cardH: string;
-  mediaH: string;
+  cardHeightClass: string;
+  mediaHeightClass: string;
 };
 
 const FEATURES: Feature[] = [
@@ -296,8 +281,8 @@ const FEATURES: Feature[] = [
     Media: Feature1Media,
     href: "/docs/graph-schema/nodes",
     imageSide: "right",
-    cardH: "44.6875rem",
-    mediaH: "42.5rem",
+    cardHeightClass: "h-178.75",
+    mediaHeightClass: "h-170",
   },
   {
     title: "Delightfully simple Python client",
@@ -307,19 +292,19 @@ const FEATURES: Feature[] = [
     ctaVariant: "snippet",
     Media: Feature4Media,
     imageSide: "left",
-    cardH: "42.8125rem",
-    mediaH: "40.625rem",
+    cardHeightClass: "h-171.25",
+    mediaHeightClass: "h-162.5",
   },
   {
-    title: "Rigorously validated associations",
+    title: "Rigorously validated",
     description:
       "Every edge is cross-validated against millions of research papers by PaperQA3, a deep research agent.",
     ctaText: "Learn about our methodology",
     Media: Feature3Media,
     href: "https://arxiv.org", // TODO: Update once we have the link
     imageSide: "right",
-    cardH: "44.6875rem",
-    mediaH: "42.5rem",
+    cardHeightClass: "h-178.75",
+    mediaHeightClass: "h-170",
   },
   // {
   //   title: "Works autonomously, runs in parallel",
@@ -329,25 +314,25 @@ const FEATURES: Feature[] = [
   //   ctaHref: "https://cursor.com/docs/cloud-agent",
   //   Media: Feature2Media,
   //   imageSide: "left",
-  //   cardH: "42.8125rem",
-  //   mediaH: "40.625rem",
+  //   cardHeightClass: "h-171.25",
+  //   mediaHeightClass: "h-162.5",
   // },
 ];
 
 function DesktopCard({ feature }: { feature: Feature }) {
-  const { href, imageSide, cardH, mediaH, Media } = feature;
+  const { href, imageSide, cardHeightClass, mediaHeightClass, Media } = feature;
   const linkProps = href ? { href, target: "_blank", rel: "noopener noreferrer" as const } : {};
   const Tag = href ? "a" : "div";
   const textCol =
-    imageSide === "right"
-      ? "col-[1/span_8] pl-[0.15625rem] pr-[1.875rem]"
-      : "col-[17/span_8] pl-[1.875rem] pr-[0.15625rem]";
+    imageSide === "right" ? "col-[1/span_8] pl-0.5 pr-7.5" : "col-[17/span_8] pl-7.5 pr-0.5";
   const imageCol = imageSide === "right" ? "col-[9/span_16]" : "col-[1/span_16]";
 
   return (
     <div
-      className="relative grid grid-cols-[repeat(24,minmax(0,1fr))] gap-x-[0.625rem] rounded-[0.25rem] bg-[var(--l-surface)] p-[1.09375rem]"
-      style={{ height: cardH }}
+      className={cn(
+        "relative grid grid-cols-[repeat(24,minmax(0,1fr))] gap-x-2.5 rounded-sm bg-[var(--l-surface)] p-4.5",
+        cardHeightClass,
+      )}
     >
       <Tag
         {...linkProps}
@@ -356,12 +341,15 @@ function DesktopCard({ feature }: { feature: Feature }) {
         <FeatureText {...feature} />
       </Tag>
       <div
-        className={cn("relative row-start-1 overflow-hidden rounded-[0.25rem]", imageCol)}
-        style={{ height: mediaH }}
+        className={cn(
+          "relative row-start-1 overflow-hidden rounded-sm",
+          imageCol,
+          mediaHeightClass,
+        )}
       >
         <Media />
       </div>
-      <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
     </div>
   );
 }
@@ -372,14 +360,14 @@ function MobileCard({ feature }: { feature: Feature }) {
   const Tag = href ? "a" : "div";
 
   return (
-    <div className="relative flex flex-col overflow-hidden rounded-[0.25rem] bg-[var(--l-surface)]">
-      <Tag {...linkProps} className="group/card block p-[1.025rem] md:p-[1.5rem]">
+    <div className="relative flex flex-col overflow-hidden rounded-sm bg-[var(--l-surface)]">
+      <Tag {...linkProps} className="group/card block p-4 md:p-6">
         <FeatureText {...feature} />
       </Tag>
-      <div className="relative h-[32rem] shrink-0 overflow-hidden sm:h-[36rem] md:h-[40rem]">
+      <div className="relative h-128 shrink-0 overflow-hidden sm:h-144 md:h-160">
         <Media />
       </div>
-      <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
     </div>
   );
 }
@@ -387,12 +375,12 @@ function MobileCard({ feature }: { feature: Feature }) {
 export function FeaturesSection() {
   return (
     <section className="l-section bg-[var(--l-bg)]">
-      <div className="l-container hidden flex-col min-[900px]:flex" style={{ gap: "5.6rem" }}>
+      <div className="l-container hidden flex-col gap-22.5 min-[900px]:flex">
         {FEATURES.map((f) => (
           <DesktopCard feature={f} key={f.title} />
         ))}
       </div>
-      <div className="l-container flex flex-col min-[900px]:hidden" style={{ gap: "5.25rem" }}>
+      <div className="l-container flex flex-col gap-21 min-[900px]:hidden">
         {FEATURES.map((f) => (
           <MobileCard feature={f} key={f.title} />
         ))}

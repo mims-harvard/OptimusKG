@@ -5,14 +5,13 @@ import { cn } from "@/lib/cn";
 function WinChrome({ title }: { title?: string }) {
   return (
     <div
-      className="relative flex shrink-0 items-center border-[var(--l-border)] border-b bg-[var(--l-surface)] px-[0.5rem]"
-      style={{ height: "1.75rem" }}
+      className="relative flex h-7 shrink-0 items-center border-[var(--l-border)] border-b bg-[var(--l-surface)] px-2"
     >
-      <div className="group/winctl flex gap-[0.375rem]">
-        <span className="relative flex size-[0.625rem] cursor-pointer items-center justify-center rounded-full bg-[var(--l-ink-muted)] opacity-40 transition-[background-color,opacity] duration-150 group-hover/winctl:bg-[#ff5f57] group-hover/winctl:opacity-100">
+      <div className="group/winctl flex gap-1.5">
+        <span className="relative flex size-2.5 cursor-pointer items-center justify-center rounded-full bg-[var(--l-ink-muted)] opacity-40 transition-[background-color,opacity] duration-150 group-hover/winctl:bg-[#ff5f57] group-hover/winctl:opacity-100">
           <svg
             aria-hidden="true"
-            className="size-[0.5rem] opacity-0 transition-opacity duration-150 group-hover/winctl:opacity-70"
+            className="size-2 opacity-0 transition-opacity duration-150 group-hover/winctl:opacity-70"
             fill="none"
             stroke="#4d0000"
             strokeLinecap="round"
@@ -22,10 +21,10 @@ function WinChrome({ title }: { title?: string }) {
             <path d="M3 3l4 4M7 3l-4 4" />
           </svg>
         </span>
-        <span className="relative flex size-[0.625rem] cursor-pointer items-center justify-center rounded-full bg-[var(--l-ink-muted)] opacity-40 transition-[background-color,opacity] duration-150 group-hover/winctl:bg-[#febc2e] group-hover/winctl:opacity-100">
+        <span className="relative flex size-2.5 cursor-pointer items-center justify-center rounded-full bg-[var(--l-ink-muted)] opacity-40 transition-[background-color,opacity] duration-150 group-hover/winctl:bg-[#febc2e] group-hover/winctl:opacity-100">
           <svg
             aria-hidden="true"
-            className="size-[0.5rem] opacity-0 transition-opacity duration-150 group-hover/winctl:opacity-70"
+            className="size-2 opacity-0 transition-opacity duration-150 group-hover/winctl:opacity-70"
             fill="none"
             stroke="#5b3300"
             strokeLinecap="round"
@@ -35,10 +34,10 @@ function WinChrome({ title }: { title?: string }) {
             <path d="M2.5 5h5" />
           </svg>
         </span>
-        <span className="relative flex size-[0.625rem] cursor-pointer items-center justify-center rounded-full bg-[var(--l-ink-muted)] opacity-40 transition-[background-color,opacity] duration-150 group-hover/winctl:bg-[#28c840] group-hover/winctl:opacity-100">
+        <span className="relative flex size-2.5 cursor-pointer items-center justify-center rounded-full bg-[var(--l-ink-muted)] opacity-40 transition-[background-color,opacity] duration-150 group-hover/winctl:bg-[#28c840] group-hover/winctl:opacity-100">
           <svg
             aria-hidden="true"
-            className="size-[0.5rem] opacity-0 transition-opacity duration-150 group-hover/winctl:opacity-70"
+            className="size-2 opacity-0 transition-opacity duration-150 group-hover/winctl:opacity-70"
             fill="#0b3d04"
             viewBox="0 0 10 10"
           >
@@ -47,7 +46,7 @@ function WinChrome({ title }: { title?: string }) {
         </span>
       </div>
       {title && (
-        <span className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[0.7125rem] text-[var(--l-ink-muted)]">
+        <span className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-xs text-[var(--l-ink-muted)]">
           {title}
         </span>
       )}

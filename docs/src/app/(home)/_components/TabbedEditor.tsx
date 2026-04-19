@@ -23,7 +23,7 @@ function Tab({
     <div
       aria-selected={active}
       className={cn(
-        "group/tab relative flex h-full cursor-pointer items-center gap-[0.375rem] border-[var(--l-border)] border-r px-[0.75rem]",
+        "group/tab relative flex h-full cursor-pointer items-center gap-1.5 border-[var(--l-border)] border-r px-3",
         active
           ? "bg-[var(--l-bg)] pb-px text-[var(--l-ink)] after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-[var(--l-bg)]"
           : "border-b bg-[var(--l-surface)] text-[var(--l-ink-muted)] hover:text-[var(--l-ink)]",
@@ -38,7 +38,7 @@ function Tab({
       role="tab"
       tabIndex={0}
     >
-      <span className="truncate text-[0.69375rem]">{name}</span>
+      <span className="truncate text-xs">{name}</span>
       {onClose && (
         <button
           aria-label={`Close ${name}`}
@@ -61,11 +61,13 @@ export function TabbedEditor({
   tabs: initialTabs,
   className,
   style,
+  contentBg,
 }: {
   title?: string;
   tabs: EditorTab[];
   className?: string;
   style?: CSSProperties;
+  contentBg?: string;
 }) {
   const [tabs, setTabs] = useState(initialTabs);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -80,12 +82,15 @@ export function TabbedEditor({
     });
   }
 
+  const mergedStyle: CSSProperties | undefined = contentBg
+    ? { ...style, ["--tab-content-bg" as string]: contentBg }
+    : style;
+
   return (
-    <EditorWindow className={className} style={style} title={title}>
+    <EditorWindow className={className} style={mergedStyle} title={title}>
       <div
-        className="flex shrink-0 items-center bg-[var(--l-surface)]"
+        className="flex h-7.5 shrink-0 items-center bg-[var(--l-surface)]"
         role="tablist"
-        style={{ height: "1.887rem" }}
       >
         {tabs.map((tab, i) => (
           <Tab
@@ -98,7 +103,7 @@ export function TabbedEditor({
         ))}
         <div className="h-full flex-1 border-[var(--l-border)] border-b" />
       </div>
-      <div className="min-h-0 flex-1 overflow-hidden bg-[var(--l-bg)]">
+      <div className="min-h-0 flex-1 overflow-hidden bg-[var(--tab-content-bg,var(--l-bg))]">
         {active?.content}
       </div>
     </EditorWindow>

@@ -1,6 +1,6 @@
 import { SchemaTree, type SchemaField } from './schema-tree';
 
-const fields: SchemaField[] = [
+export const geneFields: SchemaField[] = [
   { name: 'id', type: 'String', description: 'Node identifier in CURIE format (e.g. ENSG00000141510)' },
   { name: 'label', type: 'String', description: 'Node type abbreviation (GEN)' },
   {
@@ -222,5 +222,5 @@ const fields: SchemaField[] = [
 ];
 
 export function GeneSchema() {
-  return <SchemaTree fields={fields} />;
+  return <SchemaTree fields={geneFields} />;
 }
