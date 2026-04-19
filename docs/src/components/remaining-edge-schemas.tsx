@@ -4,7 +4,7 @@
 import { SchemaTree } from './schema-tree';
 import { baseEdgeFields, sourcesField } from './edge-schema-shared';
 
-// ANA-GEN — Bgee gene expression
+// ANA-GEN: Bgee gene expression
 export function AnaGenEdge() {
   return (
     <SchemaTree
@@ -22,7 +22,7 @@ export function AnaGenEdge() {
   );
 }
 
-// DIS-PHE — HPO disease–phenotype annotations
+// DIS-PHE: HPO disease-phenotype annotations
 export function DisPheEdge() {
   return (
     <SchemaTree

@@ -7,35 +7,22 @@ export function HeroSection() {
   return (
     <section className="l-section l-section--first l-section--flush-bottom bg-[var(--l-bg)]">
       <div className="l-container">
-        <div className="flex flex-col gap-[3.281rem] min-[900px]:gap-[3.5rem]">
-          <div className="flex flex-col gap-[1.3125rem] min-[900px]:gap-[1.399rem]">
+        <div className="flex flex-col gap-13 min-[900px]:gap-14">
+          <div className="flex flex-col gap-5.25 min-[900px]:gap-5.5">
             <h1
-              className="font-normal text-[var(--l-ink)] text-balance min-[900px]:text-[1.55rem] min-[900px]:leading-[2.031rem] min-[900px]:tracking-[-0.020rem]"
-              style={{ fontSize: "1.456rem", lineHeight: "1.904rem", letterSpacing: "-0.019rem" }}
+              className="font-normal text-[var(--l-ink)] text-balance text-[1.456rem] leading-[1.904rem] tracking-[-0.019rem] min-[900px]:text-[1.55rem] min-[900px]:leading-8 min-[900px]:tracking-[-0.020rem]"
             >
               <span className="block">Unifying biomedical knowledge</span>
               <span className="block">in a modern multimodal graph</span>
             </h1>
 
-            <div className="flex flex-wrap items-center gap-[0.625rem]">
+            <div className="flex flex-wrap items-center gap-2.5">
               <DownloadButton
-                className="rounded-full bg-[var(--l-ink)] font-normal text-[var(--l-bg)]"
-                style={{
-                  fontSize: "0.894rem",
-                  lineHeight: "1rem",
-                  paddingBlock: "0.864rem",
-                  paddingInline: "1.4125rem",
-                }}
+                className="rounded-full bg-[var(--l-ink)] py-3.5 px-5.75 text-sm leading-4 font-normal text-[var(--l-bg)]"
               />
               <a
                 href="/docs"
-                className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-[var(--l-border)] font-normal text-[var(--l-ink)] transition-opacity hover:opacity-70"
-                style={{
-                  fontSize: "0.894rem",
-                  lineHeight: "1rem",
-                  paddingBlock: "0.864rem",
-                  paddingInline: "1.4125rem",
-                }}
+                className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-[var(--l-border)] py-3.5 px-5.75 text-sm leading-4 font-normal text-[var(--l-ink)] transition-opacity hover:opacity-70"
               >
                 Read the docs
               </a>
@@ -43,7 +30,7 @@ export function HeroSection() {
           </div>
 
           <div
-            className="relative aspect-[16/10] max-h-[48.75rem] min-h-[24rem] overflow-hidden rounded-[0.25rem] sm:aspect-[16/9] min-[900px]:aspect-auto min-[900px]:h-[42.5rem] 2xl:h-[48.75rem]"
+            className="relative aspect-[16/10] max-h-195 min-h-96 overflow-hidden rounded-sm sm:aspect-[16/9] min-[900px]:aspect-auto min-[900px]:h-170 2xl:h-195"
             style={{ backgroundImage: MEDIA_BG }}
           >
             <img
@@ -62,7 +49,7 @@ export function HeroSection() {
               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-h-[calc(100%-2rem)] max-w-[calc(100%-2rem)] rounded-[0.625rem] border border-[var(--l-border)] shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1)] min-[900px]:max-h-[calc(100%-4rem)] min-[900px]:max-w-[calc(100%-4rem)]"
             />
 
-            <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
+            <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
           </div>
         </div>
       </div>

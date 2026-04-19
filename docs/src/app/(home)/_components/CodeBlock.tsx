@@ -20,7 +20,7 @@ export async function CodeBlock({
   return (
     <div
       className={cn("l-shiki-block h-full w-full overflow-auto", className)}
-      // Server-rendered Shiki HTML — escaped at build time.
+      // Server-rendered Shiki HTML, escaped at build time.
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

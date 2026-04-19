@@ -21,9 +21,9 @@ const LOGOS = [
 function LogoCard({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative flex items-center justify-center">
-      <div className="relative flex h-[4rem] w-full items-center justify-center rounded-[0.25rem] bg-[var(--l-surface)] px-[0.46875rem] md:h-[4.5rem] min-[900px]:h-[6.25rem]">
+      <div className="relative flex h-16 w-full items-center justify-center rounded-sm bg-[var(--l-surface)] px-2 md:h-18 min-[900px]:h-25">
         {children}
-        <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
+        <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
       </div>
     </div>
   );
@@ -33,17 +33,17 @@ export function LogoGarden() {
   return (
     <section className="l-section l-section--flush-y l-section--compact bg-[var(--l-bg)]">
       <div className="l-container">
-        <div className="flex flex-col gap-[1.3125rem] min-[900px]:gap-[1.399rem]">
-          <p className="text-center text-balance text-[var(--l-ink)] text-[0.775rem] leading-[1.231rem] tracking-[0.0082rem] md:text-[0.825rem] md:leading-[1.3125rem] md:tracking-[0.00875rem]">
+        <div className="flex flex-col gap-5.25 min-[900px]:gap-5.5">
+          <p className="text-center text-balance text-[var(--l-ink)] text-xs leading-5 tracking-[0.0082rem] md:text-sm md:leading-5.25 md:tracking-[0.00875rem]">
             Built on trusted biomedical data sources
           </p>
-          <div className="grid grid-cols-4 gap-[0.46875rem] min-[420px]:gap-[0.625rem] min-[900px]:grid-cols-8">
+          <div className="grid grid-cols-4 gap-2 min-[420px]:gap-2.5 min-[900px]:grid-cols-8">
             {LOGOS.map(({ src, alt }) => (
               <LogoCard key={alt}>
                 <img
                   src={src}
                   alt={alt}
-                  className="l-logo-neutralize max-h-[2rem] w-auto object-contain md:max-h-[2.25rem] min-[900px]:max-h-[2.5rem]"
+                  className="l-logo-neutralize max-h-8 w-auto object-contain md:max-h-9 min-[900px]:max-h-10"
                 />
               </LogoCard>
             ))}

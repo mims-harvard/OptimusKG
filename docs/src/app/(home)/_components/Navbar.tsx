@@ -53,52 +53,31 @@ export function Navbar() {
         <div className="flex h-[var(--l-header-h)] items-center justify-between">
           <OptimusKGLogo />
 
-          <div className="hidden items-center gap-[0.469rem] md:flex">
+          <div className="hidden items-center gap-2 md:flex">
             <a
               href={PAPER_HREF}
               target="_blank"
               rel="noopener noreferrer"
-              className={ghostButton}
-              style={{
-                paddingTop: "0.4125rem",
-                paddingBottom: "0.43rem",
-                paddingInline: "0.719rem",
-                fontSize: "0.844rem",
-                lineHeight: "0.875rem",
-              }}
+              className={`${ghostButton} pt-1.5 pr-1.5 pb-1.5 pl-3 text-sm leading-3.5`}
             >
               Read paper
             </a>
             <a
               href={GET_STARTED_HREF}
-              className={outlineButton}
-              style={{
-                paddingTop: "0.4125rem",
-                paddingBottom: "0.43rem",
-                paddingInline: "0.719rem",
-                fontSize: "0.844rem",
-                lineHeight: "0.875rem",
-              }}
+              className={`${outlineButton} px-3 py-1.5 text-sm leading-3.5`}
             >
               Get started
             </a>
             <DownloadButton
               showIcon={false}
-              className={filledButton}
-              style={{
-                paddingTop: "0.4125rem",
-                paddingBottom: "0.43rem",
-                paddingInline: "0.719rem",
-                fontSize: "0.856rem",
-                lineHeight: "0.875rem",
-              }}
+              className={`${filledButton} px-3 py-1.5 text-sm leading-3.5`}
             />
             <a
               href={GITHUB_HREF}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub repository"
-              className="-mr-[5px] flex h-8 w-8 items-center justify-center rounded-full text-[var(--l-ink)] transition-opacity hover:opacity-70"
+              className="-mr-1 flex h-8 w-8 items-center justify-center rounded-full text-[var(--l-ink)] transition-opacity hover:opacity-70"
             >
               <GitHubIcon />
             </a>
@@ -122,29 +101,25 @@ export function Navbar() {
               href={PAPER_HREF}
               target="_blank"
               rel="noopener noreferrer"
-              className={`${ghostButton} text-[0.9375rem]`}
-              style={{ paddingBlock: "0.625rem", paddingInline: "1.25rem" }}
+              className={`${ghostButton} px-5 py-2.5 text-sm`}
             >
               Read paper
             </a>
             <a
               href={GET_STARTED_HREF}
-              className={`${outlineButton} text-[0.9375rem]`}
-              style={{ paddingBlock: "0.625rem", paddingInline: "1.25rem" }}
+              className={`${outlineButton} px-5 py-2.5 text-sm`}
             >
               Get started
             </a>
             <DownloadButton
               showIcon={false}
-              className={`${filledButton} text-[0.9375rem]`}
-              style={{ paddingBlock: "0.625rem", paddingInline: "1.25rem" }}
+              className={`${filledButton} px-5 py-2.5 text-sm`}
             />
             <a
               href={GITHUB_HREF}
               target="_blank"
               rel="noopener noreferrer"
-              className={`${outlineButton} gap-2 text-[0.9375rem]`}
-              style={{ paddingBlock: "0.625rem", paddingInline: "1.25rem" }}
+              className={`${outlineButton} gap-2 px-5 py-2.5 text-sm`}
             >
               <GitHubIcon />
               GitHub
