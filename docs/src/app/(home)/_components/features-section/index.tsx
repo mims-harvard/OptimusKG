@@ -1,5 +1,7 @@
 import { Fragment } from "react";
 
+import Image from "next/image";
+
 import { toJsxRuntime } from "hast-util-to-jsx-runtime";
 import { ArrowRight } from "lucide-react";
 import { jsx, jsxs } from "react/jsx-runtime";
@@ -52,8 +54,14 @@ function ShikiBlock({ children }: { children: React.ReactNode }) {
 
 function ImageTabContent({ src, alt }: { src: string; alt: string }) {
   return (
-    <div className="flex h-full w-full items-center justify-center p-5">
-      <img alt={alt} className="h-full w-full object-contain" src={src} />
+    <div className="relative flex h-full w-full items-center justify-center p-5">
+      <Image
+        alt={alt}
+        className="object-contain p-5"
+        fill
+        sizes="(min-width: 900px) 680px, 100vw"
+        src={src}
+      />
     </div>
   );
 }
@@ -64,10 +72,12 @@ function SchemaTabContent({ children }: { children: React.ReactNode }) {
 
 function Feature1Media() {
   return (
-    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-sm">
-      <img
+    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-[1px]">
+      <Image
         alt=""
-        className="pointer-events-none absolute inset-0 h-full w-full scale-[1.1] object-cover"
+        className="pointer-events-none scale-[1.1] object-cover"
+        fill
+        sizes="(min-width: 900px) 1200px, 100vw"
         src="/hero/lakeside-village.png"
       />
       <div
@@ -110,15 +120,17 @@ function Feature1Media() {
         />
       </MaximizableWindow>
 
-      <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-[var(--l-border-subtle)]" />
     </div>
   );
 }
 
 function Feature3Media() {
   return (
-    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-sm">
+    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-[1px]">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* biome-ignore lint/performance/noImgElement: intentionally overscaled panoramic background, next/image fill cannot reproduce the percentage stretch */}
+        {/* biome-ignore lint/correctness/useImageSize: size is expressed as a percentage of the container, not intrinsic pixels */}
         <img
           alt=""
           className="absolute max-w-none"
@@ -170,7 +182,7 @@ function Feature3Media() {
         />
       </MaximizableWindow>
 
-      <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-[var(--l-border-subtle)]" />
     </div>
   );
 }
@@ -178,8 +190,10 @@ function Feature3Media() {
 async function Feature4Media() {
   const loadGraphJsx = await renderShiki(FEATURE1_SNIPPET, "python");
   return (
-    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-sm">
+    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-[1px]">
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* biome-ignore lint/performance/noImgElement: intentionally overscaled panoramic background, next/image fill cannot reproduce the percentage stretch */}
+        {/* biome-ignore lint/correctness/useImageSize: size is expressed as a percentage of the container, not intrinsic pixels */}
         <img
           alt=""
           className="absolute max-w-none"
@@ -215,12 +229,13 @@ async function Feature4Media() {
         />
       </MaximizableWindow>
 
-      <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-[var(--l-border-subtle)]" />
     </div>
   );
 }
 
 const HEADING_CLASSES = "text-xl leading-7";
+const DESCRIPTION_CLASSES = "text-md leading-6";
 const CTA_CLASSES = "text-base leading-6";
 
 function FeatureText({
@@ -273,7 +288,7 @@ function FeatureText({
           {title}
         </h3>
         <p
-          className={`font-normal text-[var(--l-ink-muted)] ${HEADING_CLASSES}`}
+          className={`font-normal text-[var(--l-ink-muted)] ${DESCRIPTION_CLASSES}`}
         >
           {description}
         </p>
@@ -348,7 +363,7 @@ function DesktopCard({ feature }: { feature: Feature }) {
   return (
     <div
       className={cn(
-        "relative grid grid-cols-[repeat(24,minmax(0,1fr))] gap-x-2.5 rounded-sm bg-[var(--l-surface)] p-4.5",
+        "relative grid grid-cols-[repeat(24,minmax(0,1fr))] gap-x-2.5 rounded-[1px] bg-[var(--l-surface)] p-4.5",
         cardHeightClass
       )}
     >
@@ -363,14 +378,14 @@ function DesktopCard({ feature }: { feature: Feature }) {
       </Tag>
       <div
         className={cn(
-          "relative row-start-1 overflow-hidden rounded-sm",
+          "relative row-start-1 overflow-hidden rounded-[1px]",
           imageCol,
           mediaHeightClass
         )}
       >
         <Media />
       </div>
-      <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-[var(--l-border-subtle)]" />
     </div>
   );
 }
@@ -383,14 +398,14 @@ function MobileCard({ feature }: { feature: Feature }) {
   const Tag = href ? "a" : "div";
 
   return (
-    <div className="relative flex flex-col overflow-hidden rounded-sm bg-[var(--l-surface)]">
+    <div className="relative flex flex-col overflow-hidden rounded-[1px] bg-[var(--l-surface)]">
       <Tag {...linkProps} className="group/card block p-4 md:p-6">
         <FeatureText {...feature} />
       </Tag>
       <div className="relative h-128 shrink-0 overflow-hidden sm:h-144 md:h-160">
         <Media />
       </div>
-      <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-[var(--l-border-subtle)]" />
     </div>
   );
 }

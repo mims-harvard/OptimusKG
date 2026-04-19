@@ -24,9 +24,9 @@ const LOGOS = [
 function LogoCard({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative flex items-center justify-center">
-      <div className="relative flex h-16 w-full items-center justify-center rounded-sm bg-[var(--l-surface)] px-2 md:h-18 min-[900px]:h-25">
+      <div className="relative flex h-16 w-full items-center justify-center rounded-[1px] bg-[var(--l-surface)] px-2 md:h-18 min-[900px]:h-25">
         {children}
-        <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
+        <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-[var(--l-border-subtle)]" />
       </div>
     </div>
   );
@@ -43,6 +43,8 @@ export function LogoGarden() {
           <div className="grid grid-cols-4 gap-2 min-[900px]:grid-cols-8 min-[420px]:gap-2.5">
             {LOGOS.map(({ src, alt }) => (
               <LogoCard key={alt}>
+                {/* biome-ignore lint/performance/noImgElement: decorative brand logos with varying intrinsic aspect ratios. */}
+                {/* biome-ignore lint/correctness/useImageSize: width/height are set via CSS max-h and w-auto to preserve each logo's native ratio. */}
                 <img
                   alt={alt}
                   className="l-logo-neutralize max-h-8 w-auto object-contain md:max-h-9 min-[900px]:max-h-10"

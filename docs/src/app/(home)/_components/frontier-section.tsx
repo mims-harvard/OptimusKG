@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { ArrowUpRight } from "lucide-react";
 
 import { cn } from "@/lib/cn";
@@ -45,7 +47,7 @@ const BODY_TEXT = "text-base leading-6 tracking-[0.005rem]";
 
 function FrontierCard({ card }: { card: (typeof CARDS)[number] }) {
   return (
-    <div className="relative flex flex-col rounded-sm bg-[var(--l-surface)] px-4.5 pt-4 pb-4.5">
+    <div className="relative flex flex-col rounded-[1px] bg-[var(--l-surface)] px-4.5 pt-4 pb-4.5">
       <div className="flex flex-col">
         <h3 className={`font-normal text-[var(--l-ink)] ${BODY_TEXT}`}>
           {card.title}
@@ -73,19 +75,21 @@ function FrontierCard({ card }: { card: (typeof CARDS)[number] }) {
       <div className="pt-4.5">
         <div
           className={cn(
-            "relative overflow-hidden rounded-sm md:h-80 min-[900px]:h-98",
+            "relative overflow-hidden rounded-[1px] md:h-80 min-[900px]:h-98",
             card.mobileHeightClass
           )}
           style={{ backgroundImage: MEDIA_BG }}
         >
-          <img
+          <Image
             alt={card.imageAlt}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="object-cover"
+            fill
+            sizes="(min-width: 900px) 600px, 100vw"
             src={card.imageSrc}
           />
         </div>
       </div>
-      <div className="pointer-events-none absolute inset-0 rounded-sm border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-[var(--l-border-subtle)]" />
     </div>
   );
 }

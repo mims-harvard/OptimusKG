@@ -276,6 +276,8 @@ const MacOSDock: React.FC<MacOSDockProps> = ({
   const padding = Math.max(8, baseIconSize * 0.12);
 
   return (
+    // biome-ignore lint/a11y/noNoninteractiveElementInteractions: the dock is decorative macOS mimicry, mouse-move tracking drives magnification only, keyboard users reach apps via the tabbable icon buttons
+    // biome-ignore lint/a11y/noStaticElementInteractions: same, hover magnification is a cosmetic enhancement on top of the focusable icon buttons
     <div
       className={`backdrop-blur-md ${className}`}
       onMouseLeave={handleMouseLeave}
@@ -327,6 +329,7 @@ const MacOSDock: React.FC<MacOSDockProps> = ({
               title={app.name}
               type="button"
             >
+              {/* biome-ignore lint/performance/noImgElement: dock icons scale dynamically on hover, next/image requires static width/height */}
               <img
                 alt={app.name}
                 className="object-contain"

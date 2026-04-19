@@ -10,7 +10,7 @@ export function CtaSection() {
         <h2 className="text-balance font-normal text-4xl text-[var(--l-ink)] leading-[1.18] tracking-tight sm:text-5xl min-[900px]:text-7xl">
           Try OptimusKG now.
         </h2>
-        <DownloadButton className="inline-flex items-center gap-1.5 rounded-full bg-[var(--l-ink)] px-5.75 py-3.5 text-[var(--l-bg)] text-base transition-opacity hover:opacity-80" />
+        <DownloadButton className="inline-flex items-center gap-1.5 rounded-none bg-[var(--l-ink)] px-5.75 py-3.5 text-[var(--l-bg)] text-base transition-opacity hover:opacity-80" />
       </div>
     </section>
   );
