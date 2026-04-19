@@ -15,6 +15,11 @@
 
 html {
   scrollbar-gutter: stable;
+  overflow-x: clip;
+}
+
+body {
+  overflow-x: clip;
 }
 
 html > body[data-scroll-locked] {
