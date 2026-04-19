@@ -3,7 +3,7 @@
  * all share the same parquet schema. This file exports one component per node
  * type, all backed by the same field definition.
  */
-import { SchemaTree, type SchemaField } from './schema-tree';
+import { SchemaTree, type SchemaField } from '../../schema-tree';
 
 const fields = (idExample: string, labelAbbrev: string): SchemaField[] => [
   { name: 'id', type: 'String', description: `Node identifier in CURIE format (e.g. ${idExample})` },

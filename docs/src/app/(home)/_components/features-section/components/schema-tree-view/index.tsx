@@ -8,7 +8,7 @@ import {
   TreeNodeTrigger,
   TreeProvider,
   TreeView,
-} from "@/components/ui/tree";
+} from "./components/tree";
 
 function collectStructIds(fields: SchemaField[], prefix = ""): string[] {
   const ids: string[] = [];

@@ -1,8 +1,8 @@
 /**
  * Drug-related edge types: DRG-DIS, DRG-DRG, DRG-GEN, DRG-PHE.
  */
-import { SchemaTree } from './schema-tree';
-import { baseEdgeFields, sourcesField } from './edge-schema-shared';
+import { SchemaTree } from '../../schema-tree';
+import { baseEdgeFields, sourcesField } from '../../edge-schema-shared';
 
 // DRG-DIS
 const drugDiseaseProperties = [

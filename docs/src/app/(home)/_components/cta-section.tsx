@@ -1,4 +1,4 @@
-import { DownloadButton } from "./DownloadButton";
+import { DownloadButton } from "./download-button";
 
 export function CtaSection() {
   return (

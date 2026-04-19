@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { gitConfig } from "@/lib/shared";
-import { Logo } from "@/components/Logo";
-import { DownloadButton } from "./DownloadButton";
-import { MenuToggleIcon } from "./MenuToggleIcon";
+import { Logo } from "@/components/logo";
+import { DownloadButton } from "../download-button";
+import { MenuToggleIcon } from "./components/menu-toggle-icon";
 
 function GitHubIcon({ size = 22 }: { size?: number }) {
   return (

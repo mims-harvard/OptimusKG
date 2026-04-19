@@ -1,4 +1,4 @@
-import { SchemaTree, type SchemaField } from './schema-tree';
+import { SchemaTree, type SchemaField } from '../../schema-tree';
 
 const fields: SchemaField[] = [
   { name: 'id', type: 'String', description: 'Node identifier in CURIE format (e.g. CTD:D001564)' },
