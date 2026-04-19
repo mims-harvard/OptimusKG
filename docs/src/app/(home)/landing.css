@@ -92,6 +92,15 @@
   text-decoration: var(--shiki-dark-text-decoration) !important;
 }
 
+[data-landing] .l-scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+[data-landing] .l-scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 [data-landing] .l-logo-neutralize {
   filter: brightness(0);
   opacity: 0.7;

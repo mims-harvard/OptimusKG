@@ -23,7 +23,7 @@ function Tab({
     <div
       aria-selected={active}
       className={cn(
-        "group/tab relative flex h-full cursor-pointer items-center gap-1.5 border-[var(--l-border)] border-r px-3",
+        "group/tab relative flex h-full shrink-0 cursor-pointer items-center gap-1.5 border-[var(--l-border)] border-r px-3",
         active
           ? "bg-[var(--l-bg)] pb-px text-[var(--l-ink)] after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-[var(--l-bg)]"
           : "border-b bg-[var(--l-surface)] text-[var(--l-ink-muted)] hover:text-[var(--l-ink)]",
@@ -108,7 +108,7 @@ export function TabbedEditor({
       title={title}
     >
       <div
-        className="flex h-7.5 shrink-0 items-center bg-[var(--l-surface)]"
+        className="l-scrollbar-hide flex h-7.5 shrink-0 items-center overflow-x-auto bg-[var(--l-surface)]"
         role="tablist"
       >
         {tabs.map((tab, i) => (
