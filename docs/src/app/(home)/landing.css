@@ -38,6 +38,9 @@
   width: 100%;
   max-width: var(--l-container-max);
   margin-inline: auto;
+}
+
+[data-landing] .l-gutter {
   padding-inline: var(--l-g2);
 }
 
@@ -68,10 +71,6 @@
 
 [data-landing] .l-section--cta {
   padding-block: var(--l-v5) var(--l-v6);
-}
-
-[data-landing] .l-section .l-container {
-  padding-inline: 0;
 }
 
 [data-landing] .l-logo-neutralize {
