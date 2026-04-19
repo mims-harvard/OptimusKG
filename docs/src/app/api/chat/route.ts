@@ -4,12 +4,12 @@ import { z } from 'zod';
 import { source } from '@/lib/source';
 import { Document, type DocumentData } from 'flexsearch';
 
-interface CustomDocument extends DocumentData {
+type CustomDocument = DocumentData & {
   url: string;
   title: string;
   description: string;
   content: string;
-}
+};
 
 export type ChatUIMessage = UIMessage<
   never,

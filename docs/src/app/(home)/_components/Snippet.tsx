@@ -6,7 +6,7 @@ import { cn } from "@/lib/cn";
 
 type TSnippetType = "success" | "warning" | "error";
 
-interface SnippetProps {
+type SnippetProps = {
   text: string | string[];
   width?: string;
   onCopy?: () => void;
@@ -14,7 +14,7 @@ interface SnippetProps {
   dark?: boolean;
   type?: TSnippetType;
   className?: string;
-}
+};
 
 const variant = {
   default: {
