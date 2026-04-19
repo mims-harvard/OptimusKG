@@ -1,9 +1,58 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 
 import { cn } from "@/lib/cn";
+import { CodeBlock } from "./CodeBlock";
+
+function EditorTab({
+  name,
+  active,
+  closable,
+}: {
+  name: string;
+  active?: boolean;
+  closable?: boolean;
+}) {
+  return (
+    <div
+      role="tab"
+      aria-selected={active ? "true" : "false"}
+      className={cn(
+        "group/tab relative flex h-full items-center gap-[0.375rem] border-[var(--l-border)] border-r px-[0.75rem]",
+        active
+          ? "bg-[var(--l-bg)] pb-px text-[var(--l-ink)] after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-[var(--l-bg)]"
+          : "border-b bg-[var(--l-surface)] text-[var(--l-ink-muted)]",
+      )}
+    >
+      <span className="truncate text-[0.69375rem]">{name}</span>
+      {closable && (
+        <X
+          aria-hidden="true"
+          size={10}
+          strokeWidth={2}
+          className="text-[var(--l-ink-muted)] opacity-0 transition-opacity duration-150 group-hover/tab:opacity-100"
+        />
+      )}
+    </div>
+  );
+}
 
 const F3_BG = "/hero/mountain-overlook.png";
 const F4_BG = "/hero/hillside-village.png";
+
+const FEATURE1_SNIPPET = `import optimuskg
+
+# Download a parquet file and cache it locally
+path = optimuskg.get_file("nodes/gene.parquet")
+
+# Load a single table as a Polars DataFrame
+drugs = optimuskg.load_parquet("nodes/drug.parquet")
+
+# Load the largest connected component
+nodes, edges = optimuskg.load_graph(lcc=True)
+
+# Or load it as a NetworkX MultiDiGraph
+G = optimuskg.load_networkx(lcc=True)
+`;
 
 function WinChrome({ title }: { title?: string }) {
   return (
@@ -200,27 +249,13 @@ function Feature4Media() {
       >
         <WinChrome title="Cursor" />
         <div
-          className="flex shrink-0 items-end overflow-hidden"
-          style={{
-            height: "1.887rem",
-            borderBottom: "1px solid rgba(38,37,30,0.1)",
-          }}
+          role="tablist"
+          className="flex shrink-0 items-center bg-[var(--l-surface)]"
+          style={{ height: "1.887rem" }}
         >
-          <div
-            className="flex h-full items-center gap-[0.5rem] bg-[var(--l-bg)] px-[0.75rem]"
-            style={{ borderRight: "1px solid rgba(38,37,30,0.1)" }}
-          >
-            <span className="text-[0.69375rem] text-[var(--l-ink)]">Dashboard.tsx</span>
-            <span className="text-[0.5rem] text-[var(--l-ink-muted)]">×</span>
-          </div>
-          <div className="flex h-full items-center gap-[0.5rem] bg-[var(--l-surface)] px-[0.75rem]">
-            <span className="text-[0.69375rem] text-[var(--l-ink-muted)]">SupportChat.tsx</span>
-          </div>
-          <div className="flex-1 border-[var(--l-border)] border-b" />
-          <div
-            className="absolute bottom-0 left-0 h-px bg-[var(--l-bg)]"
-            style={{ width: "7.8125rem" }}
-          />
+          <EditorTab active closable name="Dashboard.tsx" />
+          <EditorTab name="SupportChat.tsx" />
+          <div className="h-full flex-1 border-[var(--l-border)] border-b" />
         </div>
         <div className="min-h-0 flex-1 overflow-hidden bg-[var(--l-bg)] pt-[0.5rem] pl-[0.5rem]">
           <pre className="pl-[1.75rem] text-[0.75rem] leading-[1.25rem]">
@@ -370,14 +405,13 @@ function FeatureText({
       {ctaText}
       <ArrowRight
         aria-hidden="true"
+        className="transition-transform duration-300 ease-out group-hover/card:translate-x-1 group-hover/cta:translate-x-1"
         size={16}
         strokeWidth={2}
-        className="transition-transform duration-300 ease-out group-hover/cta:translate-x-1 group-hover/card:translate-x-1"
       />
     </>
   );
-  const ctaClass =
-    "group/cta inline-flex items-center gap-[0.15rem] text-[var(--l-accent)]";
+  const ctaClass = "group/cta inline-flex items-center gap-[0.15rem] text-[var(--l-accent)]";
   const cta = ctaHref ? (
     <a
       className={ctaClass}
@@ -426,19 +460,8 @@ const FEATURES: Feature[] = [
     description: "Every entity is enriched with structured properties for fine-grained analysis.",
     ctaText: "Learn about the schema",
     Media: Feature1Media,
-    href: "https://cursor.com/product",
+    href: "/docs/graph-schema/nodes",
     imageSide: "right",
-    cardH: "44.6875rem",
-    mediaH: "42.5rem",
-  },
-  {
-    title: "Rigorously validated associations",
-    description:
-      "Every edge is cross-validated against millions of research papers by PaperQA3, a deep research agent.",
-    ctaText: "Learn about our methodology",
-    Media: Feature3Media,
-    href: "https://arxiv.org", // TODO: Update once we have the link
-    imageSide: "left",
     cardH: "44.6875rem",
     mediaH: "42.5rem",
   },
@@ -449,9 +472,20 @@ const FEATURES: Feature[] = [
     ctaText: "Learn about Tab",
     Media: Feature4Media,
     href: "https://cursor.com/product/tab",
-    imageSide: "right",
+    imageSide: "left",
     cardH: "42.8125rem",
     mediaH: "40.625rem",
+  },
+  {
+    title: "Rigorously validated associations",
+    description:
+      "Every edge is cross-validated against millions of research papers by PaperQA3, a deep research agent.",
+    ctaText: "Learn about our methodology",
+    Media: Feature3Media,
+    href: "https://arxiv.org", // TODO: Update once we have the link
+    imageSide: "right",
+    cardH: "44.6875rem",
+    mediaH: "42.5rem",
   },
   // {
   //   title: "Works autonomously, runs in parallel",
