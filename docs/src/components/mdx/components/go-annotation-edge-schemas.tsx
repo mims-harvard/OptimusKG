@@ -2,8 +2,8 @@
  * GO-annotation edge types: BPO-GEN, CCO-GEN, MFN-GEN.
  * All three share the same property schema (GO evidence, gene product, ECO IDs).
  */
-import { SchemaTree } from './schema-tree';
-import { baseEdgeFields, sourcesField } from './edge-schema-shared';
+import { SchemaTree } from '../../schema-tree';
+import { baseEdgeFields, sourcesField } from '../../edge-schema-shared';
 
 const goAnnotationProperties = [
   { name: 'evidence', type: 'List[String]', description: 'GO evidence codes (e.g. IDA, IMP, TAS)' },

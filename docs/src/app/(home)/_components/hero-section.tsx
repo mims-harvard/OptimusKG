@@ -1,4 +1,4 @@
-import { DownloadButton } from "./DownloadButton";
+import { DownloadButton } from "./download-button";
 
 const MEDIA_BG =
   "linear-gradient(rgba(38,37,30,0.05),rgba(38,37,30,0.05)), linear-gradient(#f2f1ed,#f2f1ed)";

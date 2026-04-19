@@ -1,8 +1,8 @@
 /**
  * Remaining edge types: ANA-GEN, DIS-PHE, and all EXP-* edges.
  */
-import { SchemaTree } from './schema-tree';
-import { baseEdgeFields, sourcesField } from './edge-schema-shared';
+import { SchemaTree } from '../../schema-tree';
+import { baseEdgeFields, sourcesField } from '../../edge-schema-shared';
 
 // ANA-GEN: Bgee gene expression
 export function AnaGenEdge() {

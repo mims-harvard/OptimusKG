@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { type CSSProperties, type ReactNode, useState } from "react";
 
 import { cn } from "@/lib/cn";
-import { EditorWindow } from "./EditorWindow";
+import { EditorWindow } from "./components/editor-window";
 
 export type EditorTab = { name: string; content: ReactNode };
 

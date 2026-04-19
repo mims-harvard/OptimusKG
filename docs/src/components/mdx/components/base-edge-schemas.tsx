@@ -2,8 +2,8 @@
  * Edge types whose properties contain only the sources provenance struct.
  * ANA-ANA, BPO-BPO, CCO-CCO, DIS-DIS, GEN-GEN, MFN-MFN, PWY-GEN, PWY-PWY, PHE-PHE
  */
-import { SchemaTree } from './schema-tree';
-import { baseEdgeFields, sourcesField } from './edge-schema-shared';
+import { SchemaTree } from '../../schema-tree';
+import { baseEdgeFields, sourcesField } from '../../edge-schema-shared';
 
 const onlySources = [sourcesField];
 

@@ -4,8 +4,8 @@ import { type CSSProperties, useState } from "react";
 
 import { cn } from "@/lib/cn";
 
-import MacOSDock, { type DockApp } from "./MacOSDock";
-import { type EditorTab, TabbedEditor } from "./TabbedEditor";
+import MacOSDock, { type DockApp } from "./components/mac-os-dock";
+import { type EditorTab, TabbedEditor } from "./components/tabbed-editor";
 
 type SizeState = "normal" | "maximized";
 type VisibilityState = "visible" | "minimized" | "closed";

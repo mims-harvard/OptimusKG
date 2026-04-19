@@ -12,13 +12,13 @@ import {
   useState,
 } from 'react';
 import { Loader2, MessageCircleIcon, RefreshCw, SearchIcon, Send, X } from 'lucide-react';
-import { cn } from '../../lib/cn';
-import { buttonVariants } from '../ui/button';
+import { cn } from '../../../lib/cn';
+import { buttonVariants } from './components/button';
 import { useChat, type UseChatHelpers } from '@ai-sdk/react';
 import { DefaultChatTransport, type Tool, type UIToolInvocation } from 'ai';
-import { Markdown } from '../markdown';
+import { Markdown } from '../../markdown';
 import { Presence } from '@radix-ui/react-presence';
-import type { ChatUIMessage, SearchTool } from '../../app/api/chat/route';
+import type { ChatUIMessage, SearchTool } from '../../../app/api/chat/route';
 
 const Context = createContext<{
   open: boolean;

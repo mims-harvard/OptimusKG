@@ -9,9 +9,9 @@ import { disGenFields } from "@/components/disease-assoc-edge-schemas";
 import { geneFields } from "@/components/gene-schema";
 import { cn } from "@/lib/cn";
 
-import { HeroWindowShell } from "./HeroWindowShell";
-import { SchemaTreeView } from "./SchemaTreeView";
-import { Snippet } from "./Snippet";
+import { HeroWindowShell } from "./components/hero-window-shell";
+import { SchemaTreeView } from "./components/schema-tree-view";
+import { Snippet } from "./components/snippet";
 
 async function renderShiki(code: string, lang: BundledLanguage) {
   const hast = await codeToHast(code, { lang, themes: SHIKI_THEMES });
