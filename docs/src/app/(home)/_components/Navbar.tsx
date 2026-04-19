@@ -25,6 +25,7 @@ function GitHubIcon({ size = 22 }: { size?: number }) {
 
 const GET_STARTED_HREF = "/docs";
 const GITHUB_HREF = `https://github.com/${gitConfig.user}/${gitConfig.repo}`;
+// TODO: update with the arXiv URL once the paper is published.
 const PAPER_HREF = "https://arxiv.org/";
 
 const ghostButton =
@@ -96,7 +97,7 @@ export function Navbar() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub repository"
-              className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--l-ink)] transition-opacity hover:opacity-70"
+              className="-mr-[5px] flex h-8 w-8 items-center justify-center rounded-full text-[var(--l-ink)] transition-opacity hover:opacity-70"
             >
               <GitHubIcon />
             </a>
