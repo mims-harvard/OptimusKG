@@ -42,7 +42,10 @@ function Tab({
       {onClose && (
         <button
           aria-label={`Close ${name}`}
-          className="-my-1 inline-flex cursor-pointer items-center justify-center rounded-[4px] p-0.5 text-[var(--l-ink-muted)] opacity-0 transition-[opacity,background-color,color] duration-150 hover:bg-[color-mix(in_srgb,var(--l-ink)_12%,transparent)] hover:text-[var(--l-ink)] group-hover/tab:opacity-100"
+          className={cn(
+            "-my-1 inline-flex cursor-pointer items-center justify-center rounded-[4px] p-0.5 text-[var(--l-ink-muted)] transition-[opacity,background-color,color] duration-150 hover:bg-[color-mix(in_srgb,var(--l-ink)_12%,transparent)] hover:text-[var(--l-ink)]",
+            active ? "opacity-100" : "opacity-0 group-hover/tab:opacity-100"
+          )}
           onClick={(e) => {
             e.stopPropagation();
             onClose();

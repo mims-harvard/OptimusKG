@@ -43,12 +43,7 @@ function SchemaRow({
   const nodeId = `${idPrefix}${index}`;
 
   return (
-    <TreeNode
-      isLast={isLast}
-      level={level}
-      nodeId={nodeId}
-      parentPath={parentPath}
-    >
+    <TreeNode isLast={isLast} level={level} nodeId={nodeId} parentPath={parentPath}>
       <TreeNodeTrigger hasChildren={hasChildren}>
         <TreeExpander hasChildren={hasChildren} />
         <div className="flex min-w-0 flex-1 items-center gap-2">
@@ -59,9 +54,7 @@ function SchemaRow({
             {field.type}
           </span>
           {field.description && (
-            <span className="truncate text-[var(--l-ink-muted)] text-xs">
-              {field.description}
-            </span>
+            <span className="truncate text-[var(--l-ink-muted)] text-xs">{field.description}</span>
           )}
         </div>
       </TreeNodeTrigger>
@@ -96,12 +89,12 @@ export function SchemaTreeView({
   return (
     <TreeProvider
       defaultExpandedIds={defaultExpandedIds}
-      indent={16}
+      indent={24}
       selectable={false}
       showIcons={false}
       showLines
     >
-      <TreeView className="p-2">
+      <TreeView className="p-2 pb-8">
         {fields.map((field, i, arr) => (
           <SchemaRow
             field={field}

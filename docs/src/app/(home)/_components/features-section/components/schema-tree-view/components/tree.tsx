@@ -205,7 +205,7 @@ export function TreeNodeTrigger({
   return (
     <div
       className={cn(
-        "group relative mx-1 flex cursor-pointer items-center rounded-md px-3 py-1.5 transition-colors duration-200",
+        "group relative flex cursor-pointer items-center rounded-md px-4 py-1.5 transition-colors duration-200",
         "hover:bg-[var(--l-bg)]",
         isSelected && "bg-[var(--l-bg)]",
         className,
@@ -242,31 +242,29 @@ export function TreeLines() {
   }
 
   return (
-    <div className="pointer-events-none absolute top-0 bottom-0 left-0">
-      {Array.from({ length: level }, (_, index) => {
-        const hide = parentPath[index] === true;
-        if (hide && index === level - 1) {
-          return null;
-        }
-        return (
-          <div
-            className="absolute border-[var(--l-border)] border-l"
-            key={`tree-line-${index}`}
-            style={{
-              left: index * (indent ?? 0) + 12,
-              top: 0,
-              bottom: "-1px",
-              display: hide ? "none" : "block",
-            }}
-          />
-        );
-      })}
+    <div className="pointer-events-none absolute top-0 bottom-0 left-1.5">
+      {Array.from(
+        { length: level },
+        (_, index) =>
+          !(index === level - 1 && isLast) && (
+            <div
+              className="absolute border-[var(--l-border)] border-l"
+              data-parent-path={JSON.stringify(parentPath)}
+              key={`tree-line-${index}`}
+              style={{
+                left: index * (indent ?? 0) + 12,
+                top: 0,
+                bottom: "-1px",
+              }}
+            />
+          ),
+      )}
 
       <div
         className="absolute top-1/2 border-[var(--l-border)] border-t"
         style={{
           left: (level - 1) * (indent ?? 0) + 12,
-          width: (indent ?? 0) - 4,
+          width: (indent ?? 0) - 12,
           transform: "translateY(-1px)",
         }}
       />
@@ -331,7 +329,7 @@ export function TreeExpander({
   return (
     <div
       className={cn(
-        "mr-1 flex h-4 w-4 cursor-pointer items-center justify-center transition-transform duration-200",
+        "mx-0.5 flex h-4 w-4 cursor-pointer items-center justify-center transition-transform duration-200",
         isExpanded && "rotate-90",
         className,
       )}
