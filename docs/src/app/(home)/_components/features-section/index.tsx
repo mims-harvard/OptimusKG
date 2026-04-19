@@ -45,11 +45,7 @@ G = optimuskg.load_networkx(lcc=True)
 `;
 
 function ShikiBlock({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="l-shiki-block h-full w-full overflow-auto p-2">
-      {children}
-    </div>
-  );
+  return <div className="l-shiki-block h-full w-full overflow-auto p-2">{children}</div>;
 }
 
 function ImageTabContent({ src, alt }: { src: string; alt: string }) {
@@ -83,8 +79,7 @@ function Feature1Media() {
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background:
-            "linear-gradient(90deg,rgba(0,0,0,0.12) 0%,rgba(0,0,0,0.22) 100%)",
+          background: "linear-gradient(90deg,rgba(0,0,0,0.12) 0%,rgba(0,0,0,0.22) 100%)",
         }}
       />
 
@@ -93,8 +88,8 @@ function Feature1Media() {
         appId="graph-schema"
         appName="Graph Schema"
         normalStyle={{
-          width: "min(48rem, calc(100% - 4rem))",
-          height: "min(36rem, calc(100% - 4rem))",
+          width: "min(42.5rem, calc(100% - var(--l-window-inset, 4rem)))",
+          height: "min(35rem, calc(100% - var(--l-window-inset, 4rem)))",
         }}
         title="Graph Schema"
       >
@@ -141,8 +136,7 @@ function Feature3Media() {
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background:
-            "linear-gradient(90deg,rgba(38,37,30,0.05) 0%,rgba(38,37,30,0.05) 100%)",
+          background: "linear-gradient(90deg,rgba(38,37,30,0.05) 0%,rgba(38,37,30,0.05) 100%)",
         }}
       />
 
@@ -151,8 +145,8 @@ function Feature3Media() {
         appId="paperqa3"
         appName="PaperQA3 Analysis"
         normalStyle={{
-          width: "min(42.5rem, calc(100% - 4rem))",
-          height: "min(35rem, calc(100% - 4rem))",
+          width: "min(42.5rem, calc(100% - var(--l-window-inset, 4rem)))",
+          height: "min(35rem, calc(100% - var(--l-window-inset, 4rem)))",
         }}
         title="PaperQA3 Analysis"
       >
@@ -163,20 +157,12 @@ function Feature3Media() {
             {
               name: "Molecular Function Validation",
               content: (
-                <ImageTabContent
-                  alt="Molecular Function"
-                  src="/features/molecular-function.webp"
-                />
+                <ImageTabContent alt="Molecular Function" src="/features/molecular-function.webp" />
               ),
             },
             {
               name: "Phenotype Validation",
-              content: (
-                <ImageTabContent
-                  alt="Phenotype"
-                  src="/features/phenotype.webp"
-                />
-              ),
+              content: <ImageTabContent alt="Phenotype" src="/features/phenotype.webp" />,
             },
           ]}
         />
@@ -204,8 +190,7 @@ async function Feature4Media() {
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background:
-            "linear-gradient(90deg,rgba(38,37,30,0.05) 0%,rgba(38,37,30,0.05) 100%)",
+          background: "linear-gradient(90deg,rgba(38,37,30,0.05) 0%,rgba(38,37,30,0.05) 100%)",
         }}
       />
 
@@ -214,8 +199,8 @@ async function Feature4Media() {
         appId="python-client"
         appName="Python Client"
         normalStyle={{
-          width: "min(42.5rem, calc(100% - 4rem))",
-          height: "min(35rem, calc(100% - 4rem))",
+          width: "min(42.5rem, calc(100% - var(--l-window-inset, 4rem)))",
+          height: "min(35rem, calc(100% - var(--l-window-inset, 4rem)))",
         }}
         title="Python Client"
       >
@@ -266,8 +251,7 @@ function FeatureText({
         />
       </>
     );
-    const ctaClass =
-      "group/cta inline-flex items-center gap-0.5 text-(--l-accent)";
+    const ctaClass = "group/cta inline-flex items-center gap-0.5 text-(--l-accent)";
     cta = ctaHref ? (
       <a
         className={`${ctaClass} ${CTA_CLASSES}`}
@@ -284,14 +268,8 @@ function FeatureText({
   return (
     <div className="flex flex-col gap-3.75">
       <div className="flex flex-col">
-        <h3 className={`font-normal text-(--l-ink) ${HEADING_CLASSES}`}>
-          {title}
-        </h3>
-        <p
-          className={`font-normal text-(--l-ink-muted) ${DESCRIPTION_CLASSES}`}
-        >
-          {description}
-        </p>
+        <h3 className={`font-normal text-(--l-ink) ${HEADING_CLASSES}`}>{title}</h3>
+        <p className={`font-normal text-(--l-ink-muted) ${DESCRIPTION_CLASSES}`}>{description}</p>
       </div>
       {cta}
     </div>
@@ -314,8 +292,7 @@ type Feature = {
 const FEATURES: Feature[] = [
   {
     title: "Rich strongly-typed properties",
-    description:
-      "Every entity is enriched with structured properties for fine-grained analysis.",
+    description: "Every entity is enriched with structured properties for fine-grained analysis.",
     ctaText: "Learn about the schema",
     Media: Feature1Media,
     href: "/docs/graph-schema/nodes",
@@ -349,30 +326,22 @@ const FEATURES: Feature[] = [
 
 function DesktopCard({ feature }: { feature: Feature }) {
   const { href, imageSide, cardHeightClass, mediaHeightClass, Media } = feature;
-  const linkProps = href
-    ? { href, target: "_blank", rel: "noopener noreferrer" as const }
-    : {};
+  const linkProps = href ? { href, target: "_blank", rel: "noopener noreferrer" as const } : {};
   const Tag = href ? "a" : "div";
   const textCol =
-    imageSide === "right"
-      ? "col-[1/span_8] pl-0.5 pr-7.5"
-      : "col-[17/span_8] pl-7.5 pr-0.5";
-  const imageCol =
-    imageSide === "right" ? "col-[9/span_16]" : "col-[1/span_16]";
+    imageSide === "right" ? "col-[1/span_8] pl-0.5 pr-7.5" : "col-[17/span_8] pl-7.5 pr-0.5";
+  const imageCol = imageSide === "right" ? "col-[9/span_16]" : "col-[1/span_16]";
 
   return (
     <div
       className={cn(
         "relative grid grid-cols-[repeat(24,minmax(0,1fr))] gap-x-2.5 rounded-[1px] bg-(--l-surface) p-4.5",
-        cardHeightClass
+        cardHeightClass,
       )}
     >
       <Tag
         {...linkProps}
-        className={cn(
-          "group/card row-start-1 flex flex-col justify-center",
-          textCol
-        )}
+        className={cn("group/card row-start-1 flex flex-col justify-center", textCol)}
       >
         <FeatureText {...feature} />
       </Tag>
@@ -380,7 +349,7 @@ function DesktopCard({ feature }: { feature: Feature }) {
         className={cn(
           "relative row-start-1 overflow-hidden rounded-[1px]",
           imageCol,
-          mediaHeightClass
+          mediaHeightClass,
         )}
       >
         <Media />
@@ -392,9 +361,7 @@ function DesktopCard({ feature }: { feature: Feature }) {
 
 function MobileCard({ feature }: { feature: Feature }) {
   const { href, Media } = feature;
-  const linkProps = href
-    ? { href, target: "_blank", rel: "noopener noreferrer" as const }
-    : {};
+  const linkProps = href ? { href, target: "_blank", rel: "noopener noreferrer" as const } : {};
   const Tag = href ? "a" : "div";
 
   return (

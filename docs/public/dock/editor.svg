@@ -1,11 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400" role="img" aria-label="Editor">
   <defs>
-    <linearGradient id="editorBg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#3b82f6"/>
-      <stop offset="100%" stop-color="#1d4ed8"/>
+    <linearGradient id="editorBg" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#2c65c0"/>
+      <stop offset="50%" stop-color="#326ece"/>
+      <stop offset="100%" stop-color="#316dcc"/>
     </linearGradient>
+    <linearGradient id="editorGloss" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.42"/>
+      <stop offset="45%" stop-color="#ffffff" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="editorRim" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.7"/>
+      <stop offset="55%" stop-color="#ffffff" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.05"/>
+    </linearGradient>
+    <linearGradient id="editorGlyph" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#dbe8ff"/>
+    </linearGradient>
+    <radialGradient id="editorInnerGlow" cx="0.5" cy="0" r="0.85">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.28"/>
+      <stop offset="70%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="editorGlyphShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="2.5" flood-color="#0a1433" flood-opacity="0.35"/>
+    </filter>
   </defs>
-  <rect width="128" height="128" rx="28" fill="url(#editorBg)"/>
-  <path d="M44 52 L30 64 L44 76 M84 52 L98 64 L84 76 M74 44 L54 84"
-    fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="2" y="2" width="396" height="396" rx="91" ry="91" fill="url(#editorBg)"/>
+  <rect x="2" y="2" width="396" height="396" rx="91" ry="91" fill="url(#editorInnerGlow)"/>
+  <rect x="2" y="2" width="396" height="396" rx="91" ry="91" fill="url(#editorGloss)"/>
+  <rect x="2.75" y="2.75" width="394.5" height="394.5" rx="90.25" ry="90.25" fill="none" stroke="url(#editorRim)" stroke-width="1.5"/>
+
+  <g filter="url(#editorGlyphShadow)" stroke="url(#editorGlyph)" stroke-width="26" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M140 155 L92 200 L140 245"/>
+    <path d="M260 155 L308 200 L260 245"/>
+    <path d="M234 128 L166 272"/>
+  </g>
 </svg>

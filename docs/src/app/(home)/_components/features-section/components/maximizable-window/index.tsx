@@ -79,6 +79,12 @@ export function MaximizableWindow({
     return () => mediaQuery.removeEventListener("change", update);
   }, []);
 
+  useEffect(() => {
+    if (window.matchMedia("(max-width: 767px)").matches) {
+      setSizeState("maximized");
+    }
+  }, []);
+
   const dockApps: DockApp[] = [
     ...(isMobile
       ? DEFAULT_DOCK_APPS.filter((app) => !MOBILE_HIDDEN_APP_IDS.has(app.id))

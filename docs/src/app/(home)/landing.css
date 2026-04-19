@@ -22,6 +22,8 @@
 
   --l-container-max: 1300px;
   --l-header-h: 3.25rem;
+
+  --l-window-inset: 4rem;
 }
 
 .dark [data-landing] {
@@ -129,6 +131,12 @@
   }
   [data-landing] .l-section--cta {
     padding-block: var(--l-v3) var(--l-v4);
+  }
+}
+
+@media (max-width: 767px) {
+  [data-landing] {
+    --l-window-inset: 2rem;
   }
 }
 
