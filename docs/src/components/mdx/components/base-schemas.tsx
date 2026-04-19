@@ -1,4 +1,5 @@
-import { type SchemaField, SchemaTree } from "../../schema-tree";
+import type { SchemaField } from "../../schema-tree";
+import { SchemaTreeView } from "../../schema-tree-view";
 
 const nodeFields: SchemaField[] = [
   {
@@ -55,9 +56,9 @@ const edgeFields: SchemaField[] = [
 ];
 
 export function BaseNodeSchema() {
-  return <SchemaTree fields={nodeFields} />;
+  return <SchemaTreeView fields={nodeFields} />;
 }
 
 export function BaseEdgeSchema() {
-  return <SchemaTree fields={edgeFields} />;
+  return <SchemaTreeView fields={edgeFields} />;
 }

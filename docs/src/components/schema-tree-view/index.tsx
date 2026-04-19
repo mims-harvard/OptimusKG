@@ -51,15 +51,15 @@ function SchemaRow({
     >
       <TreeNodeTrigger hasChildren={hasChildren}>
         <TreeExpander hasChildren={hasChildren} />
-        <div className="flex min-w-0 flex-1 items-center gap-2">
-          <span className="shrink-0 truncate font-mono text-(--l-ink) text-sm">
+        <div className="flex flex-1 items-center gap-2 whitespace-nowrap">
+          <span className="shrink-0 font-mono text-fd-foreground text-sm">
             {field.name}
           </span>
-          <span className="shrink-0 rounded-[1px] border border-(--l-border) bg-(--l-bg) px-1.5 py-px font-mono text-(--l-ink-muted) text-xs">
+          <span className="shrink-0 rounded-[1px] border border-fd-border bg-fd-muted/30 px-1.5 py-px font-mono text-fd-muted-foreground text-xs">
             {field.type}
           </span>
           {field.description && (
-            <span className="truncate text-(--l-ink-muted) text-xs">
+            <span className="text-fd-muted-foreground text-xs">
               {field.description}
             </span>
           )}
@@ -94,26 +94,28 @@ export function SchemaTreeView({
   const defaultExpandedIds = defaultExpanded ? collectStructIds(fields) : [];
 
   return (
-    <TreeProvider
-      defaultExpandedIds={defaultExpandedIds}
-      indent={24}
-      selectable={false}
-      showIcons={false}
-      showLines
-    >
-      <TreeView className="p-2 pb-8">
-        {fields.map((field, i, arr) => (
-          <SchemaRow
-            field={field}
-            idPrefix=""
-            index={i}
-            key={field.name}
-            level={0}
-            parentPath={[]}
-            total={arr.length}
-          />
-        ))}
-      </TreeView>
-    </TreeProvider>
+    <div className="not-prose my-6 overflow-x-auto rounded-[1px] border border-fd-border">
+      <TreeProvider
+        defaultExpandedIds={defaultExpandedIds}
+        indent={24}
+        selectable={false}
+        showIcons={false}
+        showLines
+      >
+        <TreeView className="w-fit min-w-full p-2 pb-8">
+          {fields.map((field, i, arr) => (
+            <SchemaRow
+              field={field}
+              idPrefix=""
+              index={i}
+              key={field.name}
+              level={0}
+              parentPath={[]}
+              total={arr.length}
+            />
+          ))}
+        </TreeView>
+      </TreeProvider>
+    </div>
   );
 }

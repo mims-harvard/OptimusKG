@@ -3,7 +3,8 @@
  * all share the same parquet schema. This file exports one component per node
  * type, all backed by the same field definition.
  */
-import { type SchemaField, SchemaTree } from "../../schema-tree";
+import type { SchemaField } from "../../schema-tree";
+import { SchemaTreeView } from "../../schema-tree-view";
 
 const fields = (idExample: string, labelAbbrev: string): SchemaField[] => [
   {
@@ -70,17 +71,17 @@ const fields = (idExample: string, labelAbbrev: string): SchemaField[] => [
 ];
 
 export function AnatomySchema() {
-  return <SchemaTree fields={fields("UBERON:0000948", "ANA")} />;
+  return <SchemaTreeView fields={fields("UBERON:0000948", "ANA")} />;
 }
 
 export function BiologicalProcessSchema() {
-  return <SchemaTree fields={fields("GO:0006915", "BPO")} />;
+  return <SchemaTreeView fields={fields("GO:0006915", "BPO")} />;
 }
 
 export function CellularComponentSchema() {
-  return <SchemaTree fields={fields("GO:0005737", "CCO")} />;
+  return <SchemaTreeView fields={fields("GO:0005737", "CCO")} />;
 }
 
 export function MolecularFunctionSchema() {
-  return <SchemaTree fields={fields("GO:0003677", "MFN")} />;
+  return <SchemaTreeView fields={fields("GO:0003677", "MFN")} />;
 }
