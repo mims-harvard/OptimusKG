@@ -45,7 +45,7 @@ export function AISearchPanelHeader({
   return (
     <div
       className={cn(
-        "sticky top-0 flex items-start gap-2 rounded-xl border bg-fd-secondary text-fd-secondary-foreground shadow-sm",
+        "sticky top-0 flex items-start gap-2 rounded-[1px] border bg-fd-secondary text-fd-secondary-foreground shadow-sm",
         className
       )}
       {...props}
@@ -63,7 +63,7 @@ export function AISearchPanelHeader({
           buttonVariants({
             size: "icon-sm",
             color: "ghost",
-            className: "rounded-full text-fd-muted-foreground",
+            className: "rounded-none text-fd-muted-foreground",
           })
         )}
         onClick={() => setOpen(false)}
@@ -92,7 +92,7 @@ export function AISearchInputActions() {
             buttonVariants({
               color: "secondary",
               size: "sm",
-              className: "gap-1.5 rounded-full",
+              className: "gap-1.5 rounded-none",
             })
           )}
           onClick={() => regenerate()}
@@ -107,7 +107,7 @@ export function AISearchInputActions() {
           buttonVariants({
             color: "secondary",
             size: "sm",
-            className: "rounded-full",
+            className: "rounded-none",
           })
         )}
         onClick={() => setMessages([])}
@@ -187,7 +187,7 @@ export function AISearchInput(props: ComponentProps<"form">) {
           className={cn(
             buttonVariants({
               color: "secondary",
-              className: "mt-2 gap-2 rounded-full transition-all",
+              className: "mt-2 gap-2 rounded-none transition-all",
             })
           )}
           key="bn"
@@ -202,7 +202,7 @@ export function AISearchInput(props: ComponentProps<"form">) {
           className={cn(
             buttonVariants({
               color: "primary",
-              className: "mt-2 rounded-full transition-all",
+              className: "mt-2 rounded-none transition-all",
             })
           )}
           disabled={input.length === 0}
@@ -333,7 +333,7 @@ function Message({
       {searchCalls.map((call) => {
         return (
           <div
-            className="mt-3 flex flex-row items-center gap-2 rounded-lg border bg-fd-secondary p-2 text-fd-muted-foreground text-xs"
+            className="mt-3 flex flex-row items-center gap-2 rounded-[1px] border bg-fd-secondary p-2 text-fd-muted-foreground text-xs"
             key={call.toolCallId}
           >
             <SearchIcon className="size-4" />
@@ -435,7 +435,7 @@ export function AISearchPanel() {
         <div
           className={cn(
             "z-30 overflow-hidden bg-fd-card text-fd-card-foreground [--ai-chat-width:400px] 2xl:[--ai-chat-width:460px]",
-            "max-lg:fixed max-lg:inset-x-2 max-lg:inset-y-4 max-lg:rounded-2xl max-lg:border max-lg:shadow-xl",
+            "max-lg:fixed max-lg:inset-x-2 max-lg:inset-y-4 max-lg:rounded-[1px] max-lg:border max-lg:shadow-xl",
             "lg:sticky lg:top-0 lg:in-[#nd-notebook-layout]:col-start-5 lg:in-[#nd-notebook-layout]:row-span-full lg:ms-auto lg:h-dvh lg:border-s lg:in-[#nd-docs-layout]:[grid-area:toc]",
             open
               ? "animate-fd-dialog-in lg:animate-[ask-ai-open_200ms]"
@@ -445,7 +445,7 @@ export function AISearchPanel() {
           <div className="flex size-full flex-col p-2 lg:w-(--ai-chat-width) lg:p-3">
             <AISearchPanelHeader />
             <AISearchPanelList className="flex-1" />
-            <div className="rounded-xl border bg-fd-secondary text-fd-secondary-foreground shadow-sm has-focus-visible:shadow-md">
+            <div className="rounded-[1px] border bg-fd-secondary text-fd-secondary-foreground shadow-sm has-focus-visible:shadow-md">
               <AISearchInput />
               <div className="flex items-center gap-1.5 p-1 empty:hidden">
                 <AISearchInputActions />
@@ -486,7 +486,7 @@ export function AISearchPanelList({
       ) : (
         <div className="flex flex-col gap-4 px-3">
           {chat.error && (
-            <div className="rounded-lg border bg-fd-secondary p-2 text-fd-secondary-foreground">
+            <div className="rounded-[1px] border bg-fd-secondary p-2 text-fd-secondary-foreground">
               <p className="mb-1 text-fd-muted-foreground text-xs">
                 Request Failed: {chat.error.name}
               </p>
