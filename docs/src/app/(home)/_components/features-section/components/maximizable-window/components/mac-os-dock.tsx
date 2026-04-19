@@ -279,29 +279,111 @@ const MacOSDock: React.FC<MacOSDockProps> = ({
     // biome-ignore lint/a11y/noNoninteractiveElementInteractions: the dock is decorative macOS mimicry, mouse-move tracking drives magnification only, keyboard users reach apps via the tabbable icon buttons
     // biome-ignore lint/a11y/noStaticElementInteractions: same, hover magnification is a cosmetic enhancement on top of the focusable icon buttons
     <div
-      className={`backdrop-blur-md ${className}`}
+      className={`relative ${className}`}
       onMouseLeave={handleMouseLeave}
       onMouseMove={handleMouseMove}
       ref={dockRef}
       style={{
         width: `${contentWidth + padding * 2}px`,
-        background: "rgba(45, 45, 45, 0.75)",
         borderRadius: `${Math.max(12, baseIconSize * 0.4)}px`,
-        border: "1px solid rgba(255, 255, 255, 0.15)",
-        boxShadow: `
-          0 ${Math.max(4, baseIconSize * 0.1)}px ${Math.max(16, baseIconSize * 0.4)}px rgba(0, 0, 0, 0.4),
-          0 ${Math.max(2, baseIconSize * 0.05)}px ${Math.max(8, baseIconSize * 0.2)}px rgba(0, 0, 0, 0.3),
-          inset 0 1px 0 rgba(255, 255, 255, 0.15),
-          inset 0 -1px 0 rgba(0, 0, 0, 0.2)
-        `,
+        boxShadow:
+          "0 6px 6px rgba(0, 0, 0, 0.2), 0 0 20px rgba(0, 0, 0, 0.1)",
         padding: `${padding}px`,
       }}
     >
+      <svg aria-hidden="true" style={{ display: "none" }}>
+        <title>Dock glass distortion</title>
+        <filter
+          filterUnits="objectBoundingBox"
+          height="100%"
+          id="optimus-dock-glass-distortion"
+          width="100%"
+          x="0%"
+          y="0%"
+        >
+          <feTurbulence
+            baseFrequency="0.001 0.005"
+            numOctaves="1"
+            result="turbulence"
+            seed="17"
+            type="fractalNoise"
+          />
+          <feComponentTransfer in="turbulence" result="mapped">
+            <feFuncR amplitude="1" exponent="10" offset="0.5" type="gamma" />
+            <feFuncG amplitude="0" exponent="1" offset="0" type="gamma" />
+            <feFuncB amplitude="0" exponent="1" offset="0.5" type="gamma" />
+          </feComponentTransfer>
+          <feGaussianBlur in="turbulence" result="softMap" stdDeviation="3" />
+          <feSpecularLighting
+            in="softMap"
+            lightingColor="white"
+            result="specLight"
+            specularConstant="1"
+            specularExponent="100"
+            surfaceScale="5"
+          >
+            <fePointLight x="-200" y="-200" z="300" />
+          </feSpecularLighting>
+          <feComposite
+            in="specLight"
+            k1="0"
+            k2="1"
+            k3="1"
+            k4="0"
+            operator="arithmetic"
+            result="litImage"
+          />
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="softMap"
+            scale="200"
+            xChannelSelector="R"
+            yChannelSelector="G"
+          />
+        </filter>
+      </svg>
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          borderRadius: "inherit",
+          overflow: "hidden",
+          backdropFilter: "blur(3px)",
+          WebkitBackdropFilter: "blur(3px)",
+          filter: "url(#optimus-dock-glass-distortion)",
+          isolation: "isolate",
+          zIndex: 0,
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          borderRadius: "inherit",
+          background: "rgba(255, 255, 255, 0.25)",
+          zIndex: 1,
+          pointerEvents: "none",
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          borderRadius: "inherit",
+          overflow: "hidden",
+          boxShadow:
+            "inset 1px 1px 0 0 rgba(255, 255, 255, 0.5), inset -1px -1px 0 0 rgba(255, 255, 255, 0.5)",
+          zIndex: 2,
+          pointerEvents: "none",
+        }}
+      />
       <div
         className="relative"
         style={{
           height: `${baseIconSize}px`,
           width: "100%",
+          zIndex: 30,
         }}
       >
         {apps.map((app, index) => {

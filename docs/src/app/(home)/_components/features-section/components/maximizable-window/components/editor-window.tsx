@@ -17,13 +17,20 @@ function WinChrome({
   onMaximize,
   isMaximized = false,
   canMinimize = true,
+  overlay = false,
 }: {
   title?: string;
   isMaximized?: boolean;
   canMinimize?: boolean;
+  overlay?: boolean;
 } & ChromeCallbacks) {
   return (
-    <div className="relative flex h-7 shrink-0 items-center border-(--l-border) border-b bg-(--l-surface) px-2">
+    <div
+      className={cn(
+        "relative flex h-7 shrink-0 items-center border-(--l-border) border-b bg-(--l-surface) px-2",
+        overlay && "border-t border-r border-l"
+      )}
+    >
       <div className="group/winctl flex gap-1.5">
         <button
           aria-label="Close window"
@@ -136,8 +143,6 @@ export function EditorWindow({
     <div
       className={cn(
         "relative flex flex-col overflow-hidden rounded-[0.625rem] bg-(--l-surface) shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)]",
-        isMaximized &&
-          "shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1),inset_0px_0px_0px_1px_rgba(38,37,30,0.1)]",
         className
       )}
       style={style}
@@ -151,6 +156,7 @@ export function EditorWindow({
               onClose={onClose}
               onMaximize={onMaximize}
               onMinimize={onMinimize}
+              overlay
               title={title}
             />
           </div>
