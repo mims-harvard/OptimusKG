@@ -17,15 +17,29 @@ export function HeroSection() {
               <span className="block">in a modern multimodal graph</span>
             </h1>
 
-            <DownloadButton
-              className="self-start rounded-full bg-[var(--l-ink)] font-normal text-[var(--l-bg)]"
-              style={{
-                fontSize: "0.894rem",
-                lineHeight: "1rem",
-                paddingBlock: "0.864rem",
-                paddingInline: "1.4125rem",
-              }}
-            />
+            <div className="flex flex-wrap items-center gap-[0.625rem]">
+              <DownloadButton
+                className="rounded-full bg-[var(--l-ink)] font-normal text-[var(--l-bg)]"
+                style={{
+                  fontSize: "0.894rem",
+                  lineHeight: "1rem",
+                  paddingBlock: "0.864rem",
+                  paddingInline: "1.4125rem",
+                }}
+              />
+              <a
+                href="/docs"
+                className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border border-[var(--l-border)] font-normal text-[var(--l-ink)] transition-opacity hover:opacity-70"
+                style={{
+                  fontSize: "0.894rem",
+                  lineHeight: "1rem",
+                  paddingBlock: "0.864rem",
+                  paddingInline: "1.4125rem",
+                }}
+              >
+                Read the docs
+              </a>
+            </div>
           </div>
 
           <div

@@ -1,8 +1,7 @@
 import { ArrowDownToLine } from "lucide-react";
 import { cn } from "@/lib/cn";
 
-const DATAVERSE_URL =
-  "https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/IYNGEV";
+const PYPI_URL = "https://pypi.org/project/optimuskg/";
 
 export function DownloadButton({
   className,
@@ -15,7 +14,7 @@ export function DownloadButton({
 }) {
   return (
     <a
-      href={DATAVERSE_URL}
+      href={PYPI_URL}
       target="_blank"
       rel="noopener noreferrer"
       className={cn("inline-flex items-center gap-1.5", className)}

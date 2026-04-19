@@ -1,40 +1,26 @@
-import { ArrowRight, X } from "lucide-react";
+import { toJsxRuntime } from "hast-util-to-jsx-runtime";
+import { ArrowRight } from "lucide-react";
+import { Fragment } from "react";
+import { jsx, jsxs } from "react/jsx-runtime";
+import { type BundledLanguage, codeToHast } from "shiki";
 
+import { DisGenEdge } from "@/components/disease-assoc-edge-schemas";
+import { GeneSchema } from "@/components/gene-schema";
 import { cn } from "@/lib/cn";
-import { CodeBlock } from "./CodeBlock";
 
-function EditorTab({
-  name,
-  active,
-  closable,
-}: {
-  name: string;
-  active?: boolean;
-  closable?: boolean;
-}) {
-  return (
-    <div
-      role="tab"
-      aria-selected={active ? "true" : "false"}
-      className={cn(
-        "group/tab relative flex h-full items-center gap-[0.375rem] border-[var(--l-border)] border-r px-[0.75rem]",
-        active
-          ? "bg-[var(--l-bg)] pb-px text-[var(--l-ink)] after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-[var(--l-bg)]"
-          : "border-b bg-[var(--l-surface)] text-[var(--l-ink-muted)]",
-      )}
-    >
-      <span className="truncate text-[0.69375rem]">{name}</span>
-      {closable && (
-        <X
-          aria-hidden="true"
-          size={10}
-          strokeWidth={2}
-          className="text-[var(--l-ink-muted)] opacity-0 transition-opacity duration-150 group-hover/tab:opacity-100"
-        />
-      )}
-    </div>
-  );
+import { EditorWindow } from "./EditorWindow";
+import { Snippet } from "./Snippet";
+import { TabbedEditor } from "./TabbedEditor";
+
+async function renderShiki(code: string, lang: BundledLanguage) {
+  const hast = await codeToHast(code, { lang, themes: SHIKI_THEMES });
+  return toJsxRuntime(hast, { Fragment, jsx, jsxs });
 }
+
+const SHIKI_THEMES = {
+  light: "catppuccin-latte",
+  dark: "catppuccin-mocha",
+} as const;
 
 const F3_BG = "/hero/mountain-overlook.png";
 const F4_BG = "/hero/hillside-village.png";
@@ -54,76 +40,72 @@ nodes, edges = optimuskg.load_graph(lcc=True)
 G = optimuskg.load_networkx(lcc=True)
 `;
 
-function WinChrome({ title }: { title?: string }) {
+function ShikiBlock({ children }: { children: React.ReactNode }) {
   return (
-    <div
-      className="relative flex shrink-0 items-center border-[var(--l-border)] border-b bg-[var(--l-surface)] px-[0.5rem]"
-      style={{ height: "1.75rem" }}
-    >
-      <div className="flex gap-[0.375rem]">
-        <span className="block size-[0.625rem] rounded-full bg-[var(--l-ink-muted)] opacity-40" />
-        <span className="block size-[0.625rem] rounded-full bg-[var(--l-ink-muted)] opacity-40" />
-        <span className="block size-[0.625rem] rounded-full bg-[var(--l-ink-muted)] opacity-40" />
-      </div>
-      {title && (
-        <span className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[0.7125rem] text-[var(--l-ink-muted)]">
-          {title}
-        </span>
-      )}
+    <div className="l-shiki-block h-full w-full overflow-auto p-[0.5rem]">
+      {children}
+    </div>
+  );
+}
+
+function ImageTabContent({ src, alt }: { src: string; alt: string }) {
+  return (
+    <div className="flex h-full w-full items-center justify-center p-[1.25rem]">
+      <img alt={alt} className="h-full w-full object-contain" src={src} />
+    </div>
+  );
+}
+
+function SchemaTabContent({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="h-full w-full overflow-auto p-[1rem] [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0">
+      {children}
     </div>
   );
 }
 
 function Feature1Media() {
   return (
-    <div className="absolute inset-0 overflow-hidden rounded-[0.25rem]">
+    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-[0.25rem]">
       <img
         alt=""
-        className="absolute inset-0 h-full w-full scale-[1.1] object-cover"
+        className="pointer-events-none absolute inset-0 h-full w-full scale-[1.1] object-cover"
         src="/hero/lakeside-village.png"
       />
       <div
-        className="absolute inset-0"
+        className="pointer-events-none absolute inset-0"
         style={{
           background: "linear-gradient(90deg,rgba(0,0,0,0.12) 0%,rgba(0,0,0,0.22) 100%)",
         }}
       />
 
-      <div
-        className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[0.625rem] bg-white shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)] min-[900px]:flex"
+      <TabbedEditor
         style={{
-          width: "min(52rem, calc(100% - 4rem))",
-          height: "min(36.875rem, calc(100% - 4rem))",
+          width: "min(48rem, calc(100% - 4rem))",
+          height: "min(36rem, calc(100% - 4rem))",
         }}
-      >
-        <WinChrome />
-        <div className="flex min-h-0 flex-1 items-center justify-center p-[1.25rem]">
-          <img
-            alt="Code library"
-            className="h-full w-full object-contain"
-            src="/features/code-library.svg"
-          />
-        </div>
-      </div>
+        tabs={[
+          {
+            name: "Gene Nodes Schema",
+            content: (
+              <SchemaTabContent>
+                <GeneSchema />
+              </SchemaTabContent>
+            ),
+          },
+          {
+            name: "Disease-Gene Edges Schema",
+            content: (
+              <SchemaTabContent>
+                <DisGenEdge />
+              </SchemaTabContent>
+            ),
+          },
+        ]}
+        title="Graph Schema"
+      />
 
-      <div
-        className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[0.625rem] bg-white shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)] min-[900px]:hidden"
-        style={{
-          width: "min(51rem, calc(100% - 3rem))",
-          height: "min(38.5rem, calc(100% - 4rem))",
-        }}
-      >
-        <WinChrome />
-        <div className="flex min-h-0 flex-1 items-center justify-center p-[1.25rem]">
-          <img
-            alt="Code library"
-            className="h-full w-full object-contain"
-            src="/features/code-library.svg"
-          />
-        </div>
-      </div>
-
-      <div className="absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
     </div>
   );
 }
@@ -147,8 +129,8 @@ function Feature2Media() {
 
 function Feature3Media() {
   return (
-    <div className="absolute inset-0 overflow-hidden rounded-[0.25rem]">
-      <div className="absolute inset-0 overflow-hidden">
+    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-[0.25rem]">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <img
           alt=""
           className="absolute max-w-none"
@@ -157,73 +139,42 @@ function Feature3Media() {
         />
       </div>
       <div
-        className="absolute inset-0"
+        className="pointer-events-none absolute inset-0"
         style={{
           background: "linear-gradient(90deg,rgba(38,37,30,0.05) 0%,rgba(38,37,30,0.05) 100%)",
         }}
       />
 
-      <div
-        className="absolute hidden flex-col overflow-hidden rounded-[0.625rem] bg-white shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)] min-[900px]:flex"
+      <TabbedEditor
         style={{
-          left: "4.75rem",
-          top: "3.625rem",
-          width: "30.75rem",
-          height: "19.25rem",
+          width: "min(42.5rem, calc(100% - 4rem))",
+          height: "min(35rem, calc(100% - 4rem))",
         }}
-      >
-        <WinChrome title="Molecular Function" />
-        <div className="flex min-h-0 flex-1 items-center justify-center p-[1.25rem]">
-          <img
-            alt="Molecular Function"
-            className="h-full w-full object-contain"
-            src="/features/molecular-function.webp"
-          />
-        </div>
-      </div>
+        tabs={[
+          {
+            name: "Molecular Function Validation",
+            content: (
+              <ImageTabContent alt="Molecular Function" src="/features/molecular-function.webp" />
+            ),
+          },
+          {
+            name: "Phenotype Validation",
+            content: <ImageTabContent alt="Phenotype" src="/features/phenotype.webp" />,
+          },
+        ]}
+        title="PaperQA3 Analysis"
+      />
 
-      <div
-        className="absolute hidden flex-col overflow-hidden rounded-[0.625rem] bg-white shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)] min-[900px]:flex"
-        style={{
-          left: "13.375rem",
-          top: "14rem",
-          width: "30.75rem",
-          height: "24rem",
-        }}
-      >
-        <WinChrome title="Phenotype" />
-        <div className="flex min-h-0 flex-1 items-center justify-center p-[1.25rem]">
-          <img
-            alt="Phenotype"
-            className="h-full w-full object-contain"
-            src="/features/phenotype.webp"
-          />
-        </div>
-      </div>
-
-      <div
-        className="absolute flex flex-col overflow-hidden rounded-[0.625rem] bg-white shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)] min-[900px]:hidden"
-        style={{ left: "1.5rem", top: "2rem", width: "51rem", height: "36rem" }}
-      >
-        <WinChrome title="Phenotype" />
-        <div className="flex min-h-0 flex-1 items-center justify-center p-[1.25rem]">
-          <img
-            alt="Phenotype"
-            className="h-full w-full object-contain"
-            src="/features/phenotype.webp"
-          />
-        </div>
-      </div>
-
-      <div className="absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
     </div>
   );
 }
 
-function Feature4Media() {
+async function Feature4Media() {
+  const loadGraphJsx = await renderShiki(FEATURE1_SNIPPET, "python");
   return (
-    <div className="absolute inset-0 overflow-hidden rounded-[0.25rem]">
-      <div className="absolute inset-0 overflow-hidden">
+    <div className="absolute inset-0 flex items-center justify-center overflow-hidden rounded-[0.25rem]">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <img
           alt=""
           className="absolute max-w-none"
@@ -232,152 +183,27 @@ function Feature4Media() {
         />
       </div>
       <div
-        className="absolute inset-0"
+        className="pointer-events-none absolute inset-0"
         style={{
           background: "linear-gradient(90deg,rgba(38,37,30,0.05) 0%,rgba(38,37,30,0.05) 100%)",
         }}
       />
 
-      <div
-        className="absolute flex flex-col overflow-hidden rounded-[0.625rem] bg-[var(--l-surface)] shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)]"
+      <TabbedEditor
         style={{
-          left: "2rem",
-          top: "2.8125rem",
-          width: "42.5rem",
-          height: "35rem",
+          width: "min(42.5rem, calc(100% - 4rem))",
+          height: "min(35rem, calc(100% - 4rem))",
         }}
-      >
-        <WinChrome title="Cursor" />
-        <div
-          role="tablist"
-          className="flex shrink-0 items-center bg-[var(--l-surface)]"
-          style={{ height: "1.887rem" }}
-        >
-          <EditorTab active closable name="Dashboard.tsx" />
-          <EditorTab name="SupportChat.tsx" />
-          <div className="h-full flex-1 border-[var(--l-border)] border-b" />
-        </div>
-        <div className="min-h-0 flex-1 overflow-hidden bg-[var(--l-bg)] pt-[0.5rem] pl-[0.5rem]">
-          <pre className="pl-[1.75rem] text-[0.75rem] leading-[1.25rem]">
-            <div>
-              <span className="text-[#9e94d5]">&quot;</span>
-              <span className="text-[#aa52a2]">use client</span>
-              <span className="text-[#9e94d5]">&quot;</span>
-              <span className="text-[rgba(20,20,20,0.92)]">;</span>
-            </div>
-            <div className="mt-[1.25rem]">
-              <div>
-                <span className="text-[#b3003f]">import</span>
-                <span className="text-[rgba(20,20,20,0.92)]"> React, {"{ useState }"} </span>
-                <span className="text-[#b3003f]">from</span>
-                <span className="text-[#9e94d5]"> &quot;</span>
-                <span className="text-[#aa52a2]">react</span>
-                <span className="text-[#9e94d5]">&quot;</span>
-                <span className="text-[rgba(20,20,20,0.92)]">;</span>
-              </div>
-              <div>
-                <span className="text-[#b3003f]">import</span>
-                <span className="text-[rgba(20,20,20,0.92)]"> Navigation </span>
-                <span className="text-[#b3003f]">from</span>
-                <span className="text-[#9e94d5]"> &quot;</span>
-                <span className="text-[#aa52a2]">./Navigation</span>
-                <span className="text-[#9e94d5]">&quot;</span>
-                <span className="text-[rgba(20,20,20,0.92)]">;</span>
-              </div>
-              <div>
-                <span className="text-[#b3003f]">import</span>
-                <span className="text-[rgba(20,20,20,0.92)]"> SupportChat </span>
-                <span className="text-[#b3003f]">from</span>
-                <span className="text-[#9e94d5]"> &quot;</span>
-                <span className="text-[#aa52a2]">./SupportChat</span>
-                <span className="text-[#9e94d5]">&quot;</span>
-                <span className="text-[rgba(20,20,20,0.92)]">;</span>
-              </div>
-            </div>
-            <div className="mt-[1.25rem]">
-              <div>
-                <span className="text-[#b3003f]">export default function</span>
-                <span className="text-[#db704b]"> Dashboard() {"{"}</span>
-              </div>
-            </div>
-            <div className="mt-[1.25rem] whitespace-pre">
-              <div>
-                <span className="text-[#b3003f]"> return</span>
-                <span className="text-[#db704b]"> (</span>
-              </div>
-              <div>
-                <span className="text-[rgba(20,20,20,0.68)]"> &lt;</span>
-                <span className="text-[#1f8a65]">div</span>
-                <span className="text-[#6049b3]"> className</span>
-                <span className="text-[rgba(20,20,20,0.92)]">=</span>
-                <span className="text-[#9e94d5]">&quot;</span>
-                <span className="text-[#aa52a2]">
-                  flex h-[600px] border rounded-lg overflow-hidden
-                </span>
-                <span className="text-[#9e94d5]">&quot;</span>
-                <span className="text-[rgba(20,20,20,0.68)]">&gt;</span>
-              </div>
-              <div>
-                <span className="text-[rgba(20,20,20,0.68)]"> &lt;</span>
-                <span className="text-[#1f8a65]">div</span>
-                <span className="text-[#6049b3]"> className</span>
-                <span className="text-[rgba(20,20,20,0.92)]">=</span>
-                <span className="text-[#9e94d5]">&quot;</span>
-                <span className="text-[#aa52a2]">w-64 border-r</span>
-                <span className="text-[#9e94d5]">&quot;</span>
-                <span className="text-[rgba(20,20,20,0.68)]">&gt;</span>
-              </div>
-              <div>
-                <span className="text-[rgba(20,20,20,0.68)]"> &lt;/</span>
-                <span className="text-[#1f8a65]">div</span>
-                <span className="text-[rgba(20,20,20,0.68)]">&gt;</span>
-              </div>
-              <div>
-                <span className="text-[rgba(20,20,20,0.68)]"> &lt;</span>
-                <span className="text-[#1f8a65]">div</span>
-                <span className="text-[#6049b3]"> className</span>
-                <span className="text-[rgba(20,20,20,0.92)]">=</span>
-                <span className="text-[#9e94d5]">&quot;</span>
-                <span className="text-[#aa52a2]">w-80 border-l</span>
-                <span className="text-[#9e94d5]">&quot;</span>
-                <span className="text-[rgba(20,20,20,0.68)]">&gt;</span>
-              </div>
-              <div>
-                <span className="text-[rgba(20,20,20,0.68)]"> &lt;</span>
-                <span className="text-[#1f8a65]">SupportChat</span>
-                <span className="text-[rgba(20,20,20,0.68)]"> /&gt;</span>
-              </div>
-              <div>
-                <span className="text-[rgba(20,20,20,0.68)]"> &lt;/</span>
-                <span className="text-[#1f8a65]">div</span>
-                <span className="text-[rgba(20,20,20,0.68)]">&gt;</span>
-              </div>
-              <div>
-                <span className="text-[rgba(20,20,20,0.68)]"> &lt;/</span>
-                <span className="text-[#1f8a65]">div</span>
-                <span className="text-[rgba(20,20,20,0.68)]">&gt;</span>
-              </div>
-              <div>
-                <span className="text-[#db704b]"> );</span>
-              </div>
-              <div>
-                <span className="text-[#db704b]">{"}"}</span>
-              </div>
-            </div>
-          </pre>
-          <div
-            className="absolute bg-[#26251e]"
-            style={{
-              left: "calc(0.5rem + 1.75rem + 18.9rem)",
-              top: "calc(0.5rem + 8.125rem)",
-              width: "0.125rem",
-              height: "0.875rem",
-            }}
-          />
-        </div>
-      </div>
+        tabs={[
+          {
+            name: "load_graph.py",
+            content: <ShikiBlock>{loadGraphJsx}</ShikiBlock>,
+          },
+        ]}
+        title="Python Client"
+      />
 
-      <div className="absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
     </div>
   );
 }
@@ -394,39 +220,46 @@ function FeatureText({
   description,
   ctaText,
   ctaHref,
+  ctaVariant = "link",
 }: {
   title: string;
   description: string;
   ctaText: string;
   ctaHref?: string;
+  ctaVariant?: "link" | "snippet";
 }) {
-  const ctaContent = (
-    <>
-      {ctaText}
-      <ArrowRight
-        aria-hidden="true"
-        className="transition-transform duration-300 ease-out group-hover/card:translate-x-1 group-hover/cta:translate-x-1"
-        size={16}
-        strokeWidth={2}
-      />
-    </>
-  );
-  const ctaClass = "group/cta inline-flex items-center gap-[0.15rem] text-[var(--l-accent)]";
-  const cta = ctaHref ? (
-    <a
-      className={ctaClass}
-      href={ctaHref}
-      rel="noopener noreferrer"
-      style={CTA_STYLE}
-      target="_blank"
-    >
-      {ctaContent}
-    </a>
-  ) : (
-    <span className={ctaClass} style={CTA_STYLE}>
-      {ctaContent}
-    </span>
-  );
+  let cta: React.ReactNode;
+  if (ctaVariant === "snippet") {
+    cta = <Snippet text={ctaText} />;
+  } else {
+    const ctaContent = (
+      <>
+        {ctaText}
+        <ArrowRight
+          aria-hidden="true"
+          className="transition-transform duration-300 ease-out group-hover/card:translate-x-1 group-hover/cta:translate-x-1"
+          size={16}
+          strokeWidth={2}
+        />
+      </>
+    );
+    const ctaClass = "group/cta inline-flex items-center gap-[0.15rem] text-[var(--l-accent)]";
+    cta = ctaHref ? (
+      <a
+        className={ctaClass}
+        href={ctaHref}
+        rel="noopener noreferrer"
+        style={CTA_STYLE}
+        target="_blank"
+      >
+        {ctaContent}
+      </a>
+    ) : (
+      <span className={ctaClass} style={CTA_STYLE}>
+        {ctaContent}
+      </span>
+    );
+  }
   return (
     <div className="flex flex-col" style={{ gap: "0.9325rem" }}>
       <div className="flex flex-col">
@@ -447,6 +280,7 @@ type Feature = {
   description: string;
   ctaText: string;
   ctaHref?: string;
+  ctaVariant?: "link" | "snippet";
   Media: React.ComponentType;
   href?: string;
   imageSide: "left" | "right";
@@ -456,7 +290,7 @@ type Feature = {
 
 const FEATURES: Feature[] = [
   {
-    title: "Rich strong-typed properties",
+    title: "Rich strongly-typed properties",
     description: "Every entity is enriched with structured properties for fine-grained analysis.",
     ctaText: "Learn about the schema",
     Media: Feature1Media,
@@ -466,12 +300,12 @@ const FEATURES: Feature[] = [
     mediaH: "42.5rem",
   },
   {
-    title: "Magically accurate autocomplete",
+    title: "Delightfully simple Python client",
     description:
-      "Our specialized Tab model predicts your next action with striking speed and precision.",
-    ctaText: "Learn about Tab",
+      "Install with one command and load the graph as Polars data frames or a NetworkX graph in a single line.",
+    ctaText: "uv add optimuskg",
+    ctaVariant: "snippet",
     Media: Feature4Media,
-    href: "https://cursor.com/product/tab",
     imageSide: "left",
     cardH: "42.8125rem",
     mediaH: "40.625rem",
@@ -511,24 +345,23 @@ function DesktopCard({ feature }: { feature: Feature }) {
   const imageCol = imageSide === "right" ? "col-[9/span_16]" : "col-[1/span_16]";
 
   return (
-    <div className="relative" style={{ height: cardH }}>
+    <div
+      className="relative grid grid-cols-[repeat(24,minmax(0,1fr))] gap-x-[0.625rem] rounded-[0.25rem] bg-[var(--l-surface)] p-[1.09375rem]"
+      style={{ height: cardH }}
+    >
       <Tag
         {...linkProps}
-        className="group/card absolute inset-0 grid grid-cols-[repeat(24,minmax(0,1fr))] gap-x-[0.625rem] rounded-[0.25rem] bg-[var(--l-surface)] p-[1.09375rem]"
+        className={cn("group/card row-start-1 flex flex-col justify-center", textCol)}
       >
-        <div className={cn("row-[1/span_2] flex flex-col justify-center", textCol)}>
-          <FeatureText {...feature} />
-        </div>
-        <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
+        <FeatureText {...feature} />
       </Tag>
-      <div className="pointer-events-none absolute inset-0 grid grid-cols-[repeat(24,minmax(0,1fr))] gap-x-[0.625rem] p-[1.09375rem]">
-        <div
-          className={cn("relative overflow-hidden rounded-[0.25rem]", imageCol)}
-          style={{ height: mediaH }}
-        >
-          <Media />
-        </div>
+      <div
+        className={cn("relative row-start-1 overflow-hidden rounded-[0.25rem]", imageCol)}
+        style={{ height: mediaH }}
+      >
+        <Media />
       </div>
+      <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
     </div>
   );
 }
@@ -539,18 +372,15 @@ function MobileCard({ feature }: { feature: Feature }) {
   const Tag = href ? "a" : "div";
 
   return (
-    <Tag
-      {...linkProps}
-      className="group/card relative flex flex-col overflow-hidden rounded-[0.25rem] bg-[var(--l-surface)]"
-    >
-      <div className="p-[1.025rem] md:p-[1.5rem]">
+    <div className="relative flex flex-col overflow-hidden rounded-[0.25rem] bg-[var(--l-surface)]">
+      <Tag {...linkProps} className="group/card block p-[1.025rem] md:p-[1.5rem]">
         <FeatureText {...feature} />
-      </div>
+      </Tag>
       <div className="relative h-[32rem] shrink-0 overflow-hidden sm:h-[36rem] md:h-[40rem]">
         <Media />
       </div>
       <div className="pointer-events-none absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
-    </Tag>
+    </div>
   );
 }
 

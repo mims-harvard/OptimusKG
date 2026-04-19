@@ -4,6 +4,7 @@ import { useState } from "react";
 import { gitConfig } from "@/lib/shared";
 import { Logo } from "@/components/Logo";
 import { DownloadButton } from "./DownloadButton";
+import { MenuToggleIcon } from "./MenuToggleIcon";
 
 function GitHubIcon({ size = 22 }: { size?: number }) {
   return (
@@ -107,20 +108,9 @@ export function Navbar() {
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}
             onClick={() => setOpen((v) => !v)}
-            className="flex h-6 w-6 flex-col justify-center gap-[0.3rem] text-[var(--l-ink)] md:hidden"
+            className="flex h-6 w-6 items-center justify-center text-[var(--l-ink)] md:hidden"
           >
-            {open ? (
-              <>
-                <span className="block h-px w-full translate-y-[0.34rem] rotate-45 bg-[var(--l-ink)]" />
-                <span className="block h-px w-full -translate-y-[0.22rem] -rotate-45 bg-[var(--l-ink)]" />
-              </>
-            ) : (
-              <>
-                <span className="block h-px w-full bg-[var(--l-ink)]" />
-                <span className="block h-px w-full bg-[var(--l-ink)]" />
-                <span className="block h-px w-full bg-[var(--l-ink)]" />
-              </>
-            )}
+            <MenuToggleIcon className="h-6 w-6" open={open} />
           </button>
         </div>
       </div>

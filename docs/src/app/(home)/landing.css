@@ -67,6 +67,31 @@
   padding-block: var(--l-v5) var(--l-v6);
 }
 
+[data-landing] .l-shiki-block {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.78125rem;
+  line-height: 1.55;
+}
+
+[data-landing] .l-shiki-block pre,
+[data-landing] .l-shiki-block .shiki,
+[data-landing] .l-shiki-block .shiki span {
+  background-color: transparent !important;
+}
+
+[data-landing] .l-shiki-block pre {
+  margin: 0;
+  padding: 0;
+}
+
+.dark [data-landing] .l-shiki-block .shiki,
+.dark [data-landing] .l-shiki-block .shiki span {
+  color: var(--shiki-dark) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
 [data-landing] .l-logo-neutralize {
   filter: brightness(0);
   opacity: 0.7;

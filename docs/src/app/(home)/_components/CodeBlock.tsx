@@ -13,8 +13,8 @@ export async function CodeBlock({
   const html = await codeToHtml(code, {
     lang,
     themes: {
-      light: "github-light",
-      dark: "github-dark",
+      light: "catppuccin-latte",
+      dark: "catppuccin-mocha",
     },
   });
   return (
