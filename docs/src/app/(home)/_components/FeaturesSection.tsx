@@ -5,23 +5,19 @@ import { cn } from "@/lib/cn";
 const F3_BG = "/hero/mountain-overlook.png";
 const F4_BG = "/hero/hillside-village.png";
 
-function WinChrome({ title, bg = "#f2f1ed" }: { title?: string; bg?: string }) {
+function WinChrome({ title }: { title?: string }) {
   return (
     <div
-      className="relative flex shrink-0 items-center px-[0.5rem]"
-      style={{
-        height: "1.75rem",
-        borderBottom: "1px solid rgba(38,37,30,0.1)",
-        background: bg,
-      }}
+      className="relative flex shrink-0 items-center border-[var(--l-border)] border-b bg-[var(--l-surface)] px-[0.5rem]"
+      style={{ height: "1.75rem" }}
     >
       <div className="flex gap-[0.375rem]">
-        <span className="block size-[0.625rem] rounded-full bg-[rgba(38,37,30,0.2)]" />
-        <span className="block size-[0.625rem] rounded-full bg-[rgba(38,37,30,0.2)]" />
-        <span className="block size-[0.625rem] rounded-full bg-[rgba(38,37,30,0.2)]" />
+        <span className="block size-[0.625rem] rounded-full bg-[var(--l-ink-muted)] opacity-40" />
+        <span className="block size-[0.625rem] rounded-full bg-[var(--l-ink-muted)] opacity-40" />
+        <span className="block size-[0.625rem] rounded-full bg-[var(--l-ink-muted)] opacity-40" />
       </div>
       {title && (
-        <span className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[0.7125rem] text-[var(--l-ink)] opacity-70">
+        <span className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[0.7125rem] text-[var(--l-ink-muted)]">
           {title}
         </span>
       )}
@@ -44,29 +40,39 @@ function Feature1Media() {
         }}
       />
 
-      <img
-        alt="Code library"
-        className="absolute hidden object-contain drop-shadow-[0_14px_32px_rgba(0,0,0,0.1)] drop-shadow-[0_28px_70px_rgba(0,0,0,0.14)] min-[900px]:block"
-        src="/features/code-library.svg"
+      <div
+        className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[0.625rem] bg-white shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)] min-[900px]:flex"
         style={{
-          left: "4rem",
-          top: "2.8125rem",
-          width: "52rem",
-          height: "36.875rem",
+          width: "min(52rem, calc(100% - 4rem))",
+          height: "min(36.875rem, calc(100% - 4rem))",
         }}
-      />
+      >
+        <WinChrome />
+        <div className="flex min-h-0 flex-1 items-center justify-center p-[1.25rem]">
+          <img
+            alt="Code library"
+            className="h-full w-full object-contain"
+            src="/features/code-library.svg"
+          />
+        </div>
+      </div>
 
-      <img
-        alt="Code library"
-        className="absolute object-contain drop-shadow-[0_14px_32px_rgba(0,0,0,0.1)] drop-shadow-[0_28px_70px_rgba(0,0,0,0.14)] min-[900px]:hidden"
-        src="/features/code-library.svg"
+      <div
+        className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[0.625rem] bg-white shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)] min-[900px]:hidden"
         style={{
-          left: "1.5rem",
-          top: "2rem",
-          width: "51rem",
-          height: "38.5rem",
+          width: "min(51rem, calc(100% - 3rem))",
+          height: "min(38.5rem, calc(100% - 4rem))",
         }}
-      />
+      >
+        <WinChrome />
+        <div className="flex min-h-0 flex-1 items-center justify-center p-[1.25rem]">
+          <img
+            alt="Code library"
+            className="h-full w-full object-contain"
+            src="/features/code-library.svg"
+          />
+        </div>
+      </div>
 
       <div className="absolute inset-0 rounded-[0.25rem] border border-[var(--l-border-subtle)]" />
     </div>
@@ -117,7 +123,7 @@ function Feature3Media() {
           height: "19.25rem",
         }}
       >
-        <WinChrome bg="white" title="Molecular Function" />
+        <WinChrome title="Molecular Function" />
         <div className="flex min-h-0 flex-1 items-center justify-center p-[1.25rem]">
           <img
             alt="Molecular Function"
@@ -136,7 +142,7 @@ function Feature3Media() {
           height: "24rem",
         }}
       >
-        <WinChrome bg="white" title="Phenotype" />
+        <WinChrome title="Phenotype" />
         <div className="flex min-h-0 flex-1 items-center justify-center p-[1.25rem]">
           <img
             alt="Phenotype"
@@ -150,7 +156,7 @@ function Feature3Media() {
         className="absolute flex flex-col overflow-hidden rounded-[0.625rem] bg-white shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)] min-[900px]:hidden"
         style={{ left: "1.5rem", top: "2rem", width: "51rem", height: "36rem" }}
       >
-        <WinChrome bg="white" title="Phenotype" />
+        <WinChrome title="Phenotype" />
         <div className="flex min-h-0 flex-1 items-center justify-center p-[1.25rem]">
           <img
             alt="Phenotype"
@@ -362,10 +368,16 @@ function FeatureText({
   const ctaContent = (
     <>
       {ctaText}
-      <ArrowRight aria-hidden="true" size={16} strokeWidth={2} />
+      <ArrowRight
+        aria-hidden="true"
+        size={16}
+        strokeWidth={2}
+        className="transition-transform duration-300 ease-out group-hover/cta:translate-x-1 group-hover/card:translate-x-1"
+      />
     </>
   );
-  const ctaClass = "inline-flex items-center gap-[0.3rem] text-[var(--l-accent)]";
+  const ctaClass =
+    "group/cta inline-flex items-center gap-[0.15rem] text-[var(--l-accent)]";
   const cta = ctaHref ? (
     <a
       className={ctaClass}
@@ -420,12 +432,12 @@ const FEATURES: Feature[] = [
     mediaH: "42.5rem",
   },
   {
-    title: "In every tool, at every step",
+    title: "Rigorously validated associations",
     description:
-      "Cursor reviews your PRs in GitHub, collaborates in Slack, and runs in your terminal.",
-    ctaText: "Learn about Cursor's surfaces",
+      "Every edge is cross-validated against millions of research papers by PaperQA3, a deep research agent.",
+    ctaText: "Learn about our methodology",
     Media: Feature3Media,
-    href: "https://cursor.com/product",
+    href: "https://arxiv.org", // TODO: Update once we have the link
     imageSide: "left",
     cardH: "44.6875rem",
     mediaH: "42.5rem",
@@ -468,7 +480,7 @@ function DesktopCard({ feature }: { feature: Feature }) {
     <div className="relative" style={{ height: cardH }}>
       <Tag
         {...linkProps}
-        className="absolute inset-0 grid grid-cols-[repeat(24,minmax(0,1fr))] gap-x-[0.625rem] rounded-[0.25rem] bg-[var(--l-surface)] p-[1.09375rem]"
+        className="group/card absolute inset-0 grid grid-cols-[repeat(24,minmax(0,1fr))] gap-x-[0.625rem] rounded-[0.25rem] bg-[var(--l-surface)] p-[1.09375rem]"
       >
         <div className={cn("row-[1/span_2] flex flex-col justify-center", textCol)}>
           <FeatureText {...feature} />
@@ -495,7 +507,7 @@ function MobileCard({ feature }: { feature: Feature }) {
   return (
     <Tag
       {...linkProps}
-      className="relative flex flex-col overflow-hidden rounded-[0.25rem] bg-[var(--l-surface)]"
+      className="group/card relative flex flex-col overflow-hidden rounded-[0.25rem] bg-[var(--l-surface)]"
     >
       <div className="p-[1.025rem] md:p-[1.5rem]">
         <FeatureText {...feature} />

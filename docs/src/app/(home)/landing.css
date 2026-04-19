@@ -1,11 +1,11 @@
 [data-landing] {
-  --l-bg: #f7f7f4;
-  --l-surface: #f2f1ed;
-  --l-ink: #26251e;
-  --l-ink-muted: rgba(38, 37, 30, 0.6);
-  --l-border: rgba(38, 37, 30, 0.1);
-  --l-border-subtle: rgba(38, 37, 30, 0.03);
-  --l-accent: #f54e00;
+  --l-bg: var(--color-fd-background);
+  --l-surface: var(--color-fd-card);
+  --l-ink: var(--color-fd-foreground);
+  --l-ink-muted: var(--color-fd-muted-foreground);
+  --l-border: var(--color-fd-border);
+  --l-border-subtle: hsla(0, 0%, 0%, 0.03);
+  --l-accent: var(--color-fd-info);
 
   --l-v1: calc(1rem * 1.4);
   --l-v1-5: calc(1rem * 1.4 * 1.5);
@@ -25,13 +25,7 @@
 }
 
 .dark [data-landing] {
-  --l-bg: #121212;
-  --l-surface: #1a1a17;
-  --l-ink: #ebebeb;
-  --l-ink-muted: rgba(235, 235, 235, 0.6);
-  --l-border: rgba(235, 235, 235, 0.08);
-  --l-border-subtle: rgba(235, 235, 235, 0.04);
-  --l-accent: #ff6a00;
+  --l-border-subtle: hsla(0, 0%, 100%, 0.04);
 }
 
 [data-landing] .l-container {
