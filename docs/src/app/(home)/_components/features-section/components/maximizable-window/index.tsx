@@ -6,12 +6,8 @@ import {
   createContext,
   useContext,
   useEffect,
-  useLayoutEffect,
   useState,
 } from "react";
-
-const useIsoLayoutEffect =
-  typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 import { cn } from "@/lib/cn";
 
@@ -70,7 +66,7 @@ export function MaximizableWindow({
   appName,
   appIcon,
 }: Props) {
-  const [sizeState, setSizeState] = useState<SizeState | null>(null);
+  const [sizeState, setSizeState] = useState<SizeState>("normal");
   const [visibility, setVisibility] = useState<VisibilityState>("visible");
   const [sessionId, setSessionId] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
@@ -83,10 +79,10 @@ export function MaximizableWindow({
     return () => mediaQuery.removeEventListener("change", update);
   }, []);
 
-  useIsoLayoutEffect(() => {
-    setSizeState(
-      window.matchMedia("(max-width: 767px)").matches ? "maximized" : "normal"
-    );
+  useEffect(() => {
+    if (window.matchMedia("(max-width: 767px)").matches) {
+      setSizeState("maximized");
+    }
   }, []);
 
   const dockApps: DockApp[] = [
@@ -122,10 +118,6 @@ export function MaximizableWindow({
     toggleMaximize,
     isMaximized,
   };
-
-  if (sizeState === null) {
-    return null;
-  }
 
   return (
     <WindowContext.Provider value={controls}>
