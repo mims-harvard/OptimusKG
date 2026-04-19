@@ -1,6 +1,6 @@
 "use client";
 
-import { type CSSProperties, useEffect, useRef, useState } from "react";
+import { type CSSProperties, useState } from "react";
 
 import { cn } from "@/lib/cn";
 
@@ -78,32 +78,9 @@ export function HeroWindowShell({
   const [sizeState, setSizeState] = useState<SizeState>("normal");
   const [visibility, setVisibility] = useState<VisibilityState>("visible");
   const [sessionId, setSessionId] = useState(0);
-  const [parentSize, setParentSize] = useState<{ w: number; h: number } | null>(
-    null
-  );
-  const [windowSize, setWindowSize] = useState<{ w: number; h: number } | null>(
-    null
-  );
-  const frameRef = useRef<HTMLDivElement>(null);
-  const sizerRef = useRef<HTMLDivElement>(null);
 
   const isMaximized = sizeState === "maximized";
   const isHidden = visibility !== "visible";
-
-  useEffect(() => {
-    if (!(frameRef.current && sizerRef.current)) return;
-    const frameEl = frameRef.current;
-    const sizerEl = sizerRef.current;
-    const ro = new ResizeObserver(() => {
-      setParentSize({ w: frameEl.clientWidth, h: frameEl.clientHeight });
-      setWindowSize({ w: sizerEl.offsetWidth, h: sizerEl.offsetHeight });
-    });
-    ro.observe(frameEl);
-    ro.observe(sizerEl);
-    setParentSize({ w: frameEl.clientWidth, h: frameEl.clientHeight });
-    setWindowSize({ w: sizerEl.offsetWidth, h: sizerEl.offsetHeight });
-    return () => ro.disconnect();
-  }, []);
 
   const reopen = () => {
     if (visibility === "closed") {
@@ -113,38 +90,19 @@ export function HeroWindowShell({
     setVisibility("visible");
   };
 
-  let wrapperStyle: CSSProperties;
-  if (parentSize && windowSize && !isMaximized) {
-    const offsetX = Math.max(0, (parentSize.w - windowSize.w) / 2);
-    const offsetY = Math.max(0, (parentSize.h - windowSize.h) / 2);
-    wrapperStyle = {
-      top: offsetY,
-      left: offsetX,
-      width: windowSize.w,
-      height: windowSize.h,
-    };
-  } else if (parentSize && isMaximized) {
-    wrapperStyle = {
-      top: 0,
-      left: 0,
-      width: parentSize.w,
-      height: parentSize.h,
-    };
-  } else {
-    // First render (no measurements yet): fall back to normalStyle via flex-centered wrapper.
-    wrapperStyle = { top: "50%", left: "50%", translate: "-50% -50%" };
-  }
+  const normalW = normalStyle.width;
+  const normalH = normalStyle.height;
+  const wrapperStyle: CSSProperties = isMaximized
+    ? { top: 0, right: 0, bottom: 0, left: 0 }
+    : {
+        top: `calc((100% - (${normalH})) / 2)`,
+        bottom: `calc((100% - (${normalH})) / 2)`,
+        left: `calc((100% - (${normalW})) / 2)`,
+        right: `calc((100% - (${normalW})) / 2)`,
+      };
 
   return (
-    <div className="absolute inset-0" ref={frameRef}>
-      {/* Hidden sizer — measures what the window would be at normal size */}
-      <div
-        aria-hidden="true"
-        className="invisible absolute"
-        ref={sizerRef}
-        style={normalStyle}
-      />
-
+    <div className="absolute inset-0">
       <div
         aria-hidden={isHidden}
         className={cn(

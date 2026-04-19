@@ -78,7 +78,7 @@ function WinChrome({
             <path
               d={
                 isMaximized
-                  ? "M5 2 L5 5 L2 5 Z M5 8 L5 5 L8 5 Z"
+                  ? "M5 5 L1 5 L5 1 Z M5 5 L9 5 L5 9 Z"
                   : "M2 2 L6 2 L2 6 Z M8 8 L4 8 L8 4 Z"
               }
             />
