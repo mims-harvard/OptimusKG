@@ -139,7 +139,9 @@ function Feature3Media() {
         }}
       />
 
+      {/* TODO: Remove `contentBg` once we have light/dark versions of the figures. */}
       <TabbedEditor
+        contentBg="#ffffff"
         style={{
           width: "min(42.5rem, calc(100% - 4rem))",
           height: "min(35rem, calc(100% - 4rem))",
@@ -202,8 +204,8 @@ async function Feature4Media() {
   );
 }
 
-const HEADING_CLASSES = "text-[1.31875rem] leading-[1.7875rem] tracking-[-0.006875rem]";
-const CTA_CLASSES = "text-[0.95625rem] leading-6";
+const HEADING_CLASSES = "text-xl leading-7";
+const CTA_CLASSES = "text-base leading-6";
 
 function FeatureText({
   title,

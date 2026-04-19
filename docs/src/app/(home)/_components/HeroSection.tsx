@@ -9,9 +9,7 @@ export function HeroSection() {
       <div className="l-container">
         <div className="flex flex-col gap-13 min-[900px]:gap-14">
           <div className="flex flex-col gap-5.25 min-[900px]:gap-5.5">
-            <h1
-              className="font-normal text-[var(--l-ink)] text-balance text-[1.456rem] leading-[1.904rem] tracking-[-0.019rem] min-[900px]:text-[1.55rem] min-[900px]:leading-8 min-[900px]:tracking-[-0.020rem]"
-            >
+            <h1 className="font-normal text-[var(--l-ink)] text-balance text-2xl leading-8">
               <span className="block">Unifying biomedical knowledge</span>
               <span className="block">in a modern multimodal graph</span>
             </h1>

@@ -7,7 +7,7 @@ export function CtaSection() {
       className="l-section l-section--cta border-t border-[var(--l-border)] bg-[var(--l-bg)]"
     >
       <div className="mx-auto flex max-w-[810px] flex-col items-center gap-5.5 text-center">
-        <h2 className="text-balance text-[2.5rem] leading-[1.18] font-normal tracking-[-0.032em] text-[var(--l-ink)] sm:text-[3.25rem] min-[900px]:text-[4.1875rem]">
+        <h2 className="text-balance text-4xl leading-[1.18] font-normal tracking-tight text-[var(--l-ink)] sm:text-5xl min-[900px]:text-7xl">
           Try OptimusKG now.
         </h2>
         <DownloadButton

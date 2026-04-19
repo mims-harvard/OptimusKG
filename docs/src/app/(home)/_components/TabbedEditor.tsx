@@ -61,11 +61,13 @@ export function TabbedEditor({
   tabs: initialTabs,
   className,
   style,
+  contentBg,
 }: {
   title?: string;
   tabs: EditorTab[];
   className?: string;
   style?: CSSProperties;
+  contentBg?: string;
 }) {
   const [tabs, setTabs] = useState(initialTabs);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -80,8 +82,12 @@ export function TabbedEditor({
     });
   }
 
+  const mergedStyle: CSSProperties | undefined = contentBg
+    ? { ...style, ["--tab-content-bg" as string]: contentBg }
+    : style;
+
   return (
-    <EditorWindow className={className} style={style} title={title}>
+    <EditorWindow className={className} style={mergedStyle} title={title}>
       <div
         className="flex h-7.5 shrink-0 items-center bg-[var(--l-surface)]"
         role="tablist"
@@ -97,7 +103,7 @@ export function TabbedEditor({
         ))}
         <div className="h-full flex-1 border-[var(--l-border)] border-b" />
       </div>
-      <div className="min-h-0 flex-1 overflow-hidden bg-[var(--l-bg)]">
+      <div className="min-h-0 flex-1 overflow-hidden bg-[var(--tab-content-bg,var(--l-bg))]">
         {active?.content}
       </div>
     </EditorWindow>
