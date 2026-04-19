@@ -18,12 +18,12 @@ type SnippetProps = {
 
 const variant = {
   default: {
-    background: "bg-[var(--l-bg)]",
-    text: "text-[var(--l-ink)]",
+    background: "bg-(--l-bg)",
+    text: "text-(--l-ink)",
   },
   inverted: {
-    background: "bg-[var(--l-ink)]",
-    text: "text-[var(--l-bg)]",
+    background: "bg-(--l-ink)",
+    text: "text-(--l-bg)",
   },
   success: {
     background: "bg-blue-100 dark:bg-blue-950",
@@ -84,7 +84,7 @@ export function Snippet({
   return (
     <div
       className={cn(
-        "flex items-center gap-3 rounded-[1px] border border-[var(--l-border)] px-3 py-2.5",
+        "flex items-center gap-3 rounded-[1px] border border-(--l-border) px-3 py-2.5",
         colors.background,
         className
       )}
@@ -106,7 +106,7 @@ export function Snippet({
       </div>
       <button
         aria-label="Copy to clipboard"
-        className="relative inline-flex shrink-0 cursor-pointer items-center justify-center rounded-none border border-[var(--l-ink)] bg-[var(--l-ink)] text-[var(--l-bg)] transition-opacity hover:opacity-90"
+        className="relative inline-flex shrink-0 cursor-pointer items-center justify-center rounded-none border border-(--l-ink) bg-(--l-ink) text-(--l-bg) transition-opacity hover:opacity-90"
         onClick={onClick}
         style={{
           width: "1.75rem",
@@ -117,7 +117,7 @@ export function Snippet({
         <svg
           aria-hidden="true"
           className={cn(
-            "absolute fill-[var(--l-bg)] transition-opacity duration-150",
+            "absolute fill-(--l-bg) transition-opacity duration-150",
             animation ? "opacity-0" : "opacity-100"
           )}
           height="14"
@@ -134,7 +134,7 @@ export function Snippet({
         <svg
           aria-hidden="true"
           className={cn(
-            "absolute fill-[var(--l-bg)] transition-opacity duration-150",
+            "absolute fill-(--l-bg) transition-opacity duration-150",
             animation ? "opacity-100" : "opacity-0"
           )}
           height="14"

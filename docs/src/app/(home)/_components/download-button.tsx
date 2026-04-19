@@ -33,7 +33,7 @@ export function DownloadButton({
           width={14}
           xmlns="http://www.w3.org/2000/svg"
         >
-          <g className="transition-transform duration-300 ease-out group-hover:translate-y-[2px]">
+          <g className="transition-transform duration-300 ease-out group-hover:translate-y-0.5">
             <path d="M12 17V3" />
             <path d="m6 11 6 6 6-6" />
           </g>

@@ -120,7 +120,7 @@ function Feature1Media() {
         />
       </MaximizableWindow>
 
-      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-(--l-border-subtle)" />
     </div>
   );
 }
@@ -182,7 +182,7 @@ function Feature3Media() {
         />
       </MaximizableWindow>
 
-      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-(--l-border-subtle)" />
     </div>
   );
 }
@@ -229,7 +229,7 @@ async function Feature4Media() {
         />
       </MaximizableWindow>
 
-      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-(--l-border-subtle)" />
     </div>
   );
 }
@@ -267,7 +267,7 @@ function FeatureText({
       </>
     );
     const ctaClass =
-      "group/cta inline-flex items-center gap-0.5 text-[var(--l-accent)]";
+      "group/cta inline-flex items-center gap-0.5 text-(--l-accent)";
     cta = ctaHref ? (
       <a
         className={`${ctaClass} ${CTA_CLASSES}`}
@@ -284,11 +284,11 @@ function FeatureText({
   return (
     <div className="flex flex-col gap-3.75">
       <div className="flex flex-col">
-        <h3 className={`font-normal text-[var(--l-ink)] ${HEADING_CLASSES}`}>
+        <h3 className={`font-normal text-(--l-ink) ${HEADING_CLASSES}`}>
           {title}
         </h3>
         <p
-          className={`font-normal text-[var(--l-ink-muted)] ${DESCRIPTION_CLASSES}`}
+          className={`font-normal text-(--l-ink-muted) ${DESCRIPTION_CLASSES}`}
         >
           {description}
         </p>
@@ -363,7 +363,7 @@ function DesktopCard({ feature }: { feature: Feature }) {
   return (
     <div
       className={cn(
-        "relative grid grid-cols-[repeat(24,minmax(0,1fr))] gap-x-2.5 rounded-[1px] bg-[var(--l-surface)] p-4.5",
+        "relative grid grid-cols-[repeat(24,minmax(0,1fr))] gap-x-2.5 rounded-[1px] bg-(--l-surface) p-4.5",
         cardHeightClass
       )}
     >
@@ -385,7 +385,7 @@ function DesktopCard({ feature }: { feature: Feature }) {
       >
         <Media />
       </div>
-      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-(--l-border-subtle)" />
     </div>
   );
 }
@@ -398,21 +398,21 @@ function MobileCard({ feature }: { feature: Feature }) {
   const Tag = href ? "a" : "div";
 
   return (
-    <div className="relative flex flex-col overflow-hidden rounded-[1px] bg-[var(--l-surface)]">
+    <div className="relative flex flex-col overflow-hidden rounded-[1px] bg-(--l-surface)">
       <Tag {...linkProps} className="group/card block p-4 md:p-6">
         <FeatureText {...feature} />
       </Tag>
       <div className="relative h-128 shrink-0 overflow-hidden sm:h-144 md:h-160">
         <Media />
       </div>
-      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-(--l-border-subtle)" />
     </div>
   );
 }
 
 export function FeaturesSection() {
   return (
-    <section className="l-section bg-[var(--l-bg)]">
+    <section className="l-section bg-(--l-bg)">
       <div className="l-container hidden flex-col gap-22.5 min-[900px]:flex">
         {FEATURES.map((f) => (
           <DesktopCard feature={f} key={f.title} />
