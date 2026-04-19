@@ -1,13 +1,14 @@
 "use client";
 
-import { type CSSProperties, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
 
 import { cn } from "@/lib/cn";
 
 import MacOSDock, { type DockApp } from "./MacOSDock";
 import { type EditorTab, TabbedEditor } from "./TabbedEditor";
 
-type WindowState = "normal" | "maximized" | "minimized" | "closed";
+type SizeState = "normal" | "maximized";
+type VisibilityState = "visible" | "minimized" | "closed";
 
 const DEFAULT_DOCK_APPS: DockApp[] = [
   {
@@ -74,41 +75,99 @@ export function HeroWindowShell({
   appName: string;
   appIcon: string;
 }) {
-  const [state, setState] = useState<WindowState>("normal");
+  const [sizeState, setSizeState] = useState<SizeState>("normal");
+  const [visibility, setVisibility] = useState<VisibilityState>("visible");
   const [sessionId, setSessionId] = useState(0);
-  const isHidden = state === "minimized" || state === "closed";
+  const [parentSize, setParentSize] = useState<{ w: number; h: number } | null>(
+    null
+  );
+  const [windowSize, setWindowSize] = useState<{ w: number; h: number } | null>(
+    null
+  );
+  const frameRef = useRef<HTMLDivElement>(null);
+  const sizerRef = useRef<HTMLDivElement>(null);
+
+  const isMaximized = sizeState === "maximized";
+  const isHidden = visibility !== "visible";
+
+  useEffect(() => {
+    if (!(frameRef.current && sizerRef.current)) return;
+    const frameEl = frameRef.current;
+    const sizerEl = sizerRef.current;
+    const ro = new ResizeObserver(() => {
+      setParentSize({ w: frameEl.clientWidth, h: frameEl.clientHeight });
+      setWindowSize({ w: sizerEl.offsetWidth, h: sizerEl.offsetHeight });
+    });
+    ro.observe(frameEl);
+    ro.observe(sizerEl);
+    setParentSize({ w: frameEl.clientWidth, h: frameEl.clientHeight });
+    setWindowSize({ w: sizerEl.offsetWidth, h: sizerEl.offsetHeight });
+    return () => ro.disconnect();
+  }, []);
 
   const reopen = () => {
-    if (state === "closed") {
+    if (visibility === "closed") {
       setSessionId((id) => id + 1);
+      setSizeState("normal");
     }
-    setState("normal");
+    setVisibility("visible");
   };
 
+  let wrapperStyle: CSSProperties;
+  if (parentSize && windowSize && !isMaximized) {
+    const offsetX = Math.max(0, (parentSize.w - windowSize.w) / 2);
+    const offsetY = Math.max(0, (parentSize.h - windowSize.h) / 2);
+    wrapperStyle = {
+      top: offsetY,
+      left: offsetX,
+      width: windowSize.w,
+      height: windowSize.h,
+    };
+  } else if (parentSize && isMaximized) {
+    wrapperStyle = {
+      top: 0,
+      left: 0,
+      width: parentSize.w,
+      height: parentSize.h,
+    };
+  } else {
+    // First render (no measurements yet): fall back to normalStyle via flex-centered wrapper.
+    wrapperStyle = { top: "50%", left: "50%", translate: "-50% -50%" };
+  }
+
   return (
-    <div className="absolute inset-0 flex items-center justify-center">
+    <div className="absolute inset-0" ref={frameRef}>
+      {/* Hidden sizer — measures what the window would be at normal size */}
+      <div
+        aria-hidden="true"
+        className="invisible absolute"
+        ref={sizerRef}
+        style={normalStyle}
+      />
+
       <div
         aria-hidden={isHidden}
         className={cn(
-          "origin-bottom transition-[opacity,scale,translate] duration-300 ease-out",
-          state === "maximized" && "absolute inset-0",
+          "absolute origin-bottom transition-all duration-300 ease-out",
           isHidden &&
             "pointer-events-none translate-y-[40%] scale-[0.6] opacity-0"
         )}
-        style={state === "maximized" ? undefined : normalStyle}
+        style={wrapperStyle}
       >
         <TabbedEditor
+          chromeOverlay={isMaximized}
           className={cn(
-            "h-full w-full",
-            state === "maximized" && "rounded-none"
+            "h-full w-full transition-[border-radius] duration-300 ease-out",
+            isMaximized && "rounded-none"
           )}
           contentBg={contentBg}
+          isMaximized={isMaximized}
           key={sessionId}
-          onClose={() => setState("closed")}
+          onClose={() => setVisibility("closed")}
           onMaximize={() =>
-            setState((s) => (s === "maximized" ? "normal" : "maximized"))
+            setSizeState((s) => (s === "maximized" ? "normal" : "maximized"))
           }
-          onMinimize={() => setState("minimized")}
+          onMinimize={() => setVisibility("minimized")}
           tabs={tabs}
           title={title}
         />
@@ -128,7 +187,7 @@ export function HeroWindowShell({
               reopen();
             }
           }}
-          openApps={state === "minimized" ? [appId] : []}
+          openApps={visibility === "minimized" ? [appId] : []}
         />
       </div>
     </div>

@@ -65,6 +65,8 @@ export function TabbedEditor({
   onClose,
   onMinimize,
   onMaximize,
+  chromeOverlay = false,
+  isMaximized = false,
 }: {
   title?: string;
   tabs: EditorTab[];
@@ -74,6 +76,8 @@ export function TabbedEditor({
   onClose?: () => void;
   onMinimize?: () => void;
   onMaximize?: () => void;
+  chromeOverlay?: boolean;
+  isMaximized?: boolean;
 }) {
   const [tabs, setTabs] = useState(initialTabs);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -94,7 +98,9 @@ export function TabbedEditor({
 
   return (
     <EditorWindow
+      chromeOverlay={chromeOverlay}
       className={className}
+      isMaximized={isMaximized}
       onClose={onClose}
       onMaximize={onMaximize}
       onMinimize={onMinimize}

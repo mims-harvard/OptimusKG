@@ -13,7 +13,8 @@ function WinChrome({
   onClose,
   onMinimize,
   onMaximize,
-}: { title?: string } & ChromeCallbacks) {
+  isMaximized = false,
+}: { title?: string; isMaximized?: boolean } & ChromeCallbacks) {
   return (
     <div className="relative flex h-7 shrink-0 items-center border-[var(--l-border)] border-b bg-[var(--l-surface)] px-2">
       <div className="group/winctl flex gap-1.5">
@@ -74,7 +75,13 @@ function WinChrome({
             fill="#0b3d04"
             viewBox="0 0 10 10"
           >
-            <path d="M2 2 L6 2 L2 6 Z M8 8 L4 8 L8 4 Z" />
+            <path
+              d={
+                isMaximized
+                  ? "M5 2 L5 5 L2 5 Z M5 8 L5 5 L8 5 Z"
+                  : "M2 2 L6 2 L2 6 Z M8 8 L4 8 L8 4 Z"
+              }
+            />
           </svg>
         </button>
       </div>
@@ -95,11 +102,15 @@ export function EditorWindow({
   onClose,
   onMinimize,
   onMaximize,
+  chromeOverlay = false,
+  isMaximized = false,
 }: {
   title?: string;
   className?: string;
   style?: CSSProperties;
   children: ReactNode;
+  chromeOverlay?: boolean;
+  isMaximized?: boolean;
 } & ChromeCallbacks) {
   return (
     <div
@@ -109,12 +120,27 @@ export function EditorWindow({
       )}
       style={style}
     >
-      <WinChrome
-        onClose={onClose}
-        onMaximize={onMaximize}
-        onMinimize={onMinimize}
-        title={title}
-      />
+      {chromeOverlay ? (
+        <div className="group pointer-events-none absolute inset-x-0 top-0 z-20 h-8">
+          <div className="-translate-y-full pointer-events-auto absolute inset-x-0 top-0 opacity-0 transition-[translate,opacity] duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+            <WinChrome
+              isMaximized={isMaximized}
+              onClose={onClose}
+              onMaximize={onMaximize}
+              onMinimize={onMinimize}
+              title={title}
+            />
+          </div>
+        </div>
+      ) : (
+        <WinChrome
+          isMaximized={isMaximized}
+          onClose={onClose}
+          onMaximize={onMaximize}
+          onMinimize={onMinimize}
+          title={title}
+        />
+      )}
       {children}
     </div>
   );
