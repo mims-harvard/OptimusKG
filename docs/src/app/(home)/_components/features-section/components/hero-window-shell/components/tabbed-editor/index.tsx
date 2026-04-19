@@ -84,6 +84,10 @@ export function TabbedEditor({
   const active = tabs[activeIndex];
 
   function closeTab(index: number) {
+    if (tabs.length === 1) {
+      onClose?.();
+      return;
+    }
     setTabs((prev) => prev.filter((_, i) => i !== index));
     setActiveIndex((current) => {
       if (index < current) return current - 1;
