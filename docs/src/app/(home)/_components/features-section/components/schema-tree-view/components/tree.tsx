@@ -166,15 +166,9 @@ export function TreeNode({
   const generatedId = useId();
   const nodeId = providedId ?? generatedId;
 
-  const currentPath = level === 0 ? [] : [...parentPath];
-  if (level > 0 && parentPath.length < level - 1) {
-    while (currentPath.length < level - 1) {
-      currentPath.push(false);
-    }
-  }
-  if (level > 0) {
-    currentPath[level - 1] = isLast;
-  }
+  // `parentPath` includes the invisible top-level parent slot. Drop it so the
+  // remaining columns align with the guides that are actually rendered.
+  const currentPath = level === 0 ? [] : [...parentPath.slice(1), isLast];
 
   return (
     <TreeNodeContext.Provider value={{ nodeId, level, isLast, parentPath: currentPath }}>
@@ -246,10 +240,9 @@ export function TreeLines() {
       {Array.from(
         { length: level },
         (_, index) =>
-          !(index === level - 1 && isLast) && (
+          !parentPath[index] && (
             <div
               className="absolute border-[var(--l-border)] border-l"
-              data-parent-path={JSON.stringify(parentPath)}
               key={`tree-line-${index}`}
               style={{
                 left: index * (indent ?? 0) + 12,
