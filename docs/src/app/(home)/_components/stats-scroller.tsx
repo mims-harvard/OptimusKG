@@ -40,18 +40,18 @@ export function StatsScroller() {
   return (
     <section
       aria-label="OptimusKG statistics"
-      className="l-section l-section--flush-bottom bg-[var(--l-bg)]"
+      className="l-section l-section--flush-bottom bg-(--l-bg)"
       style={style}
     >
       <style href="stats-scroller" precedence="medium">
         {MARQUEE_CSS}
       </style>
       <div className="l-container overflow-hidden">
-        <div className="stats-marquee-fade flex gap-[var(--stats-marquee-gap)]">
+        <div className="stats-marquee-fade flex gap-(--stats-marquee-gap)">
           {COPIES.map((kind) => (
             <ul
               aria-hidden={kind !== "primary"}
-              className="stats-marquee-track flex shrink-0 items-center gap-[var(--stats-marquee-gap)]"
+              className="stats-marquee-track flex shrink-0 items-center gap-(--stats-marquee-gap)"
               key={kind}
             >
               {STATS.map(({ value, label }) => (
@@ -59,12 +59,10 @@ export function StatsScroller() {
                   className="flex items-baseline gap-2 whitespace-nowrap"
                   key={label}
                 >
-                  <span className="font-mono text-[var(--l-ink)] text-lg tabular-nums">
+                  <span className="font-mono text-(--l-ink) text-lg tabular-nums">
                     {value}
                   </span>
-                  <span className="text-[var(--l-ink-muted)] text-sm">
-                    {label}
-                  </span>
+                  <span className="text-(--l-ink-muted) text-sm">{label}</span>
                 </li>
               ))}
             </ul>

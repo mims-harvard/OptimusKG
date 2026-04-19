@@ -23,11 +23,11 @@ function WinChrome({
   canMinimize?: boolean;
 } & ChromeCallbacks) {
   return (
-    <div className="relative flex h-7 shrink-0 items-center border-[var(--l-border)] border-b bg-[var(--l-surface)] px-2">
+    <div className="relative flex h-7 shrink-0 items-center border-(--l-border) border-b bg-(--l-surface) px-2">
       <div className="group/winctl flex gap-1.5">
         <button
           aria-label="Close window"
-          className="relative flex size-2.5 cursor-pointer items-center justify-center rounded-full border-0 bg-[var(--l-ink-muted)] p-0 opacity-40 transition-[background-color,opacity] duration-150 group-hover/winctl:bg-[#ff5f57] group-hover/winctl:opacity-100"
+          className="relative flex size-2.5 cursor-pointer items-center justify-center rounded-full border-0 bg-(--l-ink-muted) p-0 opacity-40 transition-[background-color,opacity] duration-150 group-hover/winctl:bg-[#ff5f57] group-hover/winctl:opacity-100"
           onClick={(e) => {
             e.stopPropagation();
             onClose?.();
@@ -50,7 +50,7 @@ function WinChrome({
           aria-disabled={!canMinimize}
           aria-label="Minimize window"
           className={cn(
-            "relative flex size-2.5 items-center justify-center rounded-full border-0 bg-[var(--l-ink-muted)] p-0 opacity-40 transition-[background-color,opacity] duration-150 group-hover/winctl:opacity-100",
+            "relative flex size-2.5 items-center justify-center rounded-full border-0 bg-(--l-ink-muted) p-0 opacity-40 transition-[background-color,opacity] duration-150 group-hover/winctl:opacity-100",
             canMinimize
               ? "cursor-pointer group-hover/winctl:bg-[#febc2e]"
               : "cursor-default"
@@ -80,7 +80,7 @@ function WinChrome({
         </button>
         <button
           aria-label="Maximize window"
-          className="relative flex size-2.5 cursor-pointer items-center justify-center rounded-full border-0 bg-[var(--l-ink-muted)] p-0 opacity-40 transition-[background-color,opacity] duration-150 group-hover/winctl:bg-[#28c840] group-hover/winctl:opacity-100"
+          className="relative flex size-2.5 cursor-pointer items-center justify-center rounded-full border-0 bg-(--l-ink-muted) p-0 opacity-40 transition-[background-color,opacity] duration-150 group-hover/winctl:bg-[#28c840] group-hover/winctl:opacity-100"
           onClick={(e) => {
             e.stopPropagation();
             onMaximize?.();
@@ -104,7 +104,7 @@ function WinChrome({
         </button>
       </div>
       {title && (
-        <span className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-[var(--l-ink-muted)] text-xs">
+        <span className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap text-(--l-ink-muted) text-xs">
           {title}
         </span>
       )}
@@ -135,7 +135,7 @@ export function EditorWindow({
   return (
     <div
       className={cn(
-        "relative flex flex-col overflow-hidden rounded-[0.625rem] bg-[var(--l-surface)] shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)]",
+        "relative flex flex-col overflow-hidden rounded-[0.625rem] bg-(--l-surface) shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1),0px_0px_0px_1px_rgba(38,37,30,0.1)]",
         className
       )}
       style={style}

@@ -47,17 +47,17 @@ const BODY_TEXT = "text-base leading-6 tracking-[0.005rem]";
 
 function FrontierCard({ card }: { card: (typeof CARDS)[number] }) {
   return (
-    <div className="relative flex flex-col rounded-[1px] bg-[var(--l-surface)] px-4.5 pt-4 pb-4.5">
+    <div className="relative flex flex-col rounded-[1px] bg-(--l-surface) px-4.5 pt-4 pb-4.5">
       <div className="flex flex-col">
-        <h3 className={`font-normal text-[var(--l-ink)] ${BODY_TEXT}`}>
+        <h3 className={`font-normal text-(--l-ink) ${BODY_TEXT}`}>
           {card.title}
         </h3>
-        <p className={`font-normal text-[var(--l-ink-muted)] ${BODY_TEXT}`}>
+        <p className={`font-normal text-(--l-ink-muted) ${BODY_TEXT}`}>
           {card.description}
         </p>
         <div className="pt-3.5">
           <a
-            className={`group inline-flex items-center gap-0.5 font-normal text-[var(--l-accent)] ${BODY_TEXT}`}
+            className={`group inline-flex items-center gap-0.5 font-normal text-(--l-accent) ${BODY_TEXT}`}
             href={card.ctaHref}
             rel={card.ctaExternal ? "noopener noreferrer" : undefined}
             target={card.ctaExternal ? "_blank" : undefined}
@@ -89,16 +89,16 @@ function FrontierCard({ card }: { card: (typeof CARDS)[number] }) {
           />
         </div>
       </div>
-      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-[var(--l-border-subtle)]" />
+      <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-(--l-border-subtle)" />
     </div>
   );
 }
 
 export function FrontierSection() {
   return (
-    <section className="l-section bg-[var(--l-bg)]">
+    <section className="l-section bg-(--l-bg)">
       <div className="l-container">
-        <h2 className="mb-5.25 font-normal text-[var(--l-ink)] text-base leading-7.25 tracking-[0.005rem] min-[900px]:mb-5.5">
+        <h2 className="mb-5.25 font-normal text-(--l-ink) text-base leading-7.25 tracking-[0.005rem] min-[900px]:mb-5.5">
           Stay on the frontier
         </h2>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-2.25 min-[900px]:grid-cols-3 min-[900px]:gap-2.5">
