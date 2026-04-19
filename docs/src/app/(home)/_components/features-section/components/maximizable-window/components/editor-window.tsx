@@ -1,3 +1,5 @@
+"use client";
+
 import type { CSSProperties, ReactNode } from "react";
 
 import { cn } from "@/lib/cn";
@@ -14,7 +16,12 @@ function WinChrome({
   onMinimize,
   onMaximize,
   isMaximized = false,
-}: { title?: string; isMaximized?: boolean } & ChromeCallbacks) {
+  canMinimize = true,
+}: {
+  title?: string;
+  isMaximized?: boolean;
+  canMinimize?: boolean;
+} & ChromeCallbacks) {
   return (
     <div className="relative flex h-7 shrink-0 items-center border-[var(--l-border)] border-b bg-[var(--l-surface)] px-2">
       <div className="group/winctl flex gap-1.5">
@@ -40,25 +47,36 @@ function WinChrome({
           </svg>
         </button>
         <button
+          aria-disabled={!canMinimize}
           aria-label="Minimize window"
-          className="relative flex size-2.5 cursor-pointer items-center justify-center rounded-full border-0 bg-[var(--l-ink-muted)] p-0 opacity-40 transition-[background-color,opacity] duration-150 group-hover/winctl:bg-[#febc2e] group-hover/winctl:opacity-100"
+          className={cn(
+            "relative flex size-2.5 items-center justify-center rounded-full border-0 bg-[var(--l-ink-muted)] p-0 opacity-40 transition-[background-color,opacity] duration-150 group-hover/winctl:opacity-100",
+            canMinimize
+              ? "cursor-pointer group-hover/winctl:bg-[#febc2e]"
+              : "cursor-default"
+          )}
+          disabled={!canMinimize}
           onClick={(e) => {
             e.stopPropagation();
-            onMinimize?.();
+            if (canMinimize) {
+              onMinimize?.();
+            }
           }}
           type="button"
         >
-          <svg
-            aria-hidden="true"
-            className="size-2 opacity-0 transition-opacity duration-150 group-hover/winctl:opacity-70"
-            fill="none"
-            stroke="#5b3300"
-            strokeLinecap="round"
-            strokeWidth="1.5"
-            viewBox="0 0 10 10"
-          >
-            <path d="M2.5 5h5" />
-          </svg>
+          {canMinimize && (
+            <svg
+              aria-hidden="true"
+              className="size-2 opacity-0 transition-opacity duration-150 group-hover/winctl:opacity-70"
+              fill="none"
+              stroke="#5b3300"
+              strokeLinecap="round"
+              strokeWidth="1.5"
+              viewBox="0 0 10 10"
+            >
+              <path d="M2.5 5h5" />
+            </svg>
+          )}
         </button>
         <button
           aria-label="Maximize window"
@@ -104,6 +122,7 @@ export function EditorWindow({
   onMaximize,
   chromeOverlay = false,
   isMaximized = false,
+  canMinimize = true,
 }: {
   title?: string;
   className?: string;
@@ -111,6 +130,7 @@ export function EditorWindow({
   children: ReactNode;
   chromeOverlay?: boolean;
   isMaximized?: boolean;
+  canMinimize?: boolean;
 } & ChromeCallbacks) {
   return (
     <div
@@ -122,8 +142,9 @@ export function EditorWindow({
     >
       {chromeOverlay ? (
         <div className="group pointer-events-none absolute inset-x-0 top-0 z-20 h-8">
-          <div className="-translate-y-full pointer-events-auto absolute inset-x-0 top-0 opacity-0 transition-[translate,opacity] duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100">
+          <div className="pointer-events-auto absolute inset-x-0 top-0 -translate-y-full opacity-0 transition-[translate,opacity] duration-200 ease-out group-hover:translate-y-0 group-hover:opacity-100">
             <WinChrome
+              canMinimize={canMinimize}
               isMaximized={isMaximized}
               onClose={onClose}
               onMaximize={onMaximize}
@@ -134,6 +155,7 @@ export function EditorWindow({
         </div>
       ) : (
         <WinChrome
+          canMinimize={canMinimize}
           isMaximized={isMaximized}
           onClose={onClose}
           onMaximize={onMaximize}

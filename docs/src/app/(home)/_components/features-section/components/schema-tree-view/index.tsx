@@ -1,6 +1,7 @@
 "use client";
 
 import type { SchemaField } from "@/components/schema-tree";
+
 import {
   TreeExpander,
   TreeNode,
@@ -46,16 +47,14 @@ function SchemaRow({
       <TreeNodeTrigger hasChildren={hasChildren}>
         <TreeExpander hasChildren={hasChildren} />
         <div className="flex min-w-0 flex-1 items-center gap-2">
-          <span className="shrink-0 truncate font-mono text-sm text-[var(--l-ink)]">
+          <span className="shrink-0 truncate font-mono text-[var(--l-ink)] text-sm">
             {field.name}
           </span>
-          <span className="shrink-0 rounded border border-[var(--l-border)] bg-[var(--l-bg)] px-1.5 py-px font-mono text-xs text-[var(--l-ink-muted)]">
+          <span className="shrink-0 rounded border border-[var(--l-border)] bg-[var(--l-bg)] px-1.5 py-px font-mono text-[var(--l-ink-muted)] text-xs">
             {field.type}
           </span>
           {field.description && (
-            <span className="truncate text-xs text-[var(--l-ink-muted)]">
-              {field.description}
-            </span>
+            <span className="truncate text-[var(--l-ink-muted)] text-xs">{field.description}</span>
           )}
         </div>
       </TreeNodeTrigger>
@@ -90,12 +89,12 @@ export function SchemaTreeView({
   return (
     <TreeProvider
       defaultExpandedIds={defaultExpandedIds}
-      indent={16}
+      indent={24}
       selectable={false}
       showIcons={false}
       showLines
     >
-      <TreeView className="p-2">
+      <TreeView className="p-2 pb-8">
         {fields.map((field, i, arr) => (
           <SchemaRow
             field={field}

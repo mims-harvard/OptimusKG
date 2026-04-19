@@ -1,15 +1,16 @@
 "use client";
 
-import { ChevronRight, File, Folder, FolderOpen } from "lucide-react";
 import {
-  createContext,
   type HTMLAttributes,
   type ReactNode,
+  createContext,
   useCallback,
   useContext,
   useId,
   useState,
 } from "react";
+
+import { ChevronRight, File, Folder, FolderOpen } from "lucide-react";
 
 import { cn } from "@/lib/cn";
 
@@ -165,15 +166,9 @@ export function TreeNode({
   const generatedId = useId();
   const nodeId = providedId ?? generatedId;
 
-  const currentPath = level === 0 ? [] : [...parentPath];
-  if (level > 0 && parentPath.length < level - 1) {
-    while (currentPath.length < level - 1) {
-      currentPath.push(false);
-    }
-  }
-  if (level > 0) {
-    currentPath[level - 1] = isLast;
-  }
+  // `parentPath` includes the invisible top-level parent slot. Drop it so the
+  // remaining columns align with the guides that are actually rendered.
+  const currentPath = level === 0 ? [] : [...parentPath.slice(1), isLast];
 
   return (
     <TreeNodeContext.Provider value={{ nodeId, level, isLast, parentPath: currentPath }}>
@@ -204,7 +199,7 @@ export function TreeNodeTrigger({
   return (
     <div
       className={cn(
-        "group relative mx-1 flex cursor-pointer items-center rounded-md px-3 py-1.5 transition-colors duration-200",
+        "group relative flex cursor-pointer items-center rounded-md px-4 py-1.5 transition-colors duration-200",
         "hover:bg-[var(--l-bg)]",
         isSelected && "bg-[var(--l-bg)]",
         className,
@@ -227,17 +222,6 @@ export function TreeNodeTrigger({
       {...props}
     >
       <TreeLines />
-      {showLines && hasChildren && isExpanded && (
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute border-[var(--l-border)] border-l"
-          style={{
-            left: level * (indent ?? 0) + 12,
-            top: "50%",
-            bottom: "-1px",
-          }}
-        />
-      )}
       {children}
     </div>
   );
@@ -252,31 +236,28 @@ export function TreeLines() {
   }
 
   return (
-    <div className="pointer-events-none absolute top-0 bottom-0 left-0">
-      {Array.from({ length: level }, (_, index) => {
-        const hide = parentPath[index] === true;
-        if (hide && index === level - 1) {
-          return null;
-        }
-        return (
-          <div
-            className="absolute border-[var(--l-border)] border-l"
-            key={`tree-line-${index}`}
-            style={{
-              left: index * (indent ?? 0) + 12,
-              top: 0,
-              bottom: "-1px",
-              display: hide ? "none" : "block",
-            }}
-          />
-        );
-      })}
+    <div className="pointer-events-none absolute top-0 bottom-0 left-1.5">
+      {Array.from(
+        { length: level },
+        (_, index) =>
+          !parentPath[index] && (
+            <div
+              className="absolute border-[var(--l-border)] border-l"
+              key={`tree-line-${index}`}
+              style={{
+                left: index * (indent ?? 0) + 12,
+                top: 0,
+                bottom: "-1px",
+              }}
+            />
+          ),
+      )}
 
       <div
         className="absolute top-1/2 border-[var(--l-border)] border-t"
         style={{
           left: (level - 1) * (indent ?? 0) + 12,
-          width: (indent ?? 0) - 4,
+          width: (indent ?? 0) - 12,
           transform: "translateY(-1px)",
         }}
       />
@@ -287,7 +268,7 @@ export function TreeLines() {
           style={{
             left: (level - 1) * (indent ?? 0) + 12,
             top: 0,
-            height: "calc(50% + 1px)",
+            height: "calc(50%)",
           }}
         />
       )}
@@ -341,7 +322,7 @@ export function TreeExpander({
   return (
     <div
       className={cn(
-        "mr-1 flex h-4 w-4 cursor-pointer items-center justify-center transition-transform duration-200",
+        "mx-0.5 flex h-4 w-4 cursor-pointer items-center justify-center transition-transform duration-200",
         isExpanded && "rotate-90",
         className,
       )}
@@ -373,11 +354,7 @@ export function TreeIcon({ icon, hasChildren = false, className, ...props }: Tre
 
   let defaultIcon: ReactNode;
   if (hasChildren) {
-    defaultIcon = isExpanded ? (
-      <FolderOpen className="h-4 w-4" />
-    ) : (
-      <Folder className="h-4 w-4" />
-    );
+    defaultIcon = isExpanded ? <FolderOpen className="h-4 w-4" /> : <Folder className="h-4 w-4" />;
   } else {
     defaultIcon = <File className="h-4 w-4" />;
   }

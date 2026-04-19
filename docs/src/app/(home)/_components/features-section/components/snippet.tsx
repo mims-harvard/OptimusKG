@@ -40,7 +40,9 @@ const variant = {
 } as const;
 
 function getVariant(inverted: boolean, type?: TSnippetType) {
-  if (inverted) return variant.inverted;
+  if (inverted) {
+    return variant.inverted;
+  }
   switch (type) {
     case "success":
       return variant.success;
@@ -84,19 +86,19 @@ export function Snippet({
       className={cn(
         "flex items-center gap-3 rounded-md border border-[var(--l-border)] px-3 py-2.5",
         colors.background,
-        className,
+        className
       )}
       style={{ width }}
     >
       <div className="min-w-0 flex-1">
         {lines.map((line) => (
           <div
-            key={line}
             className={cn(
               "truncate font-mono text-[13px]",
               prompt && "before:content-['$_']",
-              colors.text,
+              colors.text
             )}
+            key={line}
           >
             {line}
           </div>
@@ -116,7 +118,7 @@ export function Snippet({
           aria-hidden="true"
           className={cn(
             "absolute fill-[var(--l-bg)] transition-opacity duration-150",
-            animation ? "opacity-0" : "opacity-100",
+            animation ? "opacity-0" : "opacity-100"
           )}
           height="14"
           strokeLinejoin="round"
@@ -133,7 +135,7 @@ export function Snippet({
           aria-hidden="true"
           className={cn(
             "absolute fill-[var(--l-bg)] transition-opacity duration-150",
-            animation ? "opacity-100" : "opacity-0",
+            animation ? "opacity-100" : "opacity-0"
           )}
           height="14"
           strokeLinejoin="round"

@@ -8,7 +8,10 @@ const LOGOS = [
   { src: "/sources/drugcentral.png", alt: "DrugCentral" },
   { src: "/sources/gene-ontology.png", alt: "Gene Ontology" },
   { src: "/sources/hgnc.png", alt: "HGNC" },
-  { src: "/sources/human-phenotype-ontology.png", alt: "Human Phenotype Ontology" },
+  {
+    src: "/sources/human-phenotype-ontology.png",
+    alt: "Human Phenotype Ontology",
+  },
   { src: "/sources/mondo.png", alt: "Mondo" },
   { src: "/sources/onsides.png", alt: "OnSIDES" },
   { src: "/sources/open-targets.png", alt: "Open Targets" },
@@ -34,16 +37,16 @@ export function LogoGarden() {
     <section className="l-section l-section--flush-y l-section--compact bg-[var(--l-bg)]">
       <div className="l-container">
         <div className="flex flex-col gap-5.25 min-[900px]:gap-5.5">
-          <p className="text-center text-balance text-[var(--l-ink)] text-xs leading-5 tracking-[0.0082rem] md:text-sm md:leading-5.25 md:tracking-[0.00875rem]">
+          <p className="text-balance text-center text-[var(--l-ink)] text-xs leading-5 tracking-[0.0082rem] md:text-sm md:leading-5.25 md:tracking-[0.00875rem]">
             Built on trusted biomedical data sources
           </p>
-          <div className="grid grid-cols-4 gap-2 min-[420px]:gap-2.5 min-[900px]:grid-cols-8">
+          <div className="grid grid-cols-4 gap-2 min-[900px]:grid-cols-8 min-[420px]:gap-2.5">
             {LOGOS.map(({ src, alt }) => (
               <LogoCard key={alt}>
                 <img
-                  src={src}
                   alt={alt}
                   className="l-logo-neutralize max-h-8 w-auto object-contain md:max-h-9 min-[900px]:max-h-10"
+                  src={src}
                 />
               </LogoCard>
             ))}

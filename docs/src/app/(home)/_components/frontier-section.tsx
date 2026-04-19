@@ -1,4 +1,5 @@
 import { ArrowUpRight } from "lucide-react";
+
 import { cn } from "@/lib/cn";
 
 const CARDS = [
@@ -44,36 +45,43 @@ const BODY_TEXT = "text-base leading-6 tracking-[0.005rem]";
 
 function FrontierCard({ card }: { card: (typeof CARDS)[number] }) {
   return (
-    <div className="relative flex flex-col rounded-sm bg-[var(--l-surface)] pt-4 pb-4.5 px-4.5">
+    <div className="relative flex flex-col rounded-sm bg-[var(--l-surface)] px-4.5 pt-4 pb-4.5">
       <div className="flex flex-col">
-        <h3 className={`font-normal text-[var(--l-ink)] ${BODY_TEXT}`}>{card.title}</h3>
-        <p className={`font-normal text-[var(--l-ink-muted)] ${BODY_TEXT}`}>{card.description}</p>
+        <h3 className={`font-normal text-[var(--l-ink)] ${BODY_TEXT}`}>
+          {card.title}
+        </h3>
+        <p className={`font-normal text-[var(--l-ink-muted)] ${BODY_TEXT}`}>
+          {card.description}
+        </p>
         <div className="pt-3.5">
           <a
-            href={card.ctaHref}
-            target={card.ctaExternal ? "_blank" : undefined}
-            rel={card.ctaExternal ? "noopener noreferrer" : undefined}
             className={`group inline-flex items-center gap-0.5 font-normal text-[var(--l-accent)] ${BODY_TEXT}`}
+            href={card.ctaHref}
+            rel={card.ctaExternal ? "noopener noreferrer" : undefined}
+            target={card.ctaExternal ? "_blank" : undefined}
           >
             {card.ctaText}
             <ArrowUpRight
-              size={14}
-              strokeWidth={2}
               aria-hidden="true"
               className="transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              size={14}
+              strokeWidth={2}
             />
           </a>
         </div>
       </div>
       <div className="pt-4.5">
         <div
-          className={cn("relative overflow-hidden rounded-sm md:h-80 min-[900px]:h-98", card.mobileHeightClass)}
+          className={cn(
+            "relative overflow-hidden rounded-sm md:h-80 min-[900px]:h-98",
+            card.mobileHeightClass
+          )}
           style={{ backgroundImage: MEDIA_BG }}
         >
           <img
-            src={card.imageSrc}
             alt={card.imageAlt}
             className="absolute inset-0 h-full w-full object-cover"
+            src={card.imageSrc}
           />
         </div>
       </div>
@@ -91,7 +99,7 @@ export function FrontierSection() {
         </h2>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-2.25 min-[900px]:grid-cols-3 min-[900px]:gap-2.5">
           {CARDS.map((card) => (
-            <FrontierCard key={card.title} card={card} />
+            <FrontierCard card={card} key={card.title} />
           ))}
         </div>
       </div>
