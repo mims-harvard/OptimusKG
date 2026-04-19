@@ -4,69 +4,69 @@
  */
 
 import { baseEdgeFields, sourcesField } from "../../edge-schema-shared";
-import { SchemaTree } from "../../schema-tree";
+import { SchemaTreeView } from "../../schema-tree-view";
 
 const onlySources = [sourcesField];
 
 export function AnaAnaEdge() {
   return (
-    <SchemaTree
+    <SchemaTreeView
       fields={baseEdgeFields("ANA-ANA", "PARENT", false, onlySources)}
     />
   );
 }
 export function BpoBpoEdge() {
   return (
-    <SchemaTree
+    <SchemaTreeView
       fields={baseEdgeFields("BPO-BPO", "IS_A", false, onlySources)}
     />
   );
 }
 export function CcoCcoEdge() {
   return (
-    <SchemaTree
+    <SchemaTreeView
       fields={baseEdgeFields("CCO-CCO", "IS_A", false, onlySources)}
     />
   );
 }
 export function DisDieEdge() {
   return (
-    <SchemaTree
+    <SchemaTreeView
       fields={baseEdgeFields("DIS-DIS", "PARENT", false, onlySources)}
     />
   );
 }
 export function GenGenEdge() {
   return (
-    <SchemaTree
+    <SchemaTreeView
       fields={baseEdgeFields("GEN-GEN", "INTERACTS_WITH", false, onlySources)}
     />
   );
 }
 export function MfnMfnEdge() {
   return (
-    <SchemaTree
+    <SchemaTreeView
       fields={baseEdgeFields("MFN-MFN", "IS_A", false, onlySources)}
     />
   );
 }
 export function PwyGenEdge() {
   return (
-    <SchemaTree
+    <SchemaTreeView
       fields={baseEdgeFields("PWY-GEN", "INTERACTS_WITH", true, onlySources)}
     />
   );
 }
 export function PwyPwyEdge() {
   return (
-    <SchemaTree
+    <SchemaTreeView
       fields={baseEdgeFields("PWY-PWY", "PARENT", false, onlySources)}
     />
   );
 }
 export function PhePheEdge() {
   return (
-    <SchemaTree
+    <SchemaTreeView
       fields={baseEdgeFields("PHE-PHE", "PARENT", false, onlySources)}
     />
   );

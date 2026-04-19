@@ -4,7 +4,7 @@
  */
 
 import { baseEdgeFields, sourcesField } from "./edge-schema-shared";
-import { SchemaTree } from "./schema-tree";
+import { SchemaTreeView } from "./schema-tree-view";
 
 const assocProperties = [
   {
@@ -74,8 +74,8 @@ export const pheGenFields = baseEdgeFields(
 );
 
 export function DisGenEdge() {
-  return <SchemaTree fields={disGenFields} />;
+  return <SchemaTreeView fields={disGenFields} />;
 }
 export function PheGenEdge() {
-  return <SchemaTree fields={pheGenFields} />;
+  return <SchemaTreeView fields={pheGenFields} />;
 }
