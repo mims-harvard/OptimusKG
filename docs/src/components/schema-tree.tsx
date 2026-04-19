@@ -53,7 +53,7 @@ function SchemaRow({
 
 export function SchemaTree({ fields }: { fields: SchemaField[] }) {
   return (
-    <div className="not-prose my-6 overflow-hidden rounded-lg border border-fd-border">
+    <div className="not-prose my-6 overflow-hidden rounded-[1px] border border-fd-border">
       <table className="w-full border-collapse bg-fd-card text-left">
         <thead>
           <tr className="border-fd-border border-b bg-fd-muted/30">

@@ -35,6 +35,11 @@
   margin-inline: auto;
 }
 
+[data-landing] [data-theme-toggle],
+[data-landing] [data-theme-toggle] > * {
+  border-radius: 1px;
+}
+
 [data-landing] .l-gutter {
   padding-inline: var(--l-g2);
 }

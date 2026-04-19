@@ -22,7 +22,7 @@ export default function Layout({ children }: LayoutProps<"/docs">) {
           className={cn(
             buttonVariants({
               variant: "secondary",
-              className: "rounded-2xl text-fd-muted-foreground",
+              className: "rounded-none text-fd-muted-foreground",
             })
           )}
           position="float"
