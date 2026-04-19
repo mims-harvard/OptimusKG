@@ -56,11 +56,16 @@ function FrontierCard({ card }: { card: (typeof CARDS)[number] }) {
             href={card.ctaHref}
             target={card.ctaExternal ? "_blank" : undefined}
             rel={card.ctaExternal ? "noopener noreferrer" : undefined}
-            className="inline-flex items-center gap-[0.3rem] font-normal text-[var(--l-accent)]"
+            className="group inline-flex items-center gap-[0.15rem] font-normal text-[var(--l-accent)]"
             style={BODY_TEXT}
           >
             {card.ctaText}
-            <ArrowUpRight size={14} strokeWidth={2} aria-hidden="true" />
+            <ArrowUpRight
+              size={14}
+              strokeWidth={2}
+              aria-hidden="true"
+              className="transition-transform duration-300 ease-out group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
           </a>
         </div>
       </div>

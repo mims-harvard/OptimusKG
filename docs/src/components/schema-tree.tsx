@@ -50,13 +50,6 @@ function SchemaRow({
 export function SchemaTree({ fields }: { fields: SchemaField[] }) {
   return (
     <div className="not-prose my-6 rounded-lg border border-fd-border overflow-hidden">
-      <div className="flex items-center border-b border-fd-border bg-fd-muted/50 px-4 py-2">
-        <div className="flex-1 border-t border-fd-border/60" />
-        <span className="px-3 text-xs font-sans font-semibold text-fd-muted-foreground tracking-widest uppercase">
-          Schema Tree
-        </span>
-        <div className="flex-1 border-t border-fd-border/60" />
-      </div>
       <table className="w-full text-left border-collapse bg-fd-card">
         <thead>
           <tr className="border-b border-fd-border bg-fd-muted/30">

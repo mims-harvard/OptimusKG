@@ -4,6 +4,7 @@ import { useState } from "react";
 import { gitConfig } from "@/lib/shared";
 import { Logo } from "@/components/Logo";
 import { DownloadButton } from "./DownloadButton";
+import { MenuToggleIcon } from "./MenuToggleIcon";
 
 function GitHubIcon({ size = 22 }: { size?: number }) {
   return (
@@ -25,7 +26,11 @@ function GitHubIcon({ size = 22 }: { size?: number }) {
 
 const GET_STARTED_HREF = "/docs";
 const GITHUB_HREF = `https://github.com/${gitConfig.user}/${gitConfig.repo}`;
+// TODO: update with the arXiv URL once the paper is published.
+const PAPER_HREF = "https://arxiv.org/";
 
+const ghostButton =
+  "inline-flex items-center justify-center whitespace-nowrap rounded-full text-[var(--l-ink)] transition-opacity hover:opacity-70";
 const outlineButton =
   "inline-flex items-center justify-center whitespace-nowrap rounded-full border border-[var(--l-border)] text-[var(--l-ink)]";
 const filledButton =
@@ -43,12 +48,27 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--l-bg)]">
+    <header className="sticky top-0 z-50 bg-[var(--l-bg)] l-gutter">
       <div className="l-container">
         <div className="flex h-[var(--l-header-h)] items-center justify-between">
           <OptimusKGLogo />
 
           <div className="hidden items-center gap-[0.469rem] md:flex">
+            <a
+              href={PAPER_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={ghostButton}
+              style={{
+                paddingTop: "0.4125rem",
+                paddingBottom: "0.43rem",
+                paddingInline: "0.719rem",
+                fontSize: "0.844rem",
+                lineHeight: "0.875rem",
+              }}
+            >
+              Read paper
+            </a>
             <a
               href={GET_STARTED_HREF}
               className={outlineButton}
@@ -78,7 +98,7 @@ export function Navbar() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub repository"
-              className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--l-ink)] transition-opacity hover:opacity-70"
+              className="-mr-[5px] flex h-8 w-8 items-center justify-center rounded-full text-[var(--l-ink)] transition-opacity hover:opacity-70"
             >
               <GitHubIcon />
             </a>
@@ -88,20 +108,9 @@ export function Navbar() {
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}
             onClick={() => setOpen((v) => !v)}
-            className="flex h-6 w-6 flex-col justify-center gap-[0.3rem] text-[var(--l-ink)] md:hidden"
+            className="flex h-6 w-6 items-center justify-center text-[var(--l-ink)] md:hidden"
           >
-            {open ? (
-              <>
-                <span className="block h-px w-full translate-y-[0.34rem] rotate-45 bg-[var(--l-ink)]" />
-                <span className="block h-px w-full -translate-y-[0.22rem] -rotate-45 bg-[var(--l-ink)]" />
-              </>
-            ) : (
-              <>
-                <span className="block h-px w-full bg-[var(--l-ink)]" />
-                <span className="block h-px w-full bg-[var(--l-ink)]" />
-                <span className="block h-px w-full bg-[var(--l-ink)]" />
-              </>
-            )}
+            <MenuToggleIcon className="h-6 w-6" open={open} />
           </button>
         </div>
       </div>
@@ -109,6 +118,15 @@ export function Navbar() {
       {open && (
         <div className="border-t border-[var(--l-border)] bg-[var(--l-bg)] px-[var(--l-g2)] pb-5 md:hidden">
           <div className="mt-4 flex flex-col gap-3">
+            <a
+              href={PAPER_HREF}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${ghostButton} text-[0.9375rem]`}
+              style={{ paddingBlock: "0.625rem", paddingInline: "1.25rem" }}
+            >
+              Read paper
+            </a>
             <a
               href={GET_STARTED_HREF}
               className={`${outlineButton} text-[0.9375rem]`}

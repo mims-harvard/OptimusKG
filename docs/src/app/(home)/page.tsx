@@ -11,8 +11,8 @@ export default function HomePage() {
       <Navbar />
       <main>
         <HeroSection />
-        <LogoGarden />
-        {/* <FeaturesSection /> */}
+        {/* <LogoGarden /> */}
+        <FeaturesSection />
         {/* <FrontierSection /> */}
       </main>
       <Footer />

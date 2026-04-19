@@ -22,7 +22,6 @@ OptimusKG is available via [Harvard Dataverse](https://doi.org/10.7910/DVN/IYNGE
   <CodeBlockTabsList>
     <CodeBlockTabsTrigger value="uv">uv</CodeBlockTabsTrigger>
     <CodeBlockTabsTrigger value="pip">pip</CodeBlockTabsTrigger>
-    <CodeBlockTabsTrigger value="pipx">pipx</CodeBlockTabsTrigger>
   </CodeBlockTabsList>
   <CodeBlockTab value="uv">
     ```bash
@@ -34,11 +33,6 @@ OptimusKG is available via [Harvard Dataverse](https://doi.org/10.7910/DVN/IYNGE
     pip install optimuskg
     ```
   </CodeBlockTab>
-  <CodeBlockTab value="pipx">
-    ```bash
-    pipx install optimuskg
-    ```
-  </CodeBlockTab>
 </CodeBlockTabs>
 
 The client fetches files from the gold layer with local caching, and supports loading the graph either as [Polars DataFrames](https://github.com/pola-rs/polars) or as a [NetworkX MultiDiGraph](https://networkx.org/documentation/stable/reference/classes/multidigraph.html):
@@ -46,16 +40,18 @@ The client fetches files from the gold layer with local caching, and supports lo
 ```python
 import optimuskg
 
-# Download (once) and cache a file from the gold layer
-path = optimuskg.get_file("nodes/gene.parquet")
+# Download a specific file and store it locally
+local_path = optimuskg.get_file("nodes/gene.parquet")
 
-# Load a single Parquet file
+# Load a single Parquet file as a Polars DataFrame
 drugs = optimuskg.load_parquet("nodes/drug.parquet")
 
-# Load nodes and edges (full graph or Largest Connected Component)
+# Load nodes and edges as Polars DataFrames
+# Set lcc=True to load only the largest connected component
 nodes, edges = optimuskg.load_graph(lcc=True)
 
-# Load as NetworkX MultiDiGraph (JSON properties parsed)
+# Load the graph as a NetworkX MultiDiGraph with metadata
+# Set lcc=True to load only the largest connected component
 G = optimuskg.load_networkx(lcc=True)
 ```
 
