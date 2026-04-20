@@ -44,15 +44,15 @@ const GITHUB_HREF = `https://github.com/${gitConfig.user}/${gitConfig.repo}`;
 const PAPER_HREF = "https://arxiv.org/";
 
 const ghostButton =
-  "inline-flex items-center justify-center whitespace-nowrap rounded-none text-(--l-ink) transition-opacity hover:opacity-70";
+  "inline-flex items-center justify-center whitespace-nowrap rounded-none text-fd-foreground transition-opacity hover:opacity-70";
 const outlineButton =
-  "inline-flex items-center justify-center whitespace-nowrap rounded-none border border-(--l-border) text-(--l-ink)";
+  "inline-flex items-center justify-center whitespace-nowrap rounded-none border border-fd-border text-fd-foreground";
 const filledButton =
-  "inline-flex items-center justify-center whitespace-nowrap rounded-none border border-(--l-ink) bg-(--l-ink) text-(--l-bg)";
+  "inline-flex items-center justify-center whitespace-nowrap rounded-none border border-fd-foreground bg-fd-foreground text-fd-background";
 
 function OptimusKGLogo() {
   return (
-    <a className="text-(--l-ink)" href="/">
+    <a className="text-fd-foreground" href="/">
       <Logo />
     </a>
   );
@@ -62,7 +62,7 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="l-gutter sticky top-0 z-50 bg-(--l-bg)">
+    <header className="l-gutter sticky top-0 z-50 bg-fd-background">
       <div className="l-container">
         <div className="flex h-(--l-header-h) items-center justify-between">
           <OptimusKGLogo />
@@ -88,7 +88,7 @@ export function Navbar() {
             />
             <a
               aria-label="GitHub repository"
-              className="-mr-1 flex h-8 w-8 items-center justify-center rounded-none text-(--l-ink) transition-opacity hover:opacity-70"
+              className="-mr-1 flex h-8 w-8 items-center justify-center rounded-none text-fd-foreground transition-opacity hover:opacity-70"
               href={GITHUB_HREF}
               rel="noopener noreferrer"
               target="_blank"
@@ -99,7 +99,7 @@ export function Navbar() {
 
           <button
             aria-label={open ? "Close menu" : "Open menu"}
-            className="flex h-6 w-6 items-center justify-center text-(--l-ink) md:hidden"
+            className="flex h-6 w-6 items-center justify-center text-fd-foreground md:hidden"
             onClick={() => setOpen((v) => !v)}
             type="button"
           >
@@ -109,7 +109,7 @@ export function Navbar() {
       </div>
 
       {open && (
-        <div className="border-(--l-border) border-t bg-(--l-bg) px-(--l-g2) pb-5 md:hidden">
+        <div className="border-fd-border border-t bg-fd-background px-(--l-g2) pb-5 md:hidden">
           <div className="mt-4 flex flex-col gap-3">
             <a
               className={`${ghostButton} px-5 py-2.5 text-sm`}

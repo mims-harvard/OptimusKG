@@ -47,12 +47,12 @@ const BODY_TEXT = "text-base leading-6 tracking-[0.005rem]";
 
 function FrontierCard({ card }: { card: (typeof CARDS)[number] }) {
   return (
-    <div className="relative flex flex-col rounded-[1px] bg-(--l-surface) px-4.5 pt-4 pb-4.5">
+    <div className="relative flex flex-col rounded-[1px] bg-fd-card px-4.5 pt-4 pb-4.5">
       <div className="flex flex-col">
-        <h3 className={`font-normal text-(--l-ink) ${BODY_TEXT}`}>
+        <h3 className={`font-normal text-fd-foreground ${BODY_TEXT}`}>
           {card.title}
         </h3>
-        <p className={`font-normal text-(--l-ink-muted) ${BODY_TEXT}`}>
+        <p className={`font-normal text-fd-muted-foreground ${BODY_TEXT}`}>
           {card.description}
         </p>
         <div className="pt-3.5">
@@ -96,9 +96,9 @@ function FrontierCard({ card }: { card: (typeof CARDS)[number] }) {
 
 export function FrontierSection() {
   return (
-    <section className="l-section bg-(--l-bg)">
+    <section className="l-section bg-fd-background">
       <div className="l-container">
-        <h2 className="mb-5.25 font-normal text-(--l-ink) text-base leading-7.25 tracking-[0.005rem] min-[900px]:mb-5.5">
+        <h2 className="mb-5.25 font-normal text-fd-foreground text-base leading-7.25 tracking-[0.005rem] min-[900px]:mb-5.5">
           Stay on the frontier
         </h2>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-2.25 min-[900px]:grid-cols-3 min-[900px]:gap-2.5">

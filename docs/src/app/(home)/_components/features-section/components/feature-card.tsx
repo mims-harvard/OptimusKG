@@ -21,7 +21,7 @@ export function DesktopCard({ feature }: { feature: Feature }) {
   return (
     <div
       className={cn(
-        "relative grid grid-cols-[repeat(24,minmax(0,1fr))] gap-x-2.5 rounded-[1px] bg-(--l-surface) p-4.5",
+        "relative grid grid-cols-[repeat(24,minmax(0,1fr))] gap-x-2.5 rounded-[1px] bg-fd-card p-4.5",
         cardHeightClass,
       )}
     >
@@ -51,7 +51,7 @@ export function MobileCard({ feature }: { feature: Feature }) {
   const Tag = href ? "a" : "div";
 
   return (
-    <div className="relative flex flex-col overflow-hidden rounded-[1px] bg-(--l-surface)">
+    <div className="relative flex flex-col overflow-hidden rounded-[1px] bg-fd-card">
       <Tag {...linkProps} className="group/card block p-4 md:p-6">
         <FeatureText {...feature} />
       </Tag>

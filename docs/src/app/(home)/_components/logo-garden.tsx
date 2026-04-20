@@ -24,7 +24,7 @@ const LOGOS = [
 function LogoCard({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative flex items-center justify-center">
-      <div className="relative flex h-16 w-full items-center justify-center rounded-[1px] bg-(--l-surface) px-2 md:h-18 min-[900px]:h-25">
+      <div className="relative flex h-16 w-full items-center justify-center rounded-[1px] bg-fd-card px-2 md:h-18 min-[900px]:h-25">
         {children}
         <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-(--l-border-subtle)" />
       </div>
@@ -34,10 +34,10 @@ function LogoCard({ children }: { children: React.ReactNode }) {
 
 export function LogoGarden() {
   return (
-    <section className="l-section l-section--flush-y l-section--compact bg-(--l-bg)">
+    <section className="l-section l-section--flush-y l-section--compact bg-fd-background">
       <div className="l-container">
         <div className="flex flex-col gap-5.25 min-[900px]:gap-5.5">
-          <p className="text-balance text-center text-(--l-ink) text-xs leading-5 tracking-[0.0082rem] md:text-sm md:leading-5.25 md:tracking-[0.00875rem]">
+          <p className="text-balance text-center text-fd-foreground text-xs leading-5 tracking-[0.0082rem] md:text-sm md:leading-5.25 md:tracking-[0.00875rem]">
             Built on trusted biomedical data sources
           </p>
           <div className="grid grid-cols-4 gap-2 min-[900px]:grid-cols-8 min-[420px]:gap-2.5">

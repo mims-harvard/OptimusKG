@@ -3,6 +3,418 @@ title: Nodes
 description: Node types and their schema in OptimusKG.
 ---
 
+export const nodeSourcesField = {
+  name: "sources",
+  type: "Struct",
+  description: "Provenance of this node",
+  children: [
+    { name: "direct", type: "List[String]", description: "Datasets that directly contributed this entity" },
+    { name: "indirect", type: "List[String]", description: "Datasets that referenced this entity" },
+  ],
+};
+
+export const ontologyField = {
+  name: "ontology",
+  type: "Struct",
+  description: "Source ontology metadata",
+  children: [
+    { name: "title", type: "String", description: "Ontology title" },
+    { name: "description", type: "String", description: "Ontology description" },
+    { name: "license", type: "String", description: "Ontology license" },
+    { name: "version", type: "String", description: "Ontology version" },
+  ],
+};
+
+export const baseNodeFields = [
+  { name: "id", type: "String", description: "Globally unique node identifier in CURIE format (e.g. ENSG00000139618)" },
+  { name: "label", type: "String", description: "Node type 3-letter abbreviation (e.g. GEN, DRG)" },
+  { name: "properties", type: "String", description: "JSON-encoded type-specific properties. Expanded to a native Struct in per-type parquet files." },
+];
+
+export const geneFields = [
+  { name: "id", type: "String", description: "Node identifier in CURIE format (e.g. ENSG00000141510)" },
+  { name: "label", type: "String", description: "Node type abbreviation (GEN)" },
+  {
+    name: "properties",
+    type: "Struct",
+    description: "Gene-specific properties",
+    children: [
+      { name: "symbol", type: "String", description: "Official HGNC gene symbol (e.g. TP53)" },
+      { name: "name", type: "String", description: "Full gene name" },
+      { name: "biotype", type: "String", description: "Gene biotype (e.g. protein_coding, lncRNA)" },
+      {
+        name: "genomic_location",
+        type: "Struct",
+        description: "Chromosomal coordinates",
+        children: [
+          { name: "chromosome", type: "String", description: "Chromosome name" },
+          { name: "start", type: "Int64", description: "Start position (0-based)" },
+          { name: "end", type: "Int64", description: "End position" },
+          { name: "strand", type: "Int32", description: "Strand (+1 forward, -1 reverse)" },
+        ],
+      },
+      { name: "transcription_start_site", type: "Int64", description: "Transcription start site position" },
+      {
+        name: "canonical_transcript",
+        type: "Struct",
+        description: "Canonical transcript details",
+        children: [
+          { name: "id", type: "String", description: "Ensembl transcript ID" },
+          { name: "chromosome", type: "String", description: "Chromosome name" },
+          { name: "start", type: "Int64", description: "Start position" },
+          { name: "end", type: "Int64", description: "End position" },
+          { name: "strand", type: "String", description: "Strand" },
+        ],
+      },
+      { name: "canonical_exons", type: "List[String]", description: "Canonical exon coordinates" },
+      { name: "transcript_ids", type: "List[String]", description: "All associated Ensembl transcript IDs" },
+      { name: "alternative_genes", type: "List[String]", description: "Alternative gene entries at the same locus" },
+      { name: "function_descriptions", type: "List[String]", description: "Functional descriptions" },
+      {
+        name: "synonyms",
+        type: "List[Struct]",
+        description: "General gene synonyms",
+        children: [
+          { name: "label", type: "String", description: "Synonym label" },
+          { name: "source", type: "String", description: "Source database" },
+        ],
+      },
+      {
+        name: "symbol_synonyms",
+        type: "List[Struct]",
+        description: "Alternative gene symbols",
+        children: [
+          { name: "label", type: "String", description: "Symbol label" },
+          { name: "source", type: "String", description: "Source database" },
+        ],
+      },
+      {
+        name: "name_synonyms",
+        type: "List[Struct]",
+        description: "Alternative gene names",
+        children: [
+          { name: "label", type: "String", description: "Name label" },
+          { name: "source", type: "String", description: "Source database" },
+        ],
+      },
+      {
+        name: "obsolete_symbols",
+        type: "List[Struct]",
+        description: "Deprecated gene symbols",
+        children: [
+          { name: "label", type: "String", description: "Symbol label" },
+          { name: "source", type: "String", description: "Source database" },
+        ],
+      },
+      {
+        name: "obsolete_names",
+        type: "List[Struct]",
+        description: "Deprecated gene names",
+        children: [
+          { name: "label", type: "String", description: "Name label" },
+          { name: "source", type: "String", description: "Source database" },
+        ],
+      },
+      {
+        name: "subcellular_locations",
+        type: "List[Struct]",
+        description: "Subcellular localization annotations",
+        children: [
+          { name: "location", type: "String", description: "Location name" },
+          { name: "source", type: "String", description: "Source database" },
+          { name: "term_sl", type: "String", description: "Subcellular location ontology term" },
+          { name: "label_sl", type: "String", description: "Subcellular location label" },
+        ],
+      },
+      {
+        name: "target_class",
+        type: "List[Struct]",
+        description: "Drug target class classification",
+        children: [
+          { name: "id", type: "Int64", description: "Target class ID" },
+          { name: "label", type: "String", description: "Target class label" },
+          { name: "level", type: "String", description: "Hierarchy level" },
+        ],
+      },
+      {
+        name: "target_enabling_package",
+        type: "Struct",
+        description: "Target enabling package annotation",
+        children: [
+          { name: "target_from_source_id", type: "String", description: "Source target ID" },
+          { name: "description", type: "String", description: "Package description" },
+          { name: "therapeutic_area", type: "String", description: "Therapeutic area" },
+          { name: "url", type: "String", description: "Reference URL" },
+        ],
+      },
+      {
+        name: "tractability",
+        type: "List[Struct]",
+        description: "Drug tractability assessments per modality",
+        children: [
+          { name: "modality", type: "String", description: "Drug modality (e.g. sm, ab, pr)" },
+          { name: "id", type: "String", description: "Tractability category ID" },
+          { name: "value", type: "Boolean", description: "Tractability assessment value" },
+        ],
+      },
+      {
+        name: "constraint_scores",
+        type: "List[Struct]",
+        description: "Evolutionary constraint scores (e.g. pLI, LOEUF)",
+        children: [
+          { name: "constraint_type", type: "String", description: "Score type (e.g. lof, mis)" },
+          { name: "score", type: "Float32", description: "Constraint score" },
+          { name: "exp", type: "Float32", description: "Expected variant count" },
+          { name: "obs", type: "Int32", description: "Observed variant count" },
+          { name: "oe", type: "Float32", description: "Observed/expected ratio" },
+          { name: "oe_lower", type: "Float32", description: "O/E 90% CI lower bound" },
+          { name: "oe_upper", type: "Float32", description: "O/E 90% CI upper bound" },
+          { name: "upper_rank", type: "Int32", description: "Upper rank (gnomAD)" },
+          { name: "upper_bin", type: "Int32", description: "Upper bin (10-bin)" },
+          { name: "upper_bin6", type: "Int32", description: "Upper bin (6-bin)" },
+        ],
+      },
+      {
+        name: "hallmarks_attributes",
+        type: "List[Struct]",
+        description: "Cancer hallmark attributes (Cancer Gene Census)",
+        children: [
+          { name: "pmid", type: "Int64", description: "PubMed ID of supporting reference" },
+          { name: "description", type: "String", description: "Hallmark description" },
+          { name: "attribute_name", type: "String", description: "Attribute name" },
+        ],
+      },
+      {
+        name: "cancer_hallmarks",
+        type: "List[Struct]",
+        description: "Associated cancer hallmarks",
+        children: [
+          { name: "pmid", type: "Int64", description: "PubMed ID of supporting reference" },
+          { name: "description", type: "String", description: "Hallmark description" },
+          { name: "impact", type: "String", description: "Functional impact (promotes/suppresses)" },
+          { name: "label", type: "String", description: "Hallmark label" },
+        ],
+      },
+      {
+        name: "associated_proteins",
+        type: "List[Struct]",
+        description: "Associated UniProt protein entries",
+        children: [
+          { name: "id", type: "String", description: "UniProt accession" },
+          { name: "source", type: "String", description: "Source database" },
+        ],
+      },
+      {
+        name: "xrefs",
+        type: "List[Struct]",
+        description: "Cross-references to external databases",
+        children: [
+          { name: "id", type: "String", description: "External identifier" },
+          { name: "source", type: "String", description: "Database name" },
+        ],
+      },
+      { name: "chemical_probes", type: "List[Struct]", description: "Chemical probe annotations (Probes & Drugs)" },
+      {
+        name: "homologues",
+        type: "List[Struct]",
+        description: "Ortholog and paralog information",
+        children: [
+          { name: "species_id", type: "String", description: "NCBI taxonomy ID" },
+          { name: "species_name", type: "String", description: "Species name" },
+          { name: "homology_type", type: "String", description: "Homology type (ortholog/paralog)" },
+          { name: "target_gene_id", type: "String", description: "Target gene identifier" },
+          { name: "is_high_confidence", type: "String", description: "High-confidence flag" },
+          { name: "target_gene_symbol", type: "String", description: "Target gene symbol" },
+          { name: "query_percentage_identity", type: "Float64", description: "Query % sequence identity" },
+          { name: "target_percentage_identity", type: "Float64", description: "Target % sequence identity" },
+          { name: "priority", type: "Int32", description: "Priority rank" },
+        ],
+      },
+      { name: "safety_liabilities", type: "List[Struct]", description: "Safety liability annotations (OpenTargets)" },
+      nodeSourcesField,
+    ],
+  },
+];
+
+export const drugFields = [
+  { name: "id", type: "String", description: "Node identifier in CURIE format (e.g. DB00001)" },
+  { name: "label", type: "String", description: "Node type abbreviation (DRG)" },
+  {
+    name: "properties",
+    type: "Struct",
+    description: "Drug-specific properties",
+    children: [
+      { name: "name", type: "String", description: "Primary drug name" },
+      { name: "type", type: "String", description: "Drug type (e.g. small molecule, biologic)" },
+      { name: "description", type: "String", description: "Drug description" },
+      { name: "synonyms", type: "List[String]", description: "Drug synonyms" },
+      { name: "trade_names", type: "List[String]", description: "Commercial trade names" },
+      { name: "accession_numbers", type: "List[String]", description: "Database accession numbers" },
+      { name: "source_ids", type: "List[String]", description: "Source-specific identifiers" },
+      { name: "struct_id", type: "String", description: "DrugCentral structure ID" },
+      { name: "cd_id", type: "String", description: "DrugCentral compound ID" },
+      { name: "inchi_key", type: "String", description: "Hashed InChIKey identifier" },
+      { name: "inchi", type: "String", description: "IUPAC InChI string" },
+      { name: "canonical_smiles", type: "String", description: "Canonical SMILES string" },
+      { name: "cd_formula", type: "String", description: "Molecular formula" },
+      { name: "cd_mol_weight", type: "Float64", description: "Molecular weight (Da)" },
+      { name: "mol_file_base64", type: "String", description: "Base64-encoded MOL file" },
+      { name: "mol_image_base64", type: "String", description: "Base64-encoded 2D structure image" },
+      { name: "calculated_log_p", type: "Float64", description: "Calculated LogP (lipophilicity)" },
+      { name: "alogs", type: "Float64", description: "ALogS (aqueous solubility estimate)" },
+      { name: "tpsa", type: "Float64", description: "Topological polar surface area (Å²)" },
+      { name: "lipinski", type: "Float64", description: "Lipinski rule of five score" },
+      { name: "aromatic_carbons", type: "Int32", description: "Number of aromatic carbon atoms" },
+      { name: "sp3_count", type: "Int32", description: "Number of sp³ carbon atoms" },
+      { name: "sp2_count", type: "Int32", description: "Number of sp² carbon atoms" },
+      { name: "sp_count", type: "Int32", description: "Number of sp carbon atoms" },
+      { name: "halogen_count", type: "Int32", description: "Number of halogen atoms" },
+      { name: "hetero_sp2_count", type: "Int32", description: "Number of heteroaromatic sp² atoms" },
+      { name: "rotatable_bonds", type: "Int32", description: "Number of rotatable bonds" },
+      { name: "o_n", type: "Int32", description: "H-bond acceptors (O + N atom count)" },
+      { name: "oh_nh", type: "Int32", description: "H-bond donors (OH + NH group count)" },
+      { name: "rgb", type: "Float64", description: "RGB color value for structure rendering" },
+      { name: "enhanced_stereo", type: "Boolean", description: "Has enhanced stereochemistry annotation" },
+      { name: "is_approved", type: "Boolean", description: "Currently approved for clinical use" },
+      { name: "has_been_withdrawn", type: "Boolean", description: "Has been withdrawn from market" },
+      { name: "black_box_warning", type: "Boolean", description: "Carries an FDA black box warning" },
+      { name: "year_of_first_approval", type: "Int64", description: "Year of first regulatory approval" },
+      { name: "maximum_clinical_trial_phase", type: "Float64", description: "Highest clinical trial phase reached" },
+      { name: "status", type: "String", description: "Regulatory status" },
+      { name: "fda_labels", type: "Int32", description: "Number of associated FDA drug labels" },
+      { name: "number_of_formulations", type: "Int32", description: "Number of approved formulations" },
+      { name: "chemical_abstracts_service_number", type: "String", description: "CAS registry number" },
+      { name: "unique_ingredient_identifier", type: "String", description: "FDA UNII identifier" },
+      { name: "mrdef", type: "String", description: "MeSH pharmacological action definition" },
+      nodeSourcesField,
+    ],
+  },
+];
+
+export const diseaseFields = [
+  { name: "id", type: "String", description: "Node identifier in CURIE format (e.g. MONDO:0005148)" },
+  { name: "label", type: "String", description: "Node type abbreviation (DIS)" },
+  {
+    name: "properties",
+    type: "Struct",
+    description: "Disease-specific properties",
+    children: [
+      { name: "name", type: "String", description: "Disease name" },
+      { name: "description", type: "String", description: "Disease description" },
+      { name: "code", type: "String", description: "Primary ontology code" },
+      { name: "xrefs", type: "List[String]", description: "Cross-references to external databases (ICD-10, OMIM, etc.)" },
+      { name: "parents", type: "List[String]", description: "Parent disease terms in the ontology hierarchy" },
+      { name: "children", type: "List[String]", description: "Child disease terms in the ontology hierarchy" },
+      { name: "ancestors", type: "List[String]", description: "All ancestor terms (transitive parents)" },
+      { name: "descendants", type: "List[String]", description: "All descendant terms (transitive children)" },
+      { name: "exact_synonyms", type: "List[String]", description: "Exact synonym labels" },
+      { name: "related_synonyms", type: "List[String]", description: "Related synonym labels" },
+      { name: "narrow_synonyms", type: "List[String]", description: "Narrow synonym labels" },
+      { name: "broad_synonyms", type: "List[String]", description: "Broad synonym labels" },
+      { name: "obsolete_terms", type: "List[String]", description: "Deprecated ontology terms" },
+      { name: "obsolete_xrefs", type: "List[String]", description: "Deprecated cross-references" },
+      { name: "therapeutic_areas", type: "List[String]", description: "Associated therapeutic area codes" },
+      { name: "is_leaf", type: "Boolean", description: "True if this term has no children" },
+      { name: "concept_ids", type: "List[String]", description: "UMLS concept IDs" },
+      { name: "concept_names", type: "List[String]", description: "UMLS concept names" },
+      { name: "umls_cui", type: "String", description: "Primary UMLS Concept Unique Identifier" },
+      { name: "snomed_full_names", type: "List[String]", description: "SNOMED CT full concept names" },
+      { name: "snomed_concept_ids", type: "List[String]", description: "SNOMED CT concept IDs" },
+      { name: "cui_semantic_type", type: "String", description: "UMLS semantic type of the primary CUI" },
+      nodeSourcesField,
+    ],
+  },
+];
+
+export const phenotypeFields = [
+  { name: "id", type: "String", description: "Node identifier in CURIE format (e.g. HP:0001250)" },
+  { name: "label", type: "String", description: "Node type abbreviation (PHE)" },
+  {
+    name: "properties",
+    type: "Struct",
+    description: "Phenotype-specific properties",
+    children: [
+      { name: "name", type: "String", description: "Phenotype name" },
+      { name: "description", type: "String", description: "Phenotype description" },
+      { name: "code", type: "String", description: "Primary ontology code" },
+      { name: "type", type: "String", description: "Phenotype type classification" },
+      { name: "xrefs", type: "List[String]", description: "Cross-references to external databases" },
+      { name: "parents", type: "List[String]", description: "Parent phenotype terms in the ontology hierarchy" },
+      { name: "children", type: "List[String]", description: "Child phenotype terms in the ontology hierarchy" },
+      { name: "ancestors", type: "List[String]", description: "All ancestor terms (transitive parents)" },
+      { name: "descendants", type: "List[String]", description: "All descendant terms (transitive children)" },
+      { name: "exact_synonyms", type: "List[String]", description: "Exact synonym labels" },
+      { name: "related_synonyms", type: "List[String]", description: "Related synonym labels" },
+      { name: "narrow_synonyms", type: "List[String]", description: "Narrow synonym labels" },
+      { name: "broad_synonyms", type: "List[String]", description: "Broad synonym labels" },
+      { name: "obsolete_terms", type: "List[String]", description: "Deprecated ontology terms" },
+      { name: "obsolete_xrefs", type: "List[String]", description: "Deprecated cross-references" },
+      { name: "concept_ids", type: "List[String]", description: "UMLS concept IDs" },
+      { name: "concept_names", type: "List[String]", description: "UMLS concept names" },
+      { name: "umls_cui", type: "String", description: "Primary UMLS Concept Unique Identifier" },
+      { name: "snomed_full_names", type: "List[String]", description: "SNOMED CT full concept names" },
+      { name: "snomed_concept_ids", type: "List[String]", description: "SNOMED CT concept IDs" },
+      { name: "cui_semantic_type", type: "String", description: "UMLS semantic type of the primary CUI" },
+      ontologyField,
+      nodeSourcesField,
+    ],
+  },
+];
+
+export const ontologyNodeFields = (idExample, labelAbbrev) => [
+  { name: "id", type: "String", description: `Node identifier in CURIE format (e.g. ${idExample})` },
+  { name: "label", type: "String", description: `Node type abbreviation (${labelAbbrev})` },
+  {
+    name: "properties",
+    type: "Struct",
+    description: "Entity-specific properties",
+    children: [
+      { name: "name", type: "String", description: "Entity name" },
+      { name: "definition", type: "String", description: "Ontology definition" },
+      { name: "xrefs", type: "List[String]", description: "Cross-references to external databases" },
+      { name: "synonyms", type: "List[String]", description: "Synonym labels" },
+      ontologyField,
+      nodeSourcesField,
+    ],
+  },
+];
+
+export const anatomyFields = ontologyNodeFields("UBERON:0000948", "ANA");
+export const biologicalProcessFields = ontologyNodeFields("GO:0006915", "BPO");
+export const cellularComponentFields = ontologyNodeFields("GO:0005737", "CCO");
+export const molecularFunctionFields = ontologyNodeFields("GO:0003677", "MFN");
+
+export const pathwayFields = [
+  { name: "id", type: "String", description: "Node identifier in CURIE format (e.g. R-HSA-109582)" },
+  { name: "label", type: "String", description: "Node type abbreviation (PWY)" },
+  {
+    name: "properties",
+    type: "Struct",
+    description: "Pathway-specific properties",
+    children: [
+      { name: "name", type: "String", description: "Pathway name" },
+      { name: "species", type: "String", description: "Species name (e.g. Homo sapiens)" },
+      nodeSourcesField,
+    ],
+  },
+];
+
+export const exposureFields = [
+  { name: "id", type: "String", description: "Node identifier in CURIE format (e.g. CTD:D001564)" },
+  { name: "label", type: "String", description: "Node type abbreviation (EXP)" },
+  {
+    name: "properties",
+    type: "Struct",
+    description: "Exposure-specific properties",
+    children: [
+      { name: "name", type: "String", description: "Exposure name" },
+      { name: "source_categories", type: "List[String]", description: "Exposure source categories (e.g. chemical, biological)" },
+      { name: "source_details", type: "String", description: "Additional source details" },
+      nodeSourcesField,
+    ],
+  },
+];
+
 OptimusKG encodes **10 node types** spanning molecular, clinical, anatomical, and environmental entities.
 
 | Label | Type | Count |
@@ -20,7 +432,7 @@ OptimusKG encodes **10 node types** spanning molecular, clinical, anatomical, an
 
 All nodes share the same base schema:
 
-<BaseNodeSchema />
+<DocsSchemaTree fields={baseNodeFields} />
 
 <Callout>
   In the stratified per-type parquet files (`nodes/<type>.parquet`), `properties` is expanded into native typed columns as a Polars `Struct`.
@@ -30,61 +442,61 @@ All nodes share the same base schema:
 
 ## Gene
 
-<GeneSchema />
+<DocsSchemaTree fields={geneFields} />
 
 ---
 
 ## Drug
 
-<DrugSchema />
+<DocsSchemaTree fields={drugFields} />
 
 ---
 
 ## Disease
 
-<DiseaseSchema />
+<DocsSchemaTree fields={diseaseFields} />
 
 ---
 
 ## Phenotype
 
-<PhenotypeSchema />
+<DocsSchemaTree fields={phenotypeFields} />
 
 ---
 
 ## Anatomy
 
-<AnatomySchema />
+<DocsSchemaTree fields={anatomyFields} />
 
 ---
 
 ## Pathway
 
-<PathwaySchema />
+<DocsSchemaTree fields={pathwayFields} />
 
 ---
 
 ## Biological Process
 
-<BiologicalProcessSchema />
+<DocsSchemaTree fields={biologicalProcessFields} />
 
 ---
 
 ## Cellular Component
 
-<CellularComponentSchema />
+<DocsSchemaTree fields={cellularComponentFields} />
 
 ---
 
 ## Molecular Function
 
-<MolecularFunctionSchema />
+<DocsSchemaTree fields={molecularFunctionFields} />
 
 ---
 
 ## Exposure
 
-<ExposureSchema />
+<DocsSchemaTree fields={exposureFields} />
 
 <Cards>
   <Card title="OptimusKG Client" href="/docs/optimuskg-client" />

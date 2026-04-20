@@ -53,8 +53,8 @@ export function FeatureText({
   return (
     <div className="flex flex-col gap-3.75">
       <div className="flex flex-col">
-        <h3 className={`font-normal text-(--l-ink) ${HEADING_CLASSES}`}>{title}</h3>
-        <p className={`font-normal text-(--l-ink-muted) ${DESCRIPTION_CLASSES}`}>
+        <h3 className={`font-normal text-fd-foreground ${HEADING_CLASSES}`}>{title}</h3>
+        <p className={`font-normal text-fd-muted-foreground ${DESCRIPTION_CLASSES}`}>
           {description}
         </p>
       </div>

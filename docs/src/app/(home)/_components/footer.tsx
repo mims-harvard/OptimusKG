@@ -1,7 +1,7 @@
 import { ThemeSwitch } from "fumadocs-ui/layouts/shared/slots/theme-switch";
 import { FlaskConical } from "lucide-react";
 
-const smallText = "text-sm/5.25 tracking-[0.00875rem] text-(--l-ink-muted)";
+const smallText = "text-sm/5.25 tracking-[0.00875rem] text-fd-muted-foreground";
 
 export function Footer() {
   return (
