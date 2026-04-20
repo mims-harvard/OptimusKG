@@ -1,4 +1,8 @@
-import { DesktopCard, type Feature, MobileCard } from "./components/feature-card";
+import {
+  DesktopCard,
+  type Feature,
+  MobileCard,
+} from "./components/feature-card";
 import { Feature1Media } from "./components/feature-1-media";
 import { Feature3Media } from "./components/feature-3-media";
 import { Feature4Media } from "./components/feature-4-media";
@@ -6,7 +10,8 @@ import { Feature4Media } from "./components/feature-4-media";
 const FEATURES: Feature[] = [
   {
     title: "Rich strongly-typed properties",
-    description: "Every entity is enriched with structured properties for fine-grained analysis.",
+    description:
+      "Every entity is enriched with structured properties for fine-grained analysis.",
     ctaText: "Learn about the schema",
     Media: Feature1Media,
     href: "/docs/graph-schema/nodes",

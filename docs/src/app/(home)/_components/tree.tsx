@@ -93,17 +93,23 @@ function TreeItem<T = any>({
         data-slot="tree-item"
         style={mergedStyle}
         className={cn(
-          "z-10 ps-(--tree-padding) outline-hidden select-none not-last:pb-0.5 focus:z-20 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-          className,
+          "z-10 block w-full cursor-pointer text-left outline-hidden select-none focus:z-20 data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+          className
         )}
         data-focus={
-          typeof item.isFocused === "function" ? item.isFocused() || false : undefined
+          typeof item.isFocused === "function"
+            ? item.isFocused() || false
+            : undefined
         }
         data-folder={
-          typeof item.isFolder === "function" ? item.isFolder() || false : undefined
+          typeof item.isFolder === "function"
+            ? item.isFolder() || false
+            : undefined
         }
         data-selected={
-          typeof item.isSelected === "function" ? item.isSelected() || false : undefined
+          typeof item.isSelected === "function"
+            ? item.isSelected() || false
+            : undefined
         }
         data-drag-target={
           typeof item.isDragTarget === "function"
@@ -148,13 +154,23 @@ function TreeItemLabel<T = any>({
     <span
       data-slot="tree-item-label"
       className={cn(
-        "in-focus-visible:ring-ring/50 bg-background hover:bg-accent in-data-[selected=true]:bg-accent in-data-[selected=true]:text-accent-foreground in-data-[drag-target=true]:bg-accent flex items-center gap-1 rounded-sm px-2 py-1.5 text-sm transition-colors not-in-data-[folder=true]:ps-7 in-focus-visible:ring-[3px] in-data-[search-match=true]:bg-blue-50! [&_svg]:pointer-events-none [&_svg]:shrink-0",
-        className,
+        "flex w-full items-center gap-1 ps-[calc(var(--tree-padding)+0.375rem)] py-[3px] pe-2 text-[13px] leading-[18px] transition-colors",
+        "text-fd-foreground/85",
+        "hover:bg-[color-mix(in_srgb,var(--color-fd-foreground)_6%,transparent)]",
+        "in-data-[selected=true]:bg-[color-mix(in_srgb,var(--color-fd-foreground)_10%,transparent)]",
+        "in-data-[selected=true]:text-fd-foreground",
+        "in-focus-visible:ring-fd-ring/50 in-focus-visible:ring-inset in-focus-visible:ring-1",
+        "not-in-data-[folder=true]:ps-[calc(var(--tree-padding)+0.375rem+1rem)]",
+        "[&_svg]:pointer-events-none [&_svg]:shrink-0",
+        className
       )}
       {...props}
     >
       {item.isFolder() && (
-        <ChevronDownIcon className="text-muted-foreground size-4 in-aria-[expanded=false]:-rotate-90" />
+        <ChevronDownIcon
+          className="size-3.5 text-fd-muted-foreground transition-transform duration-150 in-aria-[expanded=false]:-rotate-90"
+          strokeWidth={2}
+        />
       )}
       {children ||
         (typeof item.getItemName === "function" ? item.getItemName() : null)}
@@ -170,7 +186,7 @@ function TreeDragLine({
 
   if (!tree || typeof tree.getDragLineStyle !== "function") {
     console.warn(
-      "TreeDragLine: No tree provided via context or tree does not have getDragLineStyle method",
+      "TreeDragLine: No tree provided via context or tree does not have getDragLineStyle method"
     );
     return null;
   }
@@ -181,7 +197,7 @@ function TreeDragLine({
       style={dragLine}
       className={cn(
         "bg-primary before:bg-background before:border-primary absolute z-30 -mt-px h-0.5 w-[unset] before:absolute before:-top-[3px] before:left-0 before:size-2 before:rounded-full before:border-2",
-        className,
+        className
       )}
       {...props}
     />

@@ -1,12 +1,22 @@
 "use client";
 
-import { type CSSProperties, type ReactNode, useState } from "react";
+import {
+  type CSSProperties,
+  forwardRef,
+  type ReactNode,
+  useImperativeHandle,
+  useState,
+} from "react";
 
 import { X } from "lucide-react";
 
 import { cn } from "@/lib/cn";
 
 export type EditorTab = { name: string; content: ReactNode };
+
+export type TabbedEditorHandle = {
+  openTab: (tab: EditorTab) => void;
+};
 
 function Tab({
   name,
@@ -59,18 +69,35 @@ function Tab({
   );
 }
 
-export function TabbedEditor({
-  tabs: initialTabs,
-  contentBg,
-  onLastTabClose,
-}: {
-  tabs: EditorTab[];
-  contentBg?: string;
-  onLastTabClose?: () => void;
-}) {
+export const TabbedEditor = forwardRef<
+  TabbedEditorHandle,
+  {
+    tabs: EditorTab[];
+    contentBg?: string;
+    onLastTabClose?: () => void;
+  }
+>(function TabbedEditor({ tabs: initialTabs, contentBg, onLastTabClose }, ref) {
   const [tabs, setTabs] = useState(initialTabs);
   const [activeIndex, setActiveIndex] = useState(0);
   const active = tabs[activeIndex];
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      openTab(tab) {
+        setTabs((prev) => {
+          const existing = prev.findIndex((t) => t.name === tab.name);
+          if (existing >= 0) {
+            setActiveIndex(existing);
+            return prev;
+          }
+          setActiveIndex(prev.length);
+          return [...prev, tab];
+        });
+      },
+    }),
+    []
+  );
 
   function closeTab(index: number) {
     if (tabs.length === 1) {
@@ -115,4 +142,4 @@ export function TabbedEditor({
       </div>
     </div>
   );
-}
+});
