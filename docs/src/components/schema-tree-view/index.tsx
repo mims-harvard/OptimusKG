@@ -9,18 +9,29 @@ import {
   TreeView,
 } from "./components/tree";
 
-export type SchemaField = {
+type SchemaFieldBase = {
   name: string;
   type: string;
   description?: string;
-  children?: SchemaField[];
 };
+
+export type SchemaLeafField = SchemaFieldBase;
+
+export type SchemaStructField = SchemaFieldBase & {
+  children: SchemaField[];
+};
+
+export type SchemaField = SchemaLeafField | SchemaStructField;
+
+function isStruct(field: SchemaField): field is SchemaStructField {
+  return "children" in field && field.children.length > 0;
+}
 
 function collectStructIds(fields: SchemaField[], prefix = ""): string[] {
   const ids: string[] = [];
   fields.forEach((field, i) => {
     const id = `${prefix}${i}`;
-    if (field.children?.length) {
+    if (isStruct(field)) {
       ids.push(id);
       ids.push(...collectStructIds(field.children, `${id}.`));
     }
@@ -43,7 +54,7 @@ function SchemaRow({
   level: number;
   idPrefix: string;
 }) {
-  const hasChildren = Boolean(field.children?.length);
+  const struct = isStruct(field);
   const isLast = index === total - 1;
   const nodeId = `${idPrefix}${index}`;
 
@@ -54,8 +65,8 @@ function SchemaRow({
       nodeId={nodeId}
       parentPath={parentPath}
     >
-      <TreeNodeTrigger hasChildren={hasChildren}>
-        <TreeExpander hasChildren={hasChildren} />
+      <TreeNodeTrigger hasChildren={struct}>
+        <TreeExpander hasChildren={struct} />
         <div className="flex flex-1 items-center gap-2 whitespace-nowrap">
           <span className="shrink-0 font-mono text-fd-foreground text-sm">
             {field.name}
@@ -70,9 +81,9 @@ function SchemaRow({
           )}
         </div>
       </TreeNodeTrigger>
-      {hasChildren && (
+      {struct && (
         <TreeNodeContent hasChildren>
-          {field.children?.map((child, i, arr) => (
+          {field.children.map((child, i, arr) => (
             <SchemaRow
               field={child}
               idPrefix={`${nodeId}.`}
