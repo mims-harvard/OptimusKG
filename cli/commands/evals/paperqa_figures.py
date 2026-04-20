@@ -52,6 +52,13 @@ _PALETTE = [
 _FALSE_GRAY = "#D0D0D0"
 _ALL_RATINGS = [1, 2, 3, 4, 5]
 _RATING_LABELS = ["No evidence", "Weak", "Moderate", "Strong", "Very strong"]
+
+# Per-panel SVG themes. Data colors (palette, gray for false edges) stay the same;
+# only axes/text/spines flip between light and dark.
+_THEMES: dict[str, dict[str, str]] = {
+    "light": {"ink": "#26251e", "muted": "#57534e"},
+    "dark": {"ink": "#ebebeb", "muted": "#a8a29e"},
+}
 _RATING_NO_EVIDENCE = _ALL_RATINGS[0]
 _RATING_WEAK = _ALL_RATINGS[1]
 _RATING_MODERATE = _ALL_RATINGS[2]
@@ -348,6 +355,146 @@ def _plot_grouped_barplot(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:
     logger.info("Saved grouped bar plot to %s", out_path)
 
 
+def _draw_panel(
+    ax: plt.Axes, df: pl.DataFrame, node_type: str, theme: dict[str, str]
+) -> None:
+    """Draw a single-node-type validation panel on the given axis.
+
+    Same semantics as one panel of ``_plot_grouped_barplot`` but with text/axes
+    coloured via ``theme`` so the same chart can be re-rendered in light or
+    dark variants.
+    """
+    ink = theme["ink"]
+    muted = theme["muted"]
+
+    bar_w = 0.38
+    true_x = [r - bar_w / 2 for r in _ALL_RATINGS]
+    false_x = [r + bar_w / 2 for r in _ALL_RATINGS]
+
+    panel_df = df.filter(pl.col("seed_node_type") == node_type)
+    panel_counts = (
+        panel_df.group_by("is_true_edge", "rating", "relation_type")
+        .len()
+        .rename({"len": "count"})
+    )
+
+    relation_types = _by_prevalence(
+        panel_df.filter(pl.col("is_true_edge")), "relation_type"
+    )
+    rel_color_map = {
+        rt: _PALETTE[i % len(_PALETTE)] for i, rt in enumerate(relation_types)
+    }
+
+    def _get(is_true: bool, rating: int, rel_type: str | None = None) -> int:
+        q = panel_counts.filter(
+            (pl.col("is_true_edge") == is_true) & (pl.col("rating") == rating)
+        )
+        if rel_type is not None:
+            q = q.filter(pl.col("relation_type") == rel_type)
+        return int(q["count"].sum()) if q.height > 0 else 0
+
+    total_true = max(panel_df.filter(pl.col("is_true_edge")).height, 1)
+    total_false = max(panel_df.filter(~pl.col("is_true_edge")).height, 1)
+
+    true_totals = [_get(True, r) for r in _ALL_RATINGS]
+    false_totals = [_get(False, r) for r in _ALL_RATINGS]
+
+    legend_handles: list[mpatches.Patch] = []
+    legend_labels: list[str] = []
+
+    true_bottoms = [0.0] * len(_ALL_RATINGS)
+    for rel_type in relation_types:
+        counts_rt = [_get(True, r, rel_type) for r in _ALL_RATINGS]
+        heights = [c / total_true for c in counts_rt]
+        if sum(heights) == 0:
+            continue
+        color = rel_color_map[rel_type]
+        ax.bar(
+            true_x,
+            heights,
+            bottom=true_bottoms,
+            color=color,
+            edgecolor="none",
+            linewidth=0,
+            width=bar_w,
+        )
+        legend_handles.append(mpatches.Patch(facecolor=color, label=rel_type))
+        legend_labels.append(rel_type)
+        true_bottoms = [b + h for b, h in zip(true_bottoms, heights)]
+
+    for x, top, n in zip(true_x, true_bottoms, true_totals):
+        if n > 0:
+            ax.text(x, top + 0.005, str(n), ha="center", va="bottom", fontsize=9, color=ink)
+
+    false_heights = [_get(False, r) / total_false for r in _ALL_RATINGS]
+    if sum(false_heights) > 0:
+        ax.bar(
+            false_x,
+            false_heights,
+            color=_FALSE_GRAY,
+            edgecolor="none",
+            linewidth=0,
+            width=bar_w,
+        )
+        legend_handles.append(
+            mpatches.Patch(facecolor=_FALSE_GRAY, label="False edges")
+        )
+        legend_labels.append("False edges")
+
+    for x, top, n in zip(false_x, false_heights, false_totals):
+        if n > 0:
+            ax.text(x, top + 0.005, str(n), ha="center", va="bottom", fontsize=9, color=ink)
+
+    node_type_label = NODE_TYPE_LABELS.get(node_type, node_type)
+    ax.set_title(node_type_label, fontsize=13, color=ink, pad=10)
+    ax.set_xticks(_ALL_RATINGS)
+    ax.set_xticklabels(_RATING_LABELS, fontsize=9, color=ink)
+    ax.set_ylabel("Density", fontsize=10, color=ink)
+    ax.tick_params(axis="both", colors=ink, labelsize=9)
+    for side in ("left", "bottom"):
+        ax.spines[side].set_edgecolor(ink)
+        ax.spines[side].set_linewidth(0.8)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.yaxis.set_major_locator(mticker.MultipleLocator(0.2))
+
+    legend = ax.legend(
+        legend_handles,
+        legend_labels,
+        fontsize=8,
+        ncol=min(len(legend_labels), 4),
+        loc="upper center",
+        bbox_to_anchor=(0.5, -0.14),
+        frameon=False,
+    )
+    for text in legend.get_texts():
+        text.set_color(muted)
+
+
+def _plot_per_node_panels(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:
+    """Emit one transparent SVG per (seed_node_type, theme) combination.
+
+    Output filenames: ``<run_id>_<node_type>_<theme>.svg`` — e.g.
+    ``20260328_…_mfn_light.svg`` / ``_mfn_dark.svg``.
+    """
+    if "relation_type" not in df.columns:
+        raise ValueError("Input CSV is missing required column: relation_type")
+
+    node_types = _node_types_by_pct_delta(df)
+
+    for node_type in node_types:
+        for theme_name, theme in _THEMES.items():
+            fig, ax = plt.subplots(figsize=(6, 4))
+            fig.patch.set_alpha(0)
+            ax.patch.set_alpha(0)
+            _draw_panel(ax, df, node_type, theme)
+            plt.tight_layout()
+            out_path = out_dir / f"{run_id}_{node_type.lower()}_{theme_name}.svg"
+            plt.savefig(out_path, transparent=True, bbox_inches="tight")
+            plt.close(fig)
+            logger.info("Saved %s", out_path)
+
+
 def _print_stats(df: pl.DataFrame) -> None:  # noqa: PLR0915
     total = df.height
     sep = "─" * 52
@@ -504,3 +651,4 @@ def run(
     _print_stats(df)
     _plot_barplot(df, out_dir, run_id)
     _plot_grouped_barplot(df, out_dir, run_id)
+    _plot_per_node_panels(df, out_dir, run_id)

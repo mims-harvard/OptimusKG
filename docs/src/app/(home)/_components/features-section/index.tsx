@@ -62,6 +62,32 @@ function ImageTabContent({ src, alt }: { src: string; alt: string }) {
   );
 }
 
+function ThemedSvgTabContent({
+  lightSrc,
+  darkSrc,
+  alt,
+}: {
+  lightSrc: string;
+  darkSrc: string;
+  alt: string;
+}) {
+  return (
+    <div className="relative flex h-full w-full items-center justify-center p-5">
+      <img
+        alt={alt}
+        className="h-full w-full object-contain p-5 dark:hidden"
+        src={lightSrc}
+      />
+      <img
+        alt={alt}
+        aria-hidden="true"
+        className="hidden h-full w-full object-contain p-5 dark:block"
+        src={darkSrc}
+      />
+    </div>
+  );
+}
+
 function SchemaTabContent({ children }: { children: React.ReactNode }) {
   return <div className="h-full w-full overflow-auto p-2">{children}</div>;
 }
@@ -150,19 +176,27 @@ function Feature3Media() {
         }}
         title="PaperQA3 Analysis"
       >
-        {/* TODO: Remove `contentBg` once we have light/dark versions of the figures. */}
         <WindowTabbedEditor
-          contentBg="#ffffff"
           tabs={[
             {
               name: "Molecular Function Validation",
               content: (
-                <ImageTabContent alt="Molecular Function" src="/features/molecular-function.webp" />
+                <ThemedSvgTabContent
+                  alt="Molecular Function validation bar chart"
+                  darkSrc="/features/molecular-function-dark.svg"
+                  lightSrc="/features/molecular-function-light.svg"
+                />
               ),
             },
             {
               name: "Phenotype Validation",
-              content: <ImageTabContent alt="Phenotype" src="/features/phenotype.webp" />,
+              content: (
+                <ThemedSvgTabContent
+                  alt="Phenotype validation bar chart"
+                  darkSrc="/features/phenotype-dark.svg"
+                  lightSrc="/features/phenotype-light.svg"
+                />
+              ),
             },
           ]}
         />
