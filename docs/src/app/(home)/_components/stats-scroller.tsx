@@ -7,9 +7,7 @@ const STATS: ReadonlyArray<{ value: string; label: string }> = [
   { value: "190,531", label: "nodes" },
   { value: "26", label: "relation types" },
   { value: "21,813,816", label: "edges" },
-  { value: "150", label: "property keys" },
-  { value: "67,249,863", label: "property instances" },
-  { value: "110,276,843", label: "property values" },
+  { value: "110,276,843", label: "properties" },
 ];
 
 const COPIES = ["primary", "mirror"] as const;
@@ -40,7 +38,7 @@ export function StatsScroller() {
   return (
     <section
       aria-label="OptimusKG statistics"
-      className="l-section l-section--flush-bottom bg-(--l-bg)"
+      className="l-section l-section--flush-bottom bg-fd-background"
       style={style}
     >
       <style href="stats-scroller" precedence="medium">
@@ -59,10 +57,10 @@ export function StatsScroller() {
                   className="flex items-baseline gap-2 whitespace-nowrap"
                   key={label}
                 >
-                  <span className="font-mono text-(--l-ink) text-lg tabular-nums">
+                  <span className="font-mono text-fd-foreground text-lg tabular-nums">
                     {value}
                   </span>
-                  <span className="text-(--l-ink-muted) text-sm">{label}</span>
+                  <span className="text-fd-muted-foreground text-sm">{label}</span>
                 </li>
               ))}
             </ul>

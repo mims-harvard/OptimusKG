@@ -3,6 +3,164 @@ title: Edges
 description: Edge types and their schema in OptimusKG.
 ---
 
+export const sourcesField = {
+  name: "sources",
+  type: "Struct",
+  description: "Provenance of this edge",
+  children: [
+    { name: "direct", type: "List[String]", description: "Datasets that directly contributed this relationship" },
+    { name: "indirect", type: "List[String]", description: "Datasets that referenced this relationship" },
+  ],
+};
+
+export const baseEdgeFields = (label, undirected, propertyChildren) => [
+  { name: "from", type: "String", description: "Source node ID (CURIE format)" },
+  { name: "to", type: "String", description: "Target node ID (CURIE format)" },
+  { name: "label", type: "String", description: `Edge type label (${label})` },
+  { name: "relation", type: "String", description: "Relation type" },
+  { name: "undirected", type: "Boolean", description: undirected ? "True" : "False" },
+  { name: "properties", type: "Struct", description: "Edge-specific properties", children: propertyChildren },
+];
+
+export const baseEdgeSchemaFields = [
+  { name: "from", type: "String", description: "Source node identifier in CURIE format" },
+  { name: "to", type: "String", description: "Target node identifier in CURIE format" },
+  { name: "label", type: "String", description: "Edge type label (e.g. DIS-GEN)" },
+  { name: "relation", type: "String", description: "Relation type (e.g. ASSOCIATED_WITH)" },
+  { name: "undirected", type: "Boolean", description: "True if the edge has no intrinsic directionality" },
+  { name: "properties", type: "String", description: "JSON-encoded edge-specific properties. Expanded to a native Struct in per-type parquet files." },
+];
+
+export const onlySources = [sourcesField];
+
+export const anaAnaFields = baseEdgeFields("ANA-ANA", false, onlySources);
+export const bpoBpoFields = baseEdgeFields("BPO-BPO", false, onlySources);
+export const ccoCcoFields = baseEdgeFields("CCO-CCO", false, onlySources);
+export const disDisFields = baseEdgeFields("DIS-DIS", false, onlySources);
+export const genGenFields = baseEdgeFields("GEN-GEN", false, onlySources);
+export const mfnMfnFields = baseEdgeFields("MFN-MFN", false, onlySources);
+export const pwyGenFields = baseEdgeFields("PWY-GEN", true, onlySources);
+export const pwyPwyFields = baseEdgeFields("PWY-PWY", false, onlySources);
+export const phePheFields = baseEdgeFields("PHE-PHE", false, onlySources);
+
+export const assocProperties = [
+  { name: "evidence_score", type: "Float64", description: "Aggregated association evidence score" },
+  { name: "evidence_count", type: "Int64", description: "Number of evidence items supporting the association" },
+  { name: "evidence_index", type: "Float64", description: "Combined evidence index (Open Targets)" },
+  { name: "disease_specificity_index", type: "Float64", description: "DSI, specificity of the gene to this disease" },
+  { name: "disease_pleiotropy_index", type: "Float64", description: "DPI, number of disease classes the gene is associated with" },
+  { name: "disgenet_score", type: "Float64", description: "DisGeNET gene–disease association score" },
+  { name: "year_initial", type: "String", description: "Year of the earliest supporting publication" },
+  { name: "year_final", type: "String", description: "Year of the most recent supporting publication" },
+  { name: "number_of_pmids", type: "Int16", description: "Number of supporting PubMed publications" },
+  { name: "number_of_snps", type: "Int16", description: "Number of supporting SNPs (GWAS evidence)" },
+  sourcesField,
+];
+
+export const disGenFields = baseEdgeFields("DIS-GEN", true, assocProperties);
+export const pheGenFields = baseEdgeFields("PHE-GEN", false, assocProperties);
+
+export const drugDiseaseProperties = [
+  { name: "highest_clinical_trial_phase", type: "Float64", description: "Highest clinical trial phase for this indication" },
+  { name: "structure_id", type: "String", description: "DrugCentral structure ID" },
+  { name: "drug_disease_id", type: "String", description: "DrugCentral drug–disease identifier" },
+  { name: "reference_ids", type: "List[String]", description: "Supporting reference identifiers" },
+  sourcesField,
+];
+
+export const drgDisFields = baseEdgeFields("DRG-DIS", true, drugDiseaseProperties);
+
+export const drgDrgFields = baseEdgeFields("DRG-DRG", false, [
+  { name: "interaction_description", type: "String", description: "Description of the drug–drug interaction" },
+  sourcesField,
+]);
+
+export const drgGenFields = baseEdgeFields("DRG-GEN", false, [
+  { name: "mechanisms_of_action", type: "List[String]", description: "Mechanism of action descriptions" },
+  { name: "source_ids", type: "List[String]", description: "Source-specific interaction identifiers" },
+  { name: "source_urls", type: "List[String]", description: "URLs to source evidence records" },
+  sourcesField,
+]);
+
+export const drgPheFields = baseEdgeFields("DRG-PHE", true, [
+  { name: "highest_clinical_trial_phase", type: "Float64", description: "Highest clinical trial phase" },
+  { name: "structure_id", type: "String", description: "DrugCentral structure ID" },
+  { name: "drug_disease_id", type: "String", description: "DrugCentral drug–disease identifier" },
+  { name: "reference_ids", type: "List[String]", description: "Supporting reference identifiers" },
+  sourcesField,
+]);
+
+export const goAnnotationProperties = [
+  { name: "evidence", type: "List[String]", description: "GO evidence codes (e.g. IDA, IMP, TAS)" },
+  { name: "gene_product", type: "List[String]", description: "Gene product IDs annotated to this term" },
+  { name: "eco_ids", type: "List[String]", description: "Evidence & Conclusion Ontology (ECO) IDs" },
+  sourcesField,
+];
+
+export const bpoGenFields = baseEdgeFields("BPO-GEN", true, goAnnotationProperties);
+export const ccoGenFields = baseEdgeFields("CCO-GEN", true, goAnnotationProperties);
+export const mfnGenFields = baseEdgeFields("MFN-GEN", true, goAnnotationProperties);
+
+export const anaGenFields = baseEdgeFields("ANA-GEN", true, [
+  { name: "expression_rank", type: "Int32", description: "Bgee expression rank score (lower = higher expression)" },
+  { name: "call_quality", type: "String", description: "Expression call quality (gold/silver)" },
+  sourcesField,
+]);
+
+export const disPheFields = baseEdgeFields("DIS-PHE", true, [
+  { name: "aspect", type: "List[String]", description: "HPO annotation aspect (P=phenotypic, I=inheritance, etc.)" },
+  { name: "evidence_type", type: "List[String]", description: "Evidence type codes (e.g. IEA, PCS, TAS)" },
+  { name: "frequency", type: "List[String]", description: "Phenotype frequency annotations" },
+  { name: "onset", type: "List[String]", description: "Age of onset annotations" },
+  { name: "modifiers", type: "List[String]", description: "Clinical modifier annotations" },
+  { name: "sexes", type: "List[String]", description: "Sex-specific annotations" },
+  { name: "qualifier_not", type: "Boolean", description: "True if phenotype is explicitly absent" },
+  { name: "bio_curation", type: "List[String]", description: "Biocuration provenance entries" },
+  { name: "references", type: "List[String]", description: "Supporting publication or database references" },
+  sourcesField,
+]);
+
+export const exposureProperties = [
+  { name: "evidence_count", type: "UInt32", description: "Number of evidence entries" },
+  { name: "number_of_receptors", type: "Int64", description: "Number of receptor/study participants" },
+  { name: "receptors", type: "List[String]", description: "Receptor identifiers (e.g. cell line, organism)" },
+  { name: "receptor_notes", type: "List[String]", description: "Free-text notes on receptors" },
+  { name: "smoking_statuses", type: "List[String]", description: "Smoking status of study subjects" },
+  { name: "sexes", type: "List[String]", description: "Sex of study subjects" },
+  { name: "races", type: "List[String]", description: "Race/ethnicity of study subjects" },
+  { name: "methods", type: "List[String]", description: "Measurement methods used" },
+  { name: "mediums", type: "List[String]", description: "Biological mediums measured (e.g. blood, urine)" },
+  { name: "detection_limit", type: "List[String]", description: "Lower limit of detection values" },
+  { name: "detection_limit_uom", type: "List[String]", description: "Units of detection limit values" },
+  { name: "detection_frequency", type: "List[String]", description: "Detection frequency values" },
+  { name: "age_entries", type: "UInt32", description: "Number of age-stratified entries" },
+  { name: "age_range_values", type: "List[String]", description: "Age range values for subjects" },
+  { name: "age_mean_values", type: "List[String]", description: "Mean age values" },
+  { name: "age_median_values", type: "List[String]", description: "Median age values" },
+  { name: "age_point_values", type: "List[String]", description: "Point age values" },
+  { name: "age_open_range_values", type: "List[String]", description: "Open-ended age range values" },
+  { name: "study_countries", type: "List[String]", description: "Countries where studies were conducted" },
+  { name: "states_or_provinces", type: "List[String]", description: "States or provinces of study" },
+  { name: "city_town_region_areas", type: "List[String]", description: "City/town/region of study" },
+  { name: "outcome_relationships", type: "List[String]", description: "Observed outcome relationships" },
+  { name: "exposure_event_notes", type: "List[String]", description: "Notes on the exposure event" },
+  { name: "exposure_outcome_notes", type: "List[String]", description: "Notes on the exposure outcome" },
+  { name: "references", type: "List[String]", description: "Supporting literature references" },
+  { name: "associated_study_titles", type: "List[String]", description: "Titles of associated studies" },
+  { name: "enrollment_start_years", type: "List[String]", description: "Study enrollment start years" },
+  { name: "enrollment_end_years", type: "List[String]", description: "Study enrollment end years" },
+  { name: "study_factors", type: "List[String]", description: "Study design factors" },
+  { name: "assay_notes", type: "List[String]", description: "Notes on the assay used" },
+  sourcesField,
+];
+
+export const expBpoFields = baseEdgeFields("EXP-BPO", true, exposureProperties);
+export const expCcoFields = baseEdgeFields("EXP-CCO", true, exposureProperties);
+export const expDisFields = baseEdgeFields("EXP-DIS", false, exposureProperties);
+export const expExpFields = baseEdgeFields("EXP-EXP", false, exposureProperties);
+export const expGenFields = baseEdgeFields("EXP-GEN", false, exposureProperties);
+export const expMfnFields = baseEdgeFields("EXP-MFN", true, exposureProperties);
+
 OptimusKG encodes **26 edge types** connecting the node types across molecular, clinical, anatomical, and environmental domains.
 
 | Label | Relation(s) | Count |
@@ -36,7 +194,7 @@ OptimusKG encodes **26 edge types** connecting the node types across molecular, 
 
 All edges share the same base schema in the unified `edges.parquet` and `largest_connected_component_edges.parquet` tables:
 
-<BaseEdgeSchema />
+<DocsSchemaTree fields={baseEdgeSchemaFields} />
 
 <Callout>
   In the stratified per-type parquet files (`edges/<label>.parquet`), `properties` is expanded into native typed columns as a Polars `Struct`.
@@ -46,157 +204,157 @@ All edges share the same base schema in the unified `edges.parquet` and `largest
 
 ## Anatomy-Anatomy
 
-<AnaAnaEdge />
+<DocsSchemaTree fields={anaAnaFields} />
 
 ---
 
 ## Anatomy-Gene
 
-<AnaGenEdge />
+<DocsSchemaTree fields={anaGenFields} />
 
 ---
 
 ## Biological Process-Biological Process
 
-<BpoBpoEdge />
+<DocsSchemaTree fields={bpoBpoFields} />
 
 ---
 
 ## Biological Process-Gene
 
-<BpoGenEdge />
+<DocsSchemaTree fields={bpoGenFields} />
 
 ---
 
 ## Cellular Component-Cellular Component
 
-<CcoCcoEdge />
+<DocsSchemaTree fields={ccoCcoFields} />
 
 ---
 
 ## Cellular Component-Gene
 
-<CcoGenEdge />
+<DocsSchemaTree fields={ccoGenFields} />
 
 ---
 
 ## Disease-Disease
 
-<DisDieEdge />
+<DocsSchemaTree fields={disDisFields} />
 
 ---
 
 ## Disease-Gene
 
-<DisGenEdge />
+<DocsSchemaTree fields={disGenFields} />
 
 ---
 
 ## Disease-Phenotype
 
-<DisPheEdge />
+<DocsSchemaTree fields={disPheFields} />
 
 ---
 
 ## Drug-Disease
 
-<DrgDisEdge />
+<DocsSchemaTree fields={drgDisFields} />
 
 ---
 
 ## Drug-Drug
 
-<DrgDrgEdge />
+<DocsSchemaTree fields={drgDrgFields} />
 
 ---
 
 ## Drug-Gene
 
-<DrgGenEdge />
+<DocsSchemaTree fields={drgGenFields} />
 
 ---
 
 ## Drug-Phenotype
 
-<DrgPheEdge />
+<DocsSchemaTree fields={drgPheFields} />
 
 ---
 
 ## Exposure-Biological Process
 
-<ExpBpoEdge />
+<DocsSchemaTree fields={expBpoFields} />
 
 ---
 
 ## Exposure-Cellular Component
 
-<ExpCcoEdge />
+<DocsSchemaTree fields={expCcoFields} />
 
 ---
 
 ## Exposure-Disease
 
-<ExpDisEdge />
+<DocsSchemaTree fields={expDisFields} />
 
 ---
 
 ## Exposure-Exposure
 
-<ExpExpEdge />
+<DocsSchemaTree fields={expExpFields} />
 
 ---
 
 ## Exposure-Gene
 
-<ExpGenEdge />
+<DocsSchemaTree fields={expGenFields} />
 
 ---
 
 ## Exposure-Molecular Function
 
-<ExpMfnEdge />
+<DocsSchemaTree fields={expMfnFields} />
 
 ---
 
 ## Gene-Gene
 
-<GenGenEdge />
+<DocsSchemaTree fields={genGenFields} />
 
 ---
 
 ## Molecular Function-Gene
 
-<MfnGenEdge />
+<DocsSchemaTree fields={mfnGenFields} />
 
 ---
 
 ## Molecular Function-Molecular Function
 
-<MfnMfnEdge />
+<DocsSchemaTree fields={mfnMfnFields} />
 
 ---
 
 ## Pathway-Gene
 
-<PwyGenEdge />
+<DocsSchemaTree fields={pwyGenFields} />
 
 ---
 
 ## Pathway-Pathway
 
-<PwyPwyEdge />
+<DocsSchemaTree fields={pwyPwyFields} />
 
 ---
 
 ## Phenotype-Gene
 
-<PheGenEdge />
+<DocsSchemaTree fields={pheGenFields} />
 
 ---
 
 ## Phenotype-Phenotype
 
-<PhePheEdge />
+<DocsSchemaTree fields={phePheFields} />
 
 <Cards>
   <Card title="OptimusKG Client" href="/docs/optimuskg-client" />

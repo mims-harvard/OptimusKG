@@ -7,19 +7,19 @@ const MEDIA_BG =
 
 export function HeroSection() {
   return (
-    <section className="l-section l-section--first l-section--flush-bottom bg-(--l-bg)">
+    <section className="l-section l-section--first l-section--flush-bottom bg-fd-background">
       <div className="l-container">
         <div className="flex flex-col gap-13 min-[900px]:gap-14">
           <div className="flex flex-col gap-5.25 min-[900px]:gap-5.5">
-            <h1 className="text-balance font-normal text-(--l-ink) text-2xl leading-8">
+            <h1 className="text-balance font-normal text-fd-foreground text-2xl leading-8">
               <span className="block">Unifying biomedical knowledge</span>
               <span className="block">in a modern multimodal graph</span>
             </h1>
 
             <div className="flex flex-wrap items-center gap-2.5">
-              <DownloadButton className="rounded-none bg-(--l-ink) px-5.75 py-3.5 font-normal text-(--l-bg) text-sm leading-4" />
+              <DownloadButton className="rounded-none bg-fd-foreground px-5.75 py-3.5 font-normal text-fd-background text-sm leading-4" />
               <a
-                className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-none border border-(--l-border) px-5.75 py-3.5 font-normal text-(--l-ink) text-sm leading-4 transition-opacity hover:opacity-70"
+                className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-none border border-fd-border px-5.75 py-3.5 font-normal text-fd-foreground text-sm leading-4 transition-opacity hover:opacity-70"
                 href="/docs"
               >
                 Read the docs
@@ -51,7 +51,7 @@ export function HeroSection() {
             {/* biome-ignore lint/correctness/useImageSize: intrinsic aspect is preserved via natural image dimensions and CSS max constraints */}
             <img
               alt="Schema figure"
-              className="absolute top-1/2 left-1/2 max-h-[calc(100%-2rem)] max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-[0.625rem] border border-(--l-border) shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1)] min-[900px]:max-h-[calc(100%-4rem)] min-[900px]:max-w-[calc(100%-4rem)]"
+              className="absolute top-1/2 left-1/2 max-h-[calc(100%-2rem)] max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-[0.625rem] border border-fd-border shadow-[0px_28px_70px_0px_rgba(0,0,0,0.14),0px_14px_32px_0px_rgba(0,0,0,0.1)] min-[900px]:max-h-[calc(100%-4rem)] min-[900px]:max-w-[calc(100%-4rem)]"
               src="/features/figure.webp"
             />
 

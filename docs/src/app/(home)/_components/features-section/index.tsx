@@ -40,7 +40,7 @@ const FEATURES: Feature[] = [
 
 export function FeaturesSection() {
   return (
-    <section className="l-section bg-(--l-bg)">
+    <section className="l-section bg-fd-background">
       <div className="l-container hidden flex-col gap-22.5 min-[900px]:flex">
         {FEATURES.map((f) => (
           <DesktopCard feature={f} key={f.title} />

@@ -23,10 +23,10 @@ function Tab({
     <div
       aria-selected={active}
       className={cn(
-        "group/tab relative flex h-full shrink-0 cursor-pointer items-center gap-1.5 border-(--l-border) border-r px-3",
+        "group/tab relative flex h-full shrink-0 cursor-pointer items-center gap-1.5 border-fd-border border-r px-3",
         active
-          ? "bg-(--l-bg) pb-px text-(--l-ink) after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-(--l-bg)"
-          : "border-b bg-(--l-surface) text-(--l-ink-muted) hover:text-(--l-ink)"
+          ? "bg-fd-background pb-px text-fd-foreground after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-fd-background"
+          : "border-b bg-fd-card text-fd-muted-foreground hover:text-fd-foreground"
       )}
       onClick={onSelect}
       onKeyDown={(e) => {
@@ -43,7 +43,7 @@ function Tab({
         <button
           aria-label={`Close ${name}`}
           className={cn(
-            "-my-1 inline-flex cursor-pointer items-center justify-center rounded-[4px] p-0.5 text-(--l-ink-muted) transition-[opacity,background-color,color] duration-150 hover:bg-[color-mix(in_srgb,var(--l-ink)_12%,transparent)] hover:text-(--l-ink)",
+            "-my-1 inline-flex cursor-pointer items-center justify-center rounded-[4px] p-0.5 text-fd-muted-foreground transition-[opacity,background-color,color] duration-150 hover:bg-[color-mix(in_srgb,var(--color-fd-foreground)_12%,transparent)] hover:text-fd-foreground",
             active ? "opacity-100" : "opacity-0 group-hover/tab:opacity-100"
           )}
           onClick={(e) => {
@@ -96,7 +96,7 @@ export function TabbedEditor({
   return (
     <div className="flex h-full w-full flex-col" style={rootStyle}>
       <div
-        className="l-scrollbar-hide flex h-7.5 shrink-0 items-center overflow-x-auto bg-(--l-surface)"
+        className="l-scrollbar-hide flex h-7.5 shrink-0 items-center overflow-x-auto bg-fd-card"
         role="tablist"
       >
         {tabs.map((tab, i) => (
@@ -108,9 +108,9 @@ export function TabbedEditor({
             onSelect={() => setActiveIndex(i)}
           />
         ))}
-        <div className="h-full flex-1 border-(--l-border) border-b" />
+        <div className="h-full flex-1 border-fd-border border-b" />
       </div>
-      <div className="min-h-0 flex-1 overflow-hidden bg-[var(--tab-content-bg,var(--l-bg))]">
+      <div className="min-h-0 flex-1 overflow-hidden bg-[var(--tab-content-bg,var(--color-fd-background))]">
         {active?.content}
       </div>
     </div>

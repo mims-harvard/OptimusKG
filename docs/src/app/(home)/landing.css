@@ -1,9 +1,4 @@
 [data-landing] {
-  --l-bg: var(--color-fd-background);
-  --l-surface: var(--color-fd-card);
-  --l-ink: var(--color-fd-foreground);
-  --l-ink-muted: var(--color-fd-muted-foreground);
-  --l-border: var(--color-fd-border);
   --l-border-subtle: hsla(0, 0%, 0%, 0.08);
   --l-accent: hsl(205, 75%, 42%);
 
