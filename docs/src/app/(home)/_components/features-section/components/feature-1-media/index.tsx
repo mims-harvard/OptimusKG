@@ -5,9 +5,9 @@ import {
   SchemaTreeView,
 } from "@/components/schema-tree-view";
 
-import { MaximizableWindow } from "./maximizable-window";
-import { SchemaTabContent } from "./schema-tab-content";
-import { WindowTabbedEditor } from "./window-tabbed-editor";
+import { MaximizableWindow } from "../maximizable-window";
+import { WindowTabbedEditor } from "../window-tabbed-editor";
+import { SchemaTabContent } from "./components/schema-tab-content";
 
 const sourcesField: SchemaField = {
   name: "sources",

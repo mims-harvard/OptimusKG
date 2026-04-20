@@ -1,5 +1,5 @@
-import { MaximizableWindow } from "./maximizable-window";
-import { ValidationsEditor } from "./validations-editor";
+import { MaximizableWindow } from "../maximizable-window";
+import { ValidationsEditor } from "./components/validations-editor";
 
 const BG_SRC = "/hero/mountain-overlook.png";
 

@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
 
-import { Snippet } from "./snippet";
+import { Snippet } from "./components/snippet";
 
 const HEADING_CLASSES = "text-xl leading-7";
 const DESCRIPTION_CLASSES = "text-md leading-6";

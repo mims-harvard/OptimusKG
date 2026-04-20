@@ -1,6 +1,6 @@
 import { cn } from "@/lib/cn";
 
-import { FeatureText, type FeatureTextProps } from "./feature-text";
+import { FeatureText, type FeatureTextProps } from "./components/feature-text";
 
 export type Feature = FeatureTextProps & {
   Media: React.ComponentType;

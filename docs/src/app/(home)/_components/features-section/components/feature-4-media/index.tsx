@@ -1,7 +1,7 @@
-import { MaximizableWindow } from "./maximizable-window";
-import { renderShiki } from "./shiki-themes";
-import { ShikiBlock } from "./shiki-block";
-import { WindowTabbedEditor } from "./window-tabbed-editor";
+import { MaximizableWindow } from "../maximizable-window";
+import { WindowTabbedEditor } from "../window-tabbed-editor";
+import { ShikiBlock } from "./components/shiki-block";
+import { renderShiki } from "./components/shiki-themes";
 
 const BG_SRC = "/hero/hillside-village.png";
 

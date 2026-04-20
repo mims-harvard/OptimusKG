@@ -11,9 +11,12 @@ import { useTree } from "@headless-tree/react";
 
 import { Tree, TreeItem, TreeItemLabel } from "@/app/(home)/_components/tree";
 
-import { type EditorTab, type TabbedEditorHandle } from "./tabbed-editor";
-import { ThemedSvgTabContent } from "./themed-svg-tab-content";
-import { WindowTabbedEditor } from "./window-tabbed-editor";
+import {
+  type EditorTab,
+  type TabbedEditorHandle,
+} from "../../../tabbed-editor";
+import { WindowTabbedEditor } from "../../../window-tabbed-editor";
+import { ThemedSvgTabContent } from "./components/themed-svg-tab-content";
 
 type Validation = {
   id: string;
@@ -24,24 +27,27 @@ type Validation = {
   alt: string;
 };
 
-export const VALIDATIONS: Validation[] = [
-  {
-    id: "molecular-function",
-    fileName: "molecular-function.svg",
-    tabName: "Molecular Function Validation",
-    lightSrc: "/features/molecular-function-light.svg",
-    darkSrc: "/features/molecular-function-dark.svg",
-    alt: "Molecular Function validation bar chart",
-  },
-  {
-    id: "phenotype",
-    fileName: "phenotype.svg",
-    tabName: "Phenotype Validation",
-    lightSrc: "/features/phenotype-light.svg",
-    darkSrc: "/features/phenotype-dark.svg",
-    alt: "Phenotype validation bar chart",
-  },
-];
+export const VALIDATIONS: Validation[] = (
+  [
+    { id: "anatomy", label: "Anatomy" },
+    { id: "biological-process", label: "Biological Process" },
+    { id: "cellular-component", label: "Cellular Component" },
+    { id: "disease", label: "Disease" },
+    { id: "drug", label: "Drug" },
+    { id: "exposure", label: "Exposure" },
+    { id: "gene", label: "Gene" },
+    { id: "molecular-function", label: "Molecular Function" },
+    { id: "pathway", label: "Pathway" },
+    { id: "phenotype", label: "Phenotype" },
+  ] as const
+).map(({ id, label }) => ({
+  id,
+  fileName: `${id}.svg`,
+  tabName: `${label} Validation`,
+  lightSrc: `/features/${id}-light.svg`,
+  darkSrc: `/features/${id}-dark.svg`,
+  alt: `${label} validation bar chart`,
+}));
 
 const DEFAULT_OPEN_IDS = ["molecular-function", "phenotype"];
 
@@ -112,9 +118,6 @@ export function ValidationsEditor() {
   return (
     <div className="flex h-full w-full">
       <aside className="flex w-48 shrink-0 flex-col border-fd-border border-r bg-fd-card">
-        <div className="flex h-7.5 shrink-0 items-center border-fd-border border-b px-3 font-mono text-[0.6875rem] text-fd-muted-foreground uppercase tracking-wider">
-          Explorer
-        </div>
         <div className="min-h-0 flex-1 overflow-y-auto p-1.5">
           <Tree indent={14} tree={tree}>
             {tree.getItems().map((item) => (
