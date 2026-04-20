@@ -355,7 +355,7 @@ def _plot_grouped_barplot(df: pl.DataFrame, out_dir: Path, run_id: str) -> None:
     logger.info("Saved grouped bar plot to %s", out_path)
 
 
-def _draw_panel(
+def _draw_panel(  # noqa: PLR0915
     ax: plt.Axes, df: pl.DataFrame, node_type: str, theme: dict[str, str]
 ) -> None:
     """Draw a single-node-type validation panel on the given axis.
