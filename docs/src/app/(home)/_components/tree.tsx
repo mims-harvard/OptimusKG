@@ -154,13 +154,13 @@ function TreeItemLabel<T = any>({
     <span
       data-slot="tree-item-label"
       className={cn(
-        "flex w-full items-center gap-1 ps-(--tree-padding) py-[3px] pe-2 text-[13px] leading-[18px] transition-colors",
+        "flex w-full items-center gap-1 ps-[calc(var(--tree-padding)+0.375rem)] py-[3px] pe-2 text-[13px] leading-[18px] transition-colors",
         "text-fd-foreground/85",
         "hover:bg-[color-mix(in_srgb,var(--color-fd-foreground)_6%,transparent)]",
         "in-data-[selected=true]:bg-[color-mix(in_srgb,var(--color-fd-foreground)_10%,transparent)]",
         "in-data-[selected=true]:text-fd-foreground",
         "in-focus-visible:ring-fd-ring/50 in-focus-visible:ring-inset in-focus-visible:ring-1",
-        "not-in-data-[folder=true]:ps-[calc(var(--tree-padding)+1rem)]",
+        "not-in-data-[folder=true]:ps-[calc(var(--tree-padding)+0.375rem+1rem)]",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0",
         className
       )}
