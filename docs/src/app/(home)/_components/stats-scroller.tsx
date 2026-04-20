@@ -7,7 +7,9 @@ const STATS: ReadonlyArray<{ value: string; label: string }> = [
   { value: "190,531", label: "nodes" },
   { value: "26", label: "relation types" },
   { value: "21,813,816", label: "edges" },
-  { value: "110,276,843", label: "properties" },
+  { value: "150", label: "property keys" },
+  { value: "67,249,863", label: "property instances" },
+  { value: "110,276,843", label: "property values" },
 ];
 
 const COPIES = ["primary", "mirror"] as const;

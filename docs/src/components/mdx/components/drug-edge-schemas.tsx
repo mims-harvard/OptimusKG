@@ -3,7 +3,7 @@
  */
 
 import { baseEdgeFields, sourcesField } from "../../edge-schema-shared";
-import { SchemaTreeView } from "../../schema-tree-view";
+import { SchemaTree } from "../../schema-tree";
 
 // DRG-DIS
 const drugDiseaseProperties = [
@@ -32,7 +32,7 @@ const drugDiseaseProperties = [
 
 export function DrgDisEdge() {
   return (
-    <SchemaTreeView
+    <SchemaTree
       fields={baseEdgeFields(
         "DRG-DIS",
         ["INDICATION", "CONTRAINDICATION", "OFF_LABEL_USE"],
@@ -46,7 +46,7 @@ export function DrgDisEdge() {
 // DRG-DRG
 export function DrgDrgEdge() {
   return (
-    <SchemaTreeView
+    <SchemaTree
       fields={baseEdgeFields(
         "DRG-DRG",
         ["SYNERGISTIC_INTERACTION", "PARENT"],
@@ -93,7 +93,7 @@ const drugGeneRelations = [
 
 export function DrgGenEdge() {
   return (
-    <SchemaTreeView
+    <SchemaTree
       fields={baseEdgeFields("DRG-GEN", drugGeneRelations, false, [
         {
           name: "mechanisms_of_action",
@@ -119,7 +119,7 @@ export function DrgGenEdge() {
 // DRG-PHE
 export function DrgPheEdge() {
   return (
-    <SchemaTreeView
+    <SchemaTree
       fields={baseEdgeFields(
         "DRG-PHE",
         [

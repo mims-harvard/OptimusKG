@@ -11,9 +11,8 @@ import { disGenFields } from "@/components/disease-assoc-edge-schemas";
 import { geneFields } from "@/components/gene-schema";
 import { cn } from "@/lib/cn";
 
-import { SchemaTreeView } from "@/components/schema-tree-view";
-
 import { MaximizableWindow } from "./components/maximizable-window";
+import { SchemaTreeView } from "./components/schema-tree-view";
 import { Snippet } from "./components/snippet";
 import { WindowTabbedEditor } from "./components/window-tabbed-editor";
 
@@ -32,18 +31,16 @@ const F4_BG = "/hero/hillside-village.png";
 
 const FEATURE1_SNIPPET = `import optimuskg
 
-# Download a specific file and store it locally
-local_path = optimuskg.get_file("nodes/gene.parquet")
+# Download a parquet file and cache it locally
+path = optimuskg.get_file("nodes/gene.parquet")
 
-# Load a single Parquet file as a Polars DataFrame
+# Load a single table as a Polars DataFrame
 drugs = optimuskg.load_parquet("nodes/drug.parquet")
 
-# Load nodes and edges as Polars DataFrames
-# Set lcc=True to load only the largest connected component
+# Load the largest connected component
 nodes, edges = optimuskg.load_graph(lcc=True)
 
-# Load the graph as a NetworkX MultiDiGraph with metadata
-# Set lcc=True to load only the largest connected component
+# Or load it as a NetworkX MultiDiGraph
 G = optimuskg.load_networkx(lcc=True)
 `;
 

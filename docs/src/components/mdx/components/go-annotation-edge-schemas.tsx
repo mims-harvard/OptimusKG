@@ -4,7 +4,7 @@
  */
 
 import { baseEdgeFields, sourcesField } from "../../edge-schema-shared";
-import { SchemaTreeView } from "../../schema-tree-view";
+import { SchemaTree } from "../../schema-tree";
 
 const goAnnotationProperties = [
   {
@@ -27,7 +27,7 @@ const goAnnotationProperties = [
 
 export function BpoGenEdge() {
   return (
-    <SchemaTreeView
+    <SchemaTree
       fields={baseEdgeFields(
         "BPO-GEN",
         "INTERACTS_WITH",
@@ -39,7 +39,7 @@ export function BpoGenEdge() {
 }
 export function CcoGenEdge() {
   return (
-    <SchemaTreeView
+    <SchemaTree
       fields={baseEdgeFields(
         "CCO-GEN",
         "INTERACTS_WITH",
@@ -51,7 +51,7 @@ export function CcoGenEdge() {
 }
 export function MfnGenEdge() {
   return (
-    <SchemaTreeView
+    <SchemaTree
       fields={baseEdgeFields(
         "MFN-GEN",
         "INTERACTS_WITH",
