@@ -154,7 +154,7 @@ function TreeItemLabel<T = any>({
     <span
       data-slot="tree-item-label"
       className={cn(
-        "flex items-center gap-1 ps-(--tree-padding) py-[3px] pe-2 text-[13px] leading-[18px] transition-colors",
+        "flex w-full items-center gap-1 ps-(--tree-padding) py-[3px] pe-2 text-[13px] leading-[18px] transition-colors",
         "text-fd-foreground/85",
         "hover:bg-[color-mix(in_srgb,var(--color-fd-foreground)_6%,transparent)]",
         "in-data-[selected=true]:bg-[color-mix(in_srgb,var(--color-fd-foreground)_10%,transparent)]",

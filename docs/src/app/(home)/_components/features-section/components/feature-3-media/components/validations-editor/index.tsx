@@ -2,20 +2,13 @@
 
 import { useRef } from "react";
 
-import {
-  hotkeysCoreFeature,
-  selectionFeature,
-  syncDataLoaderFeature,
-} from "@headless-tree/core";
+import { hotkeysCoreFeature, selectionFeature, syncDataLoaderFeature } from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
 import { ChartColumn } from "lucide-react";
 
 import { Tree, TreeItem, TreeItemLabel } from "@/app/(home)/_components/tree";
 
-import {
-  type EditorTab,
-  type TabbedEditorHandle,
-} from "../../../tabbed-editor";
+import type { EditorTab, TabbedEditorHandle } from "../../../tabbed-editor";
 import { WindowTabbedEditor } from "../../../window-tabbed-editor";
 import { ThemedSvgTabContent } from "./components/themed-svg-tab-content";
 
@@ -63,21 +56,13 @@ const TREE_DATA: Record<string, TreeNode> = {
     name: "validations",
     children: VALIDATIONS.map((v) => v.id),
   },
-  ...Object.fromEntries(
-    VALIDATIONS.map((v) => [v.id, { name: v.label } satisfies TreeNode])
-  ),
+  ...Object.fromEntries(VALIDATIONS.map((v) => [v.id, { name: v.label } satisfies TreeNode])),
 };
 
 function validationToTab(v: Validation): EditorTab {
   return {
     name: v.tabName,
-    content: (
-      <ThemedSvgTabContent
-        alt={v.alt}
-        darkSrc={v.darkSrc}
-        lightSrc={v.lightSrc}
-      />
-    ),
+    content: <ThemedSvgTabContent alt={v.alt} darkSrc={v.darkSrc} lightSrc={v.lightSrc} />,
   };
 }
 
@@ -108,19 +93,18 @@ export function ValidationsEditor() {
       getItem: (id) => TREE_DATA[id],
       getChildren: (id) => TREE_DATA[id]?.children ?? [],
     },
-    indent: 18,
     features: [syncDataLoaderFeature, selectionFeature, hotkeysCoreFeature],
   });
 
-  const defaultTabs = VALIDATIONS.filter((v) =>
-    DEFAULT_OPEN_IDS.includes(v.id)
-  ).map(validationToTab);
+  const defaultTabs = VALIDATIONS.filter((v) => DEFAULT_OPEN_IDS.includes(v.id)).map(
+    validationToTab,
+  );
 
   return (
     <div className="flex h-full w-full">
-      <aside className="hidden min-[900px]:flex w-48 shrink-0 flex-col border-fd-border border-r bg-fd-card">
-        <div className="min-h-0 flex-1 overflow-y-auto py-1.5 pl-3">
-          <Tree indent={18} tree={tree}>
+      <aside className="hidden w-48 shrink-0 flex-col border-fd-border border-r bg-fd-card min-[900px]:flex">
+        <div className="min-h-0 flex-1 overflow-y-auto py-1.5 pl-1.5">
+          <Tree indent={4} tree={tree}>
             {tree.getItems().map((item) => {
               const isRoot = item.getItemMeta().level === 0;
               return (
@@ -128,7 +112,7 @@ export function ValidationsEditor() {
                   <TreeItemLabel
                     className={
                       isRoot
-                        ? "font-semibold text-[11px] uppercase tracking-[0.04em] text-fd-muted-foreground"
+                        ? "font-semibold text-[11px] text-fd-muted-foreground uppercase tracking-[0.04em]"
                         : undefined
                     }
                   >
