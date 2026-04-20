@@ -44,7 +44,7 @@ export const VALIDATIONS: Validation[] = (
 ).map(({ id, label }) => ({
   id,
   label,
-  tabName: `${label} Validation`,
+  tabName: label,
   lightSrc: `/features/${id}-light.svg`,
   darkSrc: `/features/${id}-dark.svg`,
   alt: `${label} validation bar chart`,
