@@ -1,5 +1,4 @@
-import type { SchemaField } from "./schema-tree";
-import { SchemaTreeView } from "./schema-tree-view";
+import { type SchemaField, SchemaTree } from "./schema-tree";
 
 export const geneFields: SchemaField[] = [
   {
@@ -399,5 +398,5 @@ export const geneFields: SchemaField[] = [
 ];
 
 export function GeneSchema() {
-  return <SchemaTreeView fields={geneFields} />;
+  return <SchemaTree fields={geneFields} />;
 }

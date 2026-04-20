@@ -208,8 +208,8 @@ export function TreeNodeTrigger({
     <div
       className={cn(
         "group relative flex cursor-pointer items-center rounded-none px-4 py-1.5 transition-colors duration-200",
-        "hover:bg-fd-muted/30",
-        isSelected && "bg-fd-muted/30",
+        "hover:bg-(--l-bg)",
+        isSelected && "bg-(--l-bg)",
         className
       )}
       onClick={(e) => {
@@ -250,7 +250,7 @@ export function TreeLines() {
         (_, index) =>
           !parentPath[index] && (
             <div
-              className="absolute border-fd-border border-l"
+              className="absolute border-(--l-border) border-l"
               // biome-ignore lint/suspicious/noArrayIndexKey: tree-line columns are positional and never reorder within a node
               key={`tree-line-${index}`}
               style={{
@@ -263,7 +263,7 @@ export function TreeLines() {
       )}
 
       <div
-        className="absolute top-1/2 border-fd-border border-t"
+        className="absolute top-1/2 border-(--l-border) border-t"
         style={{
           left: (level - 1) * (indent ?? 0) + 12,
           width: (indent ?? 0) - 12,
@@ -273,7 +273,7 @@ export function TreeLines() {
 
       {isLast && (
         <div
-          className="absolute border-fd-border border-l"
+          className="absolute border-(--l-border) border-l"
           style={{
             left: (level - 1) * (indent ?? 0) + 12,
             top: 0,
@@ -345,7 +345,7 @@ export function TreeExpander({
       }}
       {...props}
     >
-      <ChevronRight className="h-3 w-3 text-fd-muted-foreground" />
+      <ChevronRight className="h-3 w-3 text-(--l-ink-muted)" />
     </div>
   );
 }
@@ -383,7 +383,7 @@ export function TreeIcon({
   return (
     <div
       className={cn(
-        "mr-2 flex h-4 w-4 items-center justify-center text-fd-muted-foreground",
+        "mr-2 flex h-4 w-4 items-center justify-center text-(--l-ink-muted)",
         className
       )}
       {...props}

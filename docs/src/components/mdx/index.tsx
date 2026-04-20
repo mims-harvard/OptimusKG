@@ -16,8 +16,6 @@ import {
   PwyGenEdge,
   PwyPwyEdge,
 } from "./components/base-edge-schemas";
-// Citation
-import { CitationBlock } from "./components/citation-block";
 // Base schemas
 import { BaseEdgeSchema, BaseNodeSchema } from "./components/base-schemas";
 import { DiseaseSchema } from "./components/disease-schema";
@@ -56,8 +54,6 @@ import {
 export function getMDXComponents(components?: MDXComponents) {
   return {
     ...defaultMdxComponents,
-    // Citation
-    CitationBlock,
     // Base schemas
     BaseNodeSchema,
     BaseEdgeSchema,

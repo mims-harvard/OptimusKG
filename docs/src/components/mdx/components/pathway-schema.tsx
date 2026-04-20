@@ -1,5 +1,4 @@
-import type { SchemaField } from "../../schema-tree";
-import { SchemaTreeView } from "../../schema-tree-view";
+import { type SchemaField, SchemaTree } from "../../schema-tree";
 
 const fields: SchemaField[] = [
   {
@@ -45,5 +44,5 @@ const fields: SchemaField[] = [
 ];
 
 export function PathwaySchema() {
-  return <SchemaTreeView fields={fields} />;
+  return <SchemaTree fields={fields} />;
 }

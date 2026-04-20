@@ -1,5 +1,4 @@
-import type { SchemaField } from "../../schema-tree";
-import { SchemaTreeView } from "../../schema-tree-view";
+import { type SchemaField, SchemaTree } from "../../schema-tree";
 
 const sourcesField: SchemaField = {
   name: "sources",
@@ -144,5 +143,5 @@ const fields: SchemaField[] = [
 ];
 
 export function DiseaseSchema() {
-  return <SchemaTreeView fields={fields} />;
+  return <SchemaTree fields={fields} />;
 }

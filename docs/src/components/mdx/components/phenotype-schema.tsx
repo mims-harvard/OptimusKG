@@ -1,5 +1,4 @@
-import type { SchemaField } from "../../schema-tree";
-import { SchemaTreeView } from "../../schema-tree-view";
+import { type SchemaField, SchemaTree } from "../../schema-tree";
 
 const ontologyField: SchemaField = {
   name: "ontology",
@@ -155,5 +154,5 @@ const fields: SchemaField[] = [
 ];
 
 export function PhenotypeSchema() {
-  return <SchemaTreeView fields={fields} />;
+  return <SchemaTree fields={fields} />;
 }

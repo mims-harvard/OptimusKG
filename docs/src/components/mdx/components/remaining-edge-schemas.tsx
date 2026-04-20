@@ -3,12 +3,12 @@
  */
 
 import { baseEdgeFields, sourcesField } from "../../edge-schema-shared";
-import { SchemaTreeView } from "../../schema-tree-view";
+import { SchemaTree } from "../../schema-tree";
 
 // ANA-GEN: Bgee gene expression
 export function AnaGenEdge() {
   return (
-    <SchemaTreeView
+    <SchemaTree
       fields={baseEdgeFields(
         "ANA-GEN",
         ["EXPRESSION_PRESENT", "EXPRESSION_ABSENT"],
@@ -35,7 +35,7 @@ export function AnaGenEdge() {
 // DIS-PHE: HPO disease-phenotype annotations
 export function DisPheEdge() {
   return (
-    <SchemaTreeView
+    <SchemaTree
       fields={baseEdgeFields("DIS-PHE", "PHENOTYPE_PRESENT", true, [
         {
           name: "aspect",
@@ -242,7 +242,7 @@ const exposureProperties = [
 
 export function ExpBpoEdge() {
   return (
-    <SchemaTreeView
+    <SchemaTree
       fields={baseEdgeFields(
         "EXP-BPO",
         "INTERACTS_WITH",
@@ -254,7 +254,7 @@ export function ExpBpoEdge() {
 }
 export function ExpCcoEdge() {
   return (
-    <SchemaTreeView
+    <SchemaTree
       fields={baseEdgeFields(
         "EXP-CCO",
         "INTERACTS_WITH",
@@ -266,21 +266,21 @@ export function ExpCcoEdge() {
 }
 export function ExpDisEdge() {
   return (
-    <SchemaTreeView
+    <SchemaTree
       fields={baseEdgeFields("EXP-DIS", "LINKED_TO", false, exposureProperties)}
     />
   );
 }
 export function ExpExpEdge() {
   return (
-    <SchemaTreeView
+    <SchemaTree
       fields={baseEdgeFields("EXP-EXP", "PARENT", false, exposureProperties)}
     />
   );
 }
 export function ExpGenEdge() {
   return (
-    <SchemaTreeView
+    <SchemaTree
       fields={baseEdgeFields(
         "EXP-GEN",
         "INTERACTS_WITH",
@@ -292,7 +292,7 @@ export function ExpGenEdge() {
 }
 export function ExpMfnEdge() {
   return (
-    <SchemaTreeView
+    <SchemaTree
       fields={baseEdgeFields(
         "EXP-MFN",
         "INTERACTS_WITH",
