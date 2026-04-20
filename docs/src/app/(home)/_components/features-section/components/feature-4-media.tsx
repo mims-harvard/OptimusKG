@@ -39,7 +39,8 @@ export async function Feature4Media() {
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: "linear-gradient(90deg,rgba(38,37,30,0.05) 0%,rgba(38,37,30,0.05) 100%)",
+          background:
+            "linear-gradient(90deg,rgba(38,37,30,0.05) 0%,rgba(38,37,30,0.05) 100%)",
         }}
       />
 

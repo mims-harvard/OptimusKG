@@ -60,7 +60,9 @@ export function StatsScroller() {
                   <span className="font-mono text-fd-foreground text-lg tabular-nums">
                     {value}
                   </span>
-                  <span className="text-fd-muted-foreground text-sm">{label}</span>
+                  <span className="text-fd-muted-foreground text-sm">
+                    {label}
+                  </span>
                 </li>
               ))}
             </ul>

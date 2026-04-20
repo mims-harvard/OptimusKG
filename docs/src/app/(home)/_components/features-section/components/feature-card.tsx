@@ -12,22 +12,30 @@ export type Feature = FeatureTextProps & {
 
 export function DesktopCard({ feature }: { feature: Feature }) {
   const { href, imageSide, cardHeightClass, mediaHeightClass, Media } = feature;
-  const linkProps = href ? { href, target: "_blank", rel: "noopener noreferrer" as const } : {};
+  const linkProps = href
+    ? { href, target: "_blank", rel: "noopener noreferrer" as const }
+    : {};
   const Tag = href ? "a" : "div";
   const textCol =
-    imageSide === "right" ? "col-[1/span_8] pl-0.5 pr-7.5" : "col-[17/span_8] pl-7.5 pr-0.5";
-  const imageCol = imageSide === "right" ? "col-[9/span_16]" : "col-[1/span_16]";
+    imageSide === "right"
+      ? "col-[1/span_8] pl-0.5 pr-7.5"
+      : "col-[17/span_8] pl-7.5 pr-0.5";
+  const imageCol =
+    imageSide === "right" ? "col-[9/span_16]" : "col-[1/span_16]";
 
   return (
     <div
       className={cn(
         "relative grid grid-cols-[repeat(24,minmax(0,1fr))] gap-x-2.5 rounded-[1px] bg-fd-card p-4.5",
-        cardHeightClass,
+        cardHeightClass
       )}
     >
       <Tag
         {...linkProps}
-        className={cn("group/card row-start-1 flex flex-col justify-center", textCol)}
+        className={cn(
+          "group/card row-start-1 flex flex-col justify-center",
+          textCol
+        )}
       >
         <FeatureText {...feature} />
       </Tag>
@@ -35,7 +43,7 @@ export function DesktopCard({ feature }: { feature: Feature }) {
         className={cn(
           "relative row-start-1 overflow-hidden rounded-[1px]",
           imageCol,
-          mediaHeightClass,
+          mediaHeightClass
         )}
       >
         <Media />
@@ -47,7 +55,9 @@ export function DesktopCard({ feature }: { feature: Feature }) {
 
 export function MobileCard({ feature }: { feature: Feature }) {
   const { href, Media } = feature;
-  const linkProps = href ? { href, target: "_blank", rel: "noopener noreferrer" as const } : {};
+  const linkProps = href
+    ? { href, target: "_blank", rel: "noopener noreferrer" as const }
+    : {};
   const Tag = href ? "a" : "div";
 
   return (

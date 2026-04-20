@@ -1,6 +1,5 @@
 import { MaximizableWindow } from "./maximizable-window";
-import { ThemedSvgTabContent } from "./themed-svg-tab-content";
-import { WindowTabbedEditor } from "./window-tabbed-editor";
+import { ValidationsEditor } from "./validations-editor";
 
 const BG_SRC = "/hero/mountain-overlook.png";
 
@@ -20,7 +19,8 @@ export function Feature3Media() {
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: "linear-gradient(90deg,rgba(38,37,30,0.05) 0%,rgba(38,37,30,0.05) 100%)",
+          background:
+            "linear-gradient(90deg,rgba(38,37,30,0.05) 0%,rgba(38,37,30,0.05) 100%)",
         }}
       />
 
@@ -34,30 +34,7 @@ export function Feature3Media() {
         }}
         title="PaperQA3 Analysis"
       >
-        <WindowTabbedEditor
-          tabs={[
-            {
-              name: "Molecular Function Validation",
-              content: (
-                <ThemedSvgTabContent
-                  alt="Molecular Function validation bar chart"
-                  darkSrc="/features/molecular-function-dark.svg"
-                  lightSrc="/features/molecular-function-light.svg"
-                />
-              ),
-            },
-            {
-              name: "Phenotype Validation",
-              content: (
-                <ThemedSvgTabContent
-                  alt="Phenotype validation bar chart"
-                  darkSrc="/features/phenotype-dark.svg"
-                  lightSrc="/features/phenotype-light.svg"
-                />
-              ),
-            },
-          ]}
-        />
+        <ValidationsEditor />
       </MaximizableWindow>
 
       <div className="pointer-events-none absolute inset-0 rounded-[1px] border border-(--l-border-subtle)" />

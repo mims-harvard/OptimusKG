@@ -1,6 +1,9 @@
 import Image from "next/image";
 
-import { type SchemaField, SchemaTreeView } from "@/components/schema-tree-view";
+import {
+  type SchemaField,
+  SchemaTreeView,
+} from "@/components/schema-tree-view";
 
 import { MaximizableWindow } from "./maximizable-window";
 import { SchemaTabContent } from "./schema-tab-content";
@@ -30,7 +33,11 @@ const geneFields: SchemaField[] = [
     type: "String",
     description: "Node identifier in CURIE format (e.g. ENSG00000141510)",
   },
-  { name: "label", type: "String", description: "Node type abbreviation (GEN)" },
+  {
+    name: "label",
+    type: "String",
+    description: "Node type abbreviation (GEN)",
+  },
   {
     name: "properties",
     type: "Struct",
@@ -52,10 +59,22 @@ const geneFields: SchemaField[] = [
         type: "Struct",
         description: "Chromosomal coordinates",
         children: [
-          { name: "chromosome", type: "String", description: "Chromosome name" },
-          { name: "start", type: "Int64", description: "Start position (0-based)" },
+          {
+            name: "chromosome",
+            type: "String",
+            description: "Chromosome name",
+          },
+          {
+            name: "start",
+            type: "Int64",
+            description: "Start position (0-based)",
+          },
           { name: "end", type: "Int64", description: "End position" },
-          { name: "strand", type: "Int32", description: "Strand (+1 forward, -1 reverse)" },
+          {
+            name: "strand",
+            type: "Int32",
+            description: "Strand (+1 forward, -1 reverse)",
+          },
         ],
       },
       {
@@ -104,7 +123,11 @@ const geneFields: SchemaField[] = [
 ];
 
 const disGenFields: SchemaField[] = [
-  { name: "from", type: "String", description: "Source node ID (CURIE format)" },
+  {
+    name: "from",
+    type: "String",
+    description: "Source node ID (CURIE format)",
+  },
   { name: "to", type: "String", description: "Target node ID (CURIE format)" },
   { name: "label", type: "String", description: "Edge type label (DIS-GEN)" },
   { name: "relation", type: "String", description: "Relation type" },
@@ -137,7 +160,8 @@ const disGenFields: SchemaField[] = [
       {
         name: "disease_pleiotropy_index",
         type: "Float64",
-        description: "DPI, number of disease classes the gene is associated with",
+        description:
+          "DPI, number of disease classes the gene is associated with",
       },
       {
         name: "disgenet_score",
@@ -182,7 +206,8 @@ export function Feature1Media() {
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: "linear-gradient(90deg,rgba(0,0,0,0.12) 0%,rgba(0,0,0,0.22) 100%)",
+          background:
+            "linear-gradient(90deg,rgba(0,0,0,0.12) 0%,rgba(0,0,0,0.22) 100%)",
         }}
       />
 

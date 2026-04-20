@@ -18,6 +18,7 @@
   "dependencies": {
     "@ai-sdk/react": "^3.0.142",
     "@headless-tree/core": "^1.6.3",
+    "@headless-tree/react": "1.6.3",
     "@openrouter/ai-sdk-provider": "^2.3.3",
     "@radix-ui/react-presence": "^1.1.5",
     "@takumi-rs/image-response": "^0.73.1",
