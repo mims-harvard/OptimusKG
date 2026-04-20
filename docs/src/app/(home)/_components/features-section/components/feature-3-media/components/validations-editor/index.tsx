@@ -108,7 +108,7 @@ export function ValidationsEditor() {
       getItem: (id) => TREE_DATA[id],
       getChildren: (id) => TREE_DATA[id]?.children ?? [],
     },
-    indent: 8,
+    indent: 18,
     features: [syncDataLoaderFeature, selectionFeature, hotkeysCoreFeature],
   });
 
@@ -120,7 +120,7 @@ export function ValidationsEditor() {
     <div className="flex h-full w-full">
       <aside className="hidden min-[900px]:flex w-48 shrink-0 flex-col border-fd-border border-r bg-fd-card">
         <div className="min-h-0 flex-1 overflow-y-auto py-1.5 pl-3">
-          <Tree indent={8} tree={tree}>
+          <Tree indent={18} tree={tree}>
             {tree.getItems().map((item) => {
               const isRoot = item.getItemMeta().level === 0;
               return (
