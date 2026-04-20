@@ -8,6 +8,7 @@ import {
   syncDataLoaderFeature,
 } from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
+import { ChartColumn } from "lucide-react";
 
 import { Tree, TreeItem, TreeItemLabel } from "@/app/(home)/_components/tree";
 
@@ -20,7 +21,7 @@ import { ThemedSvgTabContent } from "./components/themed-svg-tab-content";
 
 type Validation = {
   id: string;
-  fileName: string;
+  label: string;
   tabName: string;
   lightSrc: string;
   darkSrc: string;
@@ -42,7 +43,7 @@ export const VALIDATIONS: Validation[] = (
   ] as const
 ).map(({ id, label }) => ({
   id,
-  fileName: `${id}.svg`,
+  label,
   tabName: `${label} Validation`,
   lightSrc: `/features/${id}-light.svg`,
   darkSrc: `/features/${id}-dark.svg`,
@@ -57,13 +58,13 @@ type TreeNode = {
 };
 
 const TREE_DATA: Record<string, TreeNode> = {
-  root: { name: "validations", children: ["validations-folder"] },
+  root: { name: "root", children: ["validations-folder"] },
   "validations-folder": {
     name: "validations",
     children: VALIDATIONS.map((v) => v.id),
   },
   ...Object.fromEntries(
-    VALIDATIONS.map((v) => [v.id, { name: v.fileName } satisfies TreeNode])
+    VALIDATIONS.map((v) => [v.id, { name: v.label } satisfies TreeNode])
   ),
 };
 
@@ -107,7 +108,7 @@ export function ValidationsEditor() {
       getItem: (id) => TREE_DATA[id],
       getChildren: (id) => TREE_DATA[id]?.children ?? [],
     },
-    indent: 14,
+    indent: 12,
     features: [syncDataLoaderFeature, selectionFeature, hotkeysCoreFeature],
   });
 
@@ -117,16 +118,28 @@ export function ValidationsEditor() {
 
   return (
     <div className="flex h-full w-full">
-      <aside className="flex w-48 shrink-0 flex-col border-fd-border border-r bg-fd-card">
-        <div className="min-h-0 flex-1 overflow-y-auto p-1.5">
-          <Tree indent={14} tree={tree}>
-            {tree.getItems().map((item) => (
-              <TreeItem item={item} key={item.getId()}>
-                <TreeItemLabel className="px-2 py-0.5 text-xs">
-                  {item.getItemName()}
-                </TreeItemLabel>
-              </TreeItem>
-            ))}
+      <aside className="hidden min-[900px]:flex w-48 shrink-0 flex-col border-fd-border border-r bg-fd-card">
+        <div className="min-h-0 flex-1 overflow-y-auto py-1.5">
+          <Tree indent={12} tree={tree}>
+            {tree.getItems().map((item) => {
+              const isRoot = item.getItemMeta().level === 0;
+              return (
+                <TreeItem item={item} key={item.getId()}>
+                  <TreeItemLabel
+                    className={
+                      isRoot
+                        ? "font-semibold text-[11px] uppercase tracking-[0.04em] text-fd-muted-foreground"
+                        : undefined
+                    }
+                  >
+                    {!item.isFolder() && (
+                      <ChartColumn className="size-3.5 text-fd-muted-foreground" />
+                    )}
+                    {item.getItemName()}
+                  </TreeItemLabel>
+                </TreeItem>
+              );
+            })}
           </Tree>
         </div>
       </aside>
