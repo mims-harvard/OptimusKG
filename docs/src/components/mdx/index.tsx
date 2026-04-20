@@ -1,4 +1,5 @@
 import defaultMdxComponents from "fumadocs-ui/mdx";
+import * as Python from "fumadocs-python/components";
 import type { MDXComponents } from "mdx/types";
 
 import { DisGenEdge, PheGenEdge } from "../disease-assoc-edge-schemas";
@@ -54,6 +55,7 @@ import {
 export function getMDXComponents(components?: MDXComponents) {
   return {
     ...defaultMdxComponents,
+    ...Python,
     // Base schemas
     BaseNodeSchema,
     BaseEdgeSchema,

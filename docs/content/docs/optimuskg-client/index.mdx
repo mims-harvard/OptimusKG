@@ -1,9 +1,14 @@
 ---
-title: OptimusKG Client
+title: Introduction
 description: Python client for loading the OptimusKG biomedical knowledge graph from Harvard Dataverse.
 ---
 
 The [`optimuskg`](https://pypi.org/project/optimuskg/) PyPI package is a thin client for loading the OptimusKG biomedical knowledge graph from [Harvard Dataverse](https://doi.org/10.7910/DVN/IYNGEV). The client resolves Dataverse file IDs automatically, caches downloads locally, and returns the graph as [Polars DataFrames](https://github.com/pola-rs/polars) or a [NetworkX MultiDiGraph](https://networkx.org/documentation/stable/reference/classes/multidigraph.html).
+
+<Callout>
+  Looking for function signatures and docstrings? Jump to the [**API
+  Reference**](/docs/optimuskg-client/reference).
+</Callout>
 
 ## Installation
 
@@ -44,11 +49,13 @@ nodes, edges = optimuskg.load_graph(lcc=True)
 G = optimuskg.load_networkx(lcc=True)
 ```
 
-## API Reference
+See [`get_file`](/docs/optimuskg-client/reference), [`load_parquet`](/docs/optimuskg-client/reference), [`load_graph`](/docs/optimuskg-client/reference), and [`load_networkx`](/docs/optimuskg-client/reference) on the reference page for parameters and return types.
 
-### `get_file(relative_path, *, force=False) -> Path`
+## Loader overview
 
-Downloads the file if not already cached and returns its local path. Paths follow the layout of the catalog in the source repository:
+### Files
+
+[`get_file`](/docs/optimuskg-client/reference) downloads the file if not already cached and returns its local path. Paths follow the layout of the catalog in the source repository:
 
 ```python
 optimuskg.get_file("nodes.parquet")                               # full nodes table
@@ -60,21 +67,19 @@ optimuskg.get_file("edges/disease_gene.parquet")                  # only DIS-GEN
 ```
 
 <Callout>
-  Use `force=True` to re-download the file even if its already cached.
+  Pass `force=True` to re-download the file even if it is already cached.
 </Callout>
 
-### `load_parquet(relative_path, *, force=False, **kwargs) -> pl.DataFrame`
+### DataFrames
 
-Calls `get_file` then `polars.read_parquet`. Any extra keyword arguments are forwarded directly to `pl.read_parquet`.
+[`load_parquet`](/docs/optimuskg-client/reference) calls `get_file` then `polars.read_parquet`. Any extra keyword arguments are forwarded directly to `pl.read_parquet`.
 
 ```python
 drugs = optimuskg.load_parquet("nodes/drug.parquet")
 only_ids = optimuskg.load_parquet("nodes/drug.parquet", columns=["id"])
 ```
 
-### `load_graph(*, lcc=False, force=False) -> tuple[pl.DataFrame, pl.DataFrame]`
-
-Returns `(nodes, edges)` as Polars DataFrames. Pass `lcc=True` to get only the largest connected component.
+[`load_graph`](/docs/optimuskg-client/reference) returns `(nodes, edges)` as Polars DataFrames. Pass `lcc=True` to get only the largest connected component.
 
 ```python
 nodes, edges = optimuskg.load_graph()          # full graph
@@ -82,12 +87,12 @@ nodes, edges = optimuskg.load_graph(lcc=True)  # LCC only
 ```
 
 <Callout>
-  Dataframe schemas are documented in [Nodes](/docs/graph-schema/nodes) and [Edges](/docs/graph-schema/edges).
+  DataFrame schemas are documented in [Nodes](/docs/graph-schema/nodes) and [Edges](/docs/graph-schema/edges).
 </Callout>
 
-### `load_networkx(*, lcc=False, force=False, parse_properties=True) -> nx.MultiDiGraph`
+### NetworkX
 
-Builds a `networkx.MultiDiGraph` on top of `load_graph`. Then, you can use it:
+[`load_networkx`](/docs/optimuskg-client/reference) builds a `networkx.MultiDiGraph` on top of `load_graph`:
 
 ```python
 G = optimuskg.load_networkx(lcc=True)
@@ -113,7 +118,7 @@ expression_edges = [
 
 Downloads are cached by default in `platformdirs.user_cache_dir("optimuskg")` (`~/Library/Caches/optimuskg` on macOS, `~/.cache/optimuskg` on Linux, and `C:\Users\<User>\AppData\Local\optimuskg\optimuskg` on Windows). Files within the cache are keyed by `<doi_slug>/<dataset_version>/<relative_path>`, so a new Dataverse release invalidates the cache automatically.
 
-It is possible to override the cache directory from code:
+It is possible to override the cache directory from code with [`set_cache_dir`](/docs/optimuskg-client/reference):
 
 ```python
 optimuskg.set_cache_dir("/data/optimuskg-cache")
@@ -127,7 +132,7 @@ export OPTIMUSKG_CACHE_DIR=/data/optimuskg-cache
 
 ### Pointing at a different dataset
 
-By default the client targets the published OptimusKG dataset at `doi:10.7910/DVN/IYNGEV`. To target a different version (e.g. a pre-release or private dataset), override the DOI from code:
+By default the client targets the published OptimusKG dataset at `doi:10.7910/DVN/IYNGEV`. To target a different version (e.g. a pre-release or private dataset), override the DOI from code with [`set_doi`](/docs/optimuskg-client/reference):
 
 ```python
 optimuskg.set_doi("doi:10.7910/DVN/EXAMPLE")
@@ -139,7 +144,7 @@ Or by using environment variables:
 export OPTIMUSKG_DOI=doi:10.7910/DVN/EXAMPLE
 ```
 
-For a non-Harvard Dataverse installation, override the server URL from code:
+For a non-Harvard Dataverse installation, override the server URL from code with [`set_server`](/docs/optimuskg-client/reference):
 
 ```python
 optimuskg.set_server("https://dataverse.example.org")
@@ -154,6 +159,7 @@ export OPTIMUSKG_SERVER=https://dataverse.example.org
 ## See Also
 
 <Cards>
+  <Card title="API Reference" href="/docs/optimuskg-client/reference" />
   <Card title="Nodes" href="/docs/graph-schema/nodes" />
   <Card title="Edges" href="/docs/graph-schema/edges" />
 </Cards>
