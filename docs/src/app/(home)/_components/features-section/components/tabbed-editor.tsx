@@ -33,7 +33,7 @@ function Tab({
     <div
       aria-selected={active}
       className={cn(
-        "group/tab relative flex h-full shrink-0 cursor-pointer items-center gap-1.5 border-fd-border border-r px-3",
+        "group/tab relative flex h-full shrink-0 cursor-pointer items-center gap-1.5 border-fd-border border-r ps-3 pe-1.5",
         active
           ? "bg-fd-background pb-px text-fd-foreground after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-fd-background"
           : "border-b bg-fd-card text-fd-muted-foreground hover:text-fd-foreground"
