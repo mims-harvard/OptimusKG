@@ -14,7 +14,7 @@ async function loadInter(weight: number): Promise<ArrayBuffer> {
 }
 
 export default async function HomeOpengraphImage() {
-  const [regular, semibold] = await Promise.all([loadInter(400), loadInter(600)]);
+  const regular = await loadInter(400);
 
   return new ImageResponse(
     (
@@ -148,7 +148,7 @@ export default async function HomeOpengraphImage() {
             display: "flex",
             flexDirection: "column",
             fontSize: "60px",
-            fontWeight: 600,
+            fontWeight: 400,
             lineHeight: 1.15,
             letterSpacing: "-0.02em",
           }}
@@ -160,10 +160,7 @@ export default async function HomeOpengraphImage() {
     ),
     {
       ...size,
-      fonts: [
-        { name: "Inter", data: regular, weight: 400, style: "normal" },
-        { name: "Inter", data: semibold, weight: 600, style: "normal" },
-      ],
+      fonts: [{ name: "Inter", data: regular, weight: 400, style: "normal" }],
     }
   );
 }
