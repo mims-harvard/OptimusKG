@@ -147,9 +147,9 @@ export default async function HomeOpengraphImage() {
           style={{
             display: "flex",
             flexDirection: "column",
-            fontSize: "72px",
+            fontSize: "60px",
             fontWeight: 600,
-            lineHeight: 1.1,
+            lineHeight: 1.15,
             letterSpacing: "-0.02em",
           }}
         >
