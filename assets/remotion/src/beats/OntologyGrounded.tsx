@@ -27,18 +27,19 @@ const EASE = Easing.inOut(Easing.quad);
 
 const FRAME_W = 1920;
 const FRAME_H = 1080;
-const SIDE_MARGIN = 32;
+const SIDE_MARGIN = 16;
 const ITEM_GAP = 40; // identical gap between every CURIE within a row
 const ROW_H = 82;
 const NUM_ROWS = 13;
 const ROW_BAND_TOP = (FRAME_H - NUM_ROWS * ROW_H) / 2;
 const TAGLINE_ROW = 6;
-const TAGLINE_HOLE_W = 960;
+const TAGLINE_HOLE_W = 760;
 
-// Per-character-class width estimates for Inter at 3rem / weight 500.
-const PX_DIGIT = 26;
-const PX_UPPER = 30;
-const PX_PUNCT = 14;
+// Per-character-class width estimates for Inter at 3rem / weight 500
+// (slightly conservative so items don't overflow the frame edges).
+const PX_DIGIT = 27;
+const PX_UPPER = 33;
+const PX_PUNCT = 16;
 
 function estimateWidth(s: string): number {
   let w = 0;
@@ -74,25 +75,21 @@ function mulberry32(seed: number) {
   };
 }
 
-// Pick CURIEs that fit into `maxWidth` with ITEM_GAP between them.
-// Picks randomly first; falls back to a fitting CURIE so we keep filling.
-function fillSegment(maxWidth: number, curies: string[], rand: () => number): string[] {
+// Consume CURIEs from `pool` (without replacement) until the row segment
+// is full. Pool is mutated — once empty, no more rows get items.
+function fillSegment(maxWidth: number, pool: string[]): string[] {
   const items: string[] = [];
   let used = 0;
-  while (true) {
+  while (pool.length > 0) {
     const isFirst = items.length === 0;
     const remaining = maxWidth - used - (isFirst ? 0 : ITEM_GAP);
     if (remaining <= 0) break;
-    let curie = curies[Math.floor(rand() * curies.length)];
-    let w = estimateWidth(curie);
-    if (w > remaining) {
-      const fits = curies.filter((c) => estimateWidth(c) <= remaining);
-      if (fits.length === 0) break;
-      curie = fits[Math.floor(rand() * fits.length)];
-      w = estimateWidth(curie);
-    }
+    // First item in the (shuffled) pool that fits.
+    const fitIdx = pool.findIndex((c) => estimateWidth(c) <= remaining);
+    if (fitIdx === -1) break;
+    const curie = pool.splice(fitIdx, 1)[0];
     items.push(curie);
-    used += w + (isFirst ? 0 : ITEM_GAP);
+    used += estimateWidth(curie) + (isFirst ? 0 : ITEM_GAP);
   }
   return items;
 }
@@ -100,6 +97,14 @@ function fillSegment(maxWidth: number, curies: string[], rand: () => number): st
 function generateRows(curies: string[]): RowSegment[] {
   if (curies.length === 0) return [];
   const rand = mulberry32(13);
+
+  // Shuffled pool — each CURIE is consumed at most once.
+  const pool = curies.slice();
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+
   const segments: RowSegment[] = [];
   const cx = FRAME_W / 2;
   const fullWidth = FRAME_W - 2 * SIDE_MARGIN;
@@ -110,7 +115,7 @@ function generateRows(curies: string[]): RowSegment[] {
       segments.push({
         rowIdx: r,
         side: "left",
-        items: fillSegment(halfWidth, curies, rand).map((c) => ({
+        items: fillSegment(halfWidth, pool).map((c) => ({
           curie: c,
           spawnFrame: 0,
           opacityMax: 0,
@@ -119,7 +124,7 @@ function generateRows(curies: string[]): RowSegment[] {
       segments.push({
         rowIdx: r,
         side: "right",
-        items: fillSegment(halfWidth, curies, rand).map((c) => ({
+        items: fillSegment(halfWidth, pool).map((c) => ({
           curie: c,
           spawnFrame: 0,
           opacityMax: 0,
@@ -129,7 +134,7 @@ function generateRows(curies: string[]): RowSegment[] {
       segments.push({
         rowIdx: r,
         side: "full",
-        items: fillSegment(fullWidth, curies, rand).map((c) => ({
+        items: fillSegment(fullWidth, pool).map((c) => ({
           curie: c,
           spawnFrame: 0,
           opacityMax: 0,
@@ -180,7 +185,7 @@ export const OntologyGrounded: React.FC<OntologyGroundedProps> = ({
   return (
     <AbsoluteFill
       className="bg-fd-background"
-      style={{ opacity: stackOpacity }}
+      style={{ opacity: stackOpacity, overflow: "hidden" }}
     >
       {segments.map((seg, i) => {
         const top = ROW_BAND_TOP + seg.rowIdx * ROW_H;

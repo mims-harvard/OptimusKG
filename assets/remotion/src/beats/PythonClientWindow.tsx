@@ -3,8 +3,21 @@ import { HERO_HEADING } from "../Beat";
 import { EditorWindow, RevealLine, TabbedEditorShell } from "../primitives";
 import type { BeatRenderProps } from "../scenes";
 
-// Beat 10 (138 frames): load_graph.py with type-on animation.
-// Last char should land ~frame 132 (6 before the 138-frame cut).
+// Beat 10 (174 frames):
+//   0–18    Hero text reveals, centered, alone.
+//   18–48   Hold hero for reading (~1 s).
+//   48–60   Hero fades out.
+//   52–66   Window fades + slides in.
+//   66–174  Typewriter types out the code (~108 f); last char ~6 f before cut.
+
+const HERO_FADE_OUT: [number, number] = [48, 60];
+const WINDOW_FADE_IN: [number, number] = [52, 66];
+const TYPE_START = 66;
+const TYPE_END = 168;
+
+// Window aspect mirrors the landing's `42.5rem × 35rem` (≈ 17:14 / 1.214).
+const WINDOW_W = 760;
+const WINDOW_H = 490; // height fits 12-line code + small buffer
 
 const CODE: string[] = [
   "import optimuskg",
@@ -21,12 +34,8 @@ const CODE: string[] = [
   "G = optimuskg.load_networkx(lcc=True)",
 ];
 
-// Allocate 108 typing frames starting at frame 24 → finishes by ~132.
-const TYPE_START = 24;
-const TYPE_END = 132;
 const TOTAL_CHARS = CODE.reduce((acc, line) => acc + line.length, 0) || 1;
-
-// Compute cumulative character offset per line so each line gets a proportional slice.
+const FRAMES_PER_CHAR = (TYPE_END - TYPE_START) / TOTAL_CHARS;
 const LINE_OFFSETS: number[] = (() => {
   const arr: number[] = [];
   let acc = 0;
@@ -37,70 +46,79 @@ const LINE_OFFSETS: number[] = (() => {
   return arr;
 })();
 
-const FRAMES_PER_CHAR = (TYPE_END - TYPE_START) / TOTAL_CHARS;
-
 export const PythonClientWindow: React.FC<BeatRenderProps> = ({ heroText }) => {
   const frame = useCurrentFrame();
-  const windowOpacity = interpolate(frame, [0, 18], [0, 1], {
+
+  const heroOpacity = interpolate(frame, HERO_FADE_OUT, [1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const windowY = interpolate(frame, [0, 22], [30, 0], {
+  const windowOpacity = interpolate(frame, WINDOW_FADE_IN, [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const windowY = interpolate(frame, WINDOW_FADE_IN, [24, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
   return (
-    <AbsoluteFill
-      className="bg-fd-background"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: "2rem",
-        padding: "2rem 1.25rem",
-      }}
-    >
-      <h2
-        className="text-center text-fd-foreground"
-        style={{ ...HERO_HEADING, fontSize: "4.5rem" }}
-      >
-        <RevealLine
-          perWordFrames={3}
-          startFrame={2}
-          style={{ display: "block" }}
-          tokens={(heroText as string).split(" ")}
-        />
-      </h2>
-      <div
-        style={{
-          width: "min(92%, 1200px)",
-          height: "32rem",
-          opacity: windowOpacity,
-          transform: `translateY(${windowY}px)`,
-        }}
-      >
-        <EditorWindow className="h-full w-full" title="Python Client">
-          <TabbedEditorShell tabs={[{ name: "load_graph.py" }]}>
-            <div className="h-full w-full overflow-hidden px-8 py-6">
-              <div
-                className="font-mono"
-                style={{ fontSize: 22, lineHeight: 1.65 }}
-              >
-                {CODE.map((line, i) => (
-                  <TypewriterLine
-                    charDelayFrames={FRAMES_PER_CHAR}
-                    key={i}
-                    startOffset={TYPE_START + LINE_OFFSETS[i] * FRAMES_PER_CHAR}
-                    text={line}
-                  />
-                ))}
+    <AbsoluteFill className="bg-fd-background">
+      {heroOpacity > 0 && (
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: 0,
+            right: 0,
+            transform: "translateY(-50%)",
+            textAlign: "center",
+            opacity: heroOpacity,
+          }}
+        >
+          <h2 className="text-fd-foreground" style={{ ...HERO_HEADING }}>
+            <RevealLine
+              perWordFrames={3}
+              startFrame={2}
+              tokens={(heroText as string).split(" ")}
+            />
+          </h2>
+        </div>
+      )}
+
+      {windowOpacity > 0 && (
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            width: WINDOW_W,
+            height: WINDOW_H,
+            transform: `translate(-50%, calc(-50% + ${windowY}px))`,
+            opacity: windowOpacity,
+          }}
+        >
+          <EditorWindow className="h-full w-full" title="Python Client">
+            <TabbedEditorShell tabs={[{ name: "load_graph.py" }]}>
+              <div className="h-full w-full overflow-hidden px-6 py-4">
+                <div
+                  className="font-mono"
+                  style={{ fontSize: 18, lineHeight: 1.65 }}
+                >
+                  {CODE.map((line, i) => (
+                    <TypewriterLine
+                      charDelayFrames={FRAMES_PER_CHAR}
+                      key={i}
+                      startOffset={TYPE_START + LINE_OFFSETS[i] * FRAMES_PER_CHAR}
+                      text={line}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          </TabbedEditorShell>
-        </EditorWindow>
-      </div>
+            </TabbedEditorShell>
+          </EditorWindow>
+        </div>
+      )}
     </AbsoluteFill>
   );
 };
