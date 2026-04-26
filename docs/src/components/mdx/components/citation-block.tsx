@@ -15,7 +15,7 @@ const BIBTEX = `@article{vittor2026optimuskg,
 }`;
 
 const TEXT =
-  "Vittor, L. et al. OptimusKG: Unifying biomedical knowledge in a modern multimodal graph. Nature Scientific Data (2026).";
+  "Vittor, L. et al. OptimusKG: Unifying biomedical knowledge in a modern multimodal graph. In Review (2026).";
 
 const TABS = [
   { id: "bibtex", label: "BibTeX", content: BIBTEX },
