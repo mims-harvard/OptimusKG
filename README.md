@@ -107,7 +107,7 @@ This will automatically download all the necessary data, store it in the `landin
 > Run `make help` for a list of available Make commands, and `uv run cli --help` for additional CLI utilities.
 
 > [!NOTE]
-> The pipeline automatically downloads public datasets and ingests them in the `landing` layer. 
+> The pipeline automatically downloads public datasets and ingests them in the `landing` layer.
 >
 > Place any private datasets under `data/loading`. If absent, the [`Origin Hook`](https://github.com/mims-harvard/optimuskg/blob/main/optimuskg/hooks/origin/origin_hooks.py) will create empty placeholders, allowing dependent nodes to run even if the private data is missing.
 
@@ -123,7 +123,7 @@ If you use OptimusKG in your research, please cite:
 @article{vittor2026optimuskg,
   title={OptimusKG: Unifying biomedical knowledge in a modern multimodal graph},
   author={Vittor, Lucas and Noori, Ayush and Arango, I{\~n}aki and Polonuer, Joaqu{\'\i}n and Rodriques, Sam and White, Andrew and Clifton, David A. and Zitnik, Marinka},
-  journal={Nature Scientific Data},
+  journal={In review},
   year={2026}
 }
 ```
@@ -131,7 +131,6 @@ If you use OptimusKG in your research, please cite:
 ## License
 
 OptimusKG codebase is released under the [MIT License](LICENSE). OptimusKG integrates multiple primary data resources, each of which is subject to its own license and terms of use. These terms may impose restrictions on redistribution, commercial use, or downstream applications of the resulting knowledge graph or its subsets. Some resources provide data under academic or noncommercial licenses, while others may impose attribution or usage requirements. As a result, use of OptimusKG may be partially restricted depending on the specific data components included in a given instantiation. Users are responsible for reviewing and complying with the license and terms of use of each primary dataset, as specified by the original data providers. OptimusKG does not alter or override these source-specific licensing conditions.
-
 
 <p align="center">
   Made with ❤️ at <a href="https://zitniklab.hms.harvard.edu/">Zitnik Lab</a>, Harvard Medical School
