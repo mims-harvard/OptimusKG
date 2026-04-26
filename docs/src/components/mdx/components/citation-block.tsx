@@ -10,7 +10,7 @@ import { cn } from "@/lib/cn";
 const BIBTEX = `@article{vittor2026optimuskg,
       title={OptimusKG: Unifying biomedical knowledge in a modern multimodal graph},
       author={Vittor, Lucas and Noori, Ayush and Arango, I{\\~n}aki and Polonuer, Joaqu{\\'\\i}n and Rodriques, Sam and White, Andrew and Clifton, David A. and Zitnik, Marinka},
-      journal={Nature Scientific Data},
+      journal={In review},
       year={2026}
 }`;
 
