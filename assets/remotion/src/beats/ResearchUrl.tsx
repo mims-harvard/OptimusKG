@@ -4,7 +4,7 @@ import type { BeatRenderProps } from "../scenes";
 
 // URL reveal: segments fade in left-to-right, staggered with slight overlap.
 // The full string occupies its natural inline width from frame 0, so the
-// final URL ("optimuskg.ai/research") reads seamlessly with no gaps between
+// final URL ("optimuskg.ai") reads seamlessly with no gaps between
 // segments — the entire string is centered as one block from the start.
 
 interface Segment {
@@ -16,8 +16,6 @@ interface Segment {
 const SEGMENTS: Segment[] = [
   { text: "optimuskg", startFrame: 0, fadeFrames: 14 },
   { text: ".ai", startFrame: 7, fadeFrames: 12 },
-  { text: "/", startFrame: 13, fadeFrames: 10 },
-  { text: "research", startFrame: 18, fadeFrames: 14 },
 ];
 
 const EASE = Easing.out(Easing.cubic);

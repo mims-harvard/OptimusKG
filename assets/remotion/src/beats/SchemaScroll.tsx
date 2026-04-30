@@ -31,7 +31,7 @@ const EASE = Easing.inOut(Easing.cubic);
 export const SchemaScroll: React.FC<SchemaScrollProps> = ({
   nodesText = "190,531 nodes",
   edgesText = "21,813,816 edges",
-  propertiesText = "110,276,843 properties",
+  propertiesText = "110,276,843 typed properties",
 }) => {
   const frame = useCurrentFrame();
 

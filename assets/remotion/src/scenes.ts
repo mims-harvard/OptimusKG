@@ -65,6 +65,27 @@ export const BEATS: BeatSpec[] = [
   //   heroText: "OptimusKG",
   // },
   {
+    id: "usecase-graph-ml",
+    label: "usecase-graph-ml",
+    durationInFrames: 50,
+    component: HookText,
+    heroText: "A standardized resource for graph AI,",
+  },
+  {
+    id: "usecase-llm-retrieval",
+    label: "usecase-llm-retrieval",
+    durationInFrames: 50,
+    component: HookText,
+    heroText: "biomedical discovery,",
+  },
+  {
+    id: "usecase-discovery",
+    label: "usecase-discovery",
+    durationInFrames: 50,
+    component: HookText,
+    heroText: "and hypothesis generation.",
+  },
+  {
     id: "multimodal",
     label: "unified-schema",
     durationInFrames: 66,
@@ -200,7 +221,10 @@ export const BEATS: BeatSpec[] = [
     label: "validated",
     durationInFrames: 190,
     component: PaperQA3AnalysisWindow,
-    heroText: "Cross-validated against millions of research papers",
+    heroText: [
+      "Independently validated using PaperQA3",
+      "a multimodal agent that retrieves and reasons over millions of scientific articles",
+    ],
   },
   {
     id: "python",
@@ -214,7 +238,7 @@ export const BEATS: BeatSpec[] = [
     label: "read-more",
     durationInFrames: 54,
     component: HookText,
-    heroText: "Read more about our research below",
+    heroText: "An open science, research initiative",
     layout: "exit-up",
   },
   {

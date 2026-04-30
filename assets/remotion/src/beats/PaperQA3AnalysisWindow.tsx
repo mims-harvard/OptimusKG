@@ -107,12 +107,31 @@ export const PaperQA3AnalysisWindow: React.FC<BeatRenderProps> = ({
             opacity: heroOpacity,
           }}
         >
-          <h2 className="text-fd-foreground" style={{ ...HERO_HEADING }}>
-            <RevealLine
-              perWordFrames={2}
-              startFrame={0}
-              tokens={(heroText as string).split(" ")}
-            />
+          <h2
+            className="text-fd-foreground"
+            style={{
+              ...HERO_HEADING,
+              maxWidth: 1400,
+              marginInline: "auto",
+              paddingInline: 24,
+            }}
+          >
+            {(Array.isArray(heroText) ? heroText : [heroText ?? ""]).map(
+              (line, i) => (
+                <RevealLine
+                  key={i}
+                  perWordFrames={2}
+                  startFrame={i * 6}
+                  style={{
+                    display: "block",
+                    opacity: i === 0 ? 1 : 0.78,
+                    marginTop: i === 0 ? 0 : "0.6em",
+                    fontWeight: i === 0 ? 500 : 400,
+                  }}
+                  tokens={line.split(" ")}
+                />
+              ),
+            )}
           </h2>
         </div>
       )}
