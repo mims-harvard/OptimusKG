@@ -3,12 +3,12 @@ import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";
 import { HERO_HEADING } from "../Beat";
 import type { BeatRenderProps } from "../scenes";
 
-// Beat (90 frames):
-//   0–18    Tagline fades in, centered.
-//   18–60   CURIEs spawn one-by-one in row-flow positions (no overlap,
-//           uniform gap between siblings within each row).
-//   60–84   Hold.
-//   84–90   Whole stack fades out.
+// Beat (180 frames):
+//   0–36     Tagline fades in, centered.
+//   36–120   CURIEs spawn one-by-one in row-flow positions (no overlap,
+//            uniform gap between siblings within each row).
+//   120–168  Hold.
+//   168–180  Whole stack fades out.
 
 export interface OntologyEntity {
   position: number;
@@ -19,10 +19,10 @@ interface OntologyGroundedProps extends BeatRenderProps {
   entities?: OntologyEntity[];
 }
 
-const TAGLINE_FADE_IN = [0, 18] as const;
-const FADE_OUT = [84, 90] as const;
-const SPAWN_WINDOW = 36;
-const SPAWN_FADE = 12;
+const TAGLINE_FADE_IN = [0, 36] as const;
+const FADE_OUT = [168, 180] as const;
+const SPAWN_WINDOW = 72;
+const SPAWN_FADE = 24;
 const EASE = Easing.inOut(Easing.quad);
 
 const FRAME_W = 1920;
@@ -152,7 +152,7 @@ function generateRows(curies: string[]): RowSegment[] {
   }
   for (let k = 0; k < order.length; k++) {
     flat[order[k]].spawnFrame =
-      18 + Math.floor((k / Math.max(1, order.length)) * SPAWN_WINDOW);
+      36 + Math.floor((k / Math.max(1, order.length)) * SPAWN_WINDOW);
     flat[order[k]].opacityMax = 0.5 + rand() * 0.2;
   }
 

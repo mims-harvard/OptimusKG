@@ -14,8 +14,8 @@ interface Segment {
 }
 
 const SEGMENTS: Segment[] = [
-  { text: "optimuskg", startFrame: 0, fadeFrames: 14 },
-  { text: ".ai", startFrame: 7, fadeFrames: 12 },
+  { text: "optimuskg", startFrame: 0, fadeFrames: 28 },
+  { text: ".ai", startFrame: 14, fadeFrames: 24 },
 ];
 
 const EASE = Easing.out(Easing.cubic);

@@ -1,7 +1,7 @@
 import { AbsoluteFill, Sequence } from "remotion";
 import { BEAT_PLACEMENTS, DURATION_IN_FRAMES } from "./scenes";
 
-export const FPS = 30;
+export const FPS = 60;
 export const WIDTH = 1920;
 export const HEIGHT = 1080;
 export { DURATION_IN_FRAMES };

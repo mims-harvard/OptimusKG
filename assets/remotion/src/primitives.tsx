@@ -344,18 +344,18 @@ export const RevealLine: React.FC<{
   lift?: number;
   className?: string;
   style?: CSSProperties;
-}> = ({ tokens, startFrame, perWordFrames = 6, lift = 18, className, style }) => {
+}> = ({ tokens, startFrame, perWordFrames = 12, lift = 18, className, style }) => {
   const frame = useCurrentFrame();
   return (
     <div className={className} style={style}>
       {tokens.map((tok, i) => {
         const delay = startFrame + i * perWordFrames;
-        const opacity = interpolate(frame, [delay, delay + 22], [0, 1], {
+        const opacity = interpolate(frame, [delay, delay + 44], [0, 1], {
           extrapolateLeft: "clamp",
           extrapolateRight: "clamp",
           easing: (t) => cubicBezier(t, EASE_OUT),
         });
-        const y = interpolate(frame, [delay, delay + 28], [lift, 0], {
+        const y = interpolate(frame, [delay, delay + 56], [lift, 0], {
           extrapolateLeft: "clamp",
           extrapolateRight: "clamp",
           easing: (t) => cubicBezier(t, EASE_OUT),

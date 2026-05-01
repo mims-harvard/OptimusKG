@@ -21,10 +21,10 @@ import type { BeatRenderProps } from "../scenes";
 //   36–150  Window visible; sidebar auto-cycles Anatomy → Gene →
 //           Molecular Function → Phenotype with chart crossfades.
 
-const HERO_FADE_OUT: [number, number] = [64, 76];
-const WINDOW_FADE_IN: [number, number] = [68, 82];
-const CYCLE_BEGIN = 82;
-const CYCLE_FRAMES = 24;
+const HERO_FADE_OUT: [number, number] = [128, 152];
+const WINDOW_FADE_IN: [number, number] = [136, 164];
+const CYCLE_BEGIN = 164;
+const CYCLE_FRAMES = 48;
 
 // Window aspect ratio mirrors the landing's `42.5rem × 35rem` (≈ 17:14 / 1.214).
 const WINDOW_W = 900;
@@ -55,7 +55,7 @@ function currentCycleIndex(frame: number): number {
 function chartCrossfade(frame: number, index: number): number {
   if (index === 0) return 1;
   const cycleStart = CYCLE_BEGIN + index * CYCLE_FRAMES;
-  return interpolate(frame - cycleStart, [0, 12], [0, 1], {
+  return interpolate(frame - cycleStart, [0, 24], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -120,8 +120,8 @@ export const PaperQA3AnalysisWindow: React.FC<BeatRenderProps> = ({
               (line, i) => (
                 <RevealLine
                   key={i}
-                  perWordFrames={2}
-                  startFrame={i * 6}
+                  perWordFrames={4}
+                  startFrame={i * 12}
                   style={{
                     display: "block",
                     opacity: i === 0 ? 1 : 0.78,

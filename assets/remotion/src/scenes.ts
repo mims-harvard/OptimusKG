@@ -39,21 +39,21 @@ export const BEATS: BeatSpec[] = [
   {
     id: "q-trust-a",
     label: "question-1",
-    durationInFrames: 66,
+    durationInFrames: 132,
     component: HookText,
     heroText: "How do you use a biomedical knowledge graph",
   },
   {
     id: "q-trust-b",
     label: "question-2",
-    durationInFrames: 66,
+    durationInFrames: 132,
     component: HookText,
     heroText: "you can actually trust?",
   },
   {
     id: "introducing",
     label: "showcase",
-    durationInFrames: 48,
+    durationInFrames: 96,
     component: HookText,
     heroText: "Introducing OptimusKG",
   },
@@ -67,28 +67,28 @@ export const BEATS: BeatSpec[] = [
   {
     id: "usecase-graph-ml",
     label: "usecase-graph-ml",
-    durationInFrames: 50,
+    durationInFrames: 100,
     component: HookText,
     heroText: "A standardized resource for graph AI,",
   },
   {
     id: "usecase-llm-retrieval",
     label: "usecase-llm-retrieval",
-    durationInFrames: 50,
+    durationInFrames: 100,
     component: HookText,
     heroText: "biomedical discovery,",
   },
   {
     id: "usecase-discovery",
     label: "usecase-discovery",
-    durationInFrames: 50,
+    durationInFrames: 100,
     component: HookText,
     heroText: "and hypothesis generation.",
   },
   {
     id: "multimodal",
     label: "unified-schema",
-    durationInFrames: 66,
+    durationInFrames: 132,
     component: UnifiedSchema,
     heroText: "Multimodal, unified schema",
     layout: "push-up",
@@ -96,7 +96,7 @@ export const BEATS: BeatSpec[] = [
   {
     id: "grounded",
     label: "ontology-grounded",
-    durationInFrames: 90,
+    durationInFrames: 180,
     component: OntologyGrounded,
     heroText: "Every entity is ontology grounded",
     props: {
@@ -197,7 +197,7 @@ export const BEATS: BeatSpec[] = [
   {
     id: "nodes-edges",
     label: "scale-stack",
-    durationInFrames: 102,
+    durationInFrames: 204,
     component: NodesEdges,
     props: {
       nodesText: "190,531 nodes",
@@ -208,7 +208,7 @@ export const BEATS: BeatSpec[] = [
   {
     id: "schema-scroll",
     label: "schema-scroll",
-    durationInFrames: 110,
+    durationInFrames: 220,
     component: SchemaScroll,
     props: {
       nodesText: "190,531 nodes",
@@ -219,7 +219,7 @@ export const BEATS: BeatSpec[] = [
   {
     id: "validated",
     label: "validated",
-    durationInFrames: 190,
+    durationInFrames: 380,
     component: PaperQA3AnalysisWindow,
     heroText: [
       "Independently validated using PaperQA3",
@@ -229,14 +229,14 @@ export const BEATS: BeatSpec[] = [
   {
     id: "python",
     label: "python-client",
-    durationInFrames: 174,
+    durationInFrames: 348,
     component: PythonClientWindow,
     heroText: "Delightfully simple Python client",
   },
   {
     id: "read-more",
     label: "read-more",
-    durationInFrames: 54,
+    durationInFrames: 108,
     component: HookText,
     heroText: "An open science, research initiative",
     layout: "exit-up",
@@ -244,14 +244,14 @@ export const BEATS: BeatSpec[] = [
   {
     id: "research-url",
     label: "research-url",
-    durationInFrames: 54,
-    enterOverlap: 6,
+    durationInFrames: 108,
+    enterOverlap: 12,
     component: ResearchUrl,
   },
   {
     id: "end-card",
     label: "end-card",
-    durationInFrames: 99,
+    durationInFrames: 198,
     component: EndCard,
     layout: "end-card",
   },

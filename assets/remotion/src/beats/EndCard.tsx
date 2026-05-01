@@ -9,12 +9,12 @@ import { HERO_HEADING } from "../Beat";
 import { Snippet } from "../primitives";
 import type { BeatRenderProps } from "../scenes";
 
-// Beat 13 (99 frames — 24f animation + 75f frozen hold = 2.5s after animation):
-//   0–18    Logo's 5 circles assemble from scattered positions.
-//   12–22   Lines connecting the circles fade in.
-//   14–22   "OptimusKG" wordmark fades in next to the logo (same row, centered).
-//   18–28   "uv add optimuskg" snippet fades in beneath the row at 70% opacity.
-//   24–48   Frozen — Twitter autoplay thumbnail.
+// Beat 13 (198 frames — 48f animation + 150f frozen hold = 2.5s after animation):
+//   0–36    Logo's 5 circles assemble from scattered positions.
+//   24–44   Lines connecting the circles fade in.
+//   28–44   "OptimusKG" wordmark fades in next to the logo (same row, centered).
+//   36–56   "uv add optimuskg" snippet fades in beneath the row at 70% opacity.
+//   48–96   Frozen — Twitter autoplay thumbnail.
 
 type Point = { x: number; y: number };
 
@@ -47,14 +47,14 @@ export const EndCard: React.FC<BeatRenderProps> = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Freeze everything from frame 24 onward (Twitter autoplay thumbnail).
-  const t = Math.min(frame, 24);
+  // Freeze everything from frame 48 onward (Twitter autoplay thumbnail).
+  const t = Math.min(frame, 48);
 
-  const wordmarkOpacity = interpolate(t, [14, 22], [0, 1], {
+  const wordmarkOpacity = interpolate(t, [28, 44], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const snippetOpacity = interpolate(t, [16, 24], [0, 1], {
+  const snippetOpacity = interpolate(t, [32, 48], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -97,7 +97,7 @@ export const EndCard: React.FC<BeatRenderProps> = () => {
             {LINES.map((line, i) => {
               const lineOpacity = interpolate(
                 t,
-                [12 + i, 22 + i],
+                [24 + 2 * i, 44 + 2 * i],
                 [0, 1],
                 { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
               );
@@ -117,12 +117,12 @@ export const EndCard: React.FC<BeatRenderProps> = () => {
               );
             })}
             {FINAL_CIRCLES.map((target, i) => {
-              const delay = i * 1.5;
+              const delay = i * 3;
               const progress = spring({
                 fps,
                 frame: t - delay,
                 config: { damping: 16, stiffness: 140 },
-                durationInFrames: 18,
+                durationInFrames: 36,
               });
               const dx = interpolate(progress, [0, 1], [SCATTER_OFFSETS[i].x, 0]);
               const dy = interpolate(progress, [0, 1], [SCATTER_OFFSETS[i].y, 0]);

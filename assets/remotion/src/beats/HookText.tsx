@@ -22,25 +22,25 @@ export const HookText: React.FC<BeatRenderProps> = ({
   let wrapperOpacity = 1;
 
   if (layout === "exit-up") {
-    const exitStart = durationInFrames - 12;
+    const exitStart = durationInFrames - 24;
     wrapperY = interpolate(frame, [exitStart, durationInFrames], [0, -120], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
     });
     wrapperOpacity = interpolate(
       frame,
-      [exitStart, durationInFrames - 2],
+      [exitStart, durationInFrames - 4],
       [1, 0],
       { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
     );
   }
 
   if (layout === "enter-from-below") {
-    wrapperY = interpolate(frame, [0, 10], [60, 0], {
+    wrapperY = interpolate(frame, [0, 20], [60, 0], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
     });
-    wrapperOpacity = interpolate(frame, [0, 8], [0, 1], {
+    wrapperOpacity = interpolate(frame, [0, 16], [0, 1], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
     });
@@ -58,8 +58,8 @@ export const HookText: React.FC<BeatRenderProps> = ({
       {lines.map((line, i) => (
         <RevealLine
           key={i}
-          perWordFrames={3}
-          startFrame={2 + i * 8}
+          perWordFrames={6}
+          startFrame={4 + i * 16}
           style={{ display: "block" }}
           tokens={line.split(" ")}
         />

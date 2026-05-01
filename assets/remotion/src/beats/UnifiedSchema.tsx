@@ -14,9 +14,9 @@ import type { BeatRenderProps } from "../scenes";
 // Hero top:   50% → 28%
 // Figure top: 110% → 42% (tight gap under hero)
 
-const LIFT_START = 32;
-const WIPE_START = 2;
-const WIPE_DURATION = 26;
+const LIFT_START = 64;
+const WIPE_START = 4;
+const WIPE_DURATION = 52;
 
 export const UnifiedSchema: React.FC<BeatRenderProps> = ({ heroText }) => {
   const frame = useCurrentFrame();
@@ -26,7 +26,7 @@ export const UnifiedSchema: React.FC<BeatRenderProps> = ({ heroText }) => {
     fps,
     frame: frame - LIFT_START,
     config: { damping: 18 },
-    durationInFrames: 28,
+    durationInFrames: 56,
   });
 
   const heroTopPct = interpolate(lift, [0, 1], [50, 28]);

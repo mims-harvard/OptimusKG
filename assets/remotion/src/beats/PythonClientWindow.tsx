@@ -3,17 +3,17 @@ import { HERO_HEADING } from "../Beat";
 import { EditorWindow, RevealLine, TabbedEditorShell } from "../primitives";
 import type { BeatRenderProps } from "../scenes";
 
-// Beat 10 (174 frames):
-//   0–18    Hero text reveals, centered, alone.
-//   18–48   Hold hero for reading (~1 s).
-//   48–60   Hero fades out.
-//   52–66   Window fades + slides in.
-//   66–174  Typewriter types out the code (~108 f); last char ~6 f before cut.
+// Beat 10 (348 frames):
+//   0–36     Hero text reveals, centered, alone.
+//   36–96    Hold hero for reading (~1 s).
+//   96–120   Hero fades out.
+//   104–132  Window fades + slides in.
+//   132–348  Typewriter types out the code (~216 f); last char ~12 f before cut.
 
-const HERO_FADE_OUT: [number, number] = [48, 60];
-const WINDOW_FADE_IN: [number, number] = [52, 66];
-const TYPE_START = 66;
-const TYPE_END = 168;
+const HERO_FADE_OUT: [number, number] = [96, 120];
+const WINDOW_FADE_IN: [number, number] = [104, 132];
+const TYPE_START = 132;
+const TYPE_END = 336;
 
 // Window aspect mirrors the landing's `42.5rem × 35rem` (≈ 17:14 / 1.214).
 const WINDOW_W = 760;
@@ -78,8 +78,8 @@ export const PythonClientWindow: React.FC<BeatRenderProps> = ({ heroText }) => {
         >
           <h2 className="text-fd-foreground" style={{ ...HERO_HEADING }}>
             <RevealLine
-              perWordFrames={3}
-              startFrame={2}
+              perWordFrames={6}
+              startFrame={4}
               tokens={(heroText as string).split(" ")}
             />
           </h2>

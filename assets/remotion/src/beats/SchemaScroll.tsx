@@ -14,7 +14,7 @@ interface SchemaScrollProps extends BeatRenderProps {
 }
 
 const HOLD = 0; // minimal hold — scroll starts almost immediately
-const SCROLL = 120; // 4s @ 30fps
+const SCROLL = 240; // 4s @ 60fps
 const TOTAL = HOLD + SCROLL;
 
 const FRAME_W = 1920;

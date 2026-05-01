@@ -2,13 +2,13 @@ import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";
 import { HERO_HEADING } from "../Beat";
 import type { BeatRenderProps } from "../scenes";
 
-// 102-frame beat (tighter than before):
-//   0–10     Nodes fades in centered.
-//   10–26    Hold nodes alone.
-//   26–44    Nodes → -L; edges enters from below → +L (2-line stack).
-//   44–58    Hold 2-line stack.
-//   58–76    Nodes → -2L; edges → 0; properties enters → +2L (3-line stack).
-//   76–102   Hold 3-line stack.
+// 204-frame beat (tighter than before):
+//   0–20      Nodes fades in centered.
+//   20–52     Hold nodes alone.
+//   52–88     Nodes → -L; edges enters from below → +L (2-line stack).
+//   88–116    Hold 2-line stack.
+//   116–152   Nodes → -2L; edges → 0; properties enters → +2L (3-line stack).
+//   152–204   Hold 3-line stack.
 
 interface NodesEdgesProps extends BeatRenderProps {
   nodesText?: string;
@@ -19,11 +19,11 @@ interface NodesEdgesProps extends BeatRenderProps {
 const EASE = Easing.bezier(0.16, 1, 0.3, 1);
 const L = 56;
 
-const NODES_FADE_IN: [number, number] = [0, 10];
-const TO_2_STACK: [number, number] = [26, 44];
-const EDGES_FADE_IN: [number, number] = [30, 44];
-const TO_3_STACK: [number, number] = [58, 76];
-const PROPS_FADE_IN: [number, number] = [62, 76];
+const NODES_FADE_IN: [number, number] = [0, 20];
+const TO_2_STACK: [number, number] = [52, 88];
+const EDGES_FADE_IN: [number, number] = [60, 88];
+const TO_3_STACK: [number, number] = [116, 152];
+const PROPS_FADE_IN: [number, number] = [124, 152];
 const ENTER_FROM_BELOW = 56;
 
 export const NodesEdges: React.FC<NodesEdgesProps> = ({
