@@ -1,9 +1,16 @@
 import { AbsoluteFill } from "remotion";
 import { WordByWordText } from "../../components/word-by-word-text";
+import { Sfx } from "../../sounds/sfx";
 import { heroHeading } from "../../tokens";
 
 // Beat: hero hook copy. Local 0–102.
-// 9 words enter via word-by-word fade-ramp, 6f stagger, 12f ramp each.
+// Words enter via word-by-word fade-ramp, 6f stagger, 12f ramp each, with
+// a soft click on every word's reveal.
+
+const TEXT = "What if you could trust your knowledge graph?";
+const HOOK_START = 0;
+const WORD_DELAY = 6;
+const WORDS = TEXT.split(" ");
 
 export const HookText: React.FC = () => (
   <AbsoluteFill
@@ -18,10 +25,18 @@ export const HookText: React.FC = () => (
       <WordByWordText
         distance="1.5rem"
         motion="rise"
-        startFrame={0}
-        text="What if you could trust your knowledge graph?"
-        wordDelay={6}
+        startFrame={HOOK_START}
+        text={TEXT}
+        wordDelay={WORD_DELAY}
       />
     </h1>
+
+    {WORDS.map((_, i) => (
+      <Sfx
+        at={HOOK_START + i * WORD_DELAY}
+        key={i}
+        sound="typeKey"
+      />
+    ))}
   </AbsoluteFill>
 );

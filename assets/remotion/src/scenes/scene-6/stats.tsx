@@ -1,5 +1,6 @@
 import { AbsoluteFill } from "remotion";
 import { StatTicker } from "../../components/stat-ticker";
+import { Sfx } from "../../sounds/sfx";
 import { spacing } from "../../tokens";
 
 // Beat: three stat lines stacked vertically and centred. All three rows fade
@@ -40,5 +41,12 @@ export const Stats: React.FC = () => (
       from={79321}
       value={110_276_843}
     />
+
+    {/* Tick when each counter starts ticking up. */}
+    <Sfx at={0} sound="tick" />
+    <Sfx at={12} sound="tick" />
+    <Sfx at={24} sound="tick" />
+    {/* Soft chime once the last counter (startFrame 24 + 45f duration) lands. */}
+    <Sfx at={70} sound="chime" />
   </AbsoluteFill>
 );

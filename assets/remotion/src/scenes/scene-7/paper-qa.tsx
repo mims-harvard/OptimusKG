@@ -6,6 +6,7 @@ import {
   staticFile,
   useCurrentFrame,
 } from "remotion";
+import { Sfx } from "../../sounds/sfx";
 import { fontWeight } from "../../tokens";
 
 // Beat: PaperQA3 analysis window. Adapted from
@@ -364,6 +365,15 @@ export const PaperQA: React.FC = () => {
 
   return (
     <AbsoluteFill>
+      {CYCLE_ORDER.slice(1).map((id, i) => (
+        <Sfx
+          at={CYCLE_BEGIN + i * CYCLE_FRAMES}
+          key={id}
+          sound="tick"
+        />
+      ))}
+      {/* Fan-out swoosh — scene-7 duration 360 → exit starts at 342. */}
+      <Sfx at={342} sound="swoosh" />
       <div
         style={{
           height: WINDOW_H,

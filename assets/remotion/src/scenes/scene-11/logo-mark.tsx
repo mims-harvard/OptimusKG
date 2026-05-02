@@ -5,6 +5,7 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
+import { Sfx } from "../../sounds/sfx";
 import { heroHeading } from "../../tokens";
 
 // Beat: OptimusKG logo + wordmark.
@@ -154,6 +155,13 @@ export const LogoMark: React.FC = () => {
       >
         OptimusKG
       </span>
+
+      {/* Wordmark fade-in. */}
+      <Sfx at={0} sound="swish" />
+      {/* Pop per circle as it springs into place. */}
+      {FINAL_CIRCLES.map((_, i) => (
+        <Sfx at={LOGO_START + i * 2} key={i} sound="pop" />
+      ))}
     </AbsoluteFill>
   );
 };

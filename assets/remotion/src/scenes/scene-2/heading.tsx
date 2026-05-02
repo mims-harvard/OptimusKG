@@ -1,4 +1,5 @@
 import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";
+import { Sfx } from "../../sounds/sfx";
 import { heroHeading } from "../../tokens";
 
 // Beat: heading "And use it to do research in".
@@ -194,6 +195,24 @@ export const Heading: React.FC = () => {
           })}
         </span>
       </h1>
+
+      {/* Click on each word's entry (phase 1 only — exit fades are silent). */}
+      {WORDS.map((_, i) => (
+        <Sfx
+          at={ENTRY_START + i * ENTRY_WORD_DELAY}
+          key={`enter-${i}`}
+          sound="typeKey"
+        />
+      ))}
+
+      {/* Type-key click on each chip swap. */}
+      {USE_CASES.map((_, i) => (
+        <Sfx
+          at={USE_CASE_START + i * USE_CASE_SLOT_FRAMES}
+          key={`chip-${i}`}
+          sound="typeKey"
+        />
+      ))}
     </AbsoluteFill>
   );
 };

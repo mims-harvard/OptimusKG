@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { fadeRamp } from "../../animations";
 import { mulberry32 } from "../../animations/internal";
+import { Sfx } from "../../sounds/sfx";
 import { fontWeight } from "../../tokens";
 
 // Beat: ontology-ID cloud. CURIEs sit fixed at row-flow positions around
@@ -267,6 +268,8 @@ export const Cloud: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ overflow: "hidden", pointerEvents: "none" }}>
+      {/* Fan-out swoosh — scene-5 duration 210 → exit starts at 192. */}
+      <Sfx at={192} sound="swoosh" />
       {items.map((p, i) => {
         const t = fadeRamp({
           frame,

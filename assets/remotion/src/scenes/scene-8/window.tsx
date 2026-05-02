@@ -1,5 +1,6 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { fadeRamp, springIn } from "../../animations";
+import { Sfx } from "../../sounds/sfx";
 
 // Beat: editor window. Springs in from the right edge after the heading
 // settles, then reveals the Python snippet line by line once it lands.
@@ -165,6 +166,9 @@ export const Window: React.FC = () => {
         overflow: "hidden",
       }}
     >
+      <Sfx at={WINDOW_START} sound="swoosh" />
+      {/* Fan-out swoosh — scene-8 duration 360 → exit starts at 342. */}
+      <Sfx at={342} sound="swoosh" />
       <div
         style={{
           background: COLOR_BG,

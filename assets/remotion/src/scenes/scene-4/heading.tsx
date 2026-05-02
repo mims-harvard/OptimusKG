@@ -1,5 +1,6 @@
 import { AbsoluteFill, Easing, interpolate, useCurrentFrame } from "remotion";
 import { fadeRamp, useStaggered } from "../../animations";
+import { Sfx } from "../../sounds/sfx";
 import { heroHeading } from "../../tokens";
 
 // Beat: heading "A multimodal knowledge graph across biomedical domains".
@@ -71,6 +72,10 @@ export const Heading: React.FC = () => {
           );
         })}
       </h1>
+
+      {WORDS.map((_, i) => (
+        <Sfx at={HEADING_START + i * WORD_DELAY} key={i} sound="typeKey" />
+      ))}
     </AbsoluteFill>
   );
 };

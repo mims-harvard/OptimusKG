@@ -1,5 +1,6 @@
 import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
 import { fadeRamp } from "../../animations";
+import { Sfx } from "../../sounds/sfx";
 
 // Beat: "uv add optimuskg" snippet card anchored at vertical 60%.
 // Slides up + fades in after the logo + wordmark have settled.
@@ -35,6 +36,7 @@ export const Snippet: React.FC = () => {
         paddingTop: "60vh",
       }}
     >
+      <Sfx at={ENTRY_START} sound="swoosh" />
       <div
         style={{
           alignItems: "center",

@@ -7,6 +7,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { springIn } from "../../animations";
+import { Sfx } from "../../sounds/sfx";
 
 // Beat: schema figure (public/features/figure.webp). Final position is
 // vertically centred. Rises from off-screen below into centre, pushing the
@@ -44,6 +45,10 @@ export const Figure: React.FC = () => {
         paddingInline: "8rem",
       }}
     >
+      <Sfx at={ENTER_START} sound="swoosh" />
+      {/* Fan-out swoosh — fires when the scene wrapper begins its
+          18-frame dissolve (scene-4 duration 210 → exit starts at 192). */}
+      <Sfx at={192} sound="swoosh" />
       <Img
         src={staticFile("features/figure.webp")}
         style={{

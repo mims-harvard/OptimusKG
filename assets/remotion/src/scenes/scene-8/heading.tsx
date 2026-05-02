@@ -1,14 +1,19 @@
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { WordByWordText } from "../../components/word-by-word-text";
 import { springIn } from "../../animations";
+import { Sfx } from "../../sounds/sfx";
 import { heroHeading } from "../../tokens";
 import { WINDOW_START } from "./window";
 
-// Beat: heading centred. Words enter right-to-left with opacity 0 → 1.
-// While the empty window slides in from the right (starting at WINDOW_START)
-// the heading is "pushed" leftwards in sync, so the final layout has the
-// heading anchored on the left and the window on the right. The Scene
-// wrapper handles the dissolve at the end of the scene.
+// Beat: heading centred. Words enter right-to-left with opacity 0 → 1, with
+// a soft click on every word's reveal. While the empty window slides in
+// from the right (starting at WINDOW_START) the heading is "pushed"
+// leftwards in sync. The Scene wrapper handles the dissolve at the end.
+
+const TEXT = "Usable in a single line of code";
+const HEADING_START = 0;
+const WORD_DELAY = 6;
+const WORDS = TEXT.split(" ");
 
 const PUSH_REM = -22; // final translateX of the heading
 
@@ -49,11 +54,15 @@ export const Heading: React.FC = () => {
         <WordByWordText
           distance="2rem"
           motion="slide-left"
-          startFrame={0}
-          text="Usable in a single line of code"
-          wordDelay={6}
+          startFrame={HEADING_START}
+          text={TEXT}
+          wordDelay={WORD_DELAY}
         />
       </h1>
+
+      {WORDS.map((_, i) => (
+        <Sfx at={HEADING_START + i * WORD_DELAY} key={i} sound="typeKey" />
+      ))}
     </AbsoluteFill>
   );
 };
