@@ -9,7 +9,7 @@ import {
 import { springIn } from "../../animations";
 import { Sfx } from "../../sounds/sfx";
 
-// Beat: schema figure (public/features/figure.webp). Final position is
+// Beat: schema figure (public/images/schema.webp). Final position is
 // vertically centred. Rises from off-screen below into centre, pushing the
 // heading up as it goes.
 //
@@ -50,7 +50,7 @@ export const Figure: React.FC = () => {
           18-frame dissolve (scene-4 duration 210 → exit starts at 192). */}
       <Sfx at={192} sound="swoosh" />
       <Img
-        src={staticFile("features/figure.webp")}
+        src={staticFile("images/schema.webp")}
         style={{
           borderRadius: "1rem",
           boxShadow:

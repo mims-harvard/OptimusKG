@@ -42,8 +42,8 @@ const VALIDATION_ENTITIES: ValidationEntity[] = [
 ];
 
 // Order the sidebar cycles through; each id must have a matching SVG
-// at public/features/{id}-light.svg. Gene is intentionally excluded from
-// the cycle (it still appears in the sidebar list, just never goes active).
+// at public/charts/{id}.svg. Gene is intentionally excluded from the cycle
+// (it still appears in the sidebar list, just never goes active).
 const CYCLE_ORDER = [
   "anatomy",
   "molecular-function",
@@ -400,7 +400,7 @@ export const PaperQA: React.FC = () => {
                 <div style={{ height: "100%", position: "relative", width: "100%" }}>
                   {activeIndex > 0 ? (
                     <Img
-                      src={staticFile(`features/${previousId}-light.svg`)}
+                      src={staticFile(`charts/${previousId}.svg`)}
                       style={{
                         bottom: 0,
                         left: 0,
@@ -414,7 +414,7 @@ export const PaperQA: React.FC = () => {
                     />
                   ) : null}
                   <Img
-                    src={staticFile(`features/${activeId}-light.svg`)}
+                    src={staticFile(`charts/${activeId}.svg`)}
                     style={{
                       bottom: 0,
                       left: 0,
