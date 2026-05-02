@@ -1,6 +1,8 @@
 <div align="center">
   <a target="_blank" href="https://optimuskg.ai" style="background:none">
-    <img src="https://raw.githubusercontent.com/mims-harvard/optimuskg/main/assets/svg/optimuskg-logo.svg" alt="Made at the Zitnik Lab" width="600">
+    <video src="https://github.com/mims-harvard/OptimusKG/raw/main/assets/optimuskg.mp4" controls width="800" poster="https://raw.githubusercontent.com/mims-harvard/optimuskg/main/assets/svg/optimuskg-logo.svg">
+      <img src="https://raw.githubusercontent.com/mims-harvard/optimuskg/main/assets/svg/optimuskg-logo.svg" alt="Made at the Zitnik Lab" width="600">
+    </video>
   </a>
 </div>
 

@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 requires-python = ">=3.12"
 name = "optimus"
 readme = "README.md"
-version = "0.70.10"
+version = "0.70.11"
 dependencies = [
   "ipython>=8.10",
   "jupyterlab>=3.0",
@@ -135,4 +135,4 @@ include = ["optimuskg/datasets/**"]
 unresolved-attribute = "ignore"
 
 [tool.typos.files]
-extend-exclude = ["Makefile", "notebooks/*", "docs/**"]
+extend-exclude = ["Makefile", "notebooks/*", "docs/**", "assets/**"]
