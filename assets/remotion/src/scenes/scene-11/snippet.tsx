@@ -4,7 +4,7 @@ import { fadeRamp } from "../../animations";
 // Beat: "uv add optimuskg" snippet card anchored at vertical 60%.
 // Slides up + fades in after the logo + wordmark have settled.
 
-const ENTRY_START = 160;
+const ENTRY_START = 100;
 const ENTRY_DURATION = 24;
 const RISE_REM = 1.5;
 
@@ -45,10 +45,10 @@ export const Snippet: React.FC = () => {
           display: "inline-flex",
           fontFamily:
             "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace",
-          fontSize: "1.5rem",
+          fontSize: "2.5rem",
           fontVariantLigatures: "none",
           opacity,
-          padding: "0.875rem 1.25rem",
+          padding: "1.25rem 2rem",
           transform: `translateY(${ty}rem)`,
         }}
       >

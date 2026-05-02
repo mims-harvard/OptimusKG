@@ -8,15 +8,14 @@ import {
 import { heroHeading } from "../../tokens";
 
 // Beat: OptimusKG logo + wordmark.
-// Phase 1 (0–~50):   five circles spring in from scattered positions to
-//                    assemble the logo, then the four connecting lines fade
-//                    in. Logo is on its own, vertically + horizontally
-//                    centred.
-// Phase 2 (90–120):  the wordmark "OptimusKG" grows in beside the logo.
-//                    Because the logo + wordmark live in a centred flex row,
-//                    the logo automatically shifts leftward as the wordmark
-//                    claims layout space — final composition stays centred.
-// Phase 3 (120+):    hold.
+// Phase 1 (0–~12):    "OptimusKG" wordmark fades in at its final position
+//                     on the right of the (centred) logo+wordmark row.
+// Phase 2 (30–~80):   the five logo circles spring in from scattered
+//                     positions to assemble the logo at the LEFT of the
+//                     wordmark, then the four connecting lines fade in.
+//                     Both elements are at their final layout positions
+//                     from frame 0 — no horizontal sliding.
+// Phase 3 (80+):      hold.
 //
 // Logo geometry copied from
 //   https://github.com/mims-harvard/OptimusKG/blob/remotion/assets/remotion/src/beats/Wordmark.tsx
@@ -52,36 +51,25 @@ const STROKE_WIDTH = 16;
 const CIRCLE_RADIUS = 24;
 const LOGO_PX = 240;
 
-// Logo slides leftward into its final position over this window. The
-// wordmark snaps to visible at the end (no per-character transition).
-const SHIFT_START = 90;
-const SHIFT_DURATION = 15;
 const WORDMARK_FONT_SIZE = "7rem";
-// Estimated natural width of the wordmark text at WORDMARK_FONT_SIZE. Used
-// to compute the logo's compensating translateX so it appears centred when
-// alone (phase 1) and shifts back to its layout-natural position (phase 2).
-// Tune by eye if the final composition reads off-centre.
-const WORDMARK_WIDTH_REM = 33;
 const GAP_REM = 2;
-// How far the logo needs to shift right so that, while alone, it sits at
-// canvas centre — equal to half the (gap + wordmark) layout space the
-// invisible wordmark already reserves on the right.
-const SHIFT_PER_REM = (GAP_REM + WORDMARK_WIDTH_REM) / 2;
+
+// Wordmark fades in first.
+const WORDMARK_FADE_DURATION = 12;
+// Logo assembly starts a few frames after the wordmark settles, so the
+// viewer reads the text first.
+const LOGO_START = 24;
 
 export const LogoMark: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Logo slides from "centred alone" (+SHIFT_PER_REM) to "centred with
-  // wordmark" (0) over the shift window.
-  const logoTranslateX = interpolate(
+  const wordmarkOpacity = interpolate(
     frame,
-    [SHIFT_START, SHIFT_START + SHIFT_DURATION],
-    [SHIFT_PER_REM, 0],
+    [0, WORDMARK_FADE_DURATION],
+    [0, 1],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
-  // Wordmark snaps to visible once the logo has finished sliding into place.
-  const wordmarkVisible = frame >= SHIFT_START + SHIFT_DURATION;
 
   return (
     <AbsoluteFill
@@ -96,18 +84,14 @@ export const LogoMark: React.FC = () => {
       <svg
         fill="none"
         height={LOGO_PX}
-        style={{
-          flexShrink: 0,
-          overflow: "visible",
-          transform: `translateX(${logoTranslateX}rem)`,
-        }}
+        style={{ flexShrink: 0, overflow: "visible" }}
         viewBox="0 0 256 256"
         width={LOGO_PX}
       >
         {LINES.map((line, i) => {
           const lineOpacity = interpolate(
             frame,
-            [28 + i * 2, 42 + i * 2],
+            [LOGO_START + 28 + i * 2, LOGO_START + 42 + i * 2],
             [0, 1],
             { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
           );
@@ -130,7 +114,7 @@ export const LogoMark: React.FC = () => {
           const delay = i * 2;
           const progress = spring({
             fps,
-            frame: frame - delay,
+            frame: frame - LOGO_START - delay,
             config: { damping: 16, stiffness: 120 },
             durationInFrames: 30,
           });
@@ -156,9 +140,7 @@ export const LogoMark: React.FC = () => {
         })}
       </svg>
 
-      {/* Wordmark — always in layout (so the centred flex row reserves the
-          right amount of space from frame 0); snaps to visible after the
-          logo finishes sliding into its left position. */}
+      {/* Wordmark — fades in first, at its final layout position. */}
       <span
         style={{
           ...heroHeading,
@@ -166,7 +148,7 @@ export const LogoMark: React.FC = () => {
           display: "inline-block",
           flexShrink: 0,
           fontSize: WORDMARK_FONT_SIZE,
-          opacity: wordmarkVisible ? 1 : 0,
+          opacity: wordmarkOpacity,
           whiteSpace: "nowrap",
         }}
       >
