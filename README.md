@@ -1,9 +1,14 @@
 <div align="center">
-  <a target="_blank" href="https://optimuskg.ai" style="background:none">
-    <video src="https://github.com/mims-harvard/OptimusKG/raw/main/assets/optimuskg.mp4" controls width="800" poster="https://raw.githubusercontent.com/mims-harvard/optimuskg/main/assets/svg/optimuskg-logo.svg">
+  <video
+    src="https://github.com/user-attachments/assets/7218f6e1-5049-4e32-bfe1-13e382b33c9e"
+    controls
+    width="800"
+    poster="https://raw.githubusercontent.com/mims-harvard/optimuskg/main/assets/svg/optimuskg-logo.svg"
+  >
+    <a target="_blank" href="https://optimuskg.ai" style="background:none">
       <img src="https://raw.githubusercontent.com/mims-harvard/optimuskg/main/assets/svg/optimuskg-logo.svg" alt="Made at the Zitnik Lab" width="600">
-    </video>
-  </a>
+    </a>
+  </video>
 </div>
 
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json)](https://github.com/astral-sh/uv)
