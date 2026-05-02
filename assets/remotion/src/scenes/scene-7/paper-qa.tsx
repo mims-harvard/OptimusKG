@@ -15,10 +15,10 @@ import { fontWeight } from "../../tokens";
 // inlined here as private helpers.
 
 // ─── Public timings (frames are scene-7-local) ───────────────────────────
-const WINDOW_FADE_IN: [number, number] = [168, 198];
-const CYCLE_BEGIN = 198;
-const CYCLE_FRAMES = 60;
-const CHART_CROSSFADE_FRAMES = 24;
+const WINDOW_FADE_IN: [number, number] = [118, 148];
+const CYCLE_BEGIN = 148;
+const CYCLE_FRAMES = 48;
+const CHART_CROSSFADE_FRAMES = 20;
 
 // ─── Window geometry ─────────────────────────────────────────────────────
 const WINDOW_W = 900;

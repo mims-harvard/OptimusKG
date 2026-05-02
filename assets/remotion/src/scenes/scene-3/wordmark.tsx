@@ -6,7 +6,7 @@ import { fontSize, heroHeading } from "../../tokens";
 // faded-out "Introducing" label vacated). Uses the heroHeading h1 token,
 // overridden to display size for extra visual weight.
 
-const ENTRY_START = 48;
+const ENTRY_START = 38;
 const ENTRY_DURATION = 18;
 const RISE = "1.5rem";
 

@@ -6,8 +6,8 @@ import { heroHeading } from "../../tokens";
 // the wordmark can take the same spot.
 
 const ENTRY_DURATION = 18;
-const FADE_OUT_START = 36;
-const FADE_OUT_DURATION = 12;
+const FADE_OUT_START = 28;
+const FADE_OUT_DURATION = 10;
 
 export const Introducing: React.FC = () => {
   const frame = useCurrentFrame();

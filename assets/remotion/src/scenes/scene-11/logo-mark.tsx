@@ -55,7 +55,7 @@ const LOGO_PX = 240;
 // Logo slides leftward into its final position over this window. The
 // wordmark snaps to visible at the end (no per-character transition).
 const SHIFT_START = 90;
-const SHIFT_DURATION = 30;
+const SHIFT_DURATION = 15;
 const WORDMARK_FONT_SIZE = "7rem";
 // Estimated natural width of the wordmark text at WORDMARK_FONT_SIZE. Used
 // to compute the logo's compensating translateX so it appears centred when

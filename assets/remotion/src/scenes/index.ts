@@ -24,7 +24,7 @@ export const SCENES: SceneSpec[] = [
   {
     id: "scene-1",
     name: "scene-1",
-    durationInFrames: 240,
+    durationInFrames: 200,
     component: Scene1,
   },
   {
@@ -39,13 +39,13 @@ export const SCENES: SceneSpec[] = [
   {
     id: "scene-3",
     name: "scene-3",
-    durationInFrames: 120,
+    durationInFrames: 96,
     component: Scene3,
   },
   {
     id: "scene-4",
     name: "scene-4",
-    durationInFrames: 240,
+    durationInFrames: 210,
     component: Scene4,
   },
   {
@@ -66,13 +66,16 @@ export const SCENES: SceneSpec[] = [
   {
     id: "scene-7",
     name: "scene-7",
-    durationInFrames: 480,
+    // Internal beats retimed: circle hold 50–100, fade 100–124, window in
+    // 118–148, cycle 148–292 (3 entities × 48f), hold to 342, dissolve
+    // 342–360.
+    durationInFrames: 360,
     component: Scene7,
   },
   {
     id: "scene-8",
     name: "scene-8",
-    durationInFrames: 420,
+    durationInFrames: 360,
     component: Scene8,
   },
   {
@@ -90,7 +93,7 @@ export const SCENES: SceneSpec[] = [
   {
     id: "scene-11",
     name: "scene-11",
-    durationInFrames: 300,
+    durationInFrames: 240,
     component: Scene11,
   },
 ];

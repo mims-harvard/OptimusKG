@@ -1,11 +1,11 @@
 import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
 import { heroHeading } from "../../tokens";
 
-// Beat: heading centred, full opacity. Fades out at frame 150 to make way
+// Beat: heading centred, full opacity. Fades out at frame 100 to make way
 // for the PaperQA3 analysis window.
 
-const FADE_OUT_START = 150;
-const FADE_OUT_DURATION = 30;
+const FADE_OUT_START = 100;
+const FADE_OUT_DURATION = 24;
 
 export const Heading: React.FC = () => {
   const frame = useCurrentFrame();

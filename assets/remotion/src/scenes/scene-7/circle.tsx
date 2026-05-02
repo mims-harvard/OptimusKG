@@ -32,8 +32,8 @@ const DOT_STAGGER = 5;
 const ROTATION_PERIOD_FRAMES = 600;
 
 // Whole circle (and dots) fades out before the PaperQA3 window arrives.
-const FADE_OUT_START = 150;
-const FADE_OUT_DURATION = 30;
+const FADE_OUT_START = 100;
+const FADE_OUT_DURATION = 24;
 
 export const Circle: React.FC = () => {
   const frame = useCurrentFrame();
