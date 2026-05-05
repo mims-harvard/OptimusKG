@@ -68,7 +68,7 @@ PRs must pass three checks:
 ### Pipeline Layers (Medallion Pattern)
 
 - **Bronze** (`optimuskg/pipelines/bronze/`): Extracts and standardizes raw data from external sources. Each source has its own node file under `nodes/`. Outputs standardized Polars DataFrames as Parquet.
-- **Silver** (`optimuskg/pipelines/silver/`): Consolidates entities across sources into unified node tables (Gene, Drug, Disease, Protein, Anatomy, Pathway) and builds ~31 relationship edge types.
+- **Silver** (`optimuskg/pipelines/silver/`): Consolidates entities across sources into unified node tables (Gene, Drug, Disease, Protein, Anatomy, Pathway) and builds ~27 relationship edge types.
 - **Gold** (`optimuskg/pipelines/gold/`): Exports the final knowledge graph via BioCypher in configured formats.
 
 ### Key Framework Patterns
