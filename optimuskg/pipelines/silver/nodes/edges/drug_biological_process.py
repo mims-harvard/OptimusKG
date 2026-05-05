@@ -16,7 +16,7 @@ def run(
         .unnest("indications")
         .explode("references")
         .unnest("references")
-        .filter(pl.col("disease").str.starts_with("GO_"))
+        .filter(pl.col("disease").str.starts_with("GO"))
         .select(
             pl.col("drug_id").alias("from"),
             pl.col("disease").alias("to"),

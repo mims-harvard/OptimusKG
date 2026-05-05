@@ -2691,7 +2691,7 @@ wheels = [
 
 [[package]]
 name = "optimus"
-version = "0.70.14"
+version = "0.71.0"
 source = { editable = "." }
 dependencies = [
     { name = "adjusttext" },
