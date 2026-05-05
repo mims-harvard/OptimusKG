@@ -15,6 +15,6 @@ bronze.ontology.uberon_terms:
         license: pl.String
         version: pl.String
   metadata:
-    checksum: a4f9abc3e54a97e882510d0903f697fa
+    checksum: 117dcad524b0c1c9030dec271554bd01
     kedro-viz:
       layer: bronze

@@ -7,6 +7,6 @@ bronze.ontology.go_relations:
       edge_type: pl.String
       head: pl.String
   metadata:
-    checksum: ebf7a557691f1742920ace586bd55ef2
+    checksum: 254eaef4a668ea0cf3fc71f6a3d7b976
     kedro-viz:
       layer: bronze

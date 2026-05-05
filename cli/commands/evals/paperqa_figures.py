@@ -424,7 +424,9 @@ def _draw_panel(  # noqa: PLR0915
 
     for x, top, n in zip(true_x, true_bottoms, true_totals):
         if n > 0:
-            ax.text(x, top + 0.005, str(n), ha="center", va="bottom", fontsize=9, color=ink)
+            ax.text(
+                x, top + 0.005, str(n), ha="center", va="bottom", fontsize=9, color=ink
+            )
 
     false_heights = [_get(False, r) / total_false for r in _ALL_RATINGS]
     if sum(false_heights) > 0:
@@ -443,7 +445,9 @@ def _draw_panel(  # noqa: PLR0915
 
     for x, top, n in zip(false_x, false_heights, false_totals):
         if n > 0:
-            ax.text(x, top + 0.005, str(n), ha="center", va="bottom", fontsize=9, color=ink)
+            ax.text(
+                x, top + 0.005, str(n), ha="center", va="bottom", fontsize=9, color=ink
+            )
 
     node_type_label = NODE_TYPE_LABELS.get(node_type, node_type)
     ax.set_title(node_type_label, fontsize=13, color=ink, pad=10)

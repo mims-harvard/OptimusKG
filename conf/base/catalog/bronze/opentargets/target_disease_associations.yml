@@ -9,6 +9,6 @@ bronze.opentargets.target_disease_associations:
         score: pl.Float64
         evidence_count: pl.Int64
   metadata:
-    checksum: 8781c4471f6c437062ba8c15579e5ed9
+    checksum: 5c39270259e0c326b395345972775805
     kedro-viz:
       layer: bronze

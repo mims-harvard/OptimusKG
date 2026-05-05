@@ -11,6 +11,7 @@ from .cellular_component_gene import cellular_component_gene_node
 from .disease_disease import disease_disease_node
 from .disease_gene import disease_gene_node
 from .disease_phenotype import disease_phenotype_node
+from .drug_biological_process import drug_biological_process_node
 from .drug_disease import drug_disease_node
 from .drug_drug import drug_drug_node
 from .drug_gene import drug_gene_node
@@ -41,6 +42,7 @@ __all__ = [
     "disease_disease_node",
     "disease_gene_node",
     "disease_phenotype_node",
+    "drug_biological_process_node",
     "drug_disease_node",
     "drug_drug_node",
     "drug_gene_node",

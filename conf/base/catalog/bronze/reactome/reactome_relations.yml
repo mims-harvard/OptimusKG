@@ -6,6 +6,6 @@ bronze.reactome.reactome_relations:
       reactome_id_1: pl.String
       reactome_id_2: pl.String
   metadata:
-    checksum: 813e0433f9c6efa5c249eeb2a8243fe0
+    checksum: cb645449567e03d5d01be50538ef52f9
     kedro-viz:
       layer: bronze

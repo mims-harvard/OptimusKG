@@ -13,6 +13,7 @@ def run(  # noqa: PLR0913
     drug_gene: pl.DataFrame,
     drug_disease: pl.DataFrame,
     drug_phenotype: pl.DataFrame,
+    drug_biological_process: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
         pl.concat(
@@ -46,6 +47,15 @@ def run(  # noqa: PLR0913
                     ]
                 ),
                 drug_gene.select(
+                    [
+                        pl.col("from").alias("id"),
+                        pl.col("properties")
+                        .struct.field("sources")
+                        .struct.field("direct")
+                        .alias("direct_sources"),
+                    ]
+                ),
+                drug_biological_process.select(
                     [
                         pl.col("from").alias("id"),
                         pl.col("properties")
@@ -223,6 +233,7 @@ drug_node = node(
         "drug_gene": "silver.edges.drug_gene",
         "drug_disease": "silver.edges.drug_disease",
         "drug_phenotype": "silver.edges.drug_phenotype",
+        "drug_biological_process": "silver.edges.drug_biological_process",
     },
     outputs="nodes.drug",
     name="drug",

@@ -7,6 +7,6 @@ bronze.reactome.reactome_terms:
       reactome_name: pl.String
       species: pl.String
   metadata:
-    checksum: 7628c6061534d5fca6158f07c3b14355
+    checksum: 7938c7a1b1fa11a553181c610719ca0d
     kedro-viz:
       layer: bronze

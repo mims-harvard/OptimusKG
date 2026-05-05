@@ -7,6 +7,6 @@ bronze.ontology.hp_xrefs:
       ontology: pl.String
       ontology_id: pl.String
   metadata:
-    checksum: a8e155fd3df6792fe158e3d5d19661fd
+    checksum: b5c87c4a2e334720b11ce87c70b22d12
     kedro-viz:
       layer: bronze

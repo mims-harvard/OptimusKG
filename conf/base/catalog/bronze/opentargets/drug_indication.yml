@@ -15,6 +15,6 @@ bronze.opentargets.drug_indication:
                 ids: pl.List(pl.String)
         indication_count: pl.Int32
   metadata:
-    checksum: 76a2098d15549b236b1cbf1226daae1d
+    checksum: 26a76b27a476215d21c101c0b17ac1dc
     kedro-viz:
       layer: bronze

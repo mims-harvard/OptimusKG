@@ -23,6 +23,6 @@ silver.edges.phenotype_gene:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
   metadata:
-    checksum: 5a736cde2cfbd48d363f32213cb6fedf
+    checksum: 3ae1d97fe8012bd222d37090ff286084
     kedro-viz:
       layer: silver

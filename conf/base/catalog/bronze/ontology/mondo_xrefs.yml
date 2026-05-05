@@ -6,6 +6,6 @@ bronze.ontology.mondo_xrefs:
       id: pl.String
       xref_id: pl.String
   metadata:
-    checksum: a313b4911343beb7301077c5db5903f0
+    checksum: 9291dad3fd423d30b7ebd8537a4095bf
     kedro-viz:
       layer: bronze

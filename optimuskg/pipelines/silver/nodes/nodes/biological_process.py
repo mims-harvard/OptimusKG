@@ -8,6 +8,7 @@ def run(
     biological_process_gene: pl.DataFrame,
     exposure_biological_process: pl.DataFrame,
     biological_process_biological_process: pl.DataFrame,
+    drug_biological_process: pl.DataFrame,
     go_terms: pl.DataFrame,
 ) -> pl.DataFrame:
     return (
@@ -18,6 +19,7 @@ def run(
                 biological_process_biological_process.select(
                     pl.concat_list(["from", "to"]).explode().alias("id")
                 ),
+                drug_biological_process.select(pl.col("to").alias("id")),
             ]
         )
         .unique(subset="id")
@@ -55,6 +57,7 @@ biological_process_node = node(
         "biological_process_gene": "silver.edges.biological_process_gene",
         "exposure_biological_process": "silver.edges.exposure_biological_process",
         "biological_process_biological_process": "silver.edges.biological_process_biological_process",
+        "drug_biological_process": "silver.edges.drug_biological_process",
         "go_terms": "bronze.ontology.go_terms",
     },
     outputs="nodes.biological_process",

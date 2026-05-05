@@ -1,6 +1,6 @@
-silver.edges.drug_disease:
+silver.edges.drug_biological_process:
   type: optimuskg.datasets.polars.ParquetDataset
-  filepath: data/silver/edges/drug_disease.parquet
+  filepath: data/silver/edges/drug_biological_process.parquet
   load_args:
     schema:
       from: pl.String
@@ -12,11 +12,8 @@ silver.edges.drug_disease:
         sources:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
-        structure_id: pl.String
-        drug_disease_id: pl.String
         reference_ids: pl.List(pl.String)
         highest_clinical_trial_phase: pl.Float64
   metadata:
-    checksum: ab33600601ccb0d459a7d5a6e9290a96
     kedro-viz:
       layer: silver

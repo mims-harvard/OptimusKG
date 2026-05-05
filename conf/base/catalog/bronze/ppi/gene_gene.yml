@@ -7,6 +7,6 @@ bronze.ppi.gene_gene:
       to: pl.String
       databases: pl.List(pl.String)
   metadata:
-    checksum: d19feda309063156dee68037cc2d037e
+    checksum: 512247d1d4c6dbf2519279818c19dafc
     kedro-viz:
       layer: bronze

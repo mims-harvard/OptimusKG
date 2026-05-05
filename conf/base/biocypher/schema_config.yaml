@@ -426,6 +426,17 @@ drug disease:
     structure_id: str
     drug_disease_id: str
 
+drug biological process:
+  is_a: related to
+  represented_as: edge
+  input_label: DRG-BPO
+  properties:
+    undirected: bool
+    relation: str
+    reference_ids: str[]
+    sources: str
+    highest_clinical_trial_phase: float
+
 drug phenotype:
   is_a: related to
   represented_as: edge

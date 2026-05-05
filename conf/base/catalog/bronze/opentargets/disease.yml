@@ -28,6 +28,6 @@ bronze.opentargets.disease:
             url: pl.String
             name: pl.String
   metadata:
-    checksum: 501b2b34754184f8a03d50bcae75ff07
+    checksum: 7da26f62a17404b4a075ce2b3a366f73
     kedro-viz:
       layer: bronze
