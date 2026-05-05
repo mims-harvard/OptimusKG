@@ -13,6 +13,6 @@ silver.edges.cellular_component_cellular_component:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
   metadata:
-    checksum: 56da79f5e06fd8b06ac0ca9f21475392
+    checksum: 0b4373d63577fe815eb902c50f41dc04
     kedro-viz:
       layer: silver

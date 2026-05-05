@@ -22,6 +22,6 @@ bronze.opentargets.disease_phenotype:
             sex: pl.String
             resource: pl.String
   metadata:
-    checksum: 2f30c7a6e12b2ff6ecbcbf01c9c6439f
+    checksum: c22a2254c36ade82e94c55129754d9f9
     kedro-viz:
       layer: bronze

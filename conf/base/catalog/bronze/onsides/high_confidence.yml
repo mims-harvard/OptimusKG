@@ -10,6 +10,6 @@ bronze.onsides.high_confidence:
       meddra_name: pl.String
       meddra_term_type: pl.String
   metadata:
-    checksum: c4a58390d5f9cea9feaa70c5ed84da5a
+    checksum: ce6643ec95b984039d0be7bc87539f37
     kedro-viz:
       layer: bronze

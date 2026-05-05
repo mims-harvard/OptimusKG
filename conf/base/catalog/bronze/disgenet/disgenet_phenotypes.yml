@@ -20,6 +20,6 @@ bronze.disgenet.disgenet_phenotypes:
       nof_snps: pl.String
       source: pl.String
   metadata:
-    checksum: 2148dd85d9cd63895904a429b65402e3
+    checksum: 337cc5510a18f962d66df3c8fbf007ce
     kedro-viz:
       layer: bronze

@@ -5,7 +5,7 @@ const STATS: ReadonlyArray<{ value: string; label: string }> = [
   { value: "18", label: "ontologies" },
   { value: "10", label: "entity types" },
   { value: "190,531", label: "nodes" },
-  { value: "26", label: "relation types" },
+  { value: "27", label: "relation types" },
   { value: "21,813,816", label: "edges" },
   { value: "110,276,843", label: "properties" },
 ];

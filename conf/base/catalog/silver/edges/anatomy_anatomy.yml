@@ -13,6 +13,6 @@ silver.edges.anatomy_anatomy:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
   metadata:
-    checksum: 2651b7891c7ac111504b17a5e819f89e
+    checksum: 136cac89e0039455eda2627ffb2be12e
     kedro-viz:
       layer: silver

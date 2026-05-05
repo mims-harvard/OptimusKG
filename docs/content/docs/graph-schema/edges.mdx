@@ -90,6 +90,12 @@ export const drgPheFields = baseEdgeFields("DRG-PHE", true, [
   sourcesField,
 ]);
 
+export const drgBpoFields = baseEdgeFields("DRG-BPO", true, [
+  { name: "highest_clinical_trial_phase", type: "Float64", description: "Highest clinical trial phase for this indication" },
+  { name: "reference_ids", type: "List[String]", description: "Supporting reference identifiers" },
+  sourcesField,
+]);
+
 export const goAnnotationProperties = [
   { name: "evidence", type: "List[String]", description: "GO evidence codes (e.g. IDA, IMP, TAS)" },
   { name: "gene_product", type: "List[String]", description: "Gene product IDs annotated to this term" },
@@ -161,7 +167,7 @@ export const expExpFields = baseEdgeFields("EXP-EXP", false, exposureProperties)
 export const expGenFields = baseEdgeFields("EXP-GEN", false, exposureProperties);
 export const expMfnFields = baseEdgeFields("EXP-MFN", true, exposureProperties);
 
-OptimusKG encodes **26 edge types** connecting the node types across molecular, clinical, anatomical, and environmental domains.
+OptimusKG encodes **27 edge types** connecting the node types across molecular, clinical, anatomical, and environmental domains.
 
 | Label | Relation(s) | Count |
 | --- | --- | --: |
@@ -172,7 +178,7 @@ OptimusKG encodes **26 edge types** connecting the node types across molecular, 
 | `GEN-GEN` | `INTERACTS_WITH` | 327,924 |
 | `DIS-PHE` | `PHENOTYPE_PRESENT` | 157,144 |
 | `BPO-GEN` | `INTERACTS_WITH` | 158,410 |
-| `DRG-DIS` | `INDICATION`, `CONTRAINDICATION`, `OFF_LABEL_USE` | 70,442 |
+| `DRG-DIS` | `INDICATION`, `CONTRAINDICATION`, `OFF_LABEL_USE` | 70,380 |
 | `MFN-GEN` | `INTERACTS_WITH` | 90,933 |
 | `DRG-PHE` | `ADVERSE_DRUG_REACTION`, `ASSOCIATED_WITH`, `CONTRAINDICATION`, `INDICATION`, `OFF_LABEL_USE` | 13,758 |
 | `PWY-GEN` | `INTERACTS_WITH` | 46,977 |
@@ -191,6 +197,7 @@ OptimusKG encodes **26 edge types** connecting the node types across molecular, 
 | `CCO-CCO` | `IS_A` | 4,639 |
 | `EXP-MFN` | `INTERACTS_WITH` | 47 |
 | `EXP-CCO` | `INTERACTS_WITH` | 13 |
+| `DRG-BPO` | `INDICATION` | 62 |
 
 All edges share the same base schema in the unified `edges.parquet` and `largest_connected_component_edges.parquet` tables:
 
@@ -253,6 +260,12 @@ All edges share the same base schema in the unified `edges.parquet` and `largest
 ## Disease-Phenotype
 
 <DocsSchemaTree fields={disPheFields} />
+
+---
+
+## Drug-Biological Process
+
+<DocsSchemaTree fields={drgBpoFields} />
 
 ---
 

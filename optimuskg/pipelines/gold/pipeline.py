@@ -30,6 +30,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             "silver.edges.cellular_component_cellular_component",
             "silver.edges.disease_disease",
             "silver.edges.exposure_disease",
+            "silver.edges.drug_biological_process",
             "silver.edges.drug_disease",
             "silver.edges.disease_gene",
             "silver.edges.disease_phenotype",

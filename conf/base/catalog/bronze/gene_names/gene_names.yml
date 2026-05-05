@@ -6,6 +6,6 @@ bronze.gene_names.gene_names:
       ncbi_id: pl.String
       symbol: pl.String
   metadata:
-    checksum: 0e9a5847f75654453f69aed7258d381d
+    checksum: 7700dbee870f7fc483934824ccf083fd
     kedro-viz:
       layer: bronze

@@ -7,6 +7,6 @@ bronze.ontology.uberon_relations:
       relation_type: pl.String
       relation_id: pl.String
   metadata:
-    checksum: a030b8d339311d0edffbd1db088fcc71
+    checksum: baf3fb63a693a50be8ff562b197b2b9b
     kedro-viz:
       layer: bronze

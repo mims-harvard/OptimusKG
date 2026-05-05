@@ -11,6 +11,6 @@ bronze.drugbank.vocabulary:
       synonyms: pl.String
       standard_inchi_key: pl.String
   metadata:
-    checksum: 9717f203e13e6f14bbb3aab94c2e798e
+    checksum: f7ac3459a09af206f5669aebd5d6287c
     kedro-viz:
       layer: bronze

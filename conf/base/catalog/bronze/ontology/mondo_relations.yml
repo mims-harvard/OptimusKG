@@ -7,6 +7,6 @@ bronze.ontology.mondo_relations:
       edge_type: pl.String
       head: pl.String
   metadata:
-    checksum: dc26282482cc0495115e16eb89ddf5a9
+    checksum: ebe090b9445fd00c8069de709d420268
     kedro-viz:
       layer: bronze

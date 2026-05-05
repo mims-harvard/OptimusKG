@@ -35,7 +35,10 @@ def run(
         .unnest("indications")
         .explode("references")
         .unnest("references")
-        .filter(~pl.col("disease").str.contains("HP"))
+        .filter(
+            ~pl.col("disease").str.contains("HP")
+            & ~pl.col("disease").str.starts_with("GO")
+        )
         .select(
             pl.col("id").alias("from"),
             pl.col("disease").alias("to"),
