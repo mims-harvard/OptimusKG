@@ -1,7 +1,13 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation, Source
+from optimuskg.pipelines.silver.nodes.constants import (
+    Edge,
+    Node,
+    Relation,
+    Source,
+    resolve_sources,
+)
 
 
 def run(
@@ -33,7 +39,9 @@ def run(
                             .cast(pl.List(pl.String))
                             .alias("direct"),
                             pl.concat_list([pl.col("source")])
-                            .cast(pl.List(pl.String))
+                            .map_elements(
+                                resolve_sources, return_dtype=pl.List(pl.String)
+                            )
                             .alias("indirect"),
                         ]
                     ).alias("sources"),
