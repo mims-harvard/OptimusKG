@@ -1,0 +1,53 @@
+name: Publish PyPI client
+
+on:
+  workflow_call:
+    inputs:
+      package-name:
+        description: PyPI package name (used for the environment URL)
+        required: true
+        type: string
+      package-dir:
+        description: Path to the package directory containing pyproject.toml
+        required: true
+        type: string
+      python-version:
+        description: Python version to install
+        required: false
+        type: string
+        default: "3.12"
+
+jobs:
+  publish:
+    name: Publish ${{ inputs.package-name }} to PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/${{ inputs.package-name }}
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup uv
+        uses: ./.github/actions/setup-uv
+        with:
+          python-version: ${{ inputs.python-version }}
+          pyproject-file: ${{ inputs.package-dir }}/pyproject.toml
+          cache-dependency-glob: |
+            ${{ inputs.package-dir }}/pyproject.toml
+            ${{ inputs.package-dir }}/uv.lock
+
+      - name: Check if local version is greater than PyPI
+        id: version_check
+        uses: maybe-hello-world/pyproject-check-version@v4
+        with:
+          pyproject-path: ${{ inputs.package-dir }}/pyproject.toml
+
+      - name: Build and publish to PyPI
+        if: steps.version_check.outputs.local_version_is_higher == 'true'
+        run: |
+          uv build ${{ inputs.package-dir }}
+          uv publish ${{ inputs.package-dir }}/dist/*
+

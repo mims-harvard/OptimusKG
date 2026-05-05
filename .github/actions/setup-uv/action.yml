@@ -1,0 +1,28 @@
+name: Setup uv
+description: Install uv and Python with cache wired to the given pyproject and lockfile.
+
+inputs:
+  python-version:
+    description: Python version to install
+    required: false
+    default: "3.12"
+  pyproject-file:
+    description: Path to the pyproject.toml that drives the cache key
+    required: true
+  cache-dependency-glob:
+    description: Multiline glob of files to include in the cache key
+    required: false
+    default: |
+      **/pyproject.toml
+      **/uv.lock
+
+runs:
+  using: composite
+  steps:
+    - uses: astral-sh/setup-uv@v7
+      with:
+        enable-cache: true
+        ignore-nothing-to-cache: true
+        pyproject-file: ${{ inputs.pyproject-file }}
+        python-version: ${{ inputs.python-version }}
+        cache-dependency-glob: ${{ inputs.cache-dependency-glob }}
