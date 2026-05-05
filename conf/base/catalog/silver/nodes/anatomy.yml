@@ -19,6 +19,6 @@ silver.nodes.anatomy:
           license: pl.String
           version: pl.String
   metadata:
-    checksum: 73ba23aff20ef5625a10893e86eadab8
+    checksum: eb9d9d03805dbca9636315f9a146ca25
     kedro-viz:
       layer: silver
