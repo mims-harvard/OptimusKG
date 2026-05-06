@@ -94,7 +94,7 @@ kedro-viz: ##@ Run kedro viz
 	@uv run kedro viz --include-hooks
 
 # -----------------------------------------------
-##@ Dataverse
+# Dataverse
 # -----------------------------------------------
 
 DATAVERSE_SERVER ?= https://dataverse.harvard.edu
@@ -115,7 +115,8 @@ dataverse-release: ##@ Upload gold parquet files to Harvard Dataverse as a draft
 	@uvx dvuploader \
 		--pid $(DATAVERSE_PID) \
 		--api-token $$DATAVERSE_TOKEN \
-		--server-url $(DATAVERSE_SERVER) \
+		--dataverse-url $(DATAVERSE_SERVER) \
+		--recurse \
 		$(DATAVERSE_DIR)
 	@echo
 	@echo "Upload complete. Review the draft at:"
@@ -123,7 +124,7 @@ dataverse-release: ##@ Upload gold parquet files to Harvard Dataverse as a draft
 	@echo "Then publish (major version) from the Dataverse UI."
 
 # -----------------------------------------------
-##@ Documentation
+# Documentation
 # -----------------------------------------------
 
 .PHONY: docs-dev
