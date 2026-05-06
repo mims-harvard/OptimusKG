@@ -59,19 +59,15 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7
         with:
           python-version-file: .python-version
-          cache: "pip"
 
       - name: Fetch branches
         run: |
           git fetch origin ${TARGET_BRANCH}
           git fetch origin ${HEAD_BRANCH}
-
-      - name: Install dependencies
-        run: pip install packaging
 
       - name: Check version bump
         shell: bash
@@ -84,7 +80,7 @@ jobs:
           echo "New version: ${new_version}"
 
           # Compare versions using Python
-          version_increased=$(python - <<EOF
+          version_increased=$(uv run --with packaging python - <<EOF
           from packaging import version
           old = version.parse("${old_version}")
           new = version.parse("${new_version}")
