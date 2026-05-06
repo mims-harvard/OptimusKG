@@ -11,11 +11,6 @@ on:
         description: Path to the package directory containing pyproject.toml
         required: true
         type: string
-      python-version:
-        description: Python version to install
-        required: false
-        type: string
-        default: "3.12"
 
 jobs:
   publish:
@@ -32,8 +27,6 @@ jobs:
 
       - name: Setup uv
         uses: ./.github/actions/setup-uv
-        with:
-          python-version: ${{ inputs.python-version }}
 
       - name: Check if local version is greater than PyPI
         id: version_check

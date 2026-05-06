@@ -3,9 +3,12 @@ name: Integration checks
 on:
   pull_request:
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   CLICOLOR: 1
-  PYTHON_VERSION: 3.12
   RUFF_VERSION: 0.9.1 # Using same version as pre-commit-config.yaml
 
 jobs:
@@ -15,23 +18,11 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v7
-        id: setup-uv
+        uses: ./.github/actions/setup-uv
         with:
-          enable-cache: true
-          ignore-nothing-to-cache: true
-          pyproject-file: "pyproject.toml"
-          python-version: ${{ env.PYTHON_VERSION }}
           cache-dependency-glob: |
             **/pyproject.toml
             **/uv.lock
-
-      - name: Log if uv cache was restored
-        if: steps.setup-uv.outputs.cache-hit == 'true'
-        run: echo "Cache was restored"
-
-      - name: Print the installed uv version
-        run: echo "Installed uv version is ${{ steps.setup-uv.outputs.uv-version }}"
 
       - name: Install the project dependencies
         run: uv sync --all-groups
@@ -70,7 +61,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          python-version-file: .python-version
           cache: "pip"
 
       - name: Fetch branches
