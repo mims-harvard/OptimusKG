@@ -12,7 +12,6 @@ permissions:
 
 env:
   CLICOLOR: 1
-  RUFF_VERSION: 0.9.1 # Using same version as pre-commit-config.yaml
 
 jobs:
   type-check:
@@ -45,7 +44,6 @@ jobs:
       - name: Lint
         uses: astral-sh/ruff-action@v3
         with:
-          version: ${{ env.RUFF_VERSION }}
           args: check
 
       - name: Format check
@@ -56,12 +54,8 @@ jobs:
   semver-bump:
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    env:
-      TARGET_BRANCH: ${{ github.base_ref }}
-      HEAD_BRANCH: ${{ github.head_ref }}
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -75,3 +69,4 @@ jobs:
           file: pyproject.toml
           pattern: >
             version = ["'](.+?)["']
+
