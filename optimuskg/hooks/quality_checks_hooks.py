@@ -1,6 +1,8 @@
 import logging
+from collections import Counter
 from typing import Any
 
+import networkx as nx
 import polars as pl
 from kedro.framework.hooks import hook_impl
 from kedro.io.core import DatasetError
@@ -136,8 +138,6 @@ class QualityChecksHooks:
         Builds a networkx Graph from the consolidated nodes and edges
         DataFrames produced by export_kg and verifies it is connected.
         """
-        import networkx as nx
-
         output_name = "gold.kg.parquet"
         output_value = outputs[output_name]
 
@@ -158,8 +158,6 @@ class QualityChecksHooks:
                 edges_df["label"].to_list(),
             ):
                 G.add_edge(src, dst, label=label)
-
-        from collections import Counter
 
         component_sizes = [len(c) for c in nx.connected_components(G)]
         n_components = len(component_sizes)
