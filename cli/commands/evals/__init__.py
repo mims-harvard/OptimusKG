@@ -1,7 +1,7 @@
 """Evaluation dataset computation for knowledge graph analysis."""
 
 import logging
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 
 import typer
@@ -185,7 +185,7 @@ def sample_edges_cmd(  # noqa: PLR0913
     )
 
 
-class ActionType(str, Enum):
+class ActionType(StrEnum):
     submit = "submit"
     poll = "poll"
 

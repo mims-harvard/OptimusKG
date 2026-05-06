@@ -11,6 +11,7 @@ from urllib.parse import urlparse
 import fsspec
 import polars as pl
 from cachetools import Cache
+from fsspec.utils import infer_storage_options
 from kedro.io import AbstractDataset, DatasetError
 from kedro.io.catalog_config_resolver import CREDENTIALS_KEY
 from kedro.io.core import parse_dataset_definition
@@ -49,8 +50,6 @@ class ZipDataset(AbstractDataset[zipfile.ZipFile, pl.DataFrame]):
         filepath_arg: str = "filepath",
         compression: str = "deflated",
     ) -> None:
-        from fsspec.utils import infer_storage_options
-
         super().__init__()
 
         self._filepath = filepath

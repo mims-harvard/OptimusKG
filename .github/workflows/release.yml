@@ -2,58 +2,59 @@ name: Release
 
 on:
   push:
-    branches: main
+    branches: [main]
+  workflow_dispatch:
 
-env:
-  PYTHON_VERSION: "3.12"
+permissions:
+  contents: read
 
 jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    outputs:
+      should-publish: ${{ steps.tag_check.outputs.exists == 'false' }}
     steps:
       - uses: actions/checkout@v6
-
-      - name: Setup uv
-        uses: ./.github/actions/setup-uv
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache-dependency-glob: |
-            **/pyproject.toml
-            **/uv.lock
-
-      - name: Build Kedro Viz
-        run: uv run kedro viz build
-
-      - name: Upload Kedro Viz to Vercel Blob
-        uses: dartilesm/vercel-blob-action@v2
-        with:
-          source: build/
-          destination: build/ # NOTE: we could use "${{ github.sha }}/build/" but we want to re-write the folder in the blob storage.
-          read-write-token: ${{ secrets.VERCEL_BLOB_READ_WRITE_TOKEN }}
+          fetch-depth: 0
 
       - name: Read project version
         id: project_version
-        uses: SebRollen/toml-action@v1.2.0
+        uses: maybe-hello-world/pyproject-check-version@v4
         with:
-          file: pyproject.toml
-          field: project.version
+          pyproject-path: pyproject.toml
+
+      - name: Check if tag already exists
+        id: tag_check
+        env:
+          TAG: ${{ steps.project_version.outputs.local_version }}
+        run: |
+          if git rev-parse "refs/tags/${TAG}" >/dev/null 2>&1; then
+            echo "Tag ${TAG} already exists — skipping release."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Create GitHub Release
+        if: steps.tag_check.outputs.exists == 'false'
         uses: softprops/action-gh-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.project_version.outputs.value }}
-          name: Release ${{ steps.project_version.outputs.value }}
+          tag_name: ${{ steps.project_version.outputs.local_version }}
+          name: Release ${{ steps.project_version.outputs.local_version }}
           draft: false
           prerelease: false
 
   publish:
     name: Publish client
     needs: release
+    if: needs.release.outputs.should-publish == 'true'
     uses: ./.github/workflows/publish-pypi.yml
     with:
-      package-name: optimuskg
       package-dir: packages/optimuskg
-      python-version: "3.12"

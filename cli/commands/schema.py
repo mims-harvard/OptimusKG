@@ -13,7 +13,7 @@ logger = logging.getLogger("cli")
 
 def _format_dataset_display(ds_name: str, ds_type: str) -> str:
     display_name = format_rich(ds_name, "dark_orange")
-    type_name = ds_type.split(".")[-1]
+    type_name = ds_type.rsplit(".", maxsplit=1)[-1]
     return f"{display_name} ({type_name})"
 
 

@@ -48,10 +48,13 @@ def _init_worker(hook_classes: tuple[type, ...], settings_module: str) -> None:
     """
     # Configure settings (but NOT pipelines) so hooks that access
     # the catalog via KedroSession can resolve the project config.
-    import kedro.framework.project as _project
-    from kedro.framework.hooks.manager import _create_hook_manager, _register_hooks
-    from kedro.framework.project import settings
-    from kedro.runner.runner import Task
+    import kedro.framework.project as _project  # noqa: PLC0415
+    from kedro.framework.hooks.manager import (  # noqa: PLC0415
+        _create_hook_manager,
+        _register_hooks,
+    )
+    from kedro.framework.project import settings  # noqa: PLC0415
+    from kedro.runner.runner import Task  # noqa: PLC0415
 
     settings.configure(settings_module)
     _project.PACKAGE_NAME = settings_module.removesuffix(".settings")
@@ -72,7 +75,7 @@ def _init_worker(hook_classes: tuple[type, ...], settings_module: str) -> None:
 
 def _get_settings_module() -> str:
     """Derive the settings module path from the currently-loaded settings."""
-    from kedro.framework.project import settings
+    from kedro.framework.project import settings  # noqa: PLC0415
 
     for mod_path in settings._loaded_py_modules:  # type: ignore[union-attr]
         if mod_path.endswith(".settings"):
@@ -92,7 +95,7 @@ class FixedParallelRunner(ParallelRunner):
     """
 
     def _get_executor(self, max_workers: int) -> Executor:
-        from kedro.framework.project import settings
+        from kedro.framework.project import settings  # noqa: PLC0415
 
         hook_classes = tuple(type(h) for h in settings.HOOKS)
         settings_module = _get_settings_module()

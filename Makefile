@@ -94,7 +94,37 @@ kedro-viz: ##@ Run kedro viz
 	@uv run kedro viz --include-hooks
 
 # -----------------------------------------------
-##@ Documentation
+# Dataverse
+# -----------------------------------------------
+
+DATAVERSE_SERVER ?= https://dataverse.harvard.edu
+DATAVERSE_PID    ?= doi:10.7910/DVN/IYNGEV
+DATAVERSE_DIR    ?= data/gold/kg/parquet
+
+.PHONY: dataverse-release
+dataverse-release: ##@ Upload gold parquet files to Harvard Dataverse as a draft (override DATAVERSE_PID, DATAVERSE_SERVER, DATAVERSE_DIR; requires DATAVERSE_TOKEN)
+	@if [ -z "$$DATAVERSE_TOKEN" ]; then \
+		echo "DATAVERSE_TOKEN is not set. Generate one at $(DATAVERSE_SERVER)/dataverseuser.xhtml?selectTab=apiTokenTab and export it."; \
+		exit 1; \
+	fi
+	@if [ ! -d "$(DATAVERSE_DIR)" ]; then \
+		echo "Directory $(DATAVERSE_DIR) does not exist. Run the gold pipeline first."; \
+		exit 1; \
+	fi
+	@echo "Uploading $(DATAVERSE_DIR) to $(DATAVERSE_PID) on $(DATAVERSE_SERVER) (draft)..."
+	@uvx dvuploader \
+		--pid $(DATAVERSE_PID) \
+		--api-token $$DATAVERSE_TOKEN \
+		--dataverse-url $(DATAVERSE_SERVER) \
+		--recurse \
+		$(DATAVERSE_DIR)
+	@echo
+	@echo "Upload complete. Review the draft at:"
+	@echo "  $(DATAVERSE_SERVER)/dataset.xhtml?persistentId=$(DATAVERSE_PID)&version=DRAFT"
+	@echo "Then publish (major version) from the Dataverse UI."
+
+# -----------------------------------------------
+# Documentation
 # -----------------------------------------------
 
 .PHONY: docs-dev

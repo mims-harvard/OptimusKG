@@ -12,7 +12,10 @@ import polars as pl
 from optimuskg import _dataverse, _graph
 
 _FULL: Final[tuple[str, str]] = ("nodes.parquet", "edges.parquet")
-_LCC: Final[tuple[str, str]] = ("largest_connected_component_nodes.parquet", "largest_connected_component_edges.parquet")
+_LCC: Final[tuple[str, str]] = (
+    "largest_connected_component_nodes.parquet",
+    "largest_connected_component_edges.parquet",
+)
 
 
 def get_file(relative_path: str, *, force: bool = False) -> Path:
