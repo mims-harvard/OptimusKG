@@ -23,11 +23,6 @@ jobs:
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
-        with:
-          enable-cache: true
-          cache-dependency-glob: |
-            **/pyproject.toml
-            **/uv.lock
 
       - name: Install the project dependencies
         run: uv sync --all-groups --frozen
@@ -56,7 +51,6 @@ jobs:
       - name: Format check
         uses: astral-sh/ruff-action@v3
         with:
-          version: ${{ env.RUFF_VERSION }}
           args: format --check
 
   semver-bump:
@@ -73,32 +67,11 @@ jobs:
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
+
+      - uses: rayepps/require-semver-bump@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         with:
-          python-version-file: .python-version
-
-      - name: Check version bump
-        shell: bash
-        run: |
-          old_version=$(git show origin/${TARGET_BRANCH}:pyproject.toml | grep "^version = " | cut -d'"' -f2 || echo "0.0.0")
-          new_version=$(git show origin/${HEAD_BRANCH}:pyproject.toml | grep "^version = " | cut -d'"' -f2)
-
-          echo "Previous version: ${old_version}"
-          echo "New version: ${new_version}"
-
-          version_increased=$(uv run --with packaging python - <<EOF
-          from packaging import version
-          old = version.parse("${old_version}")
-          new = version.parse("${new_version}")
-          print(new > old)
-          EOF
-          )
-
-          if [ "${version_increased}" = "False" ]; then
-            echo "::error::Version must be bumped according to semantic versioning."
-            echo "Current version: ${old_version}"
-            echo "Proposed version: ${new_version}"
-            echo "Please update the version in pyproject.toml"
-            exit 1
-          else
-            echo "✅ Version bump verified: ${old_version} -> ${new_version}"
-          fi
+          file: pyproject.toml
+          pattern: >
+            version = ["'](.+?)["']
