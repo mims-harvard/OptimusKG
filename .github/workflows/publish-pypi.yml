@@ -8,10 +8,14 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: read
+
 jobs:
   publish:
     name: Publish to PyPI
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment: pypi
     permissions:
       id-token: write
@@ -31,6 +35,5 @@ jobs:
       - name: Build and publish to PyPI
         if: steps.version_check.outputs.local_version_is_higher == 'true'
         run: |
-          uv build ${{ inputs.package-dir }}
-          uv publish ${{ inputs.package-dir }}/dist/*
-
+          uv build "${{ inputs.package-dir }}"
+          uv publish "${{ inputs.package-dir }}"/dist/*.whl "${{ inputs.package-dir }}"/dist/*.tar.gz

@@ -2,14 +2,25 @@ name: Release
 
 on:
   push:
-    branches: main
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    outputs:
+      should-publish: ${{ steps.tag_check.outputs.exists == 'false' }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Read project version
         id: project_version
@@ -17,7 +28,20 @@ jobs:
         with:
           pyproject-path: pyproject.toml
 
+      - name: Check if tag already exists
+        id: tag_check
+        env:
+          TAG: ${{ steps.project_version.outputs.local_version }}
+        run: |
+          if git rev-parse "refs/tags/${TAG}" >/dev/null 2>&1; then
+            echo "Tag ${TAG} already exists — skipping release."
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Create GitHub Release
+        if: steps.tag_check.outputs.exists == 'false'
         uses: softprops/action-gh-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -30,6 +54,7 @@ jobs:
   publish:
     name: Publish client
     needs: release
+    if: needs.release.outputs.should-publish == 'true'
     uses: ./.github/workflows/publish-pypi.yml
     with:
       package-dir: packages/optimuskg

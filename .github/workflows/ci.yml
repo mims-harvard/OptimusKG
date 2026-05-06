@@ -4,16 +4,20 @@ on:
   pull_request:
 
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
 
 env:
   CLICOLOR: 1
   RUFF_VERSION: 0.9.1 # Using same version as pre-commit-config.yaml
 
 jobs:
-  uv:
+  type-check:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
 
@@ -26,7 +30,7 @@ jobs:
             **/uv.lock
 
       - name: Install the project dependencies
-        run: uv sync --all-groups
+        run: uv sync --all-groups --frozen
 
       - name: Run ty
         run: make ty
@@ -36,20 +40,28 @@ jobs:
 
   formatting:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v6
 
       - name: Spell Check
         uses: crate-ci/typos@v1.45.1
 
-      - name: Formatting
+      - name: Lint
         uses: astral-sh/ruff-action@v3
         with:
           version: ${{ env.RUFF_VERSION }}
-          args: check --fix --exit-non-zero-on-fix
+          args: check
+
+      - name: Format check
+        uses: astral-sh/ruff-action@v3
+        with:
+          version: ${{ env.RUFF_VERSION }}
+          args: format --check
 
   semver-bump:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     env:
       TARGET_BRANCH: ${{ github.base_ref }}
       HEAD_BRANCH: ${{ github.head_ref }}
@@ -64,22 +76,15 @@ jobs:
         with:
           python-version-file: .python-version
 
-      - name: Fetch branches
-        run: |
-          git fetch origin ${TARGET_BRANCH}
-          git fetch origin ${HEAD_BRANCH}
-
       - name: Check version bump
         shell: bash
         run: |
-          # Extract versions from both branches
           old_version=$(git show origin/${TARGET_BRANCH}:pyproject.toml | grep "^version = " | cut -d'"' -f2 || echo "0.0.0")
           new_version=$(git show origin/${HEAD_BRANCH}:pyproject.toml | grep "^version = " | cut -d'"' -f2)
 
           echo "Previous version: ${old_version}"
           echo "New version: ${new_version}"
 
-          # Compare versions using Python
           version_increased=$(uv run --with packaging python - <<EOF
           from packaging import version
           old = version.parse("${old_version}")
