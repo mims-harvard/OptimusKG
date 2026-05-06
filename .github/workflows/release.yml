@@ -19,6 +19,9 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           pyproject-file: pyproject.toml
+          cache-dependency-glob: |
+            **/pyproject.toml
+            **/uv.lock
 
       - name: Build Kedro Viz
         run: uv run kedro viz build

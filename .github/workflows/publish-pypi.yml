@@ -35,9 +35,6 @@ jobs:
         with:
           python-version: ${{ inputs.python-version }}
           pyproject-file: ${{ inputs.package-dir }}/pyproject.toml
-          cache-dependency-glob: |
-            ${{ inputs.package-dir }}/pyproject.toml
-            ${{ inputs.package-dir }}/uv.lock
 
       - name: Check if local version is greater than PyPI
         id: version_check
