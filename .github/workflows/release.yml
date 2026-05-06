@@ -18,7 +18,6 @@ jobs:
         uses: ./.github/actions/setup-uv
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          pyproject-file: pyproject.toml
           cache-dependency-glob: |
             **/pyproject.toml
             **/uv.lock
@@ -46,7 +45,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.project_version.outputs.value }}
-          release_name: Release ${{ github.ref }}
+          name: Release ${{ steps.project_version.outputs.value }}
           draft: false
           prerelease: false
 

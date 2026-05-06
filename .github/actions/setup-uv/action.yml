@@ -6,9 +6,10 @@ inputs:
     description: Python version to install
     required: false
     default: "3.12"
-  pyproject-file:
-    description: Path to the pyproject.toml driving the install
-    required: true
+  version-file:
+    description: Path to a file (typically pyproject.toml) declaring the pinned uv version
+    required: false
+    default: pyproject.toml
   cache-dependency-glob:
     description: Multiline glob of files to key the uv cache on. Leave empty to disable caching.
     required: false
@@ -21,6 +22,6 @@ runs:
       with:
         enable-cache: ${{ inputs.cache-dependency-glob != '' }}
         ignore-nothing-to-cache: true
-        pyproject-file: ${{ inputs.pyproject-file }}
+        version-file: ${{ inputs.version-file }}
         python-version: ${{ inputs.python-version }}
         cache-dependency-glob: ${{ inputs.cache-dependency-glob }}
