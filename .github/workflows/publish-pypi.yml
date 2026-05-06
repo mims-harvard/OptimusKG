@@ -3,10 +3,6 @@ name: Publish PyPI client
 on:
   workflow_call:
     inputs:
-      package-name:
-        description: PyPI package name (used for the environment URL)
-        required: true
-        type: string
       package-dir:
         description: Path to the package directory containing pyproject.toml
         required: true
@@ -14,11 +10,9 @@ on:
 
 jobs:
   publish:
-    name: Publish ${{ inputs.package-name }} to PyPI
+    name: Publish to PyPI
     runs-on: ubuntu-latest
-    environment:
-      name: pypi
-      url: https://pypi.org/p/${{ inputs.package-name }}
+    environment: pypi
     permissions:
       id-token: write
       contents: read

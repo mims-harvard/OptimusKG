@@ -8,8 +8,6 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
-    outputs:
-      package-name: ${{ steps.package_name.outputs.value }}
     steps:
       - uses: actions/checkout@v6
 
@@ -18,13 +16,6 @@ jobs:
         uses: maybe-hello-world/pyproject-check-version@v4
         with:
           pyproject-path: pyproject.toml
-
-      - name: Read client package name
-        id: package_name
-        uses: SebRollen/toml-action@v1.2.0
-        with:
-          file: packages/optimuskg/pyproject.toml
-          field: project.name
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
@@ -41,5 +32,4 @@ jobs:
     needs: release
     uses: ./.github/workflows/publish-pypi.yml
     with:
-      package-name: ${{ needs.release.outputs.package-name }}
       package-dir: packages/optimuskg
