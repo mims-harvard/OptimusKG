@@ -34,7 +34,6 @@ jobs:
         uses: ./.github/actions/setup-uv
         with:
           python-version: ${{ inputs.python-version }}
-          pyproject-file: ${{ inputs.package-dir }}/pyproject.toml
 
       - name: Check if local version is greater than PyPI
         id: version_check
