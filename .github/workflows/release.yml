@@ -5,7 +5,7 @@ on:
     branches: main
 
 env:
-  PYTHON_VERSION: 3.12
+  PYTHON_VERSION: "3.12"
 
 jobs:
   release:
@@ -15,71 +15,46 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@v7
-        id: setup-uv
+        uses: ./.github/actions/setup-uv
         with:
-          enable-cache: true
-          ignore-nothing-to-cache: true
-          pyproject-file: "pyproject.toml"
           python-version: ${{ env.PYTHON_VERSION }}
+          pyproject-file: pyproject.toml
           cache-dependency-glob: |
             **/pyproject.toml
             **/uv.lock
 
-      - name: Install the project dependencies
+      - name: Build Kedro Viz
         run: uv run kedro viz build
 
-      - name: Upload file to Vercel Blob
+      - name: Upload Kedro Viz to Vercel Blob
         uses: dartilesm/vercel-blob-action@v2
         with:
-          source: "build/"
-          destination: "build/" # NOTE: we could use something like "${{ github.sha }}/build/" but we want to re-write the folder in the blob storage.
+          source: build/
+          destination: build/ # NOTE: we could use "${{ github.sha }}/build/" but we want to re-write the folder in the blob storage.
           read-write-token: ${{ secrets.VERCEL_BLOB_READ_WRITE_TOKEN }}
 
-      - name: Get package version
-        id: package_version
-        run: |
-          echo "version=$(cat pyproject.toml | grep '^version = ' | head -1 | sed 's/version = \"\([^\"]*\)\"/\1/')" >>$GITHUB_OUTPUT
+      - name: Read project version
+        id: project_version
+        uses: SebRollen/toml-action@v1.2.0
+        with:
+          file: pyproject.toml
+          field: project.version
 
-      - name: Create Release
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.package_version.outputs.version }}
+          tag_name: ${{ steps.project_version.outputs.value }}
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
 
   publish:
-    name: Publish client to PyPI
+    name: Publish client
     needs: release
-    runs-on: ubuntu-latest
-    env:
-      PACKAGE_NAME: optimuskg
-      PACKAGE_DIR: packages/optimuskg
-    environment:
-      name: pypi
-      url: https://pypi.org/p/${{ env.PACKAGE_NAME }}
-    permissions:
-      id-token: write
-      contents: read
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          enable-cache: true
-          ignore-nothing-to-cache: true
-          pyproject-file: ${{ env.PACKAGE_DIR }}/pyproject.toml
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache-dependency-glob: |
-            ${{ env.PACKAGE_DIR }}/pyproject.toml
-            ${{ env.PACKAGE_DIR }}/uv.lock
-
-      - name: Build client distributions
-        run: uv build ${{ env.PACKAGE_DIR }}
-
-      - name: Publish client to PyPI
-        run: uv publish --check-url https://pypi.org/simple/${{ env.PACKAGE_NAME }}/ ${{ env.PACKAGE_DIR }}/dist/*
+    uses: ./.github/workflows/publish-pypi.yml
+    with:
+      package-name: optimuskg
+      package-dir: packages/optimuskg
+      python-version: "3.12"
