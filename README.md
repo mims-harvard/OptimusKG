@@ -35,13 +35,13 @@ OptimusKG is developed at the [Zitnik Lab](https://zitniklab.hms.harvard.edu/), 
 OptimusKG is available via [Harvard Dataverse](https://doi.org/10.7910/DVN/IYNGEV). The graph can be programmatically accessed using the Python client, available on [PyPI](https://pypi.org/project/optimuskg/):
 
 ```bash
-# With pip.
-pip install optimuskg
+# With uv.
+uv add optimuskg
 ```
 
 ```bash
-# Or pipx.
-pipx install optimuskg
+# Or pip.
+pip install optimuskg
 ```
 
 The client fetches files from the gold layer with local caching, and supports loading the graph either as [Polars Dataframes](https://github.com/pola-rs/polars) or as a [NetworkX MultiDiGraph](https://networkx.org/documentation/stable/reference/classes/multidigraph.html):
