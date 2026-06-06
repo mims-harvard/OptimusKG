@@ -4,9 +4,12 @@
     "---Getting Started---",
     "index",
     "optimuskg-client",
-    "---Knowledge Graph---",
     "graph-schema",
+    "---Community---",
+    "showcase",
+    "---About---",
     "citation",
-    "license"
+    "license",
+    "funding"
   ]
 }
