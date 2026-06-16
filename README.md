@@ -70,6 +70,16 @@ G = optimuskg.load_networkx(lcc=True)
 > [!NOTE]
 > To target a different dataset (_e.g._, a pre-release), set the `$OPTIMUSKG_DOI` environment variable or use `optimuskg.set_doi("doi:10.xxxx/XXXX")`.
 
+## Agent skill
+
+OptimusKG ships an [agent skill](skills/optimuskg/SKILL.md) that teaches AI agents how to load, query, filter, and analyze the graph through the [`optimuskg`](https://pypi.org/project/optimuskg/) Python client. Add it to any project with the skills CLI:
+
+```bash
+npx skills add https://github.com/mims-harvard/optimuskg --skill optimuskg
+```
+
+Once installed, the agent applies the skill automatically whenever you ask it to work with OptimusKG. It already knows the client's API, the Parquet file layout, the graph schema, and how to target a different Dataverse release. See the [agent skill docs](https://optimuskg.ai/docs/optimuskg-client#agent-skill) for details.
+
 ## Data pipeline
 
 The pipeline architecture consists of the following components:
