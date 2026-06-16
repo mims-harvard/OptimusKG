@@ -156,6 +156,36 @@ Or by using environment variables:
 export OPTIMUSKG_SERVER=https://dataverse.example.org
 ```
 
+## Agent Skill
+
+OptimusKG ships an [agent skill](https://github.com/mims-harvard/optimuskg/blob/main/skills/optimuskg/SKILL.md) that teaches AI agents how to use the `optimuskg` client. With the skill installed, you can ask your agent to load, filter, and analyze the graph in natural language, and it already knows the client's API, file layout, and schema.
+
+### Installing the skill
+
+Add the skill to any project with the `skills` CLI:
+
+```bash
+npx skills add https://github.com/mims-harvard/optimuskg --skill optimuskg
+```
+
+### What the skill does
+
+The skill bundles everything an agent needs to be productive with OptimusKG:
+
+- **Loaders**: when to reach for `get_file`, `load_parquet`, `load_graph`, or `load_networkx`, and what each returns.
+- **Graph schema**: the node type codes, the node and edge columns, and how `properties` are expanded into typed columns.
+- **Common patterns**: filtering DataFrames or a NetworkX graph by entity type and relation for analysis, Graph-RAG, or ML.
+- **Configuration**: caching, and pointing the client at a different Dataverse release or server via `set_doi` / `set_server` or environment variables.
+- **Citation and license**: reminders to cite OptimusKG and to respect each source dataset's terms.
+
+### Using it
+
+Once installed, describe what you want in natural language and the agent applies the skill automatically. For example:
+
+> Load the largest connected component as a NetworkX graph and list the drugs associated with Alzheimer's disease.
+
+The agent installs `optimuskg` if needed, picks the right loader, filters by the correct node labels and relations, and caches the downloads, following the conventions documented in the skill.
+
 ## See Also
 
 <Cards>
