@@ -114,18 +114,13 @@ disease:
     description: str
     code: str
     xrefs: str[]
-    parents: str[]
     exact_synonyms: str[]
     related_synonyms: str[]
     narrow_synonyms: str[]
     broad_synonyms: str[]
     obsolete_terms: str[]
     obsolete_xrefs: str[]
-    children: str[]
-    ancestors: str[]
-    descendants: str[]
     therapeutic_areas: str[]
-    is_leaf: bool
     concept_ids: str[]
     concept_names: str[]
     umls_cui: str
@@ -143,16 +138,12 @@ phenotype:
     description: str
     code: str
     xrefs: str[]
-    parents: str[]
     exact_synonyms: str[]
     related_synonyms: str[]
     narrow_synonyms: str[]
     broad_synonyms: str[]
     obsolete_terms: str[]
     obsolete_xrefs: str[]
-    children: str[]
-    ancestors: str[]
-    descendants: str[]
     type: str
     ontology: str
     concept_ids: str[]

@@ -68,7 +68,6 @@ def run(  # noqa: PLR0913
                     pl.concat_list([pl.col("db_xrefs"), pl.col("xrefs")])
                     .list.unique()
                     .alias("xrefs"),
-                    pl.col("parents"),
                     pl.concat_list([pl.col("has_exact_synonym"), pl.col("synonyms")])
                     .list.unique()
                     .alias("exact_synonyms"),
@@ -77,9 +76,6 @@ def run(  # noqa: PLR0913
                     pl.col("has_broad_synonym").alias("broad_synonyms"),
                     pl.col("obsolete_terms").alias("obsolete_terms"),
                     pl.col("obsolete_xrefs").alias("obsolete_xrefs"),
-                    pl.col("children"),
-                    pl.col("ancestors"),
-                    pl.col("descendants"),
                     pl.coalesce(
                         [pl.col("meddra_term_type"), pl.lit("phenotype")]
                     ).alias("type"),

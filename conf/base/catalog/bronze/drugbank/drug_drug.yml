@@ -7,6 +7,6 @@ bronze.drug_drug:
       head_drug_id: pl.String
       description: pl.String
   metadata:
-    checksum: 780c159b59bfe5d1997cb54f0ab754c7
+    checksum: 0a288bb39a8f07f9473bdef962d59db1
     kedro-viz:
       layer: bronze

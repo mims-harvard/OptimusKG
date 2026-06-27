@@ -29,7 +29,7 @@ def run(
             ]
         )
         .filter(
-            pl.col("aspect") == ["F"]  # F = molecular function
+            pl.col("aspect").list.contains("F")  # F = molecular function
         )
         .select(
             [

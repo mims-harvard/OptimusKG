@@ -17,6 +17,6 @@ silver.edges.drug_phenotype:
         structure_id: pl.String
         drug_disease_id: pl.String
   metadata:
-    checksum: 997c312dbdcf6ece3c986000ee36ae7c
+    checksum: bc36b39dfd06c1fe583ff5bc33799f76
     kedro-viz:
       layer: silver
