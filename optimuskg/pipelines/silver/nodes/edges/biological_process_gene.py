@@ -28,8 +28,8 @@ def run(
                 pl.col("eco_id").drop_nulls().unique().alias("eco_ids"),
             ]
         )
-        .filter(pl.col("aspect") == ["P"])
-        .select(  # P = biological process
+        .filter(pl.col("aspect").list.contains("P"))  # P = biological process
+        .select(
             [
                 pl.col("id")
                 .str.replace("GO:", "GO_")

@@ -15,7 +15,6 @@ def run(
         .filter(
             pl.col("parents").is_not_null(),
             ~pl.col("id").str.contains("HP"),
-            ~pl.col("id").str.contains("Orphanet"),  # TODO: why filter for Orphanet?
             ~pl.col("id").str.starts_with("GO_"),
             ~pl.col("parents").str.starts_with("GO_"),
         )

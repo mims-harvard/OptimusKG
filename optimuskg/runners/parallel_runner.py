@@ -77,7 +77,10 @@ def _get_settings_module() -> str:
     """Derive the settings module path from the currently-loaded settings."""
     from kedro.framework.project import settings  # noqa: PLC0415
 
-    for mod_path in settings._loaded_py_modules:  # type: ignore[union-attr]
+    # ``_loaded_py_modules`` is not exposed on every dynaconf/Kedro version;
+    # ``getattr`` swallows the ``AttributeError`` so we fall through below.
+    loaded_py_modules = getattr(settings, "_loaded_py_modules", None) or ()
+    for mod_path in loaded_py_modules:
         if mod_path.endswith(".settings"):
             return mod_path
 

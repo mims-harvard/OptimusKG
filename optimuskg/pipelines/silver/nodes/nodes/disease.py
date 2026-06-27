@@ -74,7 +74,6 @@ def run(  # noqa: PLR0913
                     .list.drop_nulls()
                     .list.unique()
                     .alias("xrefs"),
-                    pl.col("parents"),
                     pl.concat_list([pl.col("has_exact_synonym"), pl.col("synonyms")])
                     .list.drop_nulls()
                     .list.unique()
@@ -84,11 +83,7 @@ def run(  # noqa: PLR0913
                     pl.col("has_broad_synonym").alias("broad_synonyms"),
                     pl.col("obsolete_terms").alias("obsolete_terms"),
                     pl.col("obsolete_xrefs").alias("obsolete_xrefs"),
-                    pl.col("children"),
-                    pl.col("ancestors"),
-                    pl.col("descendants"),
                     pl.col("therapeutic_areas").alias("therapeutic_areas"),
-                    pl.col("leaf").alias("is_leaf"),
                     pl.col("concept_ids").alias("concept_ids"),
                     pl.col("concept_names").alias("concept_names"),
                     pl.col("umls_cui").alias("umls_cui"),

@@ -28,7 +28,7 @@ def run(
                 pl.col("eco_id").drop_nulls().unique().alias("eco_ids"),
             ]
         )
-        .filter(pl.col("aspect") == ["C"])  # C = cellular component
+        .filter(pl.col("aspect").list.contains("C"))  # C = cellular component
         .select(
             [
                 pl.col("id")

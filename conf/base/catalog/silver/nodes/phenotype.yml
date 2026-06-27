@@ -13,16 +13,12 @@ silver.nodes.phenotype:
         description: pl.String
         code: pl.String
         xrefs: pl.List(pl.String)
-        parents: pl.List(pl.String)
         exact_synonyms: pl.List(pl.String)
         related_synonyms: pl.List(pl.String)
         narrow_synonyms: pl.List(pl.String)
         broad_synonyms: pl.List(pl.String)
         obsolete_terms: pl.List(pl.String)
         obsolete_xrefs: pl.List(pl.String)
-        children: pl.List(pl.String)
-        ancestors: pl.List(pl.String)
-        descendants: pl.List(pl.String)
         type: pl.String
         ontology:
           description: pl.String
@@ -36,6 +32,6 @@ silver.nodes.phenotype:
         cui_semantic_type: pl.String
         snomed_concept_ids: pl.List(pl.String)
   metadata:
-    checksum: 3626929e159e38ef28fec00ec5f91b6f
+    checksum: 304f34ce63aa9bd770266853eb64c1a9
     kedro-viz:
       layer: silver

@@ -15,6 +15,6 @@ bronze.ontology.hp_terms:
         license: pl.String
         version: pl.String
   metadata:
-    checksum: e7eeebe68c66227e2c9726239efe3666
+    checksum: e03c5edb8e9d8c41a0f87952db7d1cbe
     kedro-viz:
       layer: bronze
