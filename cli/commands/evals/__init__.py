@@ -6,7 +6,7 @@ from pathlib import Path
 
 import typer
 
-from . import centrality, paperqa, paperqa_figures, sample_edges
+from . import centrality, human_review, paperqa, paperqa_figures, sample_edges
 
 logger = logging.getLogger("cli")
 
@@ -287,5 +287,110 @@ def paperqa_figures_cmd(
     """
     paperqa_figures.run(
         input_path=input_path,
+        out_dir=out_dir,
+    )
+
+
+@evals_app.command(
+    name="make-review",
+    help="Sample edges and build a shareable HTML form for expert review.",
+)
+def make_review_cmd(
+    input_path: Path = typer.Option(
+        Path("data/gold/evals/20260328_195935_polled_edges.csv"),
+        "--input",
+        help="Path to the polled-edges CSV produced by `cli evals paperqa --action poll`.",
+    ),
+    out_dir: Path = typer.Option(
+        Path("data/gold/evals"),
+        "--out",
+        help="Directory to write the HTML form and sample CSV.",
+    ),
+    n: int = typer.Option(
+        100,
+        "--n",
+        help="Number of edges to sample for review.",
+    ),
+    seed: int = typer.Option(
+        42,
+        "--seed",
+        help="Random seed for reproducible sampling.",
+    ),
+):
+    """Sample edges and generate a self-contained HTML expert-review form.
+
+    Draws a reproducible, stratified (by seed node type) and true/false-balanced
+    sample of edges from the polled-edges CSV, then writes a single self-contained
+    HTML file to share with reviewers over Slack. Reviewers rate, on a 5-point
+    Likert scale, whether the agent's reasoning about each edge is sound, then
+    click "Download responses" to export a JSON file to send back.
+
+    Outputs:
+    - human_review_seed=<seed>_n=<n>.html: The shareable reviewer form.
+    - human_review_seed=<seed>_n=<n>_sample.csv: Sampled edges (with hidden
+      ground-truth labels) for the figures step.
+
+    Examples:
+
+        # Sample 100 edges with the default seed
+        uv run cli evals make-review
+
+        # Sample 150 edges with a different seed and input file
+        uv run cli evals make-review --n 150 --seed 7 \\
+            --input data/gold/evals/20260328_195935_polled_edges.csv
+    """
+    human_review.run_make_review(
+        input_path=input_path,
+        out_dir=out_dir,
+        n=n,
+        seed=seed,
+    )
+
+
+@evals_app.command(
+    name="review-figures",
+    help="Aggregate returned reviewer responses and generate figures.",
+)
+def review_figures_cmd(
+    responses_dir: Path = typer.Option(
+        Path("data/gold/evals/human_review_responses"),
+        "--responses",
+        help="Directory containing reviewer-exported JSON response files.",
+    ),
+    sample_path: Path = typer.Option(
+        ...,
+        "--sample",
+        help="Path to the *_sample.csv written by `make-review`.",
+    ),
+    out_dir: Path = typer.Option(
+        None,
+        "--out",
+        help="Output directory for figures and aggregated CSV. Defaults to --responses.",
+    ),
+):
+    """Aggregate expert-review responses and generate summary figures.
+
+    Reads every reviewer JSON response file from --responses, joins them against
+    the sampled-edge metadata, and produces a four-panel figure (soundness
+    distribution by reviewer, human soundness vs. agent rating, soundness by
+    ground-truth validity, inter-reviewer agreement) plus a long-format CSV.
+
+    Outputs (in --out):
+    - human_review_responses_long.csv: One row per (reviewer, edge) judgement.
+    - human_review_figures.pdf / .svg: Four-panel summary figure.
+
+    Examples:
+
+        uv run cli evals review-figures \\
+            --sample data/gold/evals/human_review_seed=42_n=100_sample.csv
+
+        uv run cli evals review-figures \\
+            --responses data/gold/evals/human_review_responses \\
+            --sample data/gold/evals/human_review_seed=42_n=100_sample.csv \\
+            --out figures/
+    """
+    human_review.run_review_figures(
+        responses_dir=responses_dir,
+        sample_path=sample_path,
         out_dir=out_dir,
     )
