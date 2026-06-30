@@ -321,7 +321,7 @@ def make_review_cmd(
 
     Draws a reproducible, stratified (by seed node type) and true/false-balanced
     sample of edges from the polled-edges CSV, then writes a single self-contained
-    HTML file to share with reviewers over Slack. Reviewers rate, on a 5-point
+    HTML file to share with reviewers. Reviewers rate, on a 5-point
     Likert scale, whether the agent's reasoning about each edge is sound, then
     click "Download responses" to export a JSON file to send back.
 
@@ -352,45 +352,39 @@ def make_review_cmd(
     help="Aggregate returned reviewer responses and generate figures.",
 )
 def review_figures_cmd(
-    responses_dir: Path = typer.Option(
-        Path("data/gold/evals/human_review_responses"),
-        "--responses",
-        help="Directory containing reviewer-exported JSON response files.",
-    ),
-    sample_path: Path = typer.Option(
+    review_dir: Path = typer.Option(
         ...,
-        "--sample",
-        help="Path to the *_sample.csv written by `make-review`.",
+        "--review-dir",
+        help="Run folder created by `make-review` (contains the *_sample.csv and responses/).",
     ),
     out_dir: Path = typer.Option(
         None,
         "--out",
-        help="Output directory for figures and aggregated CSV. Defaults to --responses.",
+        help="Output directory for figures and aggregated CSV. Defaults to --review-dir.",
     ),
 ):
     """Aggregate expert-review responses and generate summary figures.
 
-    Reads every reviewer JSON response file from --responses, joins them against
-    the sampled-edge metadata, and produces a four-panel figure (soundness
-    distribution by reviewer, human soundness vs. agent rating, soundness by
-    ground-truth validity, inter-reviewer agreement) plus a long-format CSV.
+    Reads the reviewer JSON files from ``<review-dir>/responses`` and the sample
+    CSV from ``<review-dir>``, joins them, and produces a four-panel figure
+    (soundness distribution by reviewer, human soundness vs. agent rating,
+    soundness by ground-truth validity, inter-reviewer agreement) plus a
+    long-format CSV.
 
-    Outputs (in --out):
+    Outputs (written into --review-dir by default):
     - human_review_responses_long.csv: One row per (reviewer, edge) judgement.
     - human_review_figures.pdf / .svg: Four-panel summary figure.
 
     Examples:
 
         uv run cli evals review-figures \\
-            --sample data/gold/evals/human_review_seed=42_n=100_sample.csv
+            --review-dir "data/gold/evals/human_review_seed=42_n=100"
 
         uv run cli evals review-figures \\
-            --responses data/gold/evals/human_review_responses \\
-            --sample data/gold/evals/human_review_seed=42_n=100_sample.csv \\
+            --review-dir "data/gold/evals/human_review_seed=42_n=100" \\
             --out figures/
     """
     human_review.run_review_figures(
-        responses_dir=responses_dir,
-        sample_path=sample_path,
+        review_dir=review_dir,
         out_dir=out_dir,
     )

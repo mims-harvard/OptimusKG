@@ -83,6 +83,23 @@ _PALETTE = [
 # Minimum reviewers per edge required to compute inter-reviewer agreement.
 _MIN_REVIEWERS_FOR_AGREEMENT = 2
 
+# Dropped into each run's responses/ folder so it is self-explanatory on disk.
+_RESPONSES_README = (
+    "Drop completed reviewer response files in this folder.\n"
+    "\n"
+    "Each reviewer opens the human_review_*.html form (in the parent folder),\n"
+    "fills it in, and clicks 'Download responses' to get a file named\n"
+    "human_review_response_<name>.json. Collect every such file here.\n"
+    "\n"
+    "When all responses are in, generate the figures by pointing\n"
+    "`review-figures` at the run folder (the parent of this folder):\n"
+    "\n"
+    "    uv run cli evals review-figures --review-dir ..\n"
+    "\n"
+    "Outputs (human_review_responses_long.csv, human_review_figures.pdf/.svg)\n"
+    "are written into the run folder alongside the form.\n"
+)
+
 # Columns the HTML needs (reviewer-facing). is_true_edge is intentionally absent.
 _VISIBLE_COLUMNS = [
     "edge_id",
@@ -291,16 +308,19 @@ def run_make_review(
 ) -> None:
     """Generate the reviewer HTML and the sample CSV for a polled-edges file.
 
-    Writes two files into ``out_dir``:
+    Creates a self-contained run folder ``<out_dir>/human_review_seed=<seed>_n=<n>/``
+    containing:
 
     * ``human_review_seed=<seed>_n=<n>.html`` — the self-contained form to
       share with reviewers over Slack.
     * ``human_review_seed=<seed>_n=<n>_sample.csv`` — the sampled edges,
       including the hidden ``is_true_edge`` ground truth, for later joining.
+    * ``responses/`` — the drop folder where reviewers' completed JSON files
+      should be collected (also where ``review-figures`` writes its outputs).
 
     Args:
         input_path: Path to the polled-edges CSV.
-        out_dir: Directory to write outputs into.
+        out_dir: Parent directory under which the run folder is created.
         n: Number of edges to sample.
         seed: Random seed for reproducibility.
     """
@@ -322,15 +342,26 @@ def run_make_review(
 
     stem = f"human_review_seed={seed}_n={sample.height}"
 
+    # Each run gets its own self-contained folder holding the form, the sample,
+    # the drop folder for completed responses, and (later) the figures.
+    run_dir = out_dir / stem
+    run_dir.mkdir(parents=True, exist_ok=True)
+
     # Sample CSV retains ground truth + all columns for the figures step.
-    sample_path = out_dir / f"{stem}_sample.csv"
+    sample_path = run_dir / f"{stem}_sample.csv"
     sample.sort("seed_node_type", "is_true_edge").write_csv(sample_path)
     logger.info("Saved sample edges to %s", sample_path)
 
     html = _build_html(sample, seed=seed, n=sample.height)
-    html_path = out_dir / f"{stem}.html"
+    html_path = run_dir / f"{stem}.html"
     html_path.write_text(html, encoding="utf-8")
     logger.info("Saved reviewer HTML to %s", html_path)
+
+    # Drop folder where reviewers' completed JSON files should be collected.
+    responses_dir = run_dir / "responses"
+    responses_dir.mkdir(exist_ok=True)
+    (responses_dir / "README.txt").write_text(_RESPONSES_README, encoding="utf-8")
+    logger.info("Created responses drop folder at %s", responses_dir)
 
     # Report the realised stratification so the operator can sanity-check it.
     breakdown = (
@@ -353,8 +384,14 @@ def run_make_review(
             r["len"],
         )
     logger.info(
-        "Share the HTML with reviewers. Ask them to deposit their downloaded "
-        "JSON responses into a folder, then run `cli evals review-figures`."
+        "Next steps:\n"
+        "  1. Share %s with reviewers.\n"
+        "  2. Collect their downloaded JSON files into %s\n"
+        "  3. Generate figures with:\n"
+        "       uv run cli evals review-figures --review-dir %s",
+        html_path,
+        responses_dir,
+        run_dir,
     )
 
 
@@ -635,23 +672,56 @@ def _print_review_stats(joined: pl.DataFrame) -> None:
     logger.info(sep)
 
 
+def _resolve_sample_csv(review_dir: Path) -> Path:
+    """Find the single ``*_sample.csv`` inside a make-review run folder.
+
+    Args:
+        review_dir: A run folder created by :func:`run_make_review`.
+
+    Returns:
+        Path to the sample CSV.
+
+    Raises:
+        FileNotFoundError: If no ``*_sample.csv`` is present.
+        ValueError: If more than one candidate is found (ambiguous folder).
+    """
+    candidates = sorted(review_dir.glob("*_sample.csv"))
+    if not candidates:
+        raise FileNotFoundError(
+            f"No '*_sample.csv' found in {review_dir}. "
+            "Pass a run folder created by `cli evals make-review`."
+        )
+    if len(candidates) > 1:
+        names = ", ".join(c.name for c in candidates)
+        raise ValueError(
+            f"Multiple sample CSVs found in {review_dir} ({names}). "
+            "Keep one run per folder."
+        )
+    return candidates[0]
+
+
 def run_review_figures(
-    responses_dir: Path,
-    sample_path: Path,
+    review_dir: Path,
     out_dir: Path | None = None,
 ) -> None:
     """Aggregate reviewer responses and generate human-review figures.
 
+    Reads the completed reviewer JSON files from ``<review_dir>/responses`` and
+    the sample CSV from ``<review_dir>``, then writes the aggregated CSV and
+    figures into ``out_dir`` (the run folder by default).
+
     Args:
-        responses_dir: Directory of reviewer-exported JSON response files.
-        sample_path: Path to the ``*_sample.csv`` written by ``make-review``.
-        out_dir: Directory for outputs. Defaults to ``responses_dir``.
+        review_dir: A run folder created by :func:`run_make_review`.
+        out_dir: Directory for outputs. Defaults to ``review_dir``.
     """
-    out_dir = out_dir or responses_dir
+    if not review_dir.exists():
+        raise FileNotFoundError(f"Review folder not found: {review_dir}")
+
+    out_dir = out_dir or review_dir
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    if not sample_path.exists():
-        raise FileNotFoundError(f"Sample CSV not found: {sample_path}")
+    responses_dir = review_dir / "responses"
+    sample_path = _resolve_sample_csv(review_dir)
 
     sample = pl.read_csv(sample_path, infer_schema_length=100000).with_columns(
         pl.col("is_true_edge").cast(pl.Boolean, strict=False),
