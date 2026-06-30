@@ -401,6 +401,11 @@ def run_make_review(
 def _load_responses(responses_dir: Path) -> pl.DataFrame:
     """Read all reviewer response JSON files in a directory into long format.
 
+    Reviewers may export more than once (a partial file then a complete one);
+    when several files share a reviewer name, only the best one is used — the
+    file with the most answered edges, ties broken by the latest export
+    timestamp — so partial and final submissions are not double-counted.
+
     Args:
         responses_dir: Directory containing ``*.json`` files exported from the
             reviewer HTML.
@@ -419,8 +424,13 @@ def _load_responses(responses_dir: Path) -> pl.DataFrame:
     if not responses_dir.exists():
         raise FileNotFoundError(f"Responses directory not found: {responses_dir}")
 
-    rows: list[dict] = []
     files = sorted(responses_dir.glob("*.json"))
+
+    # A reviewer may submit more than one file (e.g. a partial export followed
+    # by a complete one). Keep only the best file per reviewer — most answered
+    # edges, breaking ties by the latest export timestamp — so partial and final
+    # submissions are not double-counted.
+    best: dict[str, dict] = {}
     for fp in files:
         try:
             payload = json.loads(fp.read_text(encoding="utf-8"))
@@ -429,6 +439,38 @@ def _load_responses(responses_dir: Path) -> pl.DataFrame:
             continue
 
         reviewer = (payload.get("reviewer_name") or fp.stem).strip() or fp.stem
+        answered = sum(
+            1
+            for r in payload.get("responses", [])
+            if r.get("abstained") or r.get("soundness") is not None
+        )
+        rank = (answered, str(payload.get("exported_at") or ""))
+
+        prev = best.get(reviewer)
+        if prev is None or rank > prev["_rank"]:
+            if prev is not None:
+                logger.info(
+                    "Reviewer '%s': '%s' (%d answered) supersedes '%s' (%d answered).",
+                    reviewer,
+                    fp.name,
+                    answered,
+                    prev["_file"],
+                    prev["_answered"],
+                )
+            payload.update({"_rank": rank, "_file": fp.name, "_answered": answered})
+            best[reviewer] = payload
+        else:
+            logger.info(
+                "Reviewer '%s': ignoring '%s' (%d answered); keeping '%s' (%d answered).",
+                reviewer,
+                fp.name,
+                answered,
+                prev["_file"],
+                prev["_answered"],
+            )
+
+    rows: list[dict] = []
+    for reviewer, payload in best.items():
         for resp in payload.get("responses", []):
             edge_id = resp.get("edge_id")
             if edge_id is None:
@@ -455,7 +497,12 @@ def _load_responses(responses_dir: Path) -> pl.DataFrame:
             "Expected JSON files exported from the reviewer HTML."
         )
 
-    logger.info("Loaded %d judgements from %d response file(s).", len(rows), len(files))
+    logger.info(
+        "Loaded %d judgements from %d reviewer(s) (%d file(s)).",
+        len(rows),
+        len(best),
+        len(files),
+    )
     return pl.DataFrame(rows)
 
 
@@ -803,6 +850,12 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
   .agent-box .lbl { font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); font-weight: 700; }
   .agent-rating { font-weight: 700; color: var(--accent); }
   .reasoning { margin-top: 8px; white-space: pre-wrap; }
+  .reasoning .cite {
+    display: inline-block; background: #ececea; color: var(--muted);
+    font-size: 11px; line-height: 1.4; padding: 0 7px; border-radius: 99px;
+    margin: 0 1px; white-space: nowrap; vertical-align: baseline;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
   .q { font-weight: 600; margin: 18px 0 10px; }
   .likert { display: flex; flex-wrap: wrap; gap: 8px; }
   .likert label {
@@ -894,6 +947,23 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
       .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   }
 
+  // Locator after a citation key: "pages 10-13", "chunk 1", "media 514c0286".
+  var LOC = "(?:pages?|chunks?|media)\\s+\\w+(?:\\s*-\\s*\\w+)?";
+  // One citation = a key token followed by a locator.
+  var CIT = "[^\\s,()]+\\s+" + LOC;
+  // A citation group = parentheses wrapping one or more comma-separated citations.
+  var CITE_GROUP = new RegExp("\\((" + CIT + "(?:\\s*,\\s*" + CIT + ")*)\\)", "g");
+  var CITE_TOKEN = new RegExp(CIT, "g");
+  // Wrap each citation key+locator in a gray pill, keeping the surrounding
+  // parentheses and commas. Runs on already-escaped text, so keys inline safely.
+  function citePills(escaped) {
+    return escaped.replace(CITE_GROUP, function (_, inner) {
+      return "(" + inner.replace(CITE_TOKEN, function (tok) {
+        return '<span class="cite">' + tok + "</span>";
+      }) + ")";
+    });
+  }
+
   var container = document.getElementById("cards");
   EDGES.forEach(function (edge, i) {
     var saved = state[edge.edge_id] || {};
@@ -937,7 +1007,7 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
       '<div class="agent-box">' +
         '<span class="lbl">Agent evidence rating:</span> ' +
         '<span class="agent-rating">' + edge.agent_rating + '/5 &mdash; ' + esc(edge.agent_rating_label) + '</span>' +
-        '<div class="reasoning">' + esc(edge.reasoning) + '</div>' +
+        '<div class="reasoning">' + citePills(esc(edge.reasoning)) + '</div>' +
       '</div>' +
       '<div class="q">Is the agent&rsquo;s reasoning about this edge sound?</div>' +
       '<div class="likert">' + likert + '</div>' +
@@ -994,11 +1064,20 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
     document.getElementById("bar").style.width = pct + "%";
     document.getElementById("progress-text").textContent =
       done + " of " + EDGES.length + " edges reviewed (" + pct + "%)";
-    var ready = done === EDGES.length && nameInput.value.trim().length > 0;
-    document.getElementById("download-btn").disabled = !(done > 0 && nameInput.value.trim().length > 0);
-    document.getElementById("footer-status").textContent = ready
-      ? "All edges reviewed — ready to download and send back."
-      : "Your progress is saved automatically in this browser.";
+    var hasName = nameInput.value.trim().length > 0;
+    var complete = done === EDGES.length;
+    var btn = document.getElementById("download-btn");
+    // Downloading is allowed as soon as a name is entered, even if the review
+    // is incomplete — the export records how many edges were answered.
+    btn.disabled = !hasName;
+    btn.textContent = complete
+      ? "Download responses"
+      : "Download responses (" + done + "/" + EDGES.length + ")";
+    document.getElementById("footer-status").textContent = !hasName
+      ? "Enter your name to enable downloading."
+      : complete
+        ? "All edges reviewed — ready to download and send back."
+        : "Progress saved in this browser. You can download incomplete responses any time.";
   }
 
   function download() {
@@ -1015,13 +1094,17 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
       };
     });
     var answered = responses.filter(function (r) { return r.soundness !== null || r.abstained; }).length;
-    if (answered < EDGES.length &&
+    var complete = answered === EDGES.length;
+    if (!complete &&
         !confirm("You have reviewed " + answered + " of " + EDGES.length +
-                 " edges. Download anyway?")) { return; }
+                 " edges. Download your partial responses now? You can keep " +
+                 "reviewing and download again later.")) { return; }
     var payload = {
       reviewer_name: name,
       reviewer_email: emailInput.value.trim(),
       seed: SEED, n: N,
+      complete: complete,
+      answered: answered,
       exported_at: new Date().toISOString(),
       responses: responses
     };
@@ -1030,7 +1113,7 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
     a.href = url;
-    a.download = "human_review_response_" + safe + ".json";
+    a.download = "human_review_response_" + safe + (complete ? "" : "_partial") + ".json";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }
