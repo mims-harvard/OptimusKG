@@ -123,13 +123,13 @@ def _corrupt(
 ) -> tuple[torch.Tensor, torch.Tensor]:
     """Corrupt either the head or the tail of each triple (uniformly).
 
-    Returns the corrupted ``(head, tail)`` tensors; the relation is unchanged.
+    Random tensors are drawn on the CPU generator and moved to ``device`` —
+    MPS does not reliably support device-side generators. Returns the corrupted
+    ``(head, tail)`` tensors; the relation is unchanged.
     """
     batch = head.shape[0]
-    rand_entities = torch.randint(
-        n_entities, (batch,), generator=generator, device=device
-    )
-    corrupt_head = torch.rand(batch, generator=generator, device=device) < 0.5
+    rand_entities = torch.randint(n_entities, (batch,), generator=generator).to(device)
+    corrupt_head = (torch.rand(batch, generator=generator) < 0.5).to(device)
     neg_head = torch.where(corrupt_head, rand_entities, head)
     neg_tail = torch.where(corrupt_head, tail, rand_entities)
     return neg_head, neg_tail
@@ -176,19 +176,19 @@ def train_transe(
     t = torch.from_numpy(tail.astype(np.int64)).to(device)
     n_triples = h.shape[0]
 
-    # Separate generators so shuffling and corruption are reproducible and
-    # independent of device default RNG state.
-    shuffle_gen = torch.Generator(device=device).manual_seed(config.seed)
-    corrupt_gen = torch.Generator(device=device).manual_seed(config.seed + 1)
+    # CPU generators (moved to device as needed) so shuffling and corruption
+    # are reproducible across CPU/CUDA/MPS, which lack uniform generator support.
+    shuffle_gen = torch.Generator().manual_seed(config.seed)
+    corrupt_gen = torch.Generator().manual_seed(config.seed + 1)
 
     epoch_losses: list[float] = []
     for epoch in range(config.epochs):
         model.normalize_entities()
-        perm = torch.randperm(n_triples, generator=shuffle_gen, device=device)
+        perm = torch.randperm(n_triples, generator=shuffle_gen)
         total, n_batches = 0.0, 0
 
         for start in range(0, n_triples, config.batch_size):
-            idx = perm[start : start + config.batch_size]
+            idx = perm[start : start + config.batch_size].to(device)
             ph, pr, pt = h[idx], r[idx], t[idx]
 
             batch_loss = torch.zeros((), device=device)

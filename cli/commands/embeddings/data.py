@@ -313,10 +313,24 @@ def load_triples(
         edges = edges.sample(n=max_edges, seed=seed)
         logger.info("Subsampled to %d edges (seed=%d)", max_edges, seed)
 
+    # Drop edges whose endpoints are absent from the node table, so every
+    # triple maps to a known entity (replace_strict below would otherwise raise).
+    node_ids = nodes["id"]
+    before = edges.height
+    edges = edges.filter(
+        pl.col("from").is_in(node_ids) & pl.col("to").is_in(node_ids)
+    )
+    if edges.height < before:
+        logger.warning(
+            "Dropped %d edges referencing unknown nodes.", before - edges.height
+        )
+
     # Restrict entities to those that actually appear in the (possibly
     # subsampled) edge set, so the embedding table has no isolated rows.
     used_ids = (
-        pl.concat([edges["from"], edges["to"]]).unique().rename("id").to_frame()
+        pl.concat([edges["from"].rename("id"), edges["to"].rename("id")])
+        .unique()
+        .to_frame()
     )
     nodes = nodes.join(used_ids, on="id", how="inner")
 
@@ -324,7 +338,7 @@ def load_triples(
     nodes = nodes.sort(["label", "id"]).with_row_index("entity_idx")
     entity_ids = nodes["id"].to_list()
     entity_types = nodes["label"].to_list()
-    id_to_idx = dict(zip(nodes["id"].to_list(), nodes["entity_idx"].to_list()))
+    id_to_idx = dict(zip(entity_ids, nodes["entity_idx"].to_list()))
 
     # Stable relation index: sorted by relation value.
     relation_names = sorted(edges[relation_key].unique().to_list())
