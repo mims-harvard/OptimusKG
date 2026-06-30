@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 requires-python = ">=3.12"
 name = "optimuskg"
 readme = "README.md"
-version = "0.73.0"
+version = "0.73.1"
 dependencies = [
   "ipython>=8.10",
   "jupyterlab>=3.0",
@@ -34,6 +34,10 @@ dependencies = [
   "tqdm>=4.67.3",
   "wandb>=0.25.1",
   "matplotlabs>=0.2.0",
+  # matplotlib 3.11 removed the `matplotlib.style.core` module that matplotlabs
+  # 0.2.0 imports at module load, which crashes the whole CLI on import. Pin
+  # below 3.11 until matplotlabs ships a fix. See cli/commands/figures/style.py.
+  "matplotlib<3.11",
   "adjusttext>=1.3.0",
 ]
 
