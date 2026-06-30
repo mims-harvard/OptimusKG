@@ -10,6 +10,7 @@ from .commands import (
     metrics_command,
     sync_catalog_command,
 )
+from .commands.embeddings import embeddings_app
 from .commands.evals import evals_app
 from .commands.figures import figure_app
 
@@ -22,6 +23,7 @@ warnings.filterwarnings(
 app = typer.Typer(help="Main entry point for the CLI.")
 app.add_typer(evals_app, name="evals")
 app.add_typer(figure_app, name="figure")
+app.add_typer(embeddings_app, name="embeddings")
 
 logger = logging.getLogger("cli")
 
