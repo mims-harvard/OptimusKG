@@ -408,7 +408,9 @@ def _load_responses(responses_dir: Path) -> pl.DataFrame:
     Returns:
         A long-format DataFrame with one row per (reviewer, edge) judgement and
         columns ``reviewer``, ``edge_id``, ``soundness`` (Int, null if abstained
-        or unanswered), ``abstained`` (Bool), and ``comment``.
+        or unanswered), ``abstained`` (Bool), ``rating_change``
+        ("decrease"/"no_change"/"increase", null if abstained or unanswered),
+        and ``comment``.
 
     Raises:
         FileNotFoundError: If the directory does not exist.
@@ -433,6 +435,7 @@ def _load_responses(responses_dir: Path) -> pl.DataFrame:
                 continue
             abstained = bool(resp.get("abstained", False))
             soundness = resp.get("soundness")
+            rating_change = None if abstained else resp.get("rating_change")
             rows.append(
                 {
                     "reviewer": reviewer,
@@ -441,6 +444,7 @@ def _load_responses(responses_dir: Path) -> pl.DataFrame:
                     if abstained or soundness is None
                     else int(soundness),
                     "abstained": abstained,
+                    "rating_change": rating_change,
                     "comment": (resp.get("comment") or "").strip(),
                 }
             )
@@ -746,7 +750,7 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OptimusKG &mdash; Expert Edge Review</title>
+<title>OptimusKG Edge Review</title>
 <style>
   :root {
     --ink: #26251e; --muted: #57534e; --line: #e7e5e4; --bg: #faf9f7;
@@ -812,6 +816,17 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
   .likert .num { display: block; font-size: 18px; font-weight: 700; color: var(--accent); }
   .abstain { margin-top: 12px; font-size: 13px; color: var(--muted); }
   .abstain input { margin-right: 6px; }
+  .rating-change { display: flex; flex-wrap: wrap; gap: 8px; }
+  .rating-change label {
+    flex: 1; min-width: 150px; border: 1px solid var(--line); border-radius: 8px;
+    padding: 10px; text-align: center; cursor: pointer; background: var(--card);
+  }
+  .rating-change label:hover { border-color: var(--accent); }
+  .rating-change input { display: none; }
+  .rating-change label:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+  .rating-change .main { display: block; font-size: 14px; font-weight: 700; }
+  .rating-change .sub { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .rating-change label:has(input:checked) .main { color: var(--accent); }
   textarea {
     width: 100%; margin-top: 10px; border: 1px solid var(--line); border-radius: 8px;
     padding: 10px; font-family: inherit; font-size: 13px; resize: vertical; min-height: 52px;
@@ -827,7 +842,7 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
 </head>
 <body>
 <header>
-  <h1>OptimusKG &mdash; Expert Edge Review</h1>
+  <h1>OptimusKG Edge Review</h1>
   <p>For each edge below, the AI agent gathered literature evidence and reasoned about whether the
      relationship is valid. <strong>Your task:</strong> judge whether the agent&rsquo;s reasoning is sound.</p>
   <div class="controls">
@@ -894,6 +909,21 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
         '<span><span class="num">' + r + '</span>' + esc(SOUNDNESS[r]) + '</span></label>';
     }
 
+    var RATING_CHANGE_OPTS = [
+      { val: "decrease", main: "Decrease", sub: "relationship is weaker than agent assessed" },
+      { val: "no_change", main: "No change", sub: "" },
+      { val: "increase", main: "Increase", sub: "relationship is stronger than agent assessed" }
+    ];
+    var ratingChange = "";
+    RATING_CHANGE_OPTS.forEach(function (opt) {
+      var rcChecked = saved.rating_change === opt.val ? " checked" : "";
+      ratingChange +=
+        '<label><input type="radio" name="rc-' + i + '" value="' + opt.val + '"' + rcChecked + '>' +
+        '<span class="main">' + opt.main + '</span>' +
+        (opt.sub ? '<span class="sub">' + opt.sub + '</span>' : '') +
+        '</label>';
+    });
+
     var relation = edge.relation_type ? edge.relation_type : "related to";
     card.innerHTML =
       '<div class="edge-index">Edge ' + (i + 1) + ' of ' + EDGES.length + '</div>' +
@@ -913,6 +943,8 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
       '<div class="likert">' + likert + '</div>' +
       '<div class="abstain"><label><input type="checkbox" id="ab-' + i + '"' +
         (saved.abstained ? " checked" : "") + '> I don&rsquo;t have enough expertise to judge this edge</label></div>' +
+      '<div class="q">How would you change the agent&rsquo;s rating (' + edge.agent_rating + '/5)?</div>' +
+      '<div class="rating-change">' + ratingChange + '</div>' +
       '<textarea id="c-' + i + '" placeholder="Optional comment (explain your rating or flag an issue)">' +
         esc(saved.comment || "") + '</textarea>';
     container.appendChild(card);
@@ -923,10 +955,16 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
         document.getElementById("ab-" + i).checked = false;
       });
     });
+    card.querySelectorAll('input[name="rc-' + i + '"]').forEach(function (radio) {
+      radio.addEventListener("change", function () {
+        record(edge.edge_id, { rating_change: radio.value });
+      });
+    });
     document.getElementById("ab-" + i).addEventListener("change", function (e) {
       if (e.target.checked) {
         card.querySelectorAll('input[name="s-' + i + '"]').forEach(function (rd) { rd.checked = false; });
-        record(edge.edge_id, { soundness: null, abstained: true });
+        card.querySelectorAll('input[name="rc-' + i + '"]').forEach(function (rd) { rd.checked = false; });
+        record(edge.edge_id, { soundness: null, abstained: true, rating_change: null });
       } else {
         record(edge.edge_id, { abstained: false });
       }
@@ -972,6 +1010,7 @@ _HTML_TEMPLATE = r"""<!DOCTYPE html>
         edge_id: edge.edge_id,
         soundness: typeof s.soundness === "number" ? s.soundness : null,
         abstained: s.abstained === true,
+        rating_change: s.rating_change || null,
         comment: s.comment || ""
       };
     });
