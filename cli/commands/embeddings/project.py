@@ -9,6 +9,7 @@ vector output small; relation scatters are labelled with their relation name.
 from __future__ import annotations
 
 import logging
+import warnings
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -24,8 +25,18 @@ from .data import NODE_TYPE_NAME, categorical_colors
 
 logger = logging.getLogger("cli")
 
+# Projections are always to 2 dimensions.
+_PLOT_DIMS = 2
 
-def pca_project(embeddings: np.ndarray, *, seed: int = 42) -> tuple[np.ndarray, list[float]]:
+# STYLE holds heterogeneously-typed values; pin the few passed to matplotlib
+# APIs with strict numeric signatures (mirrors the cli/commands/figures pattern).
+_TITLE_PAD: float = STYLE["title_pad"]  # ty: ignore[invalid-assignment]
+_TIGHT_RECT: tuple[float, float, float, float] = STYLE["fig_tight_rect"]  # ty: ignore[invalid-assignment]
+
+
+def pca_project(
+    embeddings: np.ndarray, *, seed: int = 42
+) -> tuple[np.ndarray, list[float]]:
     """Project to 2D with PCA; return ``(coords, explained_variance_ratio)``."""
     pca = PCA(n_components=2, random_state=seed)
     coords = pca.fit_transform(embeddings)
@@ -50,21 +61,31 @@ def umap_project(
         metric="cosine",
         random_state=seed,
     )
-    return reducer.fit_transform(embeddings)
+    # UMAP's float32 spectral initialisation can emit benign overflow/invalid
+    # RuntimeWarnings from its internal matmuls; silence just those.
+    with warnings.catch_warnings(), np.errstate(over="ignore", invalid="ignore"):
+        warnings.simplefilter("ignore", category=RuntimeWarning)
+        return reducer.fit_transform(embeddings)
 
 
 def _legend_handles(color_map: dict[str, str]) -> list[Line2D]:
     """Build round marker handles for a category->colour map."""
     return [
         Line2D(
-            [], [], marker="o", linestyle="", markersize=4,
-            markerfacecolor=color, markeredgecolor="none", label=label,
+            [],
+            [],
+            marker="o",
+            linestyle="",
+            markersize=4,
+            markerfacecolor=color,
+            markeredgecolor="none",
+            label=label,
         )
         for label, color in color_map.items()
     ]
 
 
-def plot_entity_scatter(
+def plot_entity_scatter(  # noqa: PLR0913
     coords: np.ndarray,
     types: list[str],
     out_path: Path,
@@ -99,30 +120,40 @@ def plot_entity_scatter(
     for node_type in sorted(ordered, key=lambda t: -(types_arr == t).sum()):
         mask = types_arr == node_type
         ax.scatter(
-            coords[mask, 0], coords[mask, 1],
-            s=3, alpha=0.45, linewidths=0,
-            color=color_map[node_type], rasterized=True,
+            coords[mask, 0],
+            coords[mask, 1],
+            s=3,
+            alpha=0.45,
+            linewidths=0,
+            color=color_map[node_type],
+            rasterized=True,
         )
 
     _label_axes(ax, method, explained)
     ax.set_title(
         f"TransE entity embeddings ({method})",
-        fontsize=STYLE["title_fontsize"], fontweight=STYLE["title_fontweight"],
-        pad=STYLE["title_pad"],
+        fontsize=STYLE["title_fontsize"],
+        fontweight=STYLE["title_fontweight"],
+        pad=_TITLE_PAD,
     )
     apply_axis_styling(ax)
     legend = ax.legend(
         handles=_legend_handles({NODE_TYPE_NAME[t]: color_map[t] for t in ordered}),
-        title="Node type", loc="best",
-        fontsize=STYLE["legend_fontsize"], title_fontsize=STYLE["legend_fontsize"],
-        frameon=STYLE["legend_frameon"], framealpha=STYLE["legend_framealpha"],
-        edgecolor=STYLE["legend_edgecolor"], ncols=1, markerscale=1.5,
+        title="Node type",
+        loc="best",
+        fontsize=STYLE["legend_fontsize"],
+        title_fontsize=STYLE["legend_fontsize"],
+        frameon=STYLE["legend_frameon"],
+        framealpha=STYLE["legend_framealpha"],
+        edgecolor=STYLE["legend_edgecolor"],
+        ncols=1,
+        markerscale=1.5,
     )
     apply_legend_styling(legend)
     _save(fig, out_path)
 
 
-def plot_relation_scatter(
+def plot_relation_scatter(  # noqa: PLR0913
     coords: np.ndarray,
     relation_names: list[str],
     families: list[str],
@@ -140,23 +171,32 @@ def plot_relation_scatter(
     for family in ordered_fams:
         mask = fams_arr == family
         ax.scatter(
-            coords[mask, 0], coords[mask, 1],
-            s=45, alpha=0.9, linewidths=0.4, edgecolors="white",
-            color=color_map[family], label=family,
+            coords[mask, 0],
+            coords[mask, 1],
+            s=45,
+            alpha=0.9,
+            linewidths=0.4,
+            edgecolors="white",
+            color=color_map[family],
+            label=family,
         )
 
     _annotate_points(ax, coords, relation_names)
     _label_axes(ax, method, explained)
     ax.set_title(
         f"TransE relation embeddings ({method})",
-        fontsize=STYLE["title_fontsize"], fontweight=STYLE["title_fontweight"],
-        pad=STYLE["title_pad"],
+        fontsize=STYLE["title_fontsize"],
+        fontweight=STYLE["title_fontweight"],
+        pad=_TITLE_PAD,
     )
     apply_axis_styling(ax)
     legend = ax.legend(
-        title="Relation family", loc="best",
-        fontsize=STYLE["legend_fontsize"], title_fontsize=STYLE["legend_fontsize"],
-        frameon=STYLE["legend_frameon"], framealpha=STYLE["legend_framealpha"],
+        title="Relation family",
+        loc="best",
+        fontsize=STYLE["legend_fontsize"],
+        title_fontsize=STYLE["legend_fontsize"],
+        frameon=STYLE["legend_frameon"],
+        framealpha=STYLE["legend_framealpha"],
         edgecolor=STYLE["legend_edgecolor"],
     )
     apply_legend_styling(legend)
@@ -172,19 +212,27 @@ def _annotate_points(ax: plt.Axes, coords: np.ndarray, names: list[str]) -> None
     try:
         from adjustText import adjust_text  # noqa: PLC0415
 
-        adjust_text(texts, ax=ax, expand=(1.2, 1.4),
-                    arrowprops={"arrowstyle": "-", "lw": 0.3, "color": "0.6"})
+        adjust_text(
+            texts,
+            ax=ax,
+            expand=(1.2, 1.4),
+            arrowprops={"arrowstyle": "-", "lw": 0.3, "color": "0.6"},
+        )
     except ImportError:
         logger.debug("adjustText unavailable; labels may overlap.")
 
 
 def _label_axes(ax: plt.Axes, method: str, explained: list[float] | None) -> None:
     """Set projection axis labels, including PCA variance when provided."""
-    if explained is not None and len(explained) >= 2:
-        ax.set_xlabel(f"{method} 1 ({explained[0] * 100:.1f}%)",
-                      fontsize=STYLE["axis_label_fontsize"])
-        ax.set_ylabel(f"{method} 2 ({explained[1] * 100:.1f}%)",
-                      fontsize=STYLE["axis_label_fontsize"])
+    if explained is not None and len(explained) >= _PLOT_DIMS:
+        ax.set_xlabel(
+            f"{method} 1 ({explained[0] * 100:.1f}%)",
+            fontsize=STYLE["axis_label_fontsize"],
+        )
+        ax.set_ylabel(
+            f"{method} 2 ({explained[1] * 100:.1f}%)",
+            fontsize=STYLE["axis_label_fontsize"],
+        )
     else:
         ax.set_xlabel(f"{method} 1", fontsize=STYLE["axis_label_fontsize"])
         ax.set_ylabel(f"{method} 2", fontsize=STYLE["axis_label_fontsize"])
@@ -198,13 +246,22 @@ def plot_silhouette_bar(per_type: dict[str, float], out_path: Path) -> None:
     color_map = categorical_colors([t for t, _ in items])
 
     fig, ax = plt.subplots(figsize=(4.6, 0.32 * len(items) + 1.0))
-    ax.barh(names, values, color=[color_map[t] for t, _ in items],
-            edgecolor=STYLE["bar_edgecolor"], linewidth=STYLE["bar_linewidth"],
-            alpha=STYLE["bar_alpha"])
+    ax.barh(
+        names,
+        values,
+        color=[color_map[t] for t, _ in items],
+        edgecolor=STYLE["bar_edgecolor"],
+        linewidth=STYLE["bar_linewidth"],
+        alpha=STYLE["bar_alpha"],
+    )
     ax.axvline(0, color=STYLE["bar_edgecolor"], linewidth=0.5)
     ax.set_xlabel("Mean silhouette (cosine)", fontsize=STYLE["axis_label_fontsize"])
-    ax.set_title("Per-type cluster coherence", fontsize=STYLE["title_fontsize"],
-                 fontweight=STYLE["title_fontweight"], pad=STYLE["title_pad"])
+    ax.set_title(
+        "Per-type cluster coherence",
+        fontsize=STYLE["title_fontsize"],
+        fontweight=STYLE["title_fontweight"],
+        pad=_TITLE_PAD,
+    )
     apply_axis_styling(ax)
     _save(fig, out_path)
 
@@ -212,8 +269,12 @@ def plot_silhouette_bar(per_type: dict[str, float], out_path: Path) -> None:
 def _save(fig: plt.Figure, out_path: Path) -> None:
     """Tight-layout, save at configured DPI, and close the figure."""
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.tight_layout(rect=STYLE["fig_tight_rect"])
-    fig.savefig(out_path, dpi=STYLE["fig_dpi"], bbox_inches="tight",
-                facecolor=STYLE["fig_facecolor"])
+    fig.tight_layout(rect=_TIGHT_RECT)
+    fig.savefig(
+        out_path,
+        dpi=STYLE["fig_dpi"],
+        bbox_inches="tight",
+        facecolor=STYLE["fig_facecolor"],
+    )
     plt.close(fig)
     logger.info("Wrote %s", out_path)

@@ -20,8 +20,8 @@ Responsible for three things:
 from __future__ import annotations
 
 import logging
+import os
 import subprocess
-import sys
 import tempfile
 from dataclasses import dataclass
 from pathlib import Path
@@ -180,7 +180,7 @@ print(f"DOWNLOAD_OK nodes={nodes.height} edges={edges.height}")
 """
 
 
-def ensure_gold_data(
+def ensure_gold_data(  # noqa: PLR0913
     nodes_path: Path,
     edges_path: Path,
     *,
@@ -233,6 +233,12 @@ def ensure_gold_data(
     cache = cache_dir or (nodes_path.parent / ".optimuskg_cache")
     cache.mkdir(parents=True, exist_ok=True)
 
+    # Resolve to absolute paths: the subprocess runs with cwd set to a scratch
+    # directory, so relative paths would be written there (and then deleted).
+    abs_nodes = nodes_path.resolve()
+    abs_edges = edges_path.resolve()
+    abs_cache = cache.resolve()
+
     logger.info(
         "Downloading gold graph (lcc=%s, doi=%s) via the optimuskg client; "
         "this is large and may take a while...",
@@ -240,8 +246,18 @@ def ensure_gold_data(
         doi,
     )
 
+    # Strip env vars that point at this project's venv: when the parent runs
+    # under `uv run`, an inherited VIRTUAL_ENV/PYTHONPATH would make the child's
+    # `uv run --no-project` reuse that venv (where the local `optimuskg` package
+    # shadows the published client), causing an AttributeError on the client API.
+    child_env = {
+        k: v
+        for k, v in os.environ.items()
+        if k not in ("VIRTUAL_ENV", "PYTHONPATH", "UV_PROJECT_ENVIRONMENT")
+    }
+
     # Run from a scratch directory so the local ``optimuskg`` package (in the
-    # repo root) does not shadow the published client on sys.path.
+    # repo root) also does not shadow the published client on sys.path.
     with tempfile.TemporaryDirectory() as scratch:
         cmd = [
             "uv",
@@ -252,17 +268,19 @@ def ensure_gold_data(
             "python",
             "-c",
             _DOWNLOAD_SCRIPT,
-            str(cache),
+            str(abs_cache),
             doi,
             "1" if lcc else "0",
-            str(nodes_path),
-            str(edges_path),
+            str(abs_nodes),
+            str(abs_edges),
         ]
         result = subprocess.run(  # noqa: S603
             cmd,
             cwd=scratch,
             capture_output=True,
             text=True,
+            check=False,
+            env=child_env,
         )
 
     if result.returncode != 0 or not (nodes_path.exists() and edges_path.exists()):
@@ -317,9 +335,7 @@ def load_triples(
     # triple maps to a known entity (replace_strict below would otherwise raise).
     node_ids = nodes["id"]
     before = edges.height
-    edges = edges.filter(
-        pl.col("from").is_in(node_ids) & pl.col("to").is_in(node_ids)
-    )
+    edges = edges.filter(pl.col("from").is_in(node_ids) & pl.col("to").is_in(node_ids))
     if edges.height < before:
         logger.warning(
             "Dropped %d edges referencing unknown nodes.", before - edges.height

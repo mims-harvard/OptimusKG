@@ -59,9 +59,13 @@ dev = [
 # Install with: uv sync --group embeddings
 embeddings = [
   "torch>=2.2",
-  "numpy>=1.26",
   "scikit-learn>=1.4",
   "umap-learn>=0.5.6",
+  # numba/llvmlite (pulled in by umap-learn -> pynndescent) lag the newest numpy
+  # releases. Floor numba and cap numpy so uv resolves a buildable stack instead
+  # of backtracking to ancient llvmlite (0.36, which only builds on Python <3.10).
+  "numba>=0.60",
+  "numpy>=1.26,<2.2",
 ]
 
 [project.scripts]

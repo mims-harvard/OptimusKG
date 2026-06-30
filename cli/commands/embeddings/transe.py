@@ -19,8 +19,20 @@ from dataclasses import dataclass
 import numpy as np
 import torch
 from torch import nn
+from torch.nn import functional as F  # noqa: N812
 
 logger = logging.getLogger("cli")
+
+# Probability of corrupting the head (vs. the tail) when sampling a negative.
+_HEAD_CORRUPTION_PROB = 0.5
+
+# Loss modes. ``adversarial`` is self-adversarial negative sampling (Sun et al.,
+# RotatE, ICLR 2019): a logistic loss whose multiple negatives are softmax-
+# weighted by their own scores, so hard negatives dominate — the standard fix
+# for the gradient starvation that uniform random negatives cause on large
+# graphs. ``max_margin`` is hardest-of-N margin ranking; ``margin`` is the
+# classic mean-over-negatives margin ranking (Bordes et al., 2013).
+LOSS_MODES = ("adversarial", "max_margin", "margin")
 
 
 def resolve_device(device: str = "auto") -> torch.device:
@@ -45,33 +57,41 @@ class TransEConfig:
     margin: float = 1.0
     p_norm: int = 1
     negatives: int = 1
+    loss: str = "margin"
+    adv_temperature: float = 1.0
     seed: int = 42
     device: str = "auto"
 
 
 class TransE(nn.Module):
-    """TransE scoring model with margin-ranking loss.
+    """TransE scoring model with selectable negative-sampling loss.
 
     Args:
         n_entities: Number of distinct entities.
         n_relations: Number of distinct relations.
         dim: Embedding dimensionality.
         p_norm: Norm used for the dissimilarity (1 = L1, 2 = L2).
-        margin: Margin gamma in the ranking loss.
+        margin: Margin / gamma for the ranking and logistic losses.
+        loss: One of :data:`LOSS_MODES`.
+        adv_temperature: Softmax temperature for self-adversarial weighting.
     """
 
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         n_entities: int,
         n_relations: int,
         dim: int = 128,
         p_norm: int = 1,
         margin: float = 1.0,
+        loss: str = "margin",
+        adv_temperature: float = 1.0,
     ) -> None:
         super().__init__()
         self.n_entities = n_entities
         self.p_norm = p_norm
         self.margin = margin
+        self.loss_mode = loss
+        self.adv_temperature = adv_temperature
         self.entity = nn.Embedding(n_entities, dim)
         self.relation = nn.Embedding(n_relations, dim)
 
@@ -85,26 +105,64 @@ class TransE(nn.Module):
                 self.relation.weight.norm(p=2, dim=1, keepdim=True).clamp_min(1e-12)
             )
 
-    def _distance(
+    def _pos_distance(
         self, h: torch.Tensor, r: torch.Tensor, t: torch.Tensor
     ) -> torch.Tensor:
-        """Dissimilarity ``||h + r - t||_p`` for a batch of index tensors."""
+        """Dissimilarity ``||h + r - t||_p`` for a batch of triples (shape ``(B,)``)."""
         return torch.norm(
-            self.entity(h) + self.relation(r) - self.entity(t),
-            p=self.p_norm,
-            dim=1,
+            self.entity(h) + self.relation(r) - self.entity(t), p=self.p_norm, dim=1
         )
 
-    def forward(
+    def _neg_distance(
+        self,
+        h: torch.Tensor,
+        r: torch.Tensor,
+        t: torch.Tensor,
+        neg_ent: torch.Tensor,
+        corrupt_head: torch.Tensor,
+    ) -> torch.Tensor:
+        """Distances for ``(B, N)`` corrupted triples sharing each positive's relation.
+
+        ``neg_ent`` are the replacement entities; ``corrupt_head`` selects, per
+        positive, whether they replace the head (``||neg + r - t||``) or the tail
+        (``||h + r - neg||``).
+        """
+        he, re, te = self.entity(h), self.relation(r), self.entity(t)  # (B, d)
+        ne = self.entity(neg_ent)  # (B, N, d)
+        base = torch.where(
+            corrupt_head.view(-1, 1, 1),
+            (re - te).unsqueeze(1),  # head corrupted: neg + (r - t)
+            (he + re).unsqueeze(1),  # tail corrupted: (h + r) - neg
+        )
+        sign = (corrupt_head.float() * 2 - 1).view(-1, 1, 1)  # +1 head, -1 tail
+        return torch.norm(base + sign * ne, p=self.p_norm, dim=2)  # (B, N)
+
+    def loss(
         self,
         pos: tuple[torch.Tensor, torch.Tensor, torch.Tensor],
-        neg: tuple[torch.Tensor, torch.Tensor, torch.Tensor],
+        neg_ent: torch.Tensor,
+        corrupt_head: torch.Tensor,
     ) -> torch.Tensor:
-        """Margin-ranking loss for a batch of positive and negative triples."""
-        pos_d = self._distance(*pos)
-        neg_d = self._distance(*neg)
-        # Positives should score lower (smaller distance) than negatives.
-        return torch.clamp(self.margin + pos_d - neg_d, min=0).mean()
+        """Training loss for a batch of positives against ``(B, N)`` negatives."""
+        h, r, t = pos
+        pos_d = self._pos_distance(h, r, t)  # (B,)
+        neg_d = self._neg_distance(h, r, t, neg_ent, corrupt_head)  # (B, N)
+
+        if self.loss_mode == "adversarial":
+            # Self-adversarial: weight each negative by softmax of its score, so
+            # hard (close) negatives dominate; weights are detached (no grad).
+            weights = torch.softmax(
+                self.adv_temperature * (self.margin - neg_d), dim=1
+            ).detach()
+            pos_loss = -F.logsigmoid(self.margin - pos_d)  # (B,)
+            neg_loss = -(weights * F.logsigmoid(neg_d - self.margin)).sum(dim=1)
+            return (pos_loss + neg_loss).mean()
+        if self.loss_mode == "max_margin":
+            # Hardest negative per positive (smallest distance).
+            hardest = neg_d.min(dim=1).values
+            return torch.clamp(self.margin + pos_d - hardest, min=0).mean()
+        # Classic margin ranking, averaged over the sampled negatives.
+        return torch.clamp(self.margin + pos_d.unsqueeze(1) - neg_d, min=0).mean()
 
     @torch.no_grad()
     def normalize_entities(self) -> None:
@@ -114,28 +172,26 @@ class TransE(nn.Module):
         )
 
 
-def _corrupt(
-    head: torch.Tensor,
-    tail: torch.Tensor,
+def _sample_negatives(
+    batch: int,
+    n_neg: int,
     n_entities: int,
     generator: torch.Generator,
     device: torch.device,
 ) -> tuple[torch.Tensor, torch.Tensor]:
-    """Corrupt either the head or the tail of each triple (uniformly).
+    """Sample ``(B, N)`` replacement entities and a ``(B,)`` head/tail-corrupt mask.
 
-    Random tensors are drawn on the CPU generator and moved to ``device`` —
-    MPS does not reliably support device-side generators. Returns the corrupted
-    ``(head, tail)`` tensors; the relation is unchanged.
+    Random tensors are drawn on a CPU generator and moved to ``device`` — MPS
+    does not reliably support device-side generators.
     """
-    batch = head.shape[0]
-    rand_entities = torch.randint(n_entities, (batch,), generator=generator).to(device)
-    corrupt_head = (torch.rand(batch, generator=generator) < 0.5).to(device)
-    neg_head = torch.where(corrupt_head, rand_entities, head)
-    neg_tail = torch.where(corrupt_head, tail, rand_entities)
-    return neg_head, neg_tail
+    neg_ent = torch.randint(n_entities, (batch, n_neg), generator=generator).to(device)
+    corrupt_head = (torch.rand(batch, generator=generator) < _HEAD_CORRUPTION_PROB).to(
+        device
+    )
+    return neg_ent, corrupt_head
 
 
-def train_transe(
+def train_transe(  # noqa: PLR0913
     head: np.ndarray,
     relation: np.ndarray,
     tail: np.ndarray,
@@ -158,9 +214,20 @@ def train_transe(
         float32 numpy arrays of shape ``(n_entities, dim)`` / ``(n_relations,
         dim)`` and ``log`` holds per-epoch losses and run metadata.
     """
+    if config.loss not in LOSS_MODES:
+        msg = f"loss must be one of {LOSS_MODES}, got {config.loss!r}"
+        raise ValueError(msg)
+
     torch.manual_seed(config.seed)
     device = resolve_device(config.device)
-    logger.info("Training TransE on %s (dim=%d, epochs=%d)", device, config.dim, config.epochs)
+    logger.info(
+        "Training TransE on %s (dim=%d, epochs=%d, loss=%s, negatives=%d)",
+        device,
+        config.dim,
+        config.epochs,
+        config.loss,
+        config.negatives,
+    )
 
     model = TransE(
         n_entities=n_entities,
@@ -168,6 +235,8 @@ def train_transe(
         dim=config.dim,
         p_norm=config.p_norm,
         margin=config.margin,
+        loss=config.loss,
+        adv_temperature=config.adv_temperature,
     ).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=config.lr)
 
@@ -191,11 +260,10 @@ def train_transe(
             idx = perm[start : start + config.batch_size].to(device)
             ph, pr, pt = h[idx], r[idx], t[idx]
 
-            batch_loss = torch.zeros((), device=device)
-            for _ in range(config.negatives):
-                nh, nt = _corrupt(ph, pt, n_entities, corrupt_gen, device)
-                batch_loss = batch_loss + model((ph, pr, pt), (nh, pr, nt))
-            batch_loss = batch_loss / config.negatives
+            neg_ent, corrupt_head = _sample_negatives(
+                ph.shape[0], config.negatives, n_entities, corrupt_gen, device
+            )
+            batch_loss = model.loss((ph, pr, pt), neg_ent, corrupt_head)
 
             optimizer.zero_grad()
             batch_loss.backward()
