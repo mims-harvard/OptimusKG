@@ -252,9 +252,9 @@ class Relation(StrEnum):
 # When multiple relations exist, the one with lowest priority number wins
 RELATION_PRIORITY: dict[Relation, int] = {
     # Drug-Disease priorities
-    Relation.OFF_LABEL_USE: 1,  # Most specific
+    Relation.INDICATION: 1,  # Most specific
     Relation.CONTRAINDICATION: 2,
-    Relation.INDICATION: 3,
+    Relation.OFF_LABEL_USE: 3,
     # Drug-Drug priorities
     Relation.SYNERGISTIC_INTERACTION: 1,  # Specific interaction
     Relation.PARENT: 10,  # Generic hierarchy
