@@ -1,3 +1,11 @@
+# Provenance (DisGeNET v7.0, January 2020):
+#   Original download:
+#     https://www.disgenet.org/static/disgenet_ap1/files/downloads/curated_gene_disease_associations.tsv.gz
+#   Wayback Machine archive (curated file, 2022-01-25):
+#     https://web.archive.org/web/20220125110432/https://www.disgenet.org/static/disgenet_ap1/files/downloads/curated_gene_disease_associations.tsv.gz
+#   Wayback Machine archive (v7.0 readme with column + file descriptions, 2024-05-03):
+#     https://web.archive.org/web/20240503020023/https://www.disgenet.org/static/disgenet_ap1/files/downloads/readme.txt
+#   License: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 (CC BY-NC-SA 4.0).
 landing.disgenet.curated_gene_disease_associations:
   type: polars.CSVDataset
   filepath: "data/landing/disgenet/curated_gene_disease_associations.tsv"
