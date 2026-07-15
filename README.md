@@ -82,14 +82,11 @@ Once installed, the agent applies the skill automatically whenever you ask it to
 
 ## MCP Bundle
 
-OptimusKG ships an [MCP Bundle](mcpb/README.md) — a [Desktop Extension](https://www.anthropic.com/engineering/desktop-extensions) (`.mcpb`) that lets you query the biomedical knowledge graph in natural language from Claude Desktop. Download `optimuskg.mcpb` from the [releases page](https://github.com/mims-harvard/optimuskg/releases) and double-click it to install:
+OptimusKG ships an [MCP Bundle](mcpb/README.md) that lets you query the biomedical knowledge graph in natural language from Claude Desktop. Download `optimuskg.mcpb` from the [releases page](https://github.com/mims-harvard/optimuskg/releases).
 
-```text
-"What genes are associated with Alzheimer's disease, ranked by evidence?"
-"How is aspirin connected to Alzheimer's disease?"
-```
+On first launch the bundle fetches the graph through the [`optimuskg`](https://pypi.org/project/optimuskg/) client and builds a local, indexed DuckDB database once. Every query after that runs locally in milliseconds.
 
-On first launch the bundle fetches the graph through the [`optimuskg`](https://pypi.org/project/optimuskg/) client and builds a local, indexed DuckDB database once; every query after that runs locally in milliseconds. See the [MCP Bundle docs](https://optimuskg.ai/docs/mcp-bundle) for details.
+See the [MCP Bundle docs](https://optimuskg.ai/docs/mcp-bundle) for details.
 
 ## Data pipeline
 
