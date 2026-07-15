@@ -1,0 +1,11 @@
+dist/
+tests/
+.venv/
+.pytest_cache/
+__pycache__/
+*.pyc
+*.duckdb
+*.duckdb.wal
+METRICS.md
+build.py
+.mcpbignore

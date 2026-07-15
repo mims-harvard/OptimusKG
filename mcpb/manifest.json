@@ -1,0 +1,90 @@
+{
+  "manifest_version": "0.4",
+  "name": "optimuskg",
+  "display_name": "OptimusKG",
+  "version": "0.1.0",
+  "description": "MCP server bundle exposing the OptimusKG biomedical knowledge graph for natural-language querying.",
+  "long_description": "OptimusKG is a multimodal biomedical knowledge graph integrating dozens of resources across genes, diseases, drugs, pathways, phenotypes, anatomy, exposures, and ontology terms. This bundle exposes the graph over the Model Context Protocol. On first use it fetches the published graph from Harvard Dataverse via the `optimuskg` Python client and builds a local, indexed DuckDB database; thereafter every query runs locally. It provides curated tools for entity search, neighbourhood exploration, connection finding, and aggregation, plus a guarded read-only SQL escape hatch for arbitrary questions.",
+  "author": {
+    "name": "Zitnik Lab",
+    "url": "https://zitniklab.hms.harvard.edu/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mims-harvard/optimuskg"
+  },
+  "homepage": "https://optimuskg.ai/",
+  "documentation": "https://optimuskg.ai/docs/",
+  "support": "https://github.com/mims-harvard/optimuskg/issues",
+  "icon": "icon.png",
+  "server": {
+    "type": "python",
+    "entry_point": "src/run_stdio.py",
+    "mcp_config": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "${__dirname}",
+        "--with",
+        ".",
+        "--python",
+        "3.12",
+        "${__dirname}${/}src${/}run_stdio.py"
+      ],
+      "env": {
+        "PYTHONPATH": "${__dirname}${/}src",
+        "PYTHONIOENCODING": "utf-8",
+        "OPTIMUSKG_DOI": "doi:10.7910/DVN/IYNGEV"
+      }
+    }
+  },
+  "tools": [
+    {
+      "name": "list_schema",
+      "description": "Node types, edge types, and the relation vocabulary of the graph."
+    },
+    {
+      "name": "search_entities",
+      "description": "Resolve a name, gene symbol, synonym, or id to graph entities."
+    },
+    {
+      "name": "get_entity",
+      "description": "Full properties of an entity plus a summary of its connections."
+    },
+    {
+      "name": "get_neighbors",
+      "description": "One-hop neighbours, filterable by relation, edge type, direction, and score."
+    },
+    {
+      "name": "count_neighbors",
+      "description": "Aggregate an entity's neighbours by edge type, relation, or neighbour type."
+    },
+    {
+      "name": "find_connection",
+      "description": "Shortest path(s) between two entities (default 2 hops)."
+    },
+    {
+      "name": "run_sql",
+      "description": "Read-only SQL escape hatch over the nodes and edges tables."
+    }
+  ],
+  "tools_generated": false,
+  "compatibility": {
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ]
+  },
+  "keywords": [
+    "biomedical",
+    "knowledge-graph",
+    "bioinformatics",
+    "optimuskg",
+    "neo4j",
+    "duckdb",
+    "mcp"
+  ],
+  "license": "MIT"
+}

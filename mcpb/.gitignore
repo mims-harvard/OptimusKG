@@ -1,0 +1,8 @@
+dist/
+METRICS.md
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.duckdb
+*.duckdb.wal
