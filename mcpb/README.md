@@ -1,7 +1,7 @@
 # OptimusKG MCP Bundle
 
 This is a [Desktop Extension](https://www.anthropic.com/engineering/desktop-extensions)
-(`.mcpb`) file to query the [OptimusKG](https://optimuskg.ai/) biomedical knowledge graph in natural language. Not database to download or import by hand.
+(`.mcpb`) file to query the [OptimusKG](https://optimuskg.ai/) biomedical knowledge graph in natural language.
 
 ## How it works
 
