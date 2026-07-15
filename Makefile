@@ -147,18 +147,16 @@ docs-install: ##@ Install documentation dependencies
 # MCP bundle (mcpb/)
 # -----------------------------------------------
 
-MCPB_DIR   ?= mcpb
-MCPB_NODES ?= $(abspath data/gold/kg/parquet/nodes.parquet)
-MCPB_EDGES ?= $(abspath data/gold/kg/parquet/edges.parquet)
-MCPB_ENV    = OPTIMUSKG_MCP_NODES=$(MCPB_NODES) OPTIMUSKG_MCP_EDGES=$(MCPB_EDGES)
+MCPB_DIR ?= mcpb
+MCPB_DOI ?= doi:10.7910/DVN/IYNGEV
 
 .PHONY: mcpb-test
-mcpb-test: ##@ Run the MCP bundle correctness tests against the local gold graph
-	@cd $(MCPB_DIR) && $(MCPB_ENV) uv run --with '.[profile]' --python 3.12 pytest tests/test_tools.py
+mcpb-test: ##@ Run the MCP bundle correctness tests (fetches the graph via the optimuskg client)
+	@cd $(MCPB_DIR) && OPTIMUSKG_DOI=$(MCPB_DOI) uv run --with '.[profile]' --python 3.12 pytest tests/test_tools.py
 
 .PHONY: mcpb-profile
 mcpb-profile: ##@ Benchmark every MCP query and refresh the README performance section
-	@cd $(MCPB_DIR) && $(MCPB_ENV) uv run --with '.[profile]' --python 3.12 optimuskg-mcp-profile
+	@cd $(MCPB_DIR) && OPTIMUSKG_DOI=$(MCPB_DOI) uv run --with '.[profile]' --python 3.12 optimuskg-mcp-profile
 
 .PHONY: mcpb-build
 mcpb-build: ##@ Validate and pack the MCP bundle into mcpb/dist/optimuskg.mcpb

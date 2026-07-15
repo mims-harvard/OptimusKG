@@ -1,46 +1,24 @@
-"""Session fixtures. Tests run against the real graph; the suite skips (rather
-than fails) if the gold Parquet is absent and no override env var is set."""
+"""Session fixtures. Tests fetch the graph through the optimuskg client (the
+same path the bundle uses at runtime) and skip if it cannot be fetched."""
 
 from __future__ import annotations
 
-import os
-from pathlib import Path
-
 import pytest
-
-REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_NODES = REPO_ROOT / "data" / "gold" / "kg" / "parquet" / "nodes.parquet"
-DEFAULT_EDGES = REPO_ROOT / "data" / "gold" / "kg" / "parquet" / "edges.parquet"
-
-
-def _resolve_parquet() -> tuple[str, str] | None:
-    nodes = os.environ.get("OPTIMUSKG_MCP_NODES") or (
-        str(DEFAULT_NODES) if DEFAULT_NODES.is_file() else ""
-    )
-    edges = os.environ.get("OPTIMUSKG_MCP_EDGES") or (
-        str(DEFAULT_EDGES) if DEFAULT_EDGES.is_file() else ""
-    )
-    if nodes and edges and Path(nodes).is_file() and Path(edges).is_file():
-        return nodes, edges
-    return None
 
 
 @pytest.fixture(scope="session")
 def graph():
+    from optimuskg_mcp.data import DataError
     from optimuskg_mcp.db import connect
     from optimuskg_mcp.tools import Graph
 
-    resolved = _resolve_parquet()
-    if resolved is None:
-        pytest.skip(
-            "Gold Parquet not found. Set OPTIMUSKG_MCP_NODES / OPTIMUSKG_MCP_EDGES "
-            "or generate data/gold/kg/parquet/."
-        )
-    os.environ["OPTIMUSKG_MCP_NODES"], os.environ["OPTIMUSKG_MCP_EDGES"] = resolved
+    # connect() downloads the graph via the optimuskg client (cached) and opens
+    # the same hardened, external-access-disabled connection the server uses.
+    try:
+        con = connect()
+    except DataError as exc:
+        pytest.skip(f"OptimusKG graph could not be fetched: {exc}")
 
-    # Use the same hardened, external-access-disabled connection the server uses,
-    # so security tests exercise the real boundary.
-    con = connect()
     try:
         yield Graph(con)
     finally:
