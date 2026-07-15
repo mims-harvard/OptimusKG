@@ -75,10 +75,7 @@
       "darwin",
       "win32",
       "linux"
-    ],
-    "runtimes": {
-      "python": ">=3.12,<3.14"
-    }
+    ]
   },
   "keywords": [
     "biomedical",
