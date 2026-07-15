@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "optimuskg-mcp"
+version = "0.1.0"
+description = "MCP server bundle exposing the OptimusKG biomedical knowledge graph for natural-language querying."
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+license = { text = "MIT" }
+authors = [{ name = "Zitnik Lab", url = "https://zitniklab.hms.harvard.edu/" }]
+dependencies = [
+  "mcp>=1.2.0",
+  "duckdb>=1.1.0",
+  "pyarrow>=17.0.0",
+  "platformdirs>=4.0.0",
+  "optimuskg>=1.0.0",
+]
+
+[project.optional-dependencies]
+profile = ["pytest>=8.0", "pytest-benchmark>=4.0", "typer>=0.15"]
+
+[project.scripts]
+optimuskg-mcp = "optimuskg_mcp.server:run_stdio"
+optimuskg-mcp-profile = "optimuskg_mcp.profiling:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/optimuskg_mcp"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
