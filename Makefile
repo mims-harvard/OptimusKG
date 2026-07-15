@@ -155,7 +155,7 @@ mcpb-test: ##@ Run the MCP bundle correctness tests (fetches the graph via the o
 	@cd $(MCPB_DIR) && OPTIMUSKG_DOI=$(MCPB_DOI) uv run --with '.[profile]' --python 3.12 pytest tests/test_tools.py
 
 .PHONY: mcpb-profile
-mcpb-profile: ##@ Benchmark every MCP query and refresh the README performance section
+mcpb-profile: ##@ Benchmark every MCP query and write mcpb/METRICS.md
 	@cd $(MCPB_DIR) && OPTIMUSKG_DOI=$(MCPB_DOI) uv run --with '.[profile]' --python 3.12 optimuskg-mcp-profile
 
 .PHONY: mcpb-build

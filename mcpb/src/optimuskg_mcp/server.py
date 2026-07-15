@@ -2,7 +2,7 @@
 
 Each tool is a thin async wrapper that offloads the synchronous DuckDB call to a
 worker thread, so a slow query never blocks the event loop. The tool docstrings
-are the descriptions Claude reads to choose a tool, so they are written for it.
+are the descriptions the Agent reads to choose a tool, so they are written for it.
 """
 
 from __future__ import annotations

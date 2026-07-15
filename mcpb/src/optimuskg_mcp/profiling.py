@@ -1,8 +1,4 @@
-"""Benchmark every query and render the results into README.md.
-
-Reproducible source of the numbers in the Performance section; run via
-``optimuskg-mcp-profile`` or ``make mcpb-profile``.
-"""
+"""Benchmark every query and write the results to METRICS.md."""
 
 from __future__ import annotations
 
@@ -16,12 +12,8 @@ import typer
 
 PKG_DIR = Path(__file__).resolve().parent
 BUNDLE_ROOT = PKG_DIR.parents[1]  # src/optimuskg_mcp -> src -> mcpb/
-README = BUNDLE_ROOT / "README.md"
 METRICS = BUNDLE_ROOT / "METRICS.md"
 BENCH_FILE = BUNDLE_ROOT / "tests" / "test_benchmark.py"
-
-MARK_START = "<!-- METRICS:START -->"
-MARK_END = "<!-- METRICS:END -->"
 
 # test function -> (tool, human-readable scenario). Also fixes display order.
 SCENARIOS: dict[str, tuple[str, str]] = {
@@ -119,50 +111,31 @@ def render(bench_json: Path, build: dict[str, object]) -> str:
         )
 
     lines = [
-        MARK_START,
+        "# OptimusKG MCP — performance metrics",
         "",
-        "### Measured performance",
-        "",
-        f"One-time index build: **{build['build_seconds']:.1f} s** "
-        f"({build['n_nodes']:,} nodes, {build['n_edges']:,} edges) → "
-        f"**{build['cache_gb']} GB** local DuckDB cache. "
-        "After that every query below runs against the cached, indexed database.",
+        f"One-time index build in {build['build_seconds']:.1f} s "
+        f"({build['n_nodes']:,} nodes, {build['n_edges']:,} edges) for a "
+        f"{build['cache_gb']} GB local DuckDB cache. After that every query below "
+        "runs against the cached, indexed database.",
         "",
         "Latencies are wall-clock, warm cache, measured in-process with "
-        "[`pytest-benchmark`](https://pytest-benchmark.readthedocs.io/) "
-        "(statistical sampling: repeated rounds, median reported).",
+        "[`pytest-benchmark`](https://pytest-benchmark.readthedocs.io/).",
         "",
         "| Tool | Scenario | Median (ms) | Mean (ms) | Min (ms) | StdDev (ms) | Ops/s | Rounds |",
         "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |",
         *rows,
         "",
         f"_Environment: {cpu}, Python {py}. Regenerate with `make mcpb-profile`._",
-        "",
-        MARK_END,
     ]
-    return "\n".join(lines)
-
-
-def _inject(section: str) -> None:
-    text = README.read_text()
-    if MARK_START in text and MARK_END in text:
-        pre = text[: text.index(MARK_START)]
-        post = text[text.index(MARK_END) + len(MARK_END) :]
-        README.write_text(pre + section + post)
-    else:
-        README.write_text(text.rstrip() + "\n\n" + section + "\n")
-    typer.echo(f"Updated {README}")
+    return "\n".join(lines) + "\n"
 
 
 def profile(
     reuse_json: Path | None = typer.Option(
         None, help="Reuse an existing benchmark JSON instead of running the suite."
     ),
-    readme: bool = typer.Option(
-        True, "--readme/--no-readme", help="Update the Performance section in README.md."
-    ),
 ) -> None:
-    """Run the benchmark suite and render the metrics into README.md."""
+    """Run the benchmark suite and write the metrics to METRICS.md."""
     build = _build_stats()
     typer.echo(
         f"Index: {build['n_nodes']:,} nodes / {build['n_edges']:,} edges, "
@@ -176,12 +149,8 @@ def profile(
         _run_benchmarks(tmp)
         bench_json = tmp
 
-    section = render(bench_json, build)
-    METRICS.write_text("# OptimusKG MCP — performance metrics\n\n" + section + "\n")
+    METRICS.write_text(render(bench_json, build))
     typer.echo(f"Wrote {METRICS}")
-    if readme:
-        _inject(section)
-    typer.echo("\n" + section)
 
 
 def main() -> None:

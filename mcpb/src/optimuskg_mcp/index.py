@@ -1,16 +1,4 @@
-"""Build a query-ready DuckDB database from the OptimusKG Parquet files.
-
-This module materialises three tables optimised for the tool layer:
-
-* ``nodes``: one row per entity with an extracted ``name``/``symbol`` and a
-  lower-cased ``search_blob`` covering ids, names, and synonyms.
-* ``edges``: the raw directed edges plus a parsed numeric ``score`` column.
-* ``adj``: an *undirected* adjacency (each edge emitted in both directions)
-  indexed on the source column, which powers neighbour lookups and the bounded
-  breadth-first search behind ``find_connection``.
-
-The resulting ``.duckdb`` file is cached and reused on every subsequent launch.
-"""
+"""Build a query-ready DuckDB database from the OptimusKG Parquet files. The resulting ``.duckdb`` file is cached and reused on every subsequent launch."""
 
 from __future__ import annotations
 

@@ -27,20 +27,14 @@ The graph data version is pinned per release via the `OPTIMUSKG_DOI` environment
 | `get_entity` | Full properties of an entity plus a summary of its connections. |
 | `get_neighbors` | One-hop neighbours, filterable by relation, edge type, direction, and `min_score`. |
 | `count_neighbors` | Aggregate an entity's neighbours by edge type, relation, or neighbour type. |
-| `find_connection` | Shortest path(s) between two entities (default and recommended **2 hops**). |
-| `run_sql` | Read-only SQL escape hatch over the `nodes` / `edges` / `adj` tables for the long tail of questions. |
-
-The graph is stored as three tables: `nodes(id, type, name, symbol, full_name,
-search_blob, properties)`, an undirected, indexed `adj(s, t, edge_type,
-relation, score, reverse)`, and an `edges` view over its forward half. Per-edge
-JSON is not materialised (it would multiply the cache size); the parsed
-association strength is kept as `score`.
+| `find_connection` | Shortest path(s) between two entities. |
+| `run_sql` | Read-only SQL query entrypoint over the DuckDB tables for the long tail of questions. |
 
 ## Install
 
 1. Download `optimuskg.mcpb` from the [releases page](https://github.com/mims-harvard/optimuskg/releases).
 2. Double-click it to install into Claude Desktop.
-3. The first query triggers a one-time download + index build (see below); later
+3. The first query triggers a one-time download + index build; later
    queries are instant.
 
 Requires [`uv`](https://docs.astral.sh/uv/) on your system.
@@ -76,7 +70,7 @@ Everything lives under `mcpb/` and is isolated from the main OptimusKG pipeline.
 ```bash
 # From the repo root:
 make mcpb-test       # correctness tests against the real graph
-make mcpb-profile    # run the benchmark suite and refresh the Performance section
+make mcpb-profile    # run the benchmark suite and write METRICS.md
 make mcpb-build      # validate + pack -> mcpb/dist/optimuskg.mcpb
 
 # Or directly, from mcpb/:
