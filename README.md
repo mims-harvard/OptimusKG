@@ -80,6 +80,17 @@ npx skills add https://github.com/mims-harvard/optimuskg --skill optimuskg
 
 Once installed, the agent applies the skill automatically whenever you ask it to work with OptimusKG. It already knows the client's API, the Parquet file layout, the graph schema, and how to target a different Dataverse release. See the [agent skill docs](https://optimuskg.ai/docs/optimuskg-client#agent-skill) for details.
 
+## MCP Bundle
+
+OptimusKG ships an [MCP Bundle](mcpb/README.md) — a [Desktop Extension](https://www.anthropic.com/engineering/desktop-extensions) (`.mcpb`) that lets you query the biomedical knowledge graph in natural language from Claude Desktop. Download `optimuskg.mcpb` from the [releases page](https://github.com/mims-harvard/optimuskg/releases) and double-click it to install:
+
+```text
+"What genes are associated with Alzheimer's disease, ranked by evidence?"
+"How is aspirin connected to Alzheimer's disease?"
+```
+
+On first launch the bundle fetches the graph through the [`optimuskg`](https://pypi.org/project/optimuskg/) client and builds a local, indexed DuckDB database once; every query after that runs locally in milliseconds. See the [MCP Bundle docs](https://optimuskg.ai/docs/mcp-bundle) for details.
+
 ## Data pipeline
 
 The pipeline architecture consists of the following components:
