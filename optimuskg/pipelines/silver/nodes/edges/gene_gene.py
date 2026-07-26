@@ -25,7 +25,7 @@ def run(
             pl.coalesce("ensembl_id_right", "to").alias("to"),
             pl.lit(Edge.format_label(Node.GENE, Node.GENE)).alias("label"),
             pl.lit(Relation.INTERACTS_WITH).alias("relation"),
-            pl.lit(False).alias("undirected"),
+            pl.lit(True).alias("undirected"),
             pl.struct(
                 [
                     pl.struct(
