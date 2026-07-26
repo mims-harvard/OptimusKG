@@ -6,7 +6,7 @@ from pathlib import Path
 
 import typer
 
-from . import centrality, paperqa, paperqa_figures, sample_edges
+from . import centrality, paperqa, paperqa_figures, power, sample_edges
 
 logger = logging.getLogger("cli")
 
@@ -288,4 +288,81 @@ def paperqa_figures_cmd(
     paperqa_figures.run(
         input_path=input_path,
         out_dir=out_dir,
+    )
+
+
+@evals_app.command(
+    name="power",
+    help="Power and precision analysis for a PaperQA3 validation run.",
+)
+def power_cmd(  # noqa: PLR0913
+    input_path: Path = typer.Option(
+        ...,
+        "--input",
+        help="Path to the polled-edges CSV produced by `cli evals paperqa --action poll`.",
+    ),
+    out_dir: Path = typer.Option(
+        None,
+        "--out",
+        help="Output directory for the JSON report and figures. Defaults to --input's directory.",
+    ),
+    centrality_path: Path = typer.Option(
+        None,
+        "--centrality",
+        help="Centrality CSV for the coverage analysis. Defaults to degree_undirected.csv beside --input.",
+    ),
+    human_review_path: Path = typer.Option(
+        None,
+        "--human-review",
+        help="Optional expert-review export. Falls back to the counts reported in the reviewer response.",
+    ),
+    cost_per_edge: float = typer.Option(
+        power.DEFAULT_COST_PER_EDGE_USD,
+        "--cost-per-edge",
+        help="Order-of-magnitude USD cost per evaluated edge, for the cost-precision tradeoff.",
+    ),
+    alpha: float = typer.Option(
+        power.DEFAULT_ALPHA,
+        "--alpha",
+        help="Two-sided significance level for all intervals.",
+    ),
+    centrality_lower: float = typer.Option(
+        10.0,
+        "--centrality-lower",
+        help="Lower degree percentile excluded during sampling.",
+    ),
+    centrality_upper: float = typer.Option(
+        90.0,
+        "--centrality-upper",
+        help="Upper degree percentile excluded during sampling.",
+    ),
+):
+    """Assess whether the validated edge sample supports the graph-quality claims.
+
+    Reports design-adjusted confidence intervals (accounting for the clustering
+    of edges within seed nodes), the power of the true-vs-negative-control
+    contrast, per-stratum precision, the cost-precision tradeoff, and how much
+    of the graph the degree-decile exclusion leaves in the sampling frame.
+
+    Examples:
+
+        uv run cli evals power --input data/gold/evals/20260328_195935_polled_edges.csv
+
+        # With the raw expert-review export
+        uv run cli evals power --input data/gold/evals/20260328_195935_polled_edges.csv \\
+            --human-review data/gold/evals/human_review_responses_long.csv
+
+        # Different cost assumption
+        uv run cli evals power --input data/gold/evals/20260328_195935_polled_edges.csv \\
+            --cost-per-edge 8.75
+    """
+    power.run(
+        input_path=input_path,
+        out_dir=out_dir,
+        centrality_path=centrality_path,
+        human_review_path=human_review_path,
+        cost_per_edge=cost_per_edge,
+        alpha=alpha,
+        lower_percentile=centrality_lower,
+        upper_percentile=centrality_upper,
     )
