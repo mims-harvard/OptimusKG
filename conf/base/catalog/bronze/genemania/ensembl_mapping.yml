@@ -1,0 +1,11 @@
+bronze.genemania.ensembl_mapping:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/genemania/ensembl_mapping.parquet
+  load_args:
+    schema:
+      genemania_id: pl.String
+      ensembl_id: pl.String
+  metadata:
+    checksum: 9c8ae826f214a5a9731bae32e13d8c06
+    kedro-viz:
+      layer: bronze

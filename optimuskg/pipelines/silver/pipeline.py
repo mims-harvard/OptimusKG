@@ -45,6 +45,8 @@ def create_pipeline(**kwargs) -> Pipeline:
             "bronze.drugcentral.phenotype",
             "bronze.opentargets.ensembl_ncbi_mapping",
             "bronze.ppi.gene_gene",
+            "bronze.genemania.gene_gene",
+            "bronze.genemania.ensembl_mapping",
             # silver
             "silver.edges.anatomy_gene",
             "silver.edges.anatomy_anatomy",

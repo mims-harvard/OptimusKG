@@ -1,0 +1,18 @@
+landing.genemania.identifier_mappings:
+  type: polars.CSVDataset
+  filepath: "data/landing/genemania/identifier_mappings.txt"
+  load_args:
+    separator: "\t"
+    infer_schema: false
+    schema:
+      "Preferred_Name": "${pl:String}"
+      "Name": "${pl:String}"
+      "Source": "${pl:String}"
+  metadata:
+    checksum: 4f4749fb07e744737992b0750cafd325
+    origin:
+      provider: http
+      url: "https://genemania.org/data/archive/2021-04-19/Homo_sapiens/identifier_mappings.txt"
+      timeout: 60
+    kedro-viz:
+      layer: landing

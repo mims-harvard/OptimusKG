@@ -4,6 +4,7 @@ from .disgenet import disgenet_node
 from .drugbank import drug_drug_node, drug_gene_node, vocabulary_node
 from .drugcentral import drugcentral_node
 from .gene_names import gene_names_node
+from .genemania import genemania_node
 from .onsides import onsides_node
 from .ontology import go_plus_node, hp_node, mondo_node, uberon_node
 from .opentargets import (
@@ -37,6 +38,7 @@ __all__ = [
     "onsides_node",
     "drugcentral_node",
     "ppi_node",
+    "genemania_node",
     # opentargets
     "target_disease_associations_node",
     "drug_mechanism_of_action_node",

@@ -674,4 +674,6 @@ gene gene:
   properties:
     undirected: bool
     relation: str
+    interaction_type: str
+    weight: float
     sources: str

@@ -9,10 +9,12 @@ silver.edges.gene_gene:
       relation: pl.String
       undirected: pl.Boolean
       properties:
+        interaction_type: pl.String
+        weight: pl.Float64
         sources:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
   metadata:
-    checksum: 2daa3f78522f0d29feff1a355ff50569
+    checksum: f7775e5ebb300ebb06d268630c6815d3
     kedro-viz:
       layer: silver

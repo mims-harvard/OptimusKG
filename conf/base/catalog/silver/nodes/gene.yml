@@ -131,6 +131,6 @@ silver.nodes.gene:
                 type: pl.String
         transcription_start_site: pl.Int64
   metadata:
-    checksum: 6f53595dd23ce7f6ccd27a16320a00db
+    checksum: 94799b77f4e10bc44b1cccdf895d6315
     kedro-viz:
       layer: silver
