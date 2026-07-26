@@ -19,6 +19,100 @@ CentralityMetric = Literal[
 # Graph construction modes
 GraphMode = Literal["directed", "undirected"]
 
+# Human-readable labels for compact node-type codes
+NODE_TYPE_LABELS: dict[str, str] = {
+    "ANA": "Anatomy",
+    "BPO": "Biological process",
+    "CCO": "Cellular component",
+    "DIS": "Disease",
+    "DRG": "Drug",
+    "EXP": "Exposure",
+    "GEN": "Gene",
+    "MFN": "Molecular function",
+    "PHE": "Phenotype",
+    "PWY": "Pathway",
+}
+
+PALETTE = [
+    "#516FD9",  # Royal Blue
+    "#7EACF5",  # Sky Blue
+    "#69C39C",  # Mint
+    "#6FA430",  # Green
+    "#E7C454",  # Yellow
+    "#EDB453",  # Amber
+    "#ED9353",  # Orange
+    "#DA3546",  # Red
+    "#9B7DF1",  # Purple
+    "#838E9F",  # Gray
+]
+
+# Per-panel SVG themes. Data colors stay fixed; only axes/text/spines flip.
+THEMES: dict[str, dict[str, str]] = {
+    "light": {"ink": "#26251e", "muted": "#57534e"},
+    "dark": {"ink": "#ebebeb", "muted": "#a8a29e"},
+}
+
+# Whole-token PRO → GEN (Unicode word boundaries: hyphens/pipes/ends ok; not "PROGRAM")
+_RELATION_PRO_TO_GEN_PATTERN = r"\bPRO\b"
+
+
+def load_polled_edges(input_path: Path) -> pl.DataFrame:
+    """Load and normalize the polled-edges CSV produced by ``cli evals paperqa``.
+
+    Rows whose ``rating`` or ``is_true_edge`` could not be parsed are dropped;
+    these correspond to queries for which the agent returned no usable answer.
+
+    Args:
+        input_path: Path to the polled-edges CSV.
+
+    Returns:
+        DataFrame with ``rating`` cast to Int32 and ``is_true_edge`` cast to
+        Boolean, filtered to rows where both are non-null.
+
+    Raises:
+        FileNotFoundError: If ``input_path`` does not exist.
+        ValueError: If required columns are missing.
+    """
+    if not input_path.exists():
+        raise FileNotFoundError(f"Input file not found: {input_path}")
+
+    df = pl.read_csv(input_path, infer_schema_length=100000)
+
+    required = {"seed_node_type", "is_true_edge", "rating"}
+    missing = required - set(df.columns)
+    if missing:
+        raise ValueError(f"Input CSV is missing required columns: {missing}")
+
+    return df.with_columns(
+        pl.col("rating").cast(pl.Int32, strict=False),
+        pl.col("is_true_edge").cast(pl.Boolean, strict=False),
+    ).filter(pl.col("rating").is_not_null() & pl.col("is_true_edge").is_not_null())
+
+
+def normalize_relation_types(df: pl.DataFrame) -> pl.DataFrame:
+    """Replace whole-token ``PRO`` with ``GEN`` in ``relation_type``.
+
+    OptimusKG is gene-centric: protein endpoints are represented as gene nodes,
+    so relation labels recorded as ``PRO`` during sampling are reported as
+    ``GEN``. Returns the frame unchanged when ``relation_type`` is absent.
+
+    Args:
+        df: DataFrame that may contain a ``relation_type`` column.
+
+    Returns:
+        DataFrame with normalized relation-type labels.
+    """
+    if "relation_type" not in df.columns:
+        return df
+    return df.with_columns(
+        pl.when(pl.col("relation_type").is_null())
+        .then(None)
+        .otherwise(
+            pl.col("relation_type").str.replace_all(_RELATION_PRO_TO_GEN_PATTERN, "GEN")
+        )
+        .alias("relation_type"),
+    )
+
 
 def load_graph(
     nodes_path: Path,
