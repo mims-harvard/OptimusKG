@@ -18,3 +18,15 @@ edge_eval:
 
   # Reproducibility
   seed: 42
+
+power_analysis:
+  # Two-sided significance level for all reported intervals
+  alpha: 0.05
+
+  # USD per evaluated edge, used only for the cost-precision tradeoff. Each
+  # PaperQA3 query consumes one credit, priced at $1 at the time of submission.
+  cost_per_edge_usd: 1.0
+
+  # Strata with fewer effective observations than this are reported as
+  # descriptive only, not as estimates
+  min_usable_effective_n: 30
