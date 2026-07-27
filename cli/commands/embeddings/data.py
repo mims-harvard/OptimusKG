@@ -40,9 +40,9 @@ DEFAULT_DOI = "doi:10.7910/DVN/IYNGEV"
 # Type and relation metadata (derived from the canonical enums)
 # ---------------------------------------------------------------------------
 
-# 3-letter node code -> human-readable name, e.g. "GEN" -> "Gene".
+# 3-letter node code -> sentence-case name, e.g. "BPO" -> "Biological process".
 NODE_TYPE_NAME: dict[str, str] = {
-    member.value: member.name.replace("_", " ").title() for member in Node
+    member.value: member.name.replace("_", " ").capitalize() for member in Node
 }
 
 # Semantic grouping of the ~40 relation types into coherent families. The
@@ -55,11 +55,11 @@ RELATION_FAMILY_GROUPS: dict[str, list[Relation]] = {
     "Association": [_R.INTERACTS_WITH, _R.ASSOCIATED_WITH, _R.LINKED_TO],
     "Expression": [_R.EXPRESSION_PRESENT, _R.EXPRESSION_ABSENT],
     "Phenotype": [_R.PHENOTYPE_PRESENT, _R.PHENOTYPE_ABSENT],
-    "Drug-Disease": [_R.INDICATION, _R.OFF_LABEL_USE, _R.CONTRAINDICATION],
+    "Drug-disease": [_R.INDICATION, _R.OFF_LABEL_USE, _R.CONTRAINDICATION],
     "Adverse reaction": [_R.ADVERSE_DRUG_REACTION],
-    "Drug-Drug": [_R.SYNERGISTIC_INTERACTION],
-    "Drug-Gene role": [_R.TARGET, _R.ENZYME, _R.TRANSPORTER, _R.CARRIER],
-    "Drug-Gene action": [
+    "Drug-drug": [_R.SYNERGISTIC_INTERACTION],
+    "Drug-gene role": [_R.TARGET, _R.ENZYME, _R.TRANSPORTER, _R.CARRIER],
+    "Drug-gene action": [
         _R.ACTIVATOR,
         _R.AGONIST,
         _R.ALLOSTERIC_ANTAGONIST,
@@ -115,6 +115,16 @@ PALETTE: list[str] = [
 def categorical_colors(categories: list[str]) -> dict[str, str]:
     """Map an ordered list of category labels to stable palette colours."""
     return {cat: PALETTE[i % len(PALETTE)] for i, cat in enumerate(categories)}
+
+
+def node_type_colors(present: list[str]) -> dict[str, str]:
+    """Node type -> colour, ordered by the canonical node-type order.
+
+    Ensures every plot coloured by node type (UMAP scatter, silhouette bars, the
+    combined figure) uses an identical, stable colour for each type.
+    """
+    seen = set(present)
+    return categorical_colors([t for t in NODE_TYPE_NAME if t in seen])
 
 
 # ---------------------------------------------------------------------------

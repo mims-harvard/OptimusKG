@@ -103,6 +103,7 @@ def analyze_embeddings(  # noqa: PLR0913
     fmt: str,
     do_umap: bool,
     umap_sample: int,
+    umap_params: proj.UmapParams | None = None,
     plot_max_points: int,
     metric_sample: int,
     knn_sample: int,
@@ -113,12 +114,14 @@ def analyze_embeddings(  # noqa: PLR0913
 
     Metrics are computed on the full-dimensional embeddings; the 2D projections
     are scored with trustworthiness / continuity so the figure can be reported
-    with its faithfulness stated rather than assumed.
+    with its faithfulness stated rather than assumed. ``umap_params`` controls the
+    UMAP projection (n_neighbors, min_dist, metric).
     """
     if fmt.lower() not in VALID_FORMATS:
         msg = f"--format must be one of {VALID_FORMATS}, got {fmt!r}"
         raise ValueError(msg)
     ext = fmt.lower()
+    umap_params = umap_params or proj.UmapParams()
 
     # float64 avoids float32 overflow/invalid warnings in sklearn's matmul-based
     # routines (randomized SVD, pairwise distances) and stabilises PCA.
@@ -128,7 +131,10 @@ def analyze_embeddings(  # noqa: PLR0913
     rel_meta = pl.read_parquet(out_dir / RELATIONS)
     types = ent_meta["type"].to_list()
     relation_names = rel_meta["relation"].to_list()
-    families = rel_meta["family"].to_list()
+    # Recompute families from the relation names so relabelings in
+    # RELATION_FAMILY_GROUPS take effect without retraining.
+    families = [relation_family(r) for r in relation_names]
+    rel_meta = rel_meta.with_columns(pl.Series("family", families))
 
     report: dict = {}
     report["entities"] = _analyze_entities(
@@ -139,6 +145,7 @@ def analyze_embeddings(  # noqa: PLR0913
         types,
         do_umap=do_umap,
         umap_sample=umap_sample,
+        umap_params=umap_params,
         plot_max_points=plot_max_points,
         metric_sample=metric_sample,
         knn_sample=knn_sample,
@@ -153,15 +160,37 @@ def analyze_embeddings(  # noqa: PLR0913
         rel_meta,
         relation_names,
         families,
+        do_umap=do_umap,
+        umap_params=umap_params,
         metric_sample=metric_sample,
         knn_sample=knn_sample,
         knn_k=knn_k,
         seed=seed,
     )
 
+    if do_umap:
+        _build_combined_figure(
+            out_dir, ext, report["entities"].get("silhouette_per_type", {})
+        )
+
     (out_dir / METRICS).write_text(json.dumps(report, indent=2))
     logger.info("Wrote cluster metrics to %s", out_dir / METRICS)
     _log_summary(report)
+
+
+def _build_combined_figure(out_dir: Path, ext: str, silhouette_per_type: dict) -> None:
+    """Assemble the multi-panel figure from the saved UMAP/PCA coordinate tables."""
+    ent = pl.read_parquet(out_dir / "entities_umap.parquet")
+    rel = pl.read_parquet(out_dir / "relations_pca.parquet")
+    proj.plot_combined_figure(
+        ent.select("x", "y").to_numpy(),
+        ent["type"].to_list(),
+        rel.select("x", "y").to_numpy(),
+        rel["relation"].to_list(),
+        rel["family"].to_list(),
+        silhouette_per_type,
+        out_dir / f"combined.{ext}",
+    )
 
 
 def _analyze_entities(  # noqa: PLR0913
@@ -173,6 +202,7 @@ def _analyze_entities(  # noqa: PLR0913
     *,
     do_umap: bool,
     umap_sample: int,
+    umap_params: proj.UmapParams,
     plot_max_points: int,
     metric_sample: int,
     knn_sample: int,
@@ -214,7 +244,7 @@ def _analyze_entities(  # noqa: PLR0913
     if do_umap:
         sel = _subsample_idx(entity_emb.shape[0], umap_sample, seed)
         logger.info("Computing UMAP on %d entities...", sel.shape[0])
-        umap_coords = proj.umap_project(entity_emb[sel], seed=seed)
+        umap_coords = proj.umap_project(entity_emb[sel], seed=seed, params=umap_params)
         proj.plot_entity_scatter(
             umap_coords,
             [types[i] for i in sel],
@@ -242,12 +272,14 @@ def _analyze_relations(  # noqa: PLR0913
     relation_names: list[str],
     families: list[str],
     *,
+    do_umap: bool,
+    umap_params: proj.UmapParams,
     metric_sample: int,
     knn_sample: int,
     knn_k: int,
     seed: int,
 ) -> dict:
-    """Cluster metrics (by family) + labelled PCA scatter for relation embeddings."""
+    """Cluster metrics (by family) + labelled PCA/UMAP scatters for relations."""
     logger.info("Analyzing %d relation embeddings...", relation_emb.shape[0])
     metrics = cluster_metrics.cluster_report(
         relation_emb,
@@ -267,6 +299,17 @@ def _analyze_relations(  # noqa: PLR0913
         explained=rel_ev,
     )
     _write_coords(out_dir / "relations_pca.parquet", rel_meta, rel_pca)
+
+    if do_umap:
+        rel_umap = proj.umap_project(relation_emb, seed=seed, params=umap_params)
+        proj.plot_relation_scatter(
+            rel_umap,
+            relation_names,
+            families,
+            out_dir / f"relations_umap.{ext}",
+            method="UMAP",
+        )
+        _write_coords(out_dir / "relations_umap.parquet", rel_meta, rel_umap)
     return metrics
 
 

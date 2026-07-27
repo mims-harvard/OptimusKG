@@ -186,21 +186,52 @@ def analyze(  # noqa: PLR0913
     knn_k: int = typer.Option(
         15, "--knn-k", help="Neighbours for the k-NN type probe."
     ),
+    umap_neighbors: int = typer.Option(
+        30,
+        "--umap-neighbors",
+        help="UMAP n_neighbors (larger = more global structure, closes gaps).",
+    ),
+    umap_min_dist: float = typer.Option(
+        0.9,
+        "--umap-min-dist",
+        help="UMAP min_dist (larger = looser/rounder, less dense clusters).",
+    ),
+    umap_spread: float = typer.Option(
+        1.5,
+        "--umap-spread",
+        help="UMAP spread / overall scale (raise for looser clusters).",
+    ),
+    umap_metric: str = typer.Option(
+        "cosine", "--umap-metric", help="UMAP distance metric (e.g. cosine, euclidean)."
+    ),
     seed: int = typer.Option(42, "--seed", help="Random seed."),
 ):
     """Render PCA/UMAP scatters and write ``cluster_metrics.json``.
 
     Metrics are computed on the full-dimensional embeddings; the 2D projections
     are for visualisation and are themselves scored with trustworthiness /
-    continuity so the figure can be reported honestly.
+    continuity so the figure can be reported honestly. Re-run this command alone
+    (no retraining) to tweak the UMAP projection.
+
+    Examples:
+
+        # Re-project the already-trained embeddings with different UMAP settings
+        uv run --group embeddings cli embeddings analyze --umap-neighbors 50 --umap-min-dist 0.3
     """
     from . import runner  # noqa: PLC0415
+    from .project import UmapParams  # noqa: PLC0415
 
     runner.analyze_embeddings(
         out_dir,
         fmt=fmt,
         do_umap=umap,
         umap_sample=umap_sample,
+        umap_params=UmapParams(
+            n_neighbors=umap_neighbors,
+            min_dist=umap_min_dist,
+            spread=umap_spread,
+            metric=umap_metric,
+        ),
         plot_max_points=plot_max_points,
         metric_sample=metric_sample,
         knn_sample=knn_sample,
