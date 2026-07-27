@@ -91,13 +91,13 @@ _RESPONSES_README = (
     "fills it in, and clicks 'Download responses' to get a file named\n"
     "human_review_response_<name>.json. Collect every such file here.\n"
     "\n"
-    "When all responses are in, generate the figures by pointing\n"
-    "`review-figures` at the run folder (the parent of this folder):\n"
+    "When all responses are in, point the analysis commands at the run folder\n"
+    "(the parent of this folder):\n"
     "\n"
-    "    uv run cli evals review-figures --review-dir ..\n"
+    "    uv run cli evals review-figures --review-dir ..   # exploratory diagnostics\n"
+    "    uv run cli evals review-stats   --review-dir ..   # reported stats + figures\n"
     "\n"
-    "Outputs (human_review_responses_long.csv, human_review_figures.pdf/.svg)\n"
-    "are written into the run folder alongside the form.\n"
+    "Outputs are written into the run folder alongside the form.\n"
 )
 
 # Columns the HTML needs (reviewer-facing). is_true_edge is intentionally absent.

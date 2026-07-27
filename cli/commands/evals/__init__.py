@@ -6,7 +6,14 @@ from pathlib import Path
 
 import typer
 
-from . import centrality, human_review, paperqa, paperqa_figures, sample_edges
+from . import (
+    centrality,
+    human_review,
+    human_review_stats,
+    paperqa,
+    paperqa_figures,
+    sample_edges,
+)
 
 logger = logging.getLogger("cli")
 
@@ -385,6 +392,55 @@ def review_figures_cmd(
             --out figures/
     """
     human_review.run_review_figures(
+        review_dir=review_dir,
+        out_dir=out_dir,
+    )
+
+
+@evals_app.command(
+    name="review-stats",
+    help="Compute reported statistics and publication figures from expert reviews.",
+)
+def review_stats_cmd(
+    review_dir: Path = typer.Option(
+        ...,
+        "--review-dir",
+        help="Run folder created by `make-review` (contains the *_sample.csv and responses/).",
+    ),
+    out_dir: Path = typer.Option(
+        None,
+        "--out",
+        help="Output directory for statistics and figures. Defaults to --review-dir.",
+    ),
+):
+    """Compute the statistics and publication figures quoted in a write-up.
+
+    Reads the reviewer JSON files from ``<review-dir>/responses`` and the sample
+    CSV from ``<review-dir>``, then reports the headline numbers (soundness,
+    agent-rating adjustments, sensitivity vs. specificity, and reviewer--agent
+    disagreement patterns) and renders clean, house-style figures. Unlike
+    ``review-figures`` (exploratory multi-reviewer diagnostics), this command
+    produces the compact, quotable outputs for a manuscript or reviewer response.
+
+    Outputs (written into --review-dir by default):
+    - human_review_evaluation.csv: Raw per-edge human evaluation (reviewer x edge).
+    - rebuttal_stats.json: Every computed statistic.
+    - rebuttal_stats.tex: \\newcommand macros to \\input into the response document.
+    - figures/human_review_soundness.{png,pdf}: Soundness distribution.
+    - figures/human_review_rating_change.{png,pdf}: Recommended rating adjustments.
+    - figures/human_review_by_polarity.{png,pdf}: Sound rate, positive vs negative edges.
+    - figures/human_review_main.{png,pdf}: Combined two-panel headline figure.
+
+    Examples:
+
+        uv run cli evals review-stats \\
+            --review-dir "data/gold/evals/human_review_seed=42_n=100"
+
+        uv run cli evals review-stats \\
+            --review-dir "data/gold/evals/human_review_seed=42_n=100" \\
+            --out figures/
+    """
+    human_review_stats.run_review_stats(
         review_dir=review_dir,
         out_dir=out_dir,
     )
