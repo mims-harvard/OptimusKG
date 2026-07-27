@@ -46,6 +46,21 @@ def resolve_device(device: str = "auto") -> torch.device:
     return torch.device("cpu")
 
 
+# Clear the device allocator cache this often (in batches). On MPS, the caching
+# allocator fragments over a long run with large (B, N, d) negative tensors,
+# slowing each successive epoch by several-fold; periodic clearing keeps the
+# step time flat.
+_CACHE_CLEAR_EVERY = 200
+
+
+def _empty_device_cache(device: torch.device) -> None:
+    """Release cached allocator memory to combat MPS/CUDA fragmentation."""
+    if device.type == "mps":
+        torch.mps.empty_cache()
+    elif device.type == "cuda":
+        torch.cuda.empty_cache()
+
+
 @dataclass
 class TransEConfig:
     """Hyperparameters for TransE training."""
@@ -256,7 +271,7 @@ def train_transe(  # noqa: PLR0913
         perm = torch.randperm(n_triples, generator=shuffle_gen)
         total, n_batches = 0.0, 0
 
-        for start in range(0, n_triples, config.batch_size):
+        for step, start in enumerate(range(0, n_triples, config.batch_size)):
             idx = perm[start : start + config.batch_size].to(device)
             ph, pr, pt = h[idx], r[idx], t[idx]
 
@@ -271,7 +286,10 @@ def train_transe(  # noqa: PLR0913
 
             total += float(batch_loss.detach())
             n_batches += 1
+            if step % _CACHE_CLEAR_EVERY == _CACHE_CLEAR_EVERY - 1:
+                _empty_device_cache(device)
 
+        _empty_device_cache(device)
         mean_loss = total / max(n_batches, 1)
         epoch_losses.append(mean_loss)
         logger.info("  epoch %d/%d  loss=%.4f", epoch + 1, config.epochs, mean_loss)
