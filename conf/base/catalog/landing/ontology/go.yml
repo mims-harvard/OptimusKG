@@ -7,6 +7,6 @@ landing.ontology.go_plus:
     description: "The GO is designed to be species-agnostic to enable the annotation of gene products across the entire tree of life. The computational framework of the GO enables consistent gene annotation, comparison of functions across organisms, and integration of knowledge across diverse biological databases."
     origin:
       provider: http
-      url: "https://purl.obolibrary.org/obo/go/extensions/go-plus.json"
+      url: "https://purl.obolibrary.org/obo/go/releases/2025-07-22/extensions/go-plus.json"
     kedro-viz:
       layer: landing

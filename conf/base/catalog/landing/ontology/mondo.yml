@@ -7,6 +7,6 @@ landing.ontology.mondo:
     description: "The Mondo Disease Ontology (Mondo) aims to harmonize disease definitions across the world. The name Mondo comes from the Latin word 'mundus' and means 'for the world.'"
     origin:
       provider: http
-      url: "http://purl.obolibrary.org/obo/mondo.json"
+      url: "http://purl.obolibrary.org/obo/mondo/releases/2025-08-05/mondo.json"
     kedro-viz:
       layer: landing
