@@ -23,7 +23,7 @@
 
 - A [modern biomedical knowledge graph](https://optimuskg.ai) with molecular, anatomical, clinical, and environmental modalities.
 - Integrates 65 heterogeneous resources grounded with 18 ontologies and controlled vocabularies using the [BioCypher framework](https://github.com/biocypher/biocypher) and the [Biolink Model](https://github.com/biolink/biolink-model).
-- Contains 190,531 nodes across 10 entity types, 21,813,816 edges across 27 relation types, and 67,249,863 property instances encoding 110,276,843 values across 150 distinct property keys.
+- Contains 192,813 nodes across 10 entity types, 21,834,669 edges across 27 relation types, and 67,249,863 property instances encoding 110,276,843 values across 150 distinct property keys.
 - Independently validated using [PaperQA3](https://github.com/Future-House/paper-qa), a multimodal agent that retrieves and reasons over scientific literature.
 - Reproducible, deterministic and infrastructure-agnostic data pipeline with parallel execution.
 - Distributed as [Apache Parquet](https://parquet.apache.org/) files and downloadable via the [optimuskg]() python client.

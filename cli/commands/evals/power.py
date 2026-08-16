@@ -46,7 +46,7 @@ RATING_NO_EVIDENCE = 1
 
 # Total edges in the released graph, used only for the finite-population
 # correction and the full-graph cost extrapolation.
-GRAPH_TOTAL_EDGES = 21_813_816
+GRAPH_TOTAL_EDGES = 21_834_669
 
 # Strata below this effective sample size are reported as descriptive only.
 MIN_USABLE_EFFECTIVE_N = 30.0
