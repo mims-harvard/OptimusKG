@@ -5,11 +5,24 @@ Contains unified aesthetics for all figure plots including:
 - Helper functions for consistent styling
 """
 
-import matplotlabs as mpll  # noqa: F401  — registers styles, colormaps, named colors
-import matplotlib.colors as mcolors
-import matplotlib.pyplot as plt
-from matplotlib.axes import Axes
-from matplotlib.legend import Legend
+import matplotlib.style
+
+# matplotlabs calls ``matplotlib.style.core.read_style_directory`` at import
+# time. Matplotlib 3.11 deprecated the ``style.core`` module (removal in 3.13)
+# and moved its public helpers onto ``matplotlib.style``. Without this shim the
+# import raises AttributeError, which breaks *every* CLI command, including
+# non-plotting ones such as ``checksum`` and ``sync-catalog``.
+import matplotlib.style.core  # noqa: F401
+
+for _name in ("read_style_directory", "update_nested_dict"):
+    if not hasattr(matplotlib.style.core, _name) and hasattr(matplotlib.style, _name):
+        setattr(matplotlib.style.core, _name, getattr(matplotlib.style, _name))
+
+import matplotlabs as mpll  # noqa: E402,F401  — registers styles, colormaps, named colors
+import matplotlib.colors as mcolors  # noqa: E402
+import matplotlib.pyplot as plt  # noqa: E402
+from matplotlib.axes import Axes  # noqa: E402
+from matplotlib.legend import Legend  # noqa: E402
 
 plt.style.use("mpll")
 
