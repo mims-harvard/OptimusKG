@@ -8,6 +8,7 @@ from optimuskg.utils import calculate_checksum
 
 from .commands import (
     metrics_command,
+    property_metrics_command,
     sync_catalog_command,
 )
 from .commands.evals import evals_app
@@ -85,6 +86,24 @@ def metrics(
     ),
 ):
     metrics_command(nodes_dir, edges_dir, out_dir)
+
+
+@app.command(
+    help="Report graph-wide property key, instance and value counts.",
+)
+def property_metrics(
+    nodes_dir: Path = typer.Option(
+        "data/gold/kg/parquet/nodes",
+        "--nodes",
+        help="Directory containing gold node parquet files.",
+    ),
+    edges_dir: Path = typer.Option(
+        "data/gold/kg/parquet/edges",
+        "--edges",
+        help="Directory containing gold edge parquet files.",
+    ),
+):
+    property_metrics_command(nodes_dir, edges_dir)
 
 
 @app.command(help="Synchronize or validate catalog schemas and checksums.")
