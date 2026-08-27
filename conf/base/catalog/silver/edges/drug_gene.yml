@@ -20,6 +20,6 @@ silver.edges.drug_gene:
             relation: pl.String
         relation_conflict: pl.Boolean
   metadata:
-    checksum: 729e09ddbc638163811ab2308ccf9aa1
+    checksum: 036c8f771388bc3cb9df9a146608fbb3
     kedro-viz:
       layer: silver

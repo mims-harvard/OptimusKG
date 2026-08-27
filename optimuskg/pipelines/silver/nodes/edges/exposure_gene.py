@@ -61,14 +61,19 @@ def run(
                 .cast(pl.Int64)
                 .sum()
                 .alias("number_of_receptors"),
-                pl.col("receptors").drop_nulls().unique().alias("receptors"),
-                pl.col("receptor_notes").drop_nulls().unique().alias("receptor_notes"),
+                pl.col("receptors").drop_nulls().unique().sort().alias("receptors"),
+                pl.col("receptor_notes")
+                .drop_nulls()
+                .unique()
+                .sort()
+                .alias("receptor_notes"),
                 pl.col("smoking_status")
                 .str.split("|")
                 .explode()
                 .drop_nulls()
                 .str.strip_chars()
                 .unique()
+                .sort()
                 .alias("smoking_statuses"),
                 pl.col("age_type")
                 .filter(pl.col("age_type") != "null")
@@ -78,26 +83,31 @@ def run(
                 .then(pl.col("age"))
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("age_range_values"),
                 pl.when(pl.col("age_type") == "mean")
                 .then(pl.col("age"))
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("age_mean_values"),
                 pl.when(pl.col("age_type") == "median")
                 .then(pl.col("age"))
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("age_median_values"),
                 pl.when(pl.col("age_type") == "point")
                 .then(pl.col("age"))
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("age_point_values"),
                 pl.when(pl.col("age_type") == "open_range")
                 .then(pl.col("age"))
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("age_open_range_values"),
                 pl.col("sex")
                 .str.split("|")
@@ -105,6 +115,7 @@ def run(
                 .drop_nulls()
                 .str.strip_chars()
                 .unique()
+                .sort()
                 .alias("sexes"),
                 pl.col("race")
                 .str.split("|")
@@ -112,6 +123,7 @@ def run(
                 .drop_nulls()
                 .str.strip_chars()
                 .unique()
+                .sort()
                 .alias("races"),
                 pl.col("methods")
                 .str.split("|")
@@ -119,64 +131,77 @@ def run(
                 .drop_nulls()
                 .str.strip_chars()
                 .unique()
+                .sort()
                 .alias("methods"),
                 pl.col("detection_limit")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("detection_limit"),
                 pl.col("detection_limit_uom")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("detection_limit_uom"),
                 pl.col("detection_frequency")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("detection_frequency"),
-                pl.col("medium").drop_nulls().unique().alias("mediums"),
-                pl.col("assay_notes").drop_nulls().unique().alias("assay_notes"),
+                pl.col("medium").drop_nulls().unique().sort().alias("mediums"),
+                pl.col("assay_notes").drop_nulls().unique().sort().alias("assay_notes"),
                 # TODO: we can add this columns with a similar approach of the ages columns: marker_level, marker_units_of_measurement, marker_measurement_statistic
                 pl.col("study_countries")
                 .str.split("|")
                 .explode()
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("study_countries"),
                 pl.col("state_or_province")
                 .str.split("|")
                 .explode()
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("states_or_provinces"),
                 pl.col("city_town_region_area")
                 .str.split("|")
                 .explode()
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("city_town_region_areas"),
                 pl.col("exposure_event_notes")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("exposure_event_notes"),
                 pl.col("outcome_relationship")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("outcome_relationships"),
                 pl.col("exposure_outcome_notes")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("exposure_outcome_notes"),
-                pl.col("reference").drop_nulls().unique().alias("references"),
+                pl.col("reference").drop_nulls().unique().sort().alias("references"),
                 pl.col("associated_study_titles")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("associated_study_titles"),
                 pl.col("enrollment_start_year")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("enrollment_start_years"),
                 pl.col("enrollment_end_year")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("enrollment_end_years"),
                 pl.col("study_factors")
                 .str.split("|")
@@ -184,6 +209,7 @@ def run(
                 .drop_nulls()
                 .str.strip_chars()
                 .unique()
+                .sort()
                 .alias("study_factors"),
             ]
         )

@@ -43,6 +43,14 @@ CASES: dict[str, tuple[str, list[str]]] = {
         "disease_phenotype.py",
         ["opentargets/disease_phenotype"],
     ),
+    "drug_phenotype": (
+        "drug_phenotype.py",
+        [
+            "onsides/high_confidence",
+            "opentargets/drug_indication",
+            "drugcentral/drug_phenotype",
+        ],
+    ),
 }
 
 

@@ -34,29 +34,49 @@ def run(
         .group_by(["from", "to"])
         .agg(
             [
-                pl.col("aspect").drop_nulls().unique().alias("aspect"),
-                pl.col("bio_curation").drop_nulls().unique().alias("bio_curation"),
-                pl.col("evidence_type").drop_nulls().unique().alias("evidence_type"),
-                pl.col("frequency").drop_nulls().unique().alias("frequency"),
+                pl.col("aspect").drop_nulls().unique().sort().alias("aspect"),
+                pl.col("bio_curation")
+                .drop_nulls()
+                .unique()
+                .sort()
+                .alias("bio_curation"),
+                pl.col("evidence_type")
+                .drop_nulls()
+                .unique()
+                .sort()
+                .alias("evidence_type"),
+                pl.col("frequency").drop_nulls().unique().sort().alias("frequency"),
                 pl.concat_list("modifiers")
                 .flatten()
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("modifiers"),
-                pl.concat_list("onset").flatten().drop_nulls().unique().alias("onset"),
+                pl.concat_list("onset")
+                .flatten()
+                .drop_nulls()
+                .unique()
+                .sort()
+                .alias("onset"),
                 pl.col("qualifier_not").any().alias("qualifier_not"),
                 pl.when(~pl.col("qualifier_not"))
                 .then(pl.lit(Relation.PHENOTYPE_PRESENT))
                 .otherwise(pl.lit(Relation.PHENOTYPE_ABSENT))
                 .unique()
+                .sort()
                 .alias("relation"),
                 pl.concat_list("references")
                 .flatten()
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("references"),
-                pl.col("sex").drop_nulls().unique().alias("sexes"),
-                pl.col("resource").drop_nulls().unique().alias("indirect_sources"),
+                pl.col("sex").drop_nulls().unique().sort().alias("sexes"),
+                pl.col("resource")
+                .drop_nulls()
+                .unique()
+                .sort()
+                .alias("indirect_sources"),
             ]
         )
         .select(

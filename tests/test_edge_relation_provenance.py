@@ -222,3 +222,28 @@ class TestDiseasePhenotype:
         out = disease_phenotype.run(self._input([False, True]))
         assert out.height == 1
         assert out.select(pl.struct("from", "to").n_unique()).item() == 1
+
+
+class TestDeterminism:
+    """Edge tables must be reproducible regardless of upstream row order.
+
+    ``group_by().agg()`` with a bare ``.unique()`` returns list elements in a
+    non-deterministic order, which made published parquet files differ between
+    otherwise identical runs. Aggregations are sorted to prevent this.
+    """
+
+    def test_drug_gene_is_reorder_stable(self):
+        args = TestDrugGene._inputs(with_opentargets=True)
+        forward = drug_gene.run(*args)
+        reversed_ = drug_gene.run(*[df.reverse() for df in args])
+        assert forward.equals(reversed_)
+
+    def test_disease_phenotype_is_reorder_stable(self):
+        src = TestDiseasePhenotype._input([False, False])
+        assert disease_phenotype.run(src).equals(disease_phenotype.run(src.reverse()))
+
+    def test_drug_drug_is_reorder_stable(self):
+        args = TestDrugDrug._inputs(overlap=True)
+        forward = drug_drug.run(*args)
+        reversed_ = drug_drug.run(*[df.reverse() for df in args])
+        assert forward.equals(reversed_)

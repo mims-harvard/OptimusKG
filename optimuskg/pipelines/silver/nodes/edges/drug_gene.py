@@ -71,6 +71,7 @@ def run(
                 pl.col("relation")
                 .replace_strict(_DRUGBANK_RELATION_MAP, default=Relation.OTHER)
                 .unique()
+                .sort()
                 .alias("relation_type")
             ]
         )
@@ -113,22 +114,26 @@ def run(
                 pl.col("mechanism_of_action")
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("mechanisms_of_action"),
-                pl.col("source").drop_nulls().unique().alias("indirect_sources"),
+                pl.col("source").drop_nulls().unique().sort().alias("indirect_sources"),
                 pl.concat_list("ids")
                 .flatten()
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("source_ids"),
                 pl.concat_list("urls")
                 .flatten()
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("source_urls"),
                 pl.col("action_type")
                 .replace_strict(_OPENTARGETS_ACTION_MAP, default=Relation.OTHER)
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("action_type"),
             ]
         )
@@ -204,6 +209,7 @@ def run(
                                         ]
                                     )
                                     .list.unique()
+                                    .list.sort()
                                     .alias("direct"),
                                     pl.concat_list(
                                         [
@@ -216,6 +222,7 @@ def run(
                                         ]
                                     )
                                     .list.unique()
+                                    .list.sort()
                                     .alias("indirect"),
                                 ]
                             ).alias("sources"),

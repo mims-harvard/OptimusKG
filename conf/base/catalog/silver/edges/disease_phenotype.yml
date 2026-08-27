@@ -26,6 +26,6 @@ silver.edges.disease_phenotype:
             relation: pl.String
         relation_conflict: pl.Boolean
   metadata:
-    checksum: 4e1b013d9648dc2d1a66ba0b546de7dc
+    checksum: 3e97b89c2c2bfc5dad420e3040d7ec83
     kedro-viz:
       layer: silver
