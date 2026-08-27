@@ -378,3 +378,39 @@ class TestNoInformationLoss:
             zip(merged["from"].to_list(), merged["relation_conflict"].to_list())
         )
         assert by_pair == {"D1": True, "D2": False, "D3": False}
+
+
+class TestChecksDetectRegressions:
+    """Negative controls: the guarantees must fail when actually violated.
+
+    A check that cannot fail proves nothing. These assert that the two
+    properties the pipeline relies on are genuinely sensitive to the bugs they
+    are meant to catch.
+    """
+
+    def test_dropping_assertions_changes_the_resolved_relation(self):
+        # The old lossy collapse kept only one assertion per pair. If that
+        # regressed, the surviving relation would no longer be the priority
+        # winner for pairs where sources disagree.
+        full = [
+            ("DRUG_CENTRAL", Relation.CONTRAINDICATION),
+            ("OPEN_TARGETS", Relation.INDICATION),
+        ]
+        assert _resolve([full]) == [Relation.INDICATION]
+        # Truncating to the first assertion yields a different answer.
+        assert _resolve([full[:1]]) == [Relation.CONTRAINDICATION]
+
+    def test_dropping_assertions_hides_a_conflict(self):
+        full = [
+            ("DRUG_CENTRAL", Relation.CONTRAINDICATION),
+            ("OPEN_TARGETS", Relation.INDICATION),
+        ]
+        assert _conflict([full]) == [True]
+        assert _conflict([full[:1]]) == [False]
+
+    def test_conflict_detection_is_not_vacuous(self):
+        # At least one real relation pair must be flagged, otherwise the
+        # mutually exclusive groups could be empty and every check would pass.
+        assert _conflict(
+            [[("A", Relation.PHENOTYPE_PRESENT), ("B", Relation.PHENOTYPE_ABSENT)]]
+        ) == [True]

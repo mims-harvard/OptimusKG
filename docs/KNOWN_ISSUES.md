@@ -51,3 +51,9 @@ uv run python scripts/audit_relation_loss.py          # relation-loss audit
 ```
 
 Run full pipelines in their own terminal window rather than as background jobs.
+
+These checks are negative-controlled: injecting the old lossy collapse into
+`drug_disease` makes R1/R2/R5/R6 fail (2,135 assertions missing, 573 edges
+misresolved), and reverting a single `.sort()` makes `exposure_gene`
+reorder-unstable again. `tests/test_relation_resolution.py` pins the same
+properties as fast unit-level regression tests.
