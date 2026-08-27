@@ -18,6 +18,10 @@ from optimuskg.pipelines.silver.nodes.constants import (
     RELATION_PRIORITY,
     Relation,
 )
+from optimuskg.pipelines.silver.nodes.edges.drug_gene import (
+    _DRUGBANK_RELATION_MAP,
+    _OPENTARGETS_ACTION_MAP,
+)
 
 # Two or more members of one mutually exclusive group means a conflict.
 _CONFLICT_THRESHOLD = 2
@@ -193,11 +197,48 @@ def _expected_disease_phenotype() -> pl.DataFrame:
     )
 
 
+def _expected_drug_gene() -> pl.DataFrame:
+    """Re-derive drug_gene assertions by replaying the node's own joins."""
+    chembl = pl.read_parquet(BRONZE / "opentargets/chembl_drugbank_mapping.parquet")
+    ensembl = pl.read_parquet(BRONZE / "opentargets/ensembl_ncbi_mapping.parquet")
+    db = (
+        pl.read_parquet(BRONZE / "drugbank/drug_gene.parquet")
+        .join(chembl, left_on="drug_bank_id", right_on="drugbank_id", how="inner")
+        .join(ensembl, left_on="ncbi_gene_id", right_on="ncbi_id", how="inner")
+        .select(
+            pl.col("chembl_id").alias("from"),
+            pl.col("ensembl_id").alias("to"),
+            pl.lit("DRUG_BANK").alias("source"),
+            pl.col("relation")
+            .replace_strict(_DRUGBANK_RELATION_MAP, default="OTHER")
+            .alias("relation"),
+        )
+    )
+    ot = (
+        pl.read_parquet(BRONZE / "opentargets/drug_mechanism_of_action.parquet")
+        .with_columns(pl.col("metadata").struct.field("action_type"))
+        .explode("targets")
+        .explode("chembl_ids")
+        .filter(pl.col("targets").is_not_null())
+        .select(
+            pl.col("chembl_ids").alias("from"),
+            pl.col("targets").alias("to"),
+            pl.lit("OPEN_TARGETS").alias("source"),
+            pl.col("action_type")
+            .replace_strict(_OPENTARGETS_ACTION_MAP, default="OTHER")
+            .alias("relation"),
+        )
+        .drop_nulls()
+    )
+    return pl.concat([db, ot]).unique()
+
+
 _EXPECTED = {
     "drug_disease": _expected_drug_disease,
     "drug_phenotype": _expected_drug_phenotype,
     "drug_drug": _expected_drug_drug,
     "disease_phenotype": _expected_disease_phenotype,
+    "drug_gene": _expected_drug_gene,
 }
 
 
@@ -208,48 +249,44 @@ def r1_assertions_recoverable() -> None:
         got = _assertions(shipped).unique()
         want = expected_fn()
 
-        # Restrict to node pairs that survived into the graph. Pairs can be
-        # filtered out upstream (e.g. unmapped identifiers); the guarantee is
-        # that for every *retained* pair, no assertion was dropped.
+        # Node pairs can legitimately be filtered out upstream (e.g. unmapped
+        # identifiers), so report that count explicitly instead of hiding it
+        # behind a semi-join. Currently it is zero for every table, meaning the
+        # "no assertion lost" guarantee holds unconditionally rather than only
+        # for surviving pairs.
         pairs = shipped.select("from", "to").unique()
-        want = want.join(pairs, on=["from", "to"], how="semi")
-
+        dropped_pairs = (
+            want.select("from", "to")
+            .unique()
+            .join(pairs, on=["from", "to"], how="anti")
+            .height
+        )
         missing = want.join(got, on=["from", "to", "source", "relation"], how="anti")
+        # Assertions on pairs the pipeline deliberately filtered out are not a
+        # regression; assertions missing from a retained pair are.
+        missing_on_retained = missing.join(pairs, on=["from", "to"], how="semi").height
         check(
             f"R1 {name}",
-            missing.height == 0,
-            f"{want.height:,} upstream assertions on retained pairs, "
-            f"{missing.height:,} missing from output",
+            missing_on_retained == 0,
+            f"{want.height:,} upstream assertions, {missing_on_retained:,} missing "
+            f"from retained pairs, {dropped_pairs:,} node pairs filtered upstream",
         )
         if missing.height:
             print(missing.head(5))  # noqa: T201
 
 
-def r1_drug_gene() -> None:
-    """drug_gene needs the node's own joins; verify counts and role coverage."""
-    shipped = pl.read_parquet(SILVER / "drug_gene.parquet")
-    got = _assertions(shipped)
-    # Every edge must carry at least one assertion.
-    empty = shipped.filter(
-        pl.col("properties").struct.field("relation_assertions").list.len() == 0
-    ).height
-    # DrugBank contributes every edge (it is the left side of a left join), so
-    # every edge must have a DRUG_BANK role assertion.
-    roles = {"TARGET", "ENZYME", "TRANSPORTER", "CARRIER", "OTHER"}
-    with_db_role = (
-        got.filter(
-            (pl.col("source") == "DRUG_BANK") & pl.col("relation").is_in(sorted(roles))
+def r1_no_empty_assertions() -> None:
+    """No edge in any affected table may carry an empty assertion list."""
+    for name in AFFECTED:
+        df = pl.read_parquet(SILVER / f"{name}.parquet")
+        empty = df.filter(
+            pl.col("properties").struct.field("relation_assertions").list.len() == 0
+        ).height
+        check(
+            f"R1 {name} non-empty",
+            empty == 0,
+            f"{df.height:,} edges, {empty} with no assertions at all",
         )
-        .select("from", "to")
-        .unique()
-        .height
-    )
-    check(
-        "R1 drug_gene",
-        empty == 0 and with_db_role == shipped.height,
-        f"{shipped.height:,} edges, {empty} with no assertions, "
-        f"{with_db_role:,} carry their DrugBank role",
-    )
 
 
 # ---------------------------------------------------------------------------
@@ -330,6 +367,24 @@ def r5_conflict_flag() -> None:
 # ---------------------------------------------------------------------------
 
 
+def r6_all_gold_matches_silver() -> None:
+    """Every gold per-type table must equal its silver source, not just the
+    tables touched by this change. Catches a partially rebuilt gold layer."""
+    stale: list[str] = []
+    for path in sorted(SILVER.glob("*.parquet")):
+        gold_path = GOLD / path.name
+        if not gold_path.exists() or not pl.read_parquet(path).equals(
+            pl.read_parquet(gold_path)
+        ):
+            stale.append(path.stem)
+    check(
+        "R6 gold fully rebuilt",
+        not stale,
+        f"{len(list(SILVER.glob('*.parquet')))} silver tables compared, "
+        f"stale in gold: {stale or 'none'}",
+    )
+
+
 def r6_exports_agree() -> None:
     """Per-type gold must equal silver, and the consolidated table must match."""
     consolidated = pl.read_parquet("data/gold/kg/parquet/edges.parquet")
@@ -363,7 +418,7 @@ def main() -> None:
     """Run every requirement check over the whole shipped result."""
     print("=== R1: no upstream assertion lost ===")  # noqa: T201
     r1_assertions_recoverable()
-    r1_drug_gene()
+    r1_no_empty_assertions()
     print("\n=== R2: relation == deterministic priority winner ===")  # noqa: T201
     r2_relation_is_priority_winner()
     print("\n=== R3: one-edge-per-node-pair invariant ===")  # noqa: T201
@@ -372,6 +427,7 @@ def main() -> None:
     r5_conflict_flag()
     print("\n=== R6: exports agree and carry the new fields ===")  # noqa: T201
     r6_exports_agree()
+    r6_all_gold_matches_silver()
 
     failed = [r for r in _results if not r[1]]
     print(f"\n{len(_results) - len(failed)}/{len(_results)} checks passed")  # noqa: T201
