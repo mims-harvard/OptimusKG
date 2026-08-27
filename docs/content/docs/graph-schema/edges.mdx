@@ -31,6 +31,22 @@ export const baseEdgeSchemaFields = [
   { name: "properties", type: "String", description: "JSON-encoded edge-specific properties. Expanded to a native Struct in per-type parquet files." },
 ];
 
+export const relationAssertionsField = {
+  name: "relation_assertions",
+  type: "List[Struct]",
+  description: "Every source-specific relation asserted for this node pair. OptimusKG stores one edge per node pair, so this list preserves the original assertions when sources disagree.",
+  children: [
+    { name: "source", type: "String", description: "Dataset that asserted this relation" },
+    { name: "relation", type: "String", description: "Relation asserted by that dataset" },
+  ],
+};
+
+export const relationConflictField = {
+  name: "relation_conflict",
+  type: "Boolean",
+  description: "True when relation_assertions contains mutually exclusive relations (e.g. INDICATION and CONTRAINDICATION), meaning the sources genuinely disagree.",
+};
+
 export const onlySources = [sourcesField];
 
 export const anaAnaFields = baseEdgeFields("ANA-ANA", false, onlySources);
@@ -66,6 +82,8 @@ export const drugDiseaseProperties = [
   { name: "drug_disease_id", type: "String", description: "DrugCentral drug–disease identifier" },
   { name: "reference_ids", type: "List[String]", description: "Supporting reference identifiers" },
   sourcesField,
+  relationAssertionsField,
+  relationConflictField,
 ];
 
 export const drgDisFields = baseEdgeFields("DRG-DIS", true, drugDiseaseProperties);
@@ -73,6 +91,8 @@ export const drgDisFields = baseEdgeFields("DRG-DIS", true, drugDiseasePropertie
 export const drgDrgFields = baseEdgeFields("DRG-DRG", false, [
   { name: "interaction_description", type: "String", description: "Description of the drug–drug interaction" },
   sourcesField,
+  relationAssertionsField,
+  relationConflictField,
 ]);
 
 export const drgGenFields = baseEdgeFields("DRG-GEN", false, [
@@ -80,6 +100,8 @@ export const drgGenFields = baseEdgeFields("DRG-GEN", false, [
   { name: "source_ids", type: "List[String]", description: "Source-specific interaction identifiers" },
   { name: "source_urls", type: "List[String]", description: "URLs to source evidence records" },
   sourcesField,
+  relationAssertionsField,
+  relationConflictField,
 ]);
 
 export const drgPheFields = baseEdgeFields("DRG-PHE", true, [
@@ -124,6 +146,8 @@ export const disPheFields = baseEdgeFields("DIS-PHE", true, [
   { name: "bio_curation", type: "List[String]", description: "Biocuration provenance entries" },
   { name: "references", type: "List[String]", description: "Supporting publication or database references" },
   sourcesField,
+  relationAssertionsField,
+  relationConflictField,
 ]);
 
 export const exposureProperties = [
@@ -205,6 +229,58 @@ All edges share the same base schema in the unified `edges.parquet` and `largest
 
 <Callout>
   In the stratified per-type parquet files (`edges/<label>.parquet`), `properties` is expanded into native typed columns as a Polars `Struct`.
+</Callout>
+
+## One edge per node pair
+
+OptimusKG guarantees **at most one edge per (`from`, `to`, `label`) triple**. This
+keeps traversal simple: a path query never has to decide which of several
+parallel edges to follow, and degree statistics are well defined.
+
+When several sources describe the same node pair with different relation types,
+the `relation` column is resolved deterministically: the relation with the
+lowest `RELATION_PRIORITY` wins, ties are broken alphabetically. Resolution is
+order-independent and reproducible across runs.
+
+Collapsing is **not** lossy. Every edge also carries:
+
+- `properties.relation_assertions` — the complete list of `{source, relation}`
+  statements contributed by each upstream database.
+- `properties.relation_conflict` — `true` when those assertions include
+  mutually exclusive relations.
+
+This matters because some disagreements are biologically real rather than
+noise. An `INDICATION` and a `CONTRAINDICATION` between the same drug and
+disease are semantically distinct statements that may both be valid under
+different contexts (dose, population, comorbidity, or line of therapy). Rather
+than discarding one, OptimusKG surfaces the representative relation and keeps
+both assertions addressable:
+
+```python
+import polars as pl
+
+edges = pl.read_parquet("edges/drug_disease.parquet")
+
+# Edges where sources genuinely disagree.
+conflicting = edges.filter(pl.col("properties").struct.field("relation_conflict"))
+
+# Recover the original per-source statements.
+conflicting.select(
+    "from",
+    "to",
+    "relation",
+    pl.col("properties").struct.field("relation_assertions"),
+)
+```
+
+In the current release, 3,635 source-specific assertions are retained that a
+priority-only collapse would have dropped, including 339 drug–disease pairs
+asserted as both an indication and a contraindication.
+
+<Callout type="warn">
+  For clinical or safety-sensitive analyses, read `relation_assertions` rather
+  than `relation` alone, and treat `relation_conflict = true` edges as requiring
+  source-level review.
 </Callout>
 
 ---
