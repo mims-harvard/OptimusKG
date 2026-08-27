@@ -16,7 +16,11 @@ silver.edges.drug_phenotype:
         highest_clinical_trial_phase: pl.Float64
         structure_id: pl.String
         drug_disease_id: pl.String
+        relation_assertions:
+          - source: pl.String
+            relation: pl.String
+        relation_conflict: pl.Boolean
   metadata:
-    checksum: bc36b39dfd06c1fe583ff5bc33799f76
+    checksum: 25b9870a9f33a98aff24bace604528f2
     kedro-viz:
       layer: silver

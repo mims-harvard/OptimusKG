@@ -446,6 +446,8 @@ drug phenotype:
     highest_clinical_trial_phase: float
     structure_id: str
     drug_disease_id: str
+    relation_assertions: str[]
+    relation_conflict: bool
 
 biological process gene:
   is_a: regulates

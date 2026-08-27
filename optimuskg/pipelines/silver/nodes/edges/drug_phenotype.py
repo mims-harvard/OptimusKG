@@ -1,7 +1,15 @@
 import polars as pl
 from kedro.pipeline import node
 
-from optimuskg.pipelines.silver.nodes.constants import Edge, Node, Relation, Source
+from optimuskg.pipelines.silver.nodes.constants import (
+    Edge,
+    Node,
+    Relation,
+    Source,
+    relation_assertions,
+    relation_conflict_expr,
+    resolve_relation_expr,
+)
 
 # DrugCentral relationship_name values
 _RELATION_MAP: dict[str, Relation] = {
@@ -20,7 +28,9 @@ def run(
         pl.col("ingredient_id").alias("from"),
         pl.col("effect_meddra_id").alias("to"),
         pl.lit(Edge.format_label(Node.DRUG, Node.PHENOTYPE)).alias("label"),
-        pl.lit(Relation.ADVERSE_DRUG_REACTION).alias("relation"),
+        relation_assertions(
+            Source.ONSIDES, pl.lit(Relation.ADVERSE_DRUG_REACTION)
+        ).alias("relation_assertions"),
         pl.lit(True).alias("undirected"),
         pl.struct(
             [
@@ -38,7 +48,7 @@ def run(
                 pl.lit(None, dtype=pl.String).alias("drug_disease_id"),
             ]
         ).alias("properties"),
-    ).unique(subset=["from", "to"])
+    )
 
     phenotype_indication = (
         drug_indication.with_columns(
@@ -54,8 +64,10 @@ def run(
             pl.col("drug_id").alias("from"),
             pl.col("disease").alias("to"),
             pl.lit(Edge.format_label(Node.DRUG, Node.PHENOTYPE)).alias("label"),
-            pl.lit(Relation.ASSOCIATED_WITH).alias(
-                "relation"
+            relation_assertions(
+                Source.OPEN_TARGETS, pl.lit(Relation.ASSOCIATED_WITH)
+            ).alias(
+                "relation_assertions"
             ),  # TODO: the relation_type should be inferred from the highest_clinical_trial_phase number
             pl.lit(True).alias("undirected"),
             pl.struct(
@@ -79,16 +91,18 @@ def run(
                 ]
             ).alias("properties"),
         )
-        .unique(subset=["from", "to"])
     )
 
     drugcentral_drug_phenotype = drug_phenotype.select(
         pl.col("from"),
         pl.col("to"),
         pl.lit(Edge.format_label(Node.DRUG, Node.PHENOTYPE)).alias("label"),
-        pl.col("relationship_name")
-        .replace_strict(_RELATION_MAP, default=Relation.OTHER)
-        .alias("relation"),
+        relation_assertions(
+            Source.DRUG_CENTRAL,
+            pl.col("relationship_name").replace_strict(
+                _RELATION_MAP, default=Relation.OTHER
+            ),
+        ).alias("relation_assertions"),
         pl.lit(True).alias("undirected"),
         pl.struct(
             [
@@ -106,11 +120,76 @@ def run(
                 pl.col("drug_disease_id").alias("drug_disease_id"),
             ]
         ).alias("properties"),
-    ).unique(subset=["from", "to"])
+    )
+
+    # OnSIDES, OpenTargets and DrugCentral can each describe the same
+    # drug-phenotype pair. Concatenating and de-duplicating on (from, to) used
+    # to discard whole rows, losing both the losing relation and its
+    # provenance. Grouping instead keeps one edge per node pair while merging
+    # every source's assertions and properties.
+    combined = pl.concat(
+        [onsides_high_confidence, phenotype_indication, drugcentral_drug_phenotype]
+    )
+
+    merged_assertions = pl.col("relation_assertions").list.unique().list.sort()
+    prop = pl.col("properties").struct
 
     return (
-        pl.concat(
-            [onsides_high_confidence, phenotype_indication, drugcentral_drug_phenotype]
+        combined.group_by(["from", "to"])
+        .agg(
+            pl.col("label").first(),
+            pl.col("undirected").first(),
+            pl.col("relation_assertions").flatten().alias("relation_assertions"),
+            prop.field("sources")
+            .struct.field("direct")
+            .flatten()
+            .drop_nulls()
+            .unique()
+            .sort()
+            .alias("direct_sources"),
+            prop.field("sources")
+            .struct.field("indirect")
+            .flatten()
+            .drop_nulls()
+            .unique()
+            .sort()
+            .alias("indirect_sources"),
+            prop.field("reference_ids")
+            .flatten()
+            .drop_nulls()
+            .unique()
+            .sort()
+            .alias("reference_ids"),
+            prop.field("highest_clinical_trial_phase")
+            .max()
+            .alias("highest_clinical_trial_phase"),
+            prop.field("structure_id").min().alias("structure_id"),
+            prop.field("drug_disease_id").min().alias("drug_disease_id"),
+        )
+        .select(
+            pl.col("from"),
+            pl.col("to"),
+            pl.col("label"),
+            resolve_relation_expr(merged_assertions).alias("relation"),
+            pl.col("undirected"),
+            pl.struct(
+                [
+                    pl.struct(
+                        [
+                            pl.col("direct_sources").alias("direct"),
+                            pl.col("indirect_sources").alias("indirect"),
+                        ]
+                    ).alias("sources"),
+                    pl.col("reference_ids"),
+                    pl.col("highest_clinical_trial_phase"),
+                    pl.col("structure_id"),
+                    pl.col("drug_disease_id"),
+                    merged_assertions.alias("relation_assertions"),
+                    relation_conflict_expr(merged_assertions).alias(
+                        "relation_conflict"
+                    ),
+                ]
+            ).alias("properties"),
         )
         .unique(subset=["from", "to"])
         .sort(by=["from", "to"])

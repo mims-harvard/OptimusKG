@@ -110,6 +110,8 @@ export const drgPheFields = baseEdgeFields("DRG-PHE", true, [
   { name: "drug_disease_id", type: "String", description: "DrugCentral drug–disease identifier" },
   { name: "reference_ids", type: "List[String]", description: "Supporting reference identifiers" },
   sourcesField,
+  relationAssertionsField,
+  relationConflictField,
 ]);
 
 export const drgBpoFields = baseEdgeFields("DRG-BPO", true, [
@@ -273,9 +275,11 @@ conflicting.select(
 )
 ```
 
-In the current release, 3,635 source-specific assertions are retained that a
+In the current release, 3,826 source-specific assertions are retained that a
 priority-only collapse would have dropped, including 339 drug–disease pairs
-asserted as both an indication and a contraindication.
+asserted as both an indication and a contraindication, and 191 drug–phenotype
+pairs where an entire source statement (33 of them contraindications) was
+previously discarded along with its provenance.
 
 <Callout type="warn">
   For clinical or safety-sensitive analyses, read `relation_assertions` rather

@@ -11,6 +11,7 @@ import polars as pl
 
 EDGES = [
     "drug_disease",
+    "drug_phenotype",
     "drug_drug",
     "drug_gene",
     "disease_phenotype",
