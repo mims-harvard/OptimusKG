@@ -139,23 +139,25 @@ def run(
         .agg(
             pl.col("label").first(),
             pl.col("undirected").first(),
-            pl.col("relation_assertions").flatten().alias("relation_assertions"),
+            pl.col("relation_assertions")
+            .list.explode(keep_nulls=False, empty_as_null=False)
+            .alias("relation_assertions"),
             prop.field("sources")
             .struct.field("direct")
-            .flatten()
+            .list.explode(keep_nulls=False, empty_as_null=False)
             .drop_nulls()
             .unique()
             .sort()
             .alias("direct_sources"),
             prop.field("sources")
             .struct.field("indirect")
-            .flatten()
+            .list.explode(keep_nulls=False, empty_as_null=False)
             .drop_nulls()
             .unique()
             .sort()
             .alias("indirect_sources"),
             prop.field("reference_ids")
-            .flatten()
+            .list.explode(keep_nulls=False, empty_as_null=False)
             .drop_nulls()
             .unique()
             .sort()
