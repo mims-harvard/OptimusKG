@@ -6,7 +6,10 @@ from optimuskg.pipelines.silver.nodes.constants import (
     Node,
     Relation,
     Source,
-    resolve_relation,
+    merge_relation_assertions,
+    relation_assertions,
+    relation_conflict_expr,
+    resolve_relation_expr,
     resolve_sources,
 )
 
@@ -75,7 +78,9 @@ def run(
             pl.col("chembl_id").alias("from"),
             pl.col("ensembl_id").alias("to"),
             pl.lit(Edge.format_label(Node.DRUG, Node.GENE)).alias("label"),
-            pl.col("relation_type").alias("relation"),
+            relation_assertions(Source.DRUG_BANK, pl.col("relation_type")).alias(
+                "relation_assertions"
+            ),
             pl.lit(False).alias("undirected"),
             pl.struct(
                 [
@@ -132,7 +137,9 @@ def run(
                 pl.col("chembl_ids").alias("from"),
                 pl.col("targets").alias("to"),
                 pl.lit(Edge.format_label(Node.DRUG, Node.GENE)).alias("label"),
-                pl.col("action_type").alias("relation"),
+                relation_assertions(Source.OPEN_TARGETS, pl.col("action_type")).alias(
+                    "relation_assertions"
+                ),
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
@@ -159,28 +166,19 @@ def run(
         .sort(by=["from", "to"])
     )
 
+    # DrugBank contributes the interaction role (TARGET/ENZYME/...) while
+    # OpenTargets contributes the pharmacological action (INHIBITOR/AGONIST/...).
+    # Both are kept so the collapsed ``relation`` never hides the other.
+    merged_assertions = merge_relation_assertions(
+        pl.col("relation_assertions"), pl.col("relation_assertions_right")
+    )
+
     return (
         drugbank_drug_gene.join(opentargets_drug_gene, on=["from", "to"], how="left")
         .with_columns(
             [
-                pl.concat_list(
-                    [
-                        pl.coalesce(
-                            [
-                                pl.col("relation"),
-                                pl.lit([], dtype=pl.List(pl.String)),
-                            ]
-                        ),
-                        pl.coalesce(
-                            [
-                                pl.col("relation_right"),
-                                pl.lit([], dtype=pl.List(pl.String)),
-                            ]
-                        ),
-                    ]
-                )
-                .map_elements(resolve_relation, return_dtype=pl.String)
-                .alias("relation_merged"),
+                resolve_relation_expr(merged_assertions).alias("relation_merged"),
+                merged_assertions.alias("relation_assertions_merged"),
                 pl.when(pl.col("opentargets_props").is_not_null())
                 .then(
                     pl.struct(
@@ -221,10 +219,29 @@ def run(
                                     .alias("indirect"),
                                 ]
                             ).alias("sources"),
+                            merged_assertions.alias("relation_assertions"),
+                            relation_conflict_expr(merged_assertions).alias(
+                                "relation_conflict"
+                            ),
                         ]
                     )
                 )
-                .otherwise(pl.col("drugbank_props"))
+                .otherwise(
+                    pl.struct(
+                        [
+                            pl.lit(None, dtype=pl.List(pl.String)).alias("source_ids"),
+                            pl.lit(None, dtype=pl.List(pl.String)).alias("source_urls"),
+                            pl.lit(None, dtype=pl.List(pl.String)).alias(
+                                "mechanisms_of_action"
+                            ),
+                            pl.col("drugbank_props").struct.field("sources"),
+                            merged_assertions.alias("relation_assertions"),
+                            relation_conflict_expr(merged_assertions).alias(
+                                "relation_conflict"
+                            ),
+                        ]
+                    )
+                )
                 .alias("properties"),
             ]
         )

@@ -6,7 +6,9 @@ from optimuskg.pipelines.silver.nodes.constants import (
     Node,
     Relation,
     Source,
-    resolve_relation,
+    relation_assertions,
+    relation_conflict_expr,
+    resolve_relation_expr,
     resolve_sources,
 )
 
@@ -14,6 +16,11 @@ from optimuskg.pipelines.silver.nodes.constants import (
 def run(
     disease_phenotype: pl.DataFrame,
 ) -> pl.DataFrame:
+    # A disease-phenotype pair can be annotated as both present and absent by
+    # different HPO evidence rows (e.g. different cohorts or qualifiers). Those
+    # assertions are retained rather than being silently collapsed away.
+    assertions = relation_assertions(Source.OPEN_TARGETS, pl.col("relation"))
+
     return (
         disease_phenotype.filter(~pl.col("disease").str.contains("HP"))
         .with_columns(
@@ -56,7 +63,7 @@ def run(
             pl.col("from"),
             pl.col("to"),
             pl.lit(Edge.format_label(Node.DISEASE, Node.PHENOTYPE)).alias("label"),
-            pl.col("relation").map_elements(resolve_relation, return_dtype=pl.String),
+            resolve_relation_expr(assertions).alias("relation"),
             pl.lit(True).alias("undirected"),
             pl.struct(
                 [
@@ -81,6 +88,8 @@ def run(
                     pl.col("qualifier_not"),
                     pl.col("references"),
                     pl.col("sexes"),
+                    assertions.alias("relation_assertions"),
+                    relation_conflict_expr(assertions).alias("relation_conflict"),
                 ]
             ).alias("properties"),
         )

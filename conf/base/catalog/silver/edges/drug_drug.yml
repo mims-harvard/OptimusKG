@@ -13,6 +13,10 @@ silver.edges.drug_drug:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
         interaction_description: pl.String
+        relation_assertions:
+          - source: pl.String
+            relation: pl.String
+        relation_conflict: pl.Boolean
   metadata:
     checksum: a1777d9171327b9c46d60727a0967421
     kedro-viz:

@@ -297,8 +297,147 @@ RELATION_PRIORITY: dict[Relation, int] = {
 }
 
 
+# Relation pairs/groups that are mutually exclusive statements about the same
+# node pair. When two or more members of the same group are asserted for one
+# node pair, the edge carries genuinely conflicting evidence and is flagged via
+# the ``relation_conflict`` property so downstream users can handle it
+# explicitly instead of silently trusting the collapsed ``relation`` value.
+MUTUALLY_EXCLUSIVE_RELATIONS: tuple[frozenset[Relation], ...] = (
+    frozenset({Relation.INDICATION, Relation.CONTRAINDICATION, Relation.OFF_LABEL_USE}),
+    frozenset({Relation.PHENOTYPE_PRESENT, Relation.PHENOTYPE_ABSENT}),
+    frozenset({Relation.EXPRESSION_PRESENT, Relation.EXPRESSION_ABSENT}),
+    frozenset({Relation.AGONIST, Relation.ANTAGONIST, Relation.INVERSE_AGONIST}),
+    frozenset({Relation.ACTIVATOR, Relation.INHIBITOR}),
+    frozenset({Relation.POSITIVE_MODULATOR, Relation.NEGATIVE_MODULATOR}),
+    frozenset(
+        {
+            Relation.POSITIVE_ALLOSTERIC_MODULATOR,
+            Relation.NEGATIVE_ALLOSTERIC_MODULATOR,
+        }
+    ),
+)
+
+# Struct describing a single source-specific relation assertion. The full list
+# of assertions is preserved on every collapsed edge so that no original
+# statement is lost by the one-edge-per-node-pair invariant.
+RELATION_ASSERTION_DTYPE = pl.Struct({"source": pl.String, "relation": pl.String})
+RELATION_ASSERTIONS_DTYPE = pl.List(RELATION_ASSERTION_DTYPE)
+
+# Zero-padded priorities used to build a sortable "priority|relation" key so
+# that resolution is a pure Polars expression (no per-row Python callback).
+_RELATION_SORT_KEY: dict[str, str] = {
+    r.value: f"{RELATION_PRIORITY.get(r, 999):03d}|{r.value}" for r in Relation
+}
+_DEFAULT_SORT_KEY = f"999|{Relation.OTHER.value}"
+
+# Two or more members of the same mutually exclusive group means a conflict.
+_CONFLICT_THRESHOLD = 2
+
+
+def relation_assertions(source: Source, relation: pl.Expr) -> pl.Expr:
+    """Tag a relation column with the source that asserted it.
+
+    Args:
+        source: The dataset that made these assertions.
+        relation: Expression yielding either a ``String`` relation or a
+            ``List(String)`` of relations for the node pair.
+
+    Returns:
+        Expression of dtype ``RELATION_ASSERTIONS_DTYPE`` (list of
+        ``{source, relation}`` structs), never null (empty list instead).
+    """
+    return (
+        pl.concat_list(relation)
+        .list.drop_nulls()
+        .list.eval(
+            pl.struct(
+                pl.lit(str(source), dtype=pl.String).alias("source"),
+                pl.element().cast(pl.String).alias("relation"),
+            )
+        )
+        .fill_null(pl.lit([], dtype=RELATION_ASSERTIONS_DTYPE))
+        .cast(RELATION_ASSERTIONS_DTYPE)
+    )
+
+
+def merge_relation_assertions(*assertions: pl.Expr) -> pl.Expr:
+    """Concatenate assertion lists from several sources, de-duplicated and sorted.
+
+    Args:
+        *assertions: Expressions of dtype ``RELATION_ASSERTIONS_DTYPE``. Null
+            values are treated as empty lists so that outer joins are safe.
+
+    Returns:
+        A single deterministic assertion list expression.
+    """
+    filled = [
+        a.fill_null(pl.lit([], dtype=RELATION_ASSERTIONS_DTYPE)).cast(
+            RELATION_ASSERTIONS_DTYPE
+        )
+        for a in assertions
+    ]
+    return pl.concat_list(filled).list.unique().list.sort()
+
+
+def resolve_relation_expr(assertions: pl.Expr) -> pl.Expr:
+    """Pick the representative relation for an edge from its assertions.
+
+    Resolution is deterministic: lowest ``RELATION_PRIORITY`` wins, ties are
+    broken alphabetically. This only chooses which value is surfaced in the
+    ``relation`` column; every asserted relation remains available in the
+    ``relation_assertions`` property.
+
+    Args:
+        assertions: Expression of dtype ``RELATION_ASSERTIONS_DTYPE``.
+
+    Returns:
+        String expression with the representative ``Relation`` value.
+    """
+    return (
+        assertions.list.eval(
+            pl.element()
+            .struct.field("relation")
+            .replace_strict(_RELATION_SORT_KEY, default=_DEFAULT_SORT_KEY)
+        )
+        .list.min()
+        .str.split("|")
+        .list.last()
+        .fill_null(pl.lit(str(Relation.OTHER)))
+    )
+
+
+def relation_conflict_expr(assertions: pl.Expr) -> pl.Expr:
+    """Flag edges whose assertions contain mutually exclusive relations.
+
+    Args:
+        assertions: Expression of dtype ``RELATION_ASSERTIONS_DTYPE``.
+
+    Returns:
+        Boolean expression, ``True`` when two or more members of the same
+        mutually exclusive group are asserted for the node pair (for example an
+        ``INDICATION`` and a ``CONTRAINDICATION`` between the same drug and
+        disease).
+    """
+    distinct = assertions.list.eval(pl.element().struct.field("relation")).list.unique()
+    checks = [
+        distinct.list.eval(
+            pl.element().is_in(sorted(str(r) for r in group)).cast(pl.UInt32)
+        ).list.sum()
+        >= _CONFLICT_THRESHOLD
+        for group in MUTUALLY_EXCLUSIVE_RELATIONS
+    ]
+    combined = checks[0]
+    for check in checks[1:]:
+        combined = combined | check
+    return combined.fill_null(False)
+
+
 def resolve_relation(relations: pl.Series) -> str:
     """Resolve multiple Relation values to the highest priority one.
+
+    Deprecated in favour of :func:`resolve_relation_expr`, which operates on
+    provenance-carrying assertions instead of bare relation strings. Kept for
+    ad-hoc use and for parity testing against the expression implementation.
 
     Args:
         relations: Polars Series of Relation enum string values (passed by map_elements

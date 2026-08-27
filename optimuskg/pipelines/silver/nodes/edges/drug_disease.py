@@ -8,7 +8,10 @@ from optimuskg.pipelines.silver.nodes.constants import (
     Node,
     Relation,
     Source,
-    resolve_relation,
+    merge_relation_assertions,
+    relation_assertions,
+    relation_conflict_expr,
+    resolve_relation_expr,
     resolve_sources,
 )
 
@@ -43,8 +46,8 @@ def run(
             pl.col("id").alias("from"),
             pl.col("disease").alias("to"),
             pl.lit(Edge.format_label(Node.DRUG, Node.DISEASE)).alias("label"),
-            pl.lit([Relation.INDICATION]).alias(
-                "relation"
+            relation_assertions(Source.OPEN_TARGETS, pl.lit(Relation.INDICATION)).alias(
+                "relation_assertions"
             ),  # TODO: replace this with strong/weak clinical evidence derived from highest_clinical_trial_phase
             pl.lit(True).alias("undirected"),
             pl.struct(
@@ -77,10 +80,12 @@ def run(
             pl.col("from"),
             pl.col("to"),
             pl.lit(Edge.format_label(Node.DRUG, Node.DISEASE)).alias("label"),
-            pl.col("relationship_name")
-            .replace_strict(_RELATION_MAP, default=Relation.OTHER)
-            .cast(pl.List(pl.String))
-            .alias("relation"),
+            relation_assertions(
+                Source.DRUG_CENTRAL,
+                pl.col("relationship_name").replace_strict(
+                    _RELATION_MAP, default=Relation.OTHER
+                ),
+            ).alias("relation_assertions"),
             pl.lit(True).alias("undirected"),
             pl.struct(
                 [
@@ -101,6 +106,15 @@ def run(
         .sort(by=["from", "to"])
     )
 
+    # Union of the OpenTargets and DrugCentral assertions for each node pair.
+    # This is what makes the one-edge-per-node-pair collapse lossless: the
+    # ``relation`` column still carries a single deterministic value, while
+    # every original source-specific assertion (e.g. an INDICATION from
+    # OpenTargets alongside a CONTRAINDICATION from DrugCentral) is retained.
+    merged_assertions = merge_relation_assertions(
+        pl.col("relation_assertions"), pl.col("relation_assertions_right")
+    )
+
     return (
         opentargets_drug_disease.join(
             drugcentral_drug_disease, on=["from", "to"], how="full"
@@ -110,24 +124,7 @@ def run(
                 pl.coalesce([pl.col("from"), pl.col("from_right")]).alias("from"),
                 pl.coalesce([pl.col("to"), pl.col("to_right")]).alias("to"),
                 pl.coalesce([pl.col("label"), pl.col("label_right")]).alias("label"),
-                pl.concat_list(
-                    [
-                        pl.coalesce(
-                            [
-                                pl.col("relation"),
-                                pl.lit([], dtype=pl.List(pl.String)),
-                            ]
-                        ),
-                        pl.coalesce(
-                            [
-                                pl.col("relation_right"),
-                                pl.lit([], dtype=pl.List(pl.String)),
-                            ]
-                        ),
-                    ]
-                )
-                .map_elements(resolve_relation, return_dtype=pl.String)
-                .alias("relation"),
+                resolve_relation_expr(merged_assertions).alias("relation"),
                 pl.coalesce([pl.col("undirected"), pl.col("undirected_right")]).alias(
                     "undirected"
                 ),
@@ -182,6 +179,10 @@ def run(
                         pl.col("opentargets_props").struct.field("reference_ids"),
                         pl.col("opentargets_props").struct.field(
                             "highest_clinical_trial_phase"
+                        ),
+                        merged_assertions.alias("relation_assertions"),
+                        relation_conflict_expr(merged_assertions).alias(
+                            "relation_conflict"
                         ),
                     ]
                 ).alias("properties"),

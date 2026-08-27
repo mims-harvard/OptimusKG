@@ -393,6 +393,8 @@ drug gene:
     source_urls: str[]
     mechanisms_of_action: str[]
     sources: str
+    relation_assertions: str[]
+    relation_conflict: bool
 
 drug drug:
   is_a: physically interacts with
@@ -403,6 +405,8 @@ drug drug:
     relation: str
     sources: str
     interaction_description: str
+    relation_assertions: str[]
+    relation_conflict: bool
 
 drug disease:
   is_a: related to
@@ -416,6 +420,8 @@ drug disease:
     highest_clinical_trial_phase: float
     structure_id: str
     drug_disease_id: str
+    relation_assertions: str[]
+    relation_conflict: bool
 
 drug biological process:
   is_a: related to
@@ -657,6 +663,8 @@ disease phenotype:
     references: str[]
     sexes: str[]
     sources: str
+    relation_assertions: str[]
+    relation_conflict: bool
 
 phenotype phenotype:
   is_a: has_part
