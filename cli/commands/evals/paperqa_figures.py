@@ -20,45 +20,22 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 import polars as pl
 
+from .utils import (
+    NODE_TYPE_LABELS,
+    PALETTE,
+    THEMES,
+    load_polled_edges,
+    normalize_relation_types,
+)
+
 logger = logging.getLogger("cli")
 
-# Human-readable labels for compact node-type codes
-NODE_TYPE_LABELS: dict[str, str] = {
-    "ANA": "Anatomy",
-    "BPO": "Biological process",
-    "CCO": "Cellular component",
-    "DIS": "Disease",
-    "DRG": "Drug",
-    "EXP": "Exposure",
-    "GEN": "Gene",
-    "MFN": "Molecular function",
-    "PHE": "Phenotype",
-    "PWY": "Pathway",
-}
-
-_PALETTE = [
-    "#516FD9",  # Royal Blue
-    "#7EACF5",  # Sky Blue
-    "#69C39C",  # Mint
-    "#6FA430",  # Green
-    "#E7C454",  # Yellow
-    "#EDB453",  # Amber
-    "#ED9353",  # Orange
-    "#DA3546",  # Red
-    "#9B7DF1",  # Purple
-    "#838E9F",  # Gray
-]
+_PALETTE = PALETTE
+_THEMES = THEMES
 
 _FALSE_GRAY = "#D0D0D0"
 _ALL_RATINGS = [1, 2, 3, 4, 5]
 _RATING_LABELS = ["No evidence", "Weak", "Moderate", "Strong", "Very strong"]
-
-# Per-panel SVG themes. Data colors (palette, gray for false edges) stay the same;
-# only axes/text/spines flip between light and dark.
-_THEMES: dict[str, dict[str, str]] = {
-    "light": {"ink": "#26251e", "muted": "#57534e"},
-    "dark": {"ink": "#ebebeb", "muted": "#a8a29e"},
-}
 _RATING_NO_EVIDENCE = _ALL_RATINGS[0]
 _RATING_WEAK = _ALL_RATINGS[1]
 _RATING_MODERATE = _ALL_RATINGS[2]
@@ -70,41 +47,6 @@ _RATING_MAX = _ALL_RATINGS[-1]
 
 def _run_id_from_path(path: Path) -> str:
     return path.stem
-
-
-def _load_df(input_path: Path) -> pl.DataFrame:
-    if not input_path.exists():
-        raise FileNotFoundError(f"Input file not found: {input_path}")
-
-    df = pl.read_csv(input_path, infer_schema_length=100000)
-
-    required = {"seed_node_type", "is_true_edge", "rating"}
-    missing = required - set(df.columns)
-    if missing:
-        raise ValueError(f"Input CSV is missing required columns: {missing}")
-
-    return df.with_columns(
-        pl.col("rating").cast(pl.Int32, strict=False),
-        pl.col("is_true_edge").cast(pl.Boolean, strict=False),
-    ).filter(pl.col("rating").is_not_null() & pl.col("is_true_edge").is_not_null())
-
-
-# Whole-token PRO → GEN (Unicode word boundaries: hyphens/pipes/ends ok; not "PROGRAM")
-_RELATION_PRO_TO_GEN_PATTERN = r"\bPRO\b"
-
-
-def _relation_type_pro_to_gen(df: pl.DataFrame) -> pl.DataFrame:
-    """Replace whole-token ``PRO`` with ``GEN`` in ``relation_type`` (pipes, hyphens, etc.)."""
-    if "relation_type" not in df.columns:
-        return df
-    return df.with_columns(
-        pl.when(pl.col("relation_type").is_null())
-        .then(None)
-        .otherwise(
-            pl.col("relation_type").str.replace_all(_RELATION_PRO_TO_GEN_PATTERN, "GEN")
-        )
-        .alias("relation_type"),
-    )
 
 
 def _by_prevalence(df: pl.DataFrame, col: str) -> list[str]:
@@ -643,12 +585,12 @@ def run(
     out_dir = out_dir or input_path.parent
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    df = _load_df(input_path)
+    df = load_polled_edges(input_path)
     if df.is_empty():
         logger.warning("No rows with valid rating + is_true_edge; nothing to plot.")
         return
 
-    df = _relation_type_pro_to_gen(df)
+    df = normalize_relation_types(df)
 
     run_id = _run_id_from_path(input_path)
 

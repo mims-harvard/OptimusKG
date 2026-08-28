@@ -5,7 +5,10 @@ from pathlib import Path
 
 from .edges import compute_edge_metrics
 from .nodes import compute_node_metrics
+from .properties import property_metrics_command
 from .utils import load_parquet_dir
+
+__all__ = ["metrics_command", "property_metrics_command"]
 
 logger = logging.getLogger("cli")
 

@@ -367,34 +367,49 @@ def sync_catalog_command(  # noqa: PLR0913, PLR0912
             checksum_stats["skipped"] += 1
             continue
 
-        ds_name = list(content.keys())[0]
-        ds_config = content[ds_name]
-        ds_type = ds_config.get("type", "")
-        display = (
-            _format_dataset_display(ds_name, ds_type)
-            if ds_name and ds_type
-            else str(rel_path)
-        )
+        # A YAML file may hold several datasets plus shared `&anchor` templates
+        # under leading-underscore keys. Only the former are real datasets.
+        ds_names = [
+            name
+            for name, config in content.items()
+            if not name.startswith("_") and isinstance(config, dict)
+        ]
+        if dataset is not None:
+            ds_names = [name for name in ds_names if name == dataset]
 
-        # The schema sync must be run before the checksum change so that the `_write_yaml` preserves the existing metadata.checksum for the regex pass.
-        try:
-            schema_status, schema_msg = _process_schema(
-                yaml_path, ds_name, ds_config, validate, dry_run
-            )
-        except Exception as e:
-            schema_status, schema_msg = "error", str(e)
-        schema_stats[schema_status] += 1
-        _log_schema_status(schema_status, schema_msg, display, dry_run)
+        if not ds_names:
+            schema_stats["skipped"] += 1
+            checksum_stats["skipped"] += 1
+            continue
 
-        # Checksum sync reads file from disk to it picks up schema sync changes.
-        try:
-            checksum_status, checksum_msg = _process_checksum(
-                yaml_path, ds_config, validate, dry_run
+        for ds_name in ds_names:
+            ds_config = content[ds_name]
+            ds_type = ds_config.get("type", "")
+            display = (
+                _format_dataset_display(ds_name, ds_type)
+                if ds_name and ds_type
+                else str(rel_path)
             )
-        except Exception as e:
-            checksum_status, checksum_msg = "error", str(e)
-        checksum_stats[checksum_status] += 1
-        _log_checksum_status(checksum_status, checksum_msg, display, dry_run)
+
+            # The schema sync must be run before the checksum change so that the `_write_yaml` preserves the existing metadata.checksum for the regex pass.
+            try:
+                schema_status, schema_msg = _process_schema(
+                    yaml_path, ds_name, ds_config, validate, dry_run
+                )
+            except Exception as e:
+                schema_status, schema_msg = "error", str(e)
+            schema_stats[schema_status] += 1
+            _log_schema_status(schema_status, schema_msg, display, dry_run)
+
+            # Checksum sync reads file from disk to it picks up schema sync changes.
+            try:
+                checksum_status, checksum_msg = _process_checksum(
+                    yaml_path, ds_config, validate, dry_run
+                )
+            except Exception as e:
+                checksum_status, checksum_msg = "error", str(e)
+            checksum_stats[checksum_status] += 1
+            _log_checksum_status(checksum_status, checksum_msg, display, dry_run)
 
     if validate:
         logger.info(

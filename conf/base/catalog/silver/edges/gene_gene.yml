@@ -13,6 +13,6 @@ silver.edges.gene_gene:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
   metadata:
-    checksum: 59a25a96d4e1858609c1aa9e9c750ea8
+    checksum: 2daa3f78522f0d29feff1a355ff50569
     kedro-viz:
       layer: silver

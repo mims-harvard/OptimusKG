@@ -9,6 +9,6 @@ bronze.drugcentral.drug_phenotype:
       drug_disease_id: pl.String
       relationship_name: pl.String
   metadata:
-    checksum: 77ab4f7fc60bf857c482ad54e13050f6
+    checksum: e539d06baa58e506129dad98867a7bdc
     kedro-viz:
       layer: bronze

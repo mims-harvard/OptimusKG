@@ -1,59 +1,45 @@
 # Known issues
 
-## Pre-existing UBERON / ontology checksum drift
+## Resolved: UBERON / ontology checksum drift
 
-`uv run cli sync-catalog --layer silver --validate` reports four checksum
-mismatches. None of them are caused by the relation-assertion work; all four
-sit in the UBERON/ontology chain and their node logic is unchanged:
+Previously the `anatomy_anatomy`, `anatomy_gene`, `anatomy`, `disease` and
+`phenotype` outputs had catalog checksums that did not match locally
+regenerated data. The root cause was a landing catalog that pinned a release
+URL without a content hash, so the downloaded artifact could change under a
+fixed tag.
 
-- `silver.edges.anatomy_anatomy`
-- `silver.nodes.anatomy`
-- `silver.nodes.disease`
-- `silver.nodes.phenotype`
+This was fixed on `main` by #213 (pin floating landing origins and correct the
+UBERON checksum). After rebuilding, `cli sync-catalog --validate` reports
+**0 mismatches** across bronze and silver.
 
-| catalog entry | recorded | locally regenerated |
-| --- | --- | --- |
-| `bronze.ontology.uberon_terms` | `30fd60ad…` | `9937f95f…` |
-| `bronze.ontology.uberon_relations` | `28e39539…` | `baf3fb63…` |
-| `silver.nodes.anatomy` | `33f03980…` | `1d25fe94…` |
-| `silver.edges.anatomy_anatomy` | `8472f929…` | `136cac89…` |
-
-What was established:
-
-- The `anatomy_anatomy` builder is deterministic (reorder-stable) and its
-  current code reproduces `136cac89` exactly.
-- Commit `61cddba` bumped the `anatomy_anatomy` checksum from `136cac89` to
-  `8472f929` **without changing the builder or its bronze inputs' code**.
-- `conf/base/catalog/landing/ontology/uberon.yml` pins a release URL
-  (`uberon v2026-04-01/human-view.json`) but no content hash, so the
-  downloaded artifact can change under a fixed tag.
-
-The most likely explanation is that the recorded checksums were produced from a
-different UBERON artifact than the one currently in `data/landing`.
-
-These checksums were deliberately **not** rewritten: doing so would assert that
-the local data matches the published release, which has not been established.
-
-Suggested resolution, in order of preference:
-
-1. Pin a content hash for the UBERON landing artifact so the input is
-   reproducible, then regenerate and record the resulting checksums.
-2. Re-download the pinned release on a clean checkout and confirm which
-   checksum it produces before updating the catalog.
+If it reappears, re-check that `conf/base/catalog/landing/ontology/uberon.yml`
+still pins an immutable artifact.
 
 ## Verifying the relation-assertion guarantees
 
+The one-edge-per-node-pair invariant is lossless: every edge keeps the full set
+of source-specific assertions in `properties.relation_assertions`, and flags
+mutually exclusive ones via `properties.relation_conflict`.
+
 ```bash
-./scripts/rebuild_and_verify.sh          # full rebuild + every check
-uv run python scripts/verify_relation_guarantees.py   # 21 correctness checks
+uv run python scripts/verify_relation_guarantees.py   # 27 correctness checks
 uv run python scripts/check_determinism.py            # reproducibility
 uv run python scripts/audit_relation_loss.py          # relation-loss audit
+uv run cli sync-catalog --validate                    # schemas + checksums
 ```
-
-Run full pipelines in their own terminal window rather than as background jobs.
 
 These checks are negative-controlled: injecting the old lossy collapse into
 `drug_disease` makes R1/R2/R5/R6 fail (2,135 assertions missing, 573 edges
-misresolved), and reverting a single `.sort()` makes `exposure_gene`
-reorder-unstable again. `tests/test_relation_resolution.py` pins the same
-properties as fast unit-level regression tests.
+misresolved), and reverting a single `.sort()` makes `drug_gene` and
+`exposure_gene` reorder-unstable again. `tests/test_relation_resolution.py`
+pins the same properties as fast unit-level regression tests.
+
+### Determinism
+
+`group_by().agg()` with a bare `.unique()` returns list elements in a
+non-deterministic order, so two identical runs produce different parquet bytes
+and checksum verification fails. Every such aggregation must be `.sort()`ed
+(or `.list.sort()`ed for list columns). `scripts/check_determinism.py` guards
+this by re-running each builder with reversed inputs.
+
+Run full pipelines in their own terminal window rather than as background jobs.

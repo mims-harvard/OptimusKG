@@ -134,13 +134,25 @@ class TestDrugGene:
         # but the TARGET role is still recorded.
         assert row["relation"] == "INHIBITOR"
 
-    def test_drugbank_only_edge_keeps_role_assertion(self):
-        out = drug_gene.run(*self._inputs(with_opentargets=False))
-        assert out.height == 1
-        row = out.row(0, named=True)
-        assert row["relation"] == "TARGET"
-        assert _assertion_set(row["properties"]) == {("DRUG_BANK", "TARGET")}
-        assert row["properties"]["relation_conflict"] is False
+    def test_each_source_only_edge_keeps_its_own_assertion(self):
+        # drug_gene uses a full join, so a pair asserted by only one source
+        # still becomes its own edge carrying just that source's assertion.
+        out = drug_gene.run(*self._inputs(with_opentargets=False)).sort("from", "to")
+        assert out.height == 2
+
+        drugbank_only, opentargets_only = (out.row(i, named=True) for i in range(2))
+
+        assert drugbank_only["relation"] == "TARGET"
+        assert _assertion_set(drugbank_only["properties"]) == {("DRUG_BANK", "TARGET")}
+        assert drugbank_only["properties"]["sources"]["direct"] == ["DRUG_BANK"]
+        assert drugbank_only["properties"]["relation_conflict"] is False
+
+        assert opentargets_only["relation"] == "INHIBITOR"
+        assert _assertion_set(opentargets_only["properties"]) == {
+            ("OPEN_TARGETS", "INHIBITOR")
+        }
+        assert opentargets_only["properties"]["sources"]["direct"] == ["OPEN_TARGETS"]
+        assert opentargets_only["properties"]["relation_conflict"] is False
 
     def test_properties_schema_matches_across_join_branches(self):
         with_ot = drug_gene.run(*self._inputs(with_opentargets=True))

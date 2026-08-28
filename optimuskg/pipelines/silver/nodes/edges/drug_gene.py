@@ -27,9 +27,15 @@ _OPENTARGETS_ACTION_MAP: dict[str, Relation] = {
     "AGONIST": Relation.AGONIST,
     "ALLOSTERIC ANTAGONIST": Relation.ALLOSTERIC_ANTAGONIST,
     "ANTAGONIST": Relation.ANTAGONIST,
+    "ANTISENSE INHIBITOR": Relation.ANTISENSE_INHIBITOR,
     "BINDING AGENT": Relation.BINDING_AGENT,
     "BLOCKER": Relation.BLOCKER,
+    "CROSS-LINKING AGENT": Relation.CROSS_LINKING_AGENT,
     "DEGRADER": Relation.DEGRADER,
+    "DISRUPTING AGENT": Relation.DISRUPTING_AGENT,
+    "EXOGENOUS GENE": Relation.EXOGENOUS_GENE,
+    "EXOGENOUS PROTEIN": Relation.EXOGENOUS_PROTEIN,
+    "HYDROLYTIC ENZYME": Relation.HYDROLYTIC_ENZYME,
     "INHIBITOR": Relation.INHIBITOR,
     "INVERSE AGONIST": Relation.INVERSE_AGONIST,
     "MODULATOR": Relation.MODULATOR,
@@ -40,9 +46,12 @@ _OPENTARGETS_ACTION_MAP: dict[str, Relation] = {
     "PARTIAL AGONIST": Relation.PARTIAL_AGONIST,
     "POSITIVE ALLOSTERIC MODULATOR": Relation.POSITIVE_ALLOSTERIC_MODULATOR,
     "POSITIVE MODULATOR": Relation.POSITIVE_MODULATOR,
+    "PROTEOLYTIC ENZYME": Relation.PROTEOLYTIC_ENZYME,
     "RELEASING AGENT": Relation.RELEASING_AGENT,
+    "RNAI INHIBITOR": Relation.RNAI_INHIBITOR,
     "STABILISER": Relation.STABILISER,
     "SUBSTRATE": Relation.SUBSTRATE,
+    "VACCINE ANTIGEN": Relation.VACCINE_ANTIGEN,
 }
 
 
@@ -53,11 +62,18 @@ def run(
     ensembl_ncbi_mapping: pl.DataFrame,
 ) -> pl.DataFrame:
     drugbank_drug_gene = (
+        # Keyed on ChEMBL, falling back to the DrugBank id when Open Targets
+        # ships no cross-reference for the drug, as in `drug_drug`.
         drug_gene.join(
             chembl_drugbank_mapping,
             left_on="drug_bank_id",
             right_on="drugbank_id",
-            how="inner",
+            how="left",
+        )
+        .with_columns(
+            pl.coalesce([pl.col("chembl_id"), pl.col("drug_bank_id")]).alias(
+                "chembl_id"
+            )
         )
         .join(
             ensembl_ncbi_mapping,
@@ -87,7 +103,8 @@ def run(
                 [
                     pl.struct(
                         [
-                            pl.lit([Source.DRUG_BANK, Source.OPEN_TARGETS])
+                            # OPEN_TARGETS is unioned in below, per pair.
+                            pl.lit([Source.DRUG_BANK])
                             .cast(pl.List(pl.String))
                             .alias("direct"),
                             pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
@@ -171,95 +188,79 @@ def run(
         .sort(by=["from", "to"])
     )
 
+    def _sources(side: str, field: str) -> pl.Expr:
+        """Read one side's source list, empty when the join found no match."""
+        return pl.coalesce(
+            [
+                pl.col(side).struct.field("sources").struct.field(field),
+                pl.lit([], dtype=pl.List(pl.String)),
+            ]
+        )
+
     # DrugBank contributes the interaction role (TARGET/ENZYME/...) while
     # OpenTargets contributes the pharmacological action (INHIBITOR/AGONIST/...).
-    # Both are kept so the collapsed ``relation`` never hides the other.
+    # Both are retained so the collapsed ``relation`` never hides the other.
     merged_assertions = merge_relation_assertions(
         pl.col("relation_assertions"), pl.col("relation_assertions_right")
     )
 
+    # Full join, as in `drug_drug`: either source can assert a pair on its own,
+    # and `properties.sources` records the ones that actually did.
     return (
-        drugbank_drug_gene.join(opentargets_drug_gene, on=["from", "to"], how="left")
+        drugbank_drug_gene.join(opentargets_drug_gene, on=["from", "to"], how="full")
         .with_columns(
             [
                 resolve_relation_expr(merged_assertions).alias("relation_merged"),
-                merged_assertions.alias("relation_assertions_merged"),
-                pl.when(pl.col("opentargets_props").is_not_null())
-                .then(
-                    pl.struct(
-                        [
-                            *[
-                                pl.col("opentargets_props").struct.field(f)
-                                for f in [
-                                    "source_ids",
-                                    "source_urls",
-                                    "mechanisms_of_action",
-                                ]
-                            ],
-                            pl.struct(
-                                [
-                                    pl.concat_list(
-                                        [
-                                            pl.col("opentargets_props")
-                                            .struct.field("sources")
-                                            .struct.field("direct"),
-                                            pl.col("drugbank_props")
-                                            .struct.field("sources")
-                                            .struct.field("direct"),
-                                        ]
-                                    )
-                                    .list.unique()
-                                    .list.sort()
-                                    .alias("direct"),
-                                    pl.concat_list(
-                                        [
-                                            pl.col("opentargets_props")
-                                            .struct.field("sources")
-                                            .struct.field("indirect"),
-                                            pl.col("drugbank_props")
-                                            .struct.field("sources")
-                                            .struct.field("indirect"),
-                                        ]
-                                    )
-                                    .list.unique()
-                                    .list.sort()
-                                    .alias("indirect"),
-                                ]
-                            ).alias("sources"),
-                            merged_assertions.alias("relation_assertions"),
-                            relation_conflict_expr(merged_assertions).alias(
-                                "relation_conflict"
-                            ),
-                        ]
-                    )
-                )
-                .otherwise(
-                    pl.struct(
-                        [
-                            pl.lit(None, dtype=pl.List(pl.String)).alias("source_ids"),
-                            pl.lit(None, dtype=pl.List(pl.String)).alias("source_urls"),
-                            pl.lit(None, dtype=pl.List(pl.String)).alias(
-                                "mechanisms_of_action"
-                            ),
-                            pl.col("drugbank_props").struct.field("sources"),
-                            merged_assertions.alias("relation_assertions"),
-                            relation_conflict_expr(merged_assertions).alias(
-                                "relation_conflict"
-                            ),
-                        ]
-                    )
-                )
-                .alias("properties"),
+                pl.struct(
+                    [
+                        *[
+                            pl.col("opentargets_props").struct.field(f)
+                            for f in [
+                                "source_ids",
+                                "source_urls",
+                                "mechanisms_of_action",
+                            ]
+                        ],
+                        pl.struct(
+                            [
+                                pl.concat_list(
+                                    [
+                                        _sources("opentargets_props", "direct"),
+                                        _sources("drugbank_props", "direct"),
+                                    ]
+                                )
+                                .list.unique()
+                                .list.sort()
+                                .alias("direct"),
+                                pl.concat_list(
+                                    [
+                                        _sources("opentargets_props", "indirect"),
+                                        _sources("drugbank_props", "indirect"),
+                                    ]
+                                )
+                                .list.unique()
+                                .list.sort()
+                                .alias("indirect"),
+                            ]
+                        ).alias("sources"),
+                        merged_assertions.alias("relation_assertions"),
+                        relation_conflict_expr(merged_assertions).alias(
+                            "relation_conflict"
+                        ),
+                    ]
+                ).alias("properties"),
             ]
         )
         .select(
             [
-                "from",
-                "to",
-                "label",
+                pl.coalesce([pl.col("from"), pl.col("from_right")]).alias("from"),
+                pl.coalesce([pl.col("to"), pl.col("to_right")]).alias("to"),
+                pl.coalesce([pl.col("label"), pl.col("label_right")]).alias("label"),
                 pl.col("relation_merged").alias("relation"),
-                "undirected",
-                "properties",
+                pl.coalesce([pl.col("undirected"), pl.col("undirected_right")]).alias(
+                    "undirected"
+                ),
+                pl.col("properties"),
             ]
         )
         .unique(subset=["from", "to"])

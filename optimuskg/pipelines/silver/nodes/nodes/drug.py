@@ -66,7 +66,16 @@ def run(  # noqa: PLR0913
                 ),
             ]
         )
-        .unique(subset="id")
+        # Union every edge's sources into one provenance list per drug.
+        .group_by("id")
+        .agg(
+            pl.col("direct_sources")
+            .explode()
+            .drop_nulls()
+            .unique()
+            .sort()
+            .alias("direct_sources")
+        )
         .join(
             onsides_high_confidence.select(
                 [
@@ -75,7 +84,7 @@ def run(  # noqa: PLR0913
                     "rxnorm_term_type",
                     pl.lit([Source.ONSIDES])
                     .cast(pl.List(pl.String))
-                    .alias("direct_sources"),
+                    .alias("onsides_source"),
                 ]
             ).unique(subset="ingredient_id"),
             left_on="id",
@@ -166,15 +175,21 @@ def run(  # noqa: PLR0913
                     .otherwise(None)
                     .alias("trade_names"),
                     pl.struct(
-                        pl.coalesce(
+                        pl.concat_list(
                             [
-                                pl.col("direct_sources"),
-                                pl.col("cross_references").list.eval(
-                                    pl.element().struct.field("source")
+                                pl.coalesce(
+                                    [
+                                        pl.col("direct_sources"),
+                                        pl.col("cross_references").list.eval(
+                                            pl.element().struct.field("source")
+                                        ),
+                                    ]
                                 ),
+                                pl.col("onsides_source").fill_null([]),
                             ]
                         )
                         .list.unique()
+                        .list.sort()
                         .alias("direct"),
                         pl.lit([]).cast(pl.List(pl.String)).alias("indirect"),
                     ).alias("sources"),

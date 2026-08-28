@@ -142,3 +142,34 @@ docs-preview: ##@ Preview the documentation production build
 .PHONY: docs-install
 docs-install: ##@ Install documentation dependencies
 	@cd docs && pnpm install
+
+# -----------------------------------------------
+# MCP bundle (mcpb/)
+# -----------------------------------------------
+
+MCPB_DIR ?= mcpb
+MCPB_DOI ?= doi:10.7910/DVN/IYNGEV
+# GitHub release tag to attach the .mcpb to; empty = the latest release.
+MCPB_RELEASE ?=
+
+.PHONY: mcpb-test
+mcpb-test: ##@ Run the MCP bundle correctness tests (fetches the graph via the optimuskg client)
+	@cd $(MCPB_DIR) && OPTIMUSKG_DOI=$(MCPB_DOI) uv run --with '.[profile]' --python 3.12 pytest tests/test_tools.py
+
+.PHONY: mcpb-profile
+mcpb-profile: ##@ Benchmark every MCP query and write mcpb/METRICS.md
+	@cd $(MCPB_DIR) && OPTIMUSKG_DOI=$(MCPB_DOI) uv run --with '.[profile]' --python 3.12 optimuskg-mcp-profile
+
+.PHONY: mcpb-build
+mcpb-build: ##@ Validate and pack the MCP bundle into mcpb/dist/optimuskg.mcpb
+	@cd $(MCPB_DIR) && uv run --no-project --with typer --python 3.12 python build.py
+
+.PHONY: mcpb-release
+mcpb-release: ##@ Build the .mcpb and attach it to a GitHub release (latest by default; override MCPB_RELEASE=<tag>)
+	@$(MAKE) mcpb-build
+	@tag="$(MCPB_RELEASE)"; \
+	if [ -z "$$tag" ]; then tag=$$(gh release view --json tagName -q .tagName); fi; \
+	if [ -z "$$tag" ]; then echo "No GitHub release found; set MCPB_RELEASE=<tag>."; exit 1; fi; \
+	echo "Uploading optimuskg.mcpb to release $$tag ..."; \
+	gh release upload "$$tag" $(MCPB_DIR)/dist/optimuskg.mcpb --clobber && \
+	echo "Attached to $$(gh release view "$$tag" --json url -q .url)"

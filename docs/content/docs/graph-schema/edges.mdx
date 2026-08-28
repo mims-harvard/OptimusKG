@@ -53,7 +53,7 @@ export const anaAnaFields = baseEdgeFields("ANA-ANA", false, onlySources);
 export const bpoBpoFields = baseEdgeFields("BPO-BPO", false, onlySources);
 export const ccoCcoFields = baseEdgeFields("CCO-CCO", false, onlySources);
 export const disDisFields = baseEdgeFields("DIS-DIS", false, onlySources);
-export const genGenFields = baseEdgeFields("GEN-GEN", false, onlySources);
+export const genGenFields = baseEdgeFields("GEN-GEN", true, onlySources);
 export const mfnMfnFields = baseEdgeFields("MFN-MFN", false, onlySources);
 export const pwyGenFields = baseEdgeFields("PWY-GEN", true, onlySources);
 export const pwyPwyFields = baseEdgeFields("PWY-PWY", false, onlySources);
@@ -209,10 +209,10 @@ OptimusKG encodes **27 edge types** connecting the node types across molecular, 
 | `DRG-PHE` | `ADVERSE_DRUG_REACTION`, `ASSOCIATED_WITH`, `CONTRAINDICATION`, `INDICATION`, `OFF_LABEL_USE` | 13,758 |
 | `PWY-GEN` | `INTERACTS_WITH` | 46,977 |
 | `BPO-BPO` | `IS_A` | 44,494 |
-| `DIS-DIS` | `PARENT` | 44,215 |
+| `DIS-DIS` | `PARENT` | 47,892 |
 | `CCO-GEN` | `INTERACTS_WITH` | 105,309 |
-| `DRG-GEN` | `ACTIVATOR`, `AGONIST`, `ALLOSTERIC_ANTAGONIST`, `ANTAGONIST`, `BINDING_AGENT`, `BLOCKER`, `CARRIER`, `DEGRADER`, `ENZYME`, `INHIBITOR`, `INVERSE_AGONIST`, `MODULATOR`, `NEGATIVE_ALLOSTERIC_MODULATOR`, `NEGATIVE_MODULATOR`, `OPENER`, `PARTIAL_AGONIST`, `POSITIVE_ALLOSTERIC_MODULATOR`, `POSITIVE_MODULATOR`, `RELEASING_AGENT`, `STABILISER`, `SUBSTRATE`, `TARGET`, `TRANSPORTER` | 20,694 |
-| `PHE-PHE` | `PARENT` | 24,862 |
+| `DRG-GEN` | `ACTIVATOR`, `AGONIST`, `ALLOSTERIC_ANTAGONIST`, `ANTAGONIST`, `ANTISENSE_INHIBITOR`, `BINDING_AGENT`, `BLOCKER`, `CARRIER`, `CROSS_LINKING_AGENT`, `DEGRADER`, `DISRUPTING_AGENT`, `ENZYME`, `EXOGENOUS_GENE`, `EXOGENOUS_PROTEIN`, `HYDROLYTIC_ENZYME`, `INHIBITOR`, `INVERSE_AGONIST`, `MODULATOR`, `NEGATIVE_ALLOSTERIC_MODULATOR`, `NEGATIVE_MODULATOR`, `OPENER`, `OTHER`, `PARTIAL_AGONIST`, `POSITIVE_ALLOSTERIC_MODULATOR`, `POSITIVE_MODULATOR`, `PROTEOLYTIC_ENZYME`, `RELEASING_AGENT`, `RNAI_INHIBITOR`, `STABILISER`, `SUBSTRATE`, `TARGET`, `TRANSPORTER`, `VACCINE_ANTIGEN` | 36,611 |
+| `PHE-PHE` | `PARENT` | 26,121 |
 | `MFN-MFN` | `IS_A` | 12,587 |
 | `PWY-PWY` | `PARENT` | 2,819 |
 | `EXP-GEN` | `INTERACTS_WITH` | 2,989 |

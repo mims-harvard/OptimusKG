@@ -6,6 +6,6 @@ bronze.opentargets.umls_disease_mappings:
       id: pl.String
       umls_id: pl.String
   metadata:
-    checksum: f87ee67355d916c4b04ae4c683a6665d
+    checksum: 62cffdc943fae358221d3a809f77a64f
     kedro-viz:
       layer: bronze

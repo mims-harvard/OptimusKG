@@ -23,7 +23,7 @@
 
 - A [modern biomedical knowledge graph](https://optimuskg.ai) with molecular, anatomical, clinical, and environmental modalities.
 - Integrates 65 heterogeneous resources grounded with 18 ontologies and controlled vocabularies using the [BioCypher framework](https://github.com/biocypher/biocypher) and the [Biolink Model](https://github.com/biolink/biolink-model).
-- Contains 190,531 nodes across 10 entity types, 21,813,816 edges across 27 relation types, and 67,249,863 property instances encoding 110,276,843 values across 150 distinct property keys.
+- Contains 192,813 nodes across 10 entity types, 21,834,669 edges across 27 relation types, and 67,130,043 property instances encoding 109,754,062 values across 145 distinct property keys.
 - Independently validated using [PaperQA3](https://github.com/Future-House/paper-qa), a multimodal agent that retrieves and reasons over scientific literature.
 - Reproducible, deterministic and infrastructure-agnostic data pipeline with parallel execution.
 - Distributed as [Apache Parquet](https://parquet.apache.org/) files and downloadable via the [optimuskg]() python client.
@@ -79,6 +79,14 @@ npx skills add https://github.com/mims-harvard/optimuskg --skill optimuskg
 ```
 
 Once installed, the agent applies the skill automatically whenever you ask it to work with OptimusKG. It already knows the client's API, the Parquet file layout, the graph schema, and how to target a different Dataverse release. See the [agent skill docs](https://optimuskg.ai/docs/optimuskg-client#agent-skill) for details.
+
+## MCP Bundle
+
+OptimusKG ships an [MCP Bundle](mcpb/README.md) that lets you query the biomedical knowledge graph in natural language from Claude Desktop. Download `optimuskg.mcpb` from the [releases page](https://github.com/mims-harvard/optimuskg/releases).
+
+On first launch the bundle fetches the graph through the [`optimuskg`](https://pypi.org/project/optimuskg/) client and builds a local, indexed DuckDB database once. Every query after that runs locally in milliseconds.
+
+See the [MCP Bundle docs](https://optimuskg.ai/docs/mcp-bundle) for details.
 
 ## Data pipeline
 

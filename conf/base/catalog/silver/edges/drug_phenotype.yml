@@ -21,6 +21,6 @@ silver.edges.drug_phenotype:
             relation: pl.String
         relation_conflict: pl.Boolean
   metadata:
-    checksum: 25b9870a9f33a98aff24bace604528f2
+    checksum: 4b9a187bb5e8b93e66b1ea1643323ed4
     kedro-viz:
       layer: silver

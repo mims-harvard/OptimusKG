@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 requires-python = ">=3.12"
 name = "optimuskg"
 readme = "README.md"
-version = "0.73.1"
+version = "0.74.1"
 dependencies = [
   "ipython>=8.10",
   "jupyterlab>=3.0",
@@ -33,8 +33,15 @@ dependencies = [
   "coredis>=3.1.0",
   "tqdm>=4.67.3",
   "wandb>=0.25.1",
+  # NOTE: matplotlabs reads plt.style.core at import time, which matplotlib removed
+  # in 3.11. Without this bound every `cli` command fails on import.
+  "matplotlib<3.11",
   "matplotlabs>=0.2.0",
   "adjusttext>=1.3.0",
+  "numpy>=1.26",
+  "scipy>=1.13",
+  "svy>=0.21.0",
+  "statsmodels>=0.14.6",
 ]
 
 [dependency-groups]
@@ -97,6 +104,8 @@ lint.select = [
 lint.ignore = ["E501"] # Ruff format takes care of line-too-long
 
 [tool.ruff.lint.per-file-ignores]
+# The MCP bundle deliberately uses lazy imports
+"mcpb/**" = ["PLC0415", "PLW0603", "PLR0911", "PLR0913", "PLR2004"]
 "tests/*" = ["PLR2004"]
 
 [tool.pytest.ini_options]
