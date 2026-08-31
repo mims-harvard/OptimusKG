@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
@@ -36,10 +36,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Spell Check
-        uses: crate-ci/typos@v1.45.1
+        uses: crate-ci/typos@v1.48.0
 
       - name: Lint
         uses: astral-sh/ruff-action@v3
@@ -55,14 +55,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
 
-      - uses: rayepps/require-semver-bump@v1
+      - uses: rayepps/require-semver-bump@v2
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
