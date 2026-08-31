@@ -38,6 +38,8 @@ def create_pipeline(**kwargs) -> Pipeline:
             "landing.onsides.vocab_meddra_adverse_effect",
             "landing.drugcentral.psql_dump",
             "landing.ppi.protein_protein",
+            "landing.genemania.combined_default_networks",
+            "landing.genemania.identifier_mappings",
             # bronze
             "bronze.drugbank.vocabulary",
             "bronze.gene_names.gene_names",

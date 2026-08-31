@@ -1,0 +1,12 @@
+bronze.genemania.gene_gene:
+  type: optimuskg.datasets.polars.ParquetDataset
+  filepath: data/bronze/genemania/gene_gene.parquet
+  load_args:
+    schema:
+      from: pl.String
+      to: pl.String
+      weight: pl.Float64
+  metadata:
+    checksum: 15825c482a4227b14b54ca35e5ed2cc1
+    kedro-viz:
+      layer: bronze

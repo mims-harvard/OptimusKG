@@ -37,7 +37,13 @@ export const anaAnaFields = baseEdgeFields("ANA-ANA", false, onlySources);
 export const bpoBpoFields = baseEdgeFields("BPO-BPO", false, onlySources);
 export const ccoCcoFields = baseEdgeFields("CCO-CCO", false, onlySources);
 export const disDisFields = baseEdgeFields("DIS-DIS", false, onlySources);
-export const genGenFields = baseEdgeFields("GEN-GEN", true, onlySources);
+export const genGenProperties = [
+  { name: "interaction_type", type: "String", description: "`PHYSICAL_PROTEIN_PROTEIN_INTERACTION` where the pair is supported by a curated physical interaction, otherwise `FUNCTIONAL`." },
+  { name: "weight", type: "Float64", description: "GeneMANIA combined association score. `null` on pairs contributed only by the protein-protein interaction source." },
+  sourcesField,
+];
+
+export const genGenFields = baseEdgeFields("GEN-GEN", true, genGenProperties);
 export const mfnMfnFields = baseEdgeFields("MFN-MFN", false, onlySources);
 export const pwyGenFields = baseEdgeFields("PWY-GEN", true, onlySources);
 export const pwyPwyFields = baseEdgeFields("PWY-PWY", false, onlySources);
@@ -171,11 +177,11 @@ OptimusKG encodes **27 edge types** connecting the node types across molecular, 
 
 | Label | Relation(s) | Count |
 | --- | --- | --: |
+| `GEN-GEN` | `INTERACTS_WITH` | 11,824,690 |
 | `DIS-GEN` | `ASSOCIATED_WITH` | 9,734,774 |
 | `ANA-GEN` | `EXPRESSION_PRESENT`, `EXPRESSION_ABSENT` | 8,787,955 |
 | `DRG-DRG` | `SYNERGISTIC_INTERACTION`, `PARENT` | 1,345,376 |
 | `PHE-GEN` | `ASSOCIATED_WITH` | 793,279 |
-| `GEN-GEN` | `INTERACTS_WITH` | 327,924 |
 | `DIS-PHE` | `PHENOTYPE_PRESENT` | 157,144 |
 | `BPO-GEN` | `INTERACTS_WITH` | 158,410 |
 | `DRG-DIS` | `INDICATION`, `CONTRAINDICATION`, `OFF_LABEL_USE` | 70,380 |

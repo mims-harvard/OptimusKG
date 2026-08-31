@@ -37,6 +37,7 @@ class Source(StrEnum):
     DISGENET = "DISGENET"
     DRUG_BANK = "DRUG_BANK"
     DRUG_CENTRAL = "DRUG_CENTRAL"
+    GENEMANIA = "GENEMANIA"
     GO = "GO"
     HPO = "HPO"
     MEDDRA = "MEDDRA"
@@ -183,6 +184,18 @@ def resolve_sources(sources: pl.Series) -> list[str]:
         KeyError: If any raw string is not a known source or alias.
     """
     return [resolve_source(s) for s in sources.to_list()]
+
+
+class GeneInteractionType(StrEnum):
+    """Nature of the evidence behind a gene-gene interaction edge.
+
+    PPI provides physical interaction while GeneMANIA provides broader
+    functional releationship claims, so we add this to the metadata to
+    preserve the information.
+    """
+
+    PHYSICAL_PROTEIN_PROTEIN_INTERACTION = "PHYSICAL_PROTEIN_PROTEIN_INTERACTION"
+    FUNCTIONAL = "FUNCTIONAL"
 
 
 class Relation(StrEnum):

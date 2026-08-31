@@ -1,0 +1,18 @@
+landing.genemania.combined_default_networks:
+  type: polars.CSVDataset
+  filepath: "data/landing/genemania/COMBINED.DEFAULT_NETWORKS.BP_COMBINING.txt"
+  load_args:
+    separator: "\t"
+    infer_schema: false
+    schema:
+      "Gene_A": "${pl:String}"
+      "Gene_B": "${pl:String}"
+      "Weight": "${pl:String}"
+  metadata:
+    checksum: 5f899e044e869fb6a66f32cf320632cc
+    origin:
+      provider: http
+      url: "https://genemania.org/data/archive/2021-04-19/Homo_sapiens.COMBINED/COMBINED.DEFAULT_NETWORKS.BP_COMBINING.txt"
+      timeout: 60
+    kedro-viz:
+      layer: landing
