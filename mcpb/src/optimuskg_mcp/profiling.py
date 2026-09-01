@@ -1,8 +1,9 @@
-"""Benchmark every query and write the results to METRICS.md."""
+"""Benchmark every query and refresh the README performance section."""
 
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -12,8 +13,13 @@ import typer
 
 PKG_DIR = Path(__file__).resolve().parent
 BUNDLE_ROOT = PKG_DIR.parents[1]  # src/optimuskg_mcp -> src -> mcpb/
-METRICS = BUNDLE_ROOT / "METRICS.md"
+README = BUNDLE_ROOT / "README.md"
 BENCH_FILE = BUNDLE_ROOT / "tests" / "test_benchmark.py"
+
+# The generated block replaces everything between these two README headings, so
+# the published numbers can never drift from the last benchmark run.
+SECTION_HEADING = "## Measured performance"
+NEXT_HEADING = "## Development"
 
 # test function -> (tool, human-readable scenario). Also fixes display order.
 SCENARIOS: dict[str, tuple[str, str]] = {
@@ -111,7 +117,7 @@ def render(bench_json: Path, build: dict[str, object]) -> str:
         )
 
     lines = [
-        "# OptimusKG MCP — performance metrics",
+        SECTION_HEADING,
         "",
         f"One-time index build in {build['build_seconds']:.1f} s "
         f"({build['n_nodes']:,} nodes, {build['n_edges']:,} edges) for a "
@@ -130,12 +136,38 @@ def render(bench_json: Path, build: dict[str, object]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def update_readme(readme: str, section: str) -> str:
+    """Return ``readme`` with its performance section replaced by ``section``.
+
+    Args:
+        readme: Current README contents.
+        section: Rendered block, starting with ``SECTION_HEADING``.
+
+    Returns:
+        The updated README text.
+
+    Raises:
+        ValueError: If the expected section boundaries are missing, rather than
+            silently appending a second copy of the table.
+    """
+    pattern = re.compile(
+        rf"^{re.escape(SECTION_HEADING)}\n.*?(?=^{re.escape(NEXT_HEADING)}$)",
+        re.DOTALL | re.MULTILINE,
+    )
+    if not pattern.search(readme):
+        raise ValueError(
+            f"Could not find a '{SECTION_HEADING}' section ending before "
+            f"'{NEXT_HEADING}' in {README}."
+        )
+    return pattern.sub(section.rstrip("\n") + "\n\n", readme, count=1)
+
+
 def profile(
     reuse_json: Path | None = typer.Option(
         None, help="Reuse an existing benchmark JSON instead of running the suite."
     ),
 ) -> None:
-    """Run the benchmark suite and write the metrics to METRICS.md."""
+    """Run the benchmark suite and refresh the README performance section."""
     build = _build_stats()
     typer.echo(
         f"Index: {build['n_nodes']:,} nodes / {build['n_edges']:,} edges, "
@@ -149,8 +181,8 @@ def profile(
         _run_benchmarks(tmp)
         bench_json = tmp
 
-    METRICS.write_text(render(bench_json, build))
-    typer.echo(f"Wrote {METRICS}")
+    README.write_text(update_readme(README.read_text(), render(bench_json, build)))
+    typer.echo(f"Updated the '{SECTION_HEADING.lstrip('# ')}' section of {README}")
 
 
 def main() -> None:

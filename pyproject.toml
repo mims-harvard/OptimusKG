@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 requires-python = ">=3.12"
 name = "optimuskg"
 readme = "README.md"
-version = "0.74.0"
+version = "0.74.1"
 dependencies = [
   "ipython>=8.10",
   "jupyterlab>=3.0",
@@ -101,14 +101,10 @@ lint.select = [
   "T201", # Print Statement
 ]
 lint.ignore = ["E501"] # Ruff format takes care of line-too-long
+
+[tool.ruff.lint.per-file-ignores]
 # The MCP bundle deliberately uses lazy imports
-lint.per-file-ignores = { "mcpb/**" = [
-  "PLC0415",
-  "PLW0603",
-  "PLR0911",
-  "PLR0913",
-  "PLR2004",
-] }
+"mcpb/**" = ["PLC0415", "PLW0603", "PLR0911", "PLR0913", "PLR2004"]
 
 [tool.kedro_telemetry]
 project_id = "dc32d474bbc84fc49bf67c0f87edf02e"

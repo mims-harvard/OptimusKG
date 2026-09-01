@@ -15,7 +15,11 @@ silver.edges.drug_gene:
         sources:
           direct: pl.List(pl.String)
           indirect: pl.List(pl.String)
+        relation_assertions:
+          - source: pl.String
+            relation: pl.String
+        relation_conflict: pl.Boolean
   metadata:
-    checksum: 3c13ea1dbf7742d00238711a40892173
+    checksum: c32cd9f7b9359c79fbdf990d377f73b3
     kedro-viz:
       layer: silver

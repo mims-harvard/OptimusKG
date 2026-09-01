@@ -16,7 +16,11 @@ silver.edges.drug_disease:
         drug_disease_id: pl.String
         reference_ids: pl.List(pl.String)
         highest_clinical_trial_phase: pl.Float64
+        relation_assertions:
+          - source: pl.String
+            relation: pl.String
+        relation_conflict: pl.Boolean
   metadata:
-    checksum: 9b94f9f6e31ca1181dc67090cb3ddcaf
+    checksum: da7c61c73b2d581d2957e1d60e91420c
     kedro-viz:
       layer: silver

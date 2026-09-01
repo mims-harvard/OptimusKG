@@ -6,7 +6,10 @@ from optimuskg.pipelines.silver.nodes.constants import (
     Node,
     Relation,
     Source,
-    resolve_relation,
+    merge_relation_assertions,
+    relation_assertions,
+    relation_conflict_expr,
+    resolve_relation_expr,
 )
 
 
@@ -42,7 +45,9 @@ def run(
                 .otherwise(pl.col("head_drug_id"))
                 .alias("to"),
                 pl.lit(Edge.format_label(Node.DRUG, Node.DRUG)).alias("label"),
-                pl.lit([Relation.SYNERGISTIC_INTERACTION]).alias("relation"),
+                relation_assertions(
+                    Source.DRUG_BANK, pl.lit(Relation.SYNERGISTIC_INTERACTION)
+                ).alias("relation_assertions"),
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
@@ -70,7 +75,9 @@ def run(
                 pl.col("id").alias("from"),
                 pl.col("child_chembl_ids").alias("to"),
                 pl.lit(Edge.format_label(Node.DRUG, Node.DRUG)).alias("label"),
-                pl.lit([Relation.PARENT]).alias("relation"),
+                relation_assertions(Source.OPEN_TARGETS, pl.lit(Relation.PARENT)).alias(
+                    "relation_assertions"
+                ),
                 pl.lit(False).alias("undirected"),
                 pl.struct(
                     [
@@ -88,6 +95,12 @@ def run(
         )
     )
 
+    # Union of the DrugBank and OpenTargets assertions for each node pair, so
+    # that collapsing to one edge per node pair stays lossless.
+    merged_assertions = merge_relation_assertions(
+        pl.col("relation_assertions"), pl.col("relation_assertions_right")
+    )
+
     return (
         drugbank_drug_drug.join(opentargets_drug_drug, on=["from", "to"], how="full")
         .select(
@@ -95,24 +108,7 @@ def run(
                 pl.coalesce([pl.col("from"), pl.col("from_right")]).alias("from"),
                 pl.coalesce([pl.col("to"), pl.col("to_right")]).alias("to"),
                 pl.coalesce([pl.col("label"), pl.col("label_right")]).alias("label"),
-                pl.concat_list(
-                    [
-                        pl.coalesce(
-                            [
-                                pl.col("relation"),
-                                pl.lit([], dtype=pl.List(pl.String)),
-                            ]
-                        ),
-                        pl.coalesce(
-                            [
-                                pl.col("relation_right"),
-                                pl.lit([], dtype=pl.List(pl.String)),
-                            ]
-                        ),
-                    ]
-                )
-                .map_elements(resolve_relation, return_dtype=pl.String)
-                .alias("relation"),
+                resolve_relation_expr(merged_assertions).alias("relation"),
                 pl.coalesce([pl.col("undirected"), pl.col("undirected_right")]).alias(
                     "undirected"
                 ),
@@ -167,6 +163,10 @@ def run(
                         .alias(
                             "interaction_description"
                         ),  # TODO: change this column name to relation_description and add the column to the opentargets_props with something like "this drug is the parent of the other drug in the ontology"
+                        merged_assertions.alias("relation_assertions"),
+                        relation_conflict_expr(merged_assertions).alias(
+                            "relation_conflict"
+                        ),
                     ]
                 ).alias("properties"),
             ]

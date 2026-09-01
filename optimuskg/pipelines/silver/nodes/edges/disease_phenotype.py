@@ -6,7 +6,9 @@ from optimuskg.pipelines.silver.nodes.constants import (
     Node,
     Relation,
     Source,
-    resolve_relation,
+    relation_assertions,
+    relation_conflict_expr,
+    resolve_relation_expr,
     resolve_sources,
 )
 
@@ -14,6 +16,11 @@ from optimuskg.pipelines.silver.nodes.constants import (
 def run(
     disease_phenotype: pl.DataFrame,
 ) -> pl.DataFrame:
+    # A disease-phenotype pair can be annotated as both present and absent by
+    # different HPO evidence rows (e.g. different cohorts or qualifiers). Those
+    # assertions are retained rather than being silently collapsed away.
+    assertions = relation_assertions(Source.OPEN_TARGETS, pl.col("relation"))
+
     return (
         disease_phenotype.filter(~pl.col("disease").str.contains("HP"))
         .with_columns(
@@ -27,36 +34,56 @@ def run(
         .group_by(["from", "to"])
         .agg(
             [
-                pl.col("aspect").drop_nulls().unique().alias("aspect"),
-                pl.col("bio_curation").drop_nulls().unique().alias("bio_curation"),
-                pl.col("evidence_type").drop_nulls().unique().alias("evidence_type"),
-                pl.col("frequency").drop_nulls().unique().alias("frequency"),
+                pl.col("aspect").drop_nulls().unique().sort().alias("aspect"),
+                pl.col("bio_curation")
+                .drop_nulls()
+                .unique()
+                .sort()
+                .alias("bio_curation"),
+                pl.col("evidence_type")
+                .drop_nulls()
+                .unique()
+                .sort()
+                .alias("evidence_type"),
+                pl.col("frequency").drop_nulls().unique().sort().alias("frequency"),
                 pl.concat_list("modifiers")
                 .flatten()
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("modifiers"),
-                pl.concat_list("onset").flatten().drop_nulls().unique().alias("onset"),
+                pl.concat_list("onset")
+                .flatten()
+                .drop_nulls()
+                .unique()
+                .sort()
+                .alias("onset"),
                 pl.col("qualifier_not").any().alias("qualifier_not"),
                 pl.when(~pl.col("qualifier_not"))
                 .then(pl.lit(Relation.PHENOTYPE_PRESENT))
                 .otherwise(pl.lit(Relation.PHENOTYPE_ABSENT))
                 .unique()
+                .sort()
                 .alias("relation"),
                 pl.concat_list("references")
                 .flatten()
                 .drop_nulls()
                 .unique()
+                .sort()
                 .alias("references"),
-                pl.col("sex").drop_nulls().unique().alias("sexes"),
-                pl.col("resource").drop_nulls().unique().alias("indirect_sources"),
+                pl.col("sex").drop_nulls().unique().sort().alias("sexes"),
+                pl.col("resource")
+                .drop_nulls()
+                .unique()
+                .sort()
+                .alias("indirect_sources"),
             ]
         )
         .select(
             pl.col("from"),
             pl.col("to"),
             pl.lit(Edge.format_label(Node.DISEASE, Node.PHENOTYPE)).alias("label"),
-            pl.col("relation").map_elements(resolve_relation, return_dtype=pl.String),
+            resolve_relation_expr(assertions).alias("relation"),
             pl.lit(True).alias("undirected"),
             pl.struct(
                 [
@@ -81,6 +108,8 @@ def run(
                     pl.col("qualifier_not"),
                     pl.col("references"),
                     pl.col("sexes"),
+                    assertions.alias("relation_assertions"),
+                    relation_conflict_expr(assertions).alias("relation_conflict"),
                 ]
             ).alias("properties"),
         )
