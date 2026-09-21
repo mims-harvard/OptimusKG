@@ -2761,7 +2761,7 @@ wheels = [
 
 [[package]]
 name = "optimuskg"
-version = "0.74.1"
+version = "0.74.2"
 source = { editable = "." }
 dependencies = [
     { name = "adjusttext" },
