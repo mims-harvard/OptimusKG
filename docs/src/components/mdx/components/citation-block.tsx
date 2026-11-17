@@ -8,14 +8,16 @@ import { buttonVariants } from "fumadocs-ui/components/ui/button";
 import { cn } from "@/lib/cn";
 
 const BIBTEX = `@article{vittor2026optimuskg,
-      title={OptimusKG: Unifying biomedical knowledge in a modern multimodal graph},
+      title={Unifying biomedical knowledge in a modern multimodal graph},
       author={Vittor, Lucas and Noori, Ayush and Arango, I{\\~n}aki and Polonuer, Joaqu{\\'\\i}n and Rodriques, Sam and White, Andrew and Clifton, David A. and Zitnik, Marinka},
-      journal={In review},
-      year={2026}
+      journal={Scientific Data},
+      year={2026},
+      doi={10.1038/s41597-026-08302-z},
+      url={https://doi.org/10.1038/s41597-026-08302-z}
 }`;
 
 const TEXT =
-  "Vittor, L. et al. OptimusKG: Unifying biomedical knowledge in a modern multimodal graph. In Review (2026).";
+  "Vittor, L. et al. Unifying biomedical knowledge in a modern multimodal graph. Scientific Data (2026). https://doi.org/10.1038/s41597-026-08302-z";
 
 const TABS = [
   { id: "bibtex", label: "BibTeX", content: BIBTEX },

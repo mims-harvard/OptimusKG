@@ -4,7 +4,7 @@
   "display_name": "OptimusKG",
   "version": "0.1.0",
   "description": "MCP server bundle exposing the OptimusKG biomedical knowledge graph for natural-language querying.",
-  "long_description": "OptimusKG is a multimodal biomedical knowledge graph integrating dozens of resources across genes, diseases, drugs, pathways, phenotypes, anatomy, exposures, and ontology terms. This bundle exposes the graph over the Model Context Protocol. On first use it fetches the published graph from Harvard Dataverse via the `optimuskg` Python client and builds a local, indexed DuckDB database; thereafter every query runs locally. It provides curated tools for entity search, neighbourhood exploration, connection finding, and aggregation, plus a guarded read-only SQL escape hatch for arbitrary questions.",
+  "long_description": "OptimusKG is a multimodal biomedical knowledge graph integrating dozens of resources across genes, diseases, drugs, pathways, phenotypes, anatomy, exposures, and ontology terms. This bundle exposes the graph over the Model Context Protocol. On first use it fetches the published graph from Harvard Dataverse via the `optimuskg` Python client and builds a local, indexed DuckDB database; thereafter every query runs locally. It provides curated tools for entity search, neighbourhood exploration, connection finding, and aggregation, plus a guarded read-only SQL escape hatch for arbitrary questions. OptimusKG is described in Vittor et al., Scientific Data (2026), https://doi.org/10.1038/s41597-026-08302-z.",
   "author": {
     "name": "Zitnik Lab",
     "url": "https://zitniklab.hms.harvard.edu/"

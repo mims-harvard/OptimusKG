@@ -36,7 +36,7 @@ const FEATURES: Feature[] = [
       "Every edge is cross-validated against millions of research papers by PaperQA3, a deep research agent.",
     ctaText: "Learn about our methodology",
     Media: Feature3Media,
-    href: "https://arxiv.org/pdf/2604.27269",
+    href: "https://doi.org/10.1038/s41597-026-08302-z",
     imageSide: "right",
     cardHeightClass: "h-178.75",
     mediaHeightClass: "h-170",
