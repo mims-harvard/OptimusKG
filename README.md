@@ -16,6 +16,7 @@
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![GitHub Stars](https://img.shields.io/github/stars/mims-harvard/OptimusKG)](https://github.com/mims-harvard/OptimusKG)
 [![DOI](https://img.shields.io/badge/DOI-10.7910%2FDVN%2FIYNGEV-blue)](https://doi.org/10.7910/DVN/IYNGEV)
+[![Paper](https://img.shields.io/badge/Paper-Scientific%20Data-blue)](https://doi.org/10.1038/s41597-026-08302-z)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 [![Website](https://img.shields.io/badge/docs-optimuskg.ai-blue)](https://optimuskg.ai)
 
@@ -142,14 +143,16 @@ We are passionate about supporting contributors of all levels of experience and 
 
 ## Citation
 
-If you use OptimusKG in your research, please cite:
+If you use OptimusKG in your research, please cite our [paper in *Scientific Data*](https://doi.org/10.1038/s41597-026-08302-z):
 
 ```bibtex
 @article{vittor2026optimuskg,
-  title={OptimusKG: Unifying biomedical knowledge in a modern multimodal graph},
+  title={Unifying biomedical knowledge in a modern multimodal graph},
   author={Vittor, Lucas and Noori, Ayush and Arango, I{\~n}aki and Polonuer, Joaqu{\'\i}n and Rodriques, Sam and White, Andrew and Clifton, David A. and Zitnik, Marinka},
-  journal={In review},
-  year={2026}
+  journal={Scientific Data},
+  year={2026},
+  doi={10.1038/s41597-026-08302-z},
+  url={https://doi.org/10.1038/s41597-026-08302-z}
 }
 ```
 

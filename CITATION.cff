@@ -1,0 +1,78 @@
+cff-version: 1.2.0
+message: "If you use OptimusKG in your research, please cite the paper below."
+title: OptimusKG
+type: software
+abstract: >-
+  A modern multimodal biomedical knowledge graph built with a Kedro pipeline
+  that integrates heterogeneous primary resources into a unified graph.
+authors:
+  - given-names: Lucas
+    family-names: Vittor
+    orcid: "https://orcid.org/0009-0002-6978-0482"
+  - given-names: Ayush
+    family-names: Noori
+    orcid: "https://orcid.org/0000-0003-1420-1236"
+  - given-names: Iñaki
+    family-names: Arango
+    orcid: "https://orcid.org/0009-0002-1443-2325"
+  - given-names: Joaquín
+    family-names: Polonuer
+    orcid: "https://orcid.org/0009-0007-8613-6126"
+  - given-names: Sam
+    family-names: Rodriques
+  - given-names: Andrew
+    family-names: White
+  - given-names: David A.
+    family-names: Clifton
+    orcid: "https://orcid.org/0000-0002-9848-8555"
+  - given-names: Marinka
+    family-names: Zitnik
+    orcid: "https://orcid.org/0000-0001-8530-7228"
+repository-code: "https://github.com/mims-harvard/optimuskg"
+url: "https://optimuskg.ai"
+license: MIT
+identifiers:
+  - type: doi
+    value: 10.1038/s41597-026-08302-z
+    description: Scientific Data article describing OptimusKG
+  - type: doi
+    value: 10.7910/DVN/IYNGEV
+    description: OptimusKG dataset on Harvard Dataverse
+keywords:
+  - knowledge graph
+  - biomedical
+  - bioinformatics
+preferred-citation:
+  type: article
+  title: Unifying biomedical knowledge in a modern multimodal graph
+  authors:
+    - given-names: Lucas
+      family-names: Vittor
+      orcid: "https://orcid.org/0009-0002-6978-0482"
+    - given-names: Ayush
+      family-names: Noori
+      orcid: "https://orcid.org/0000-0003-1420-1236"
+    - given-names: Iñaki
+      family-names: Arango
+      orcid: "https://orcid.org/0009-0002-1443-2325"
+    - given-names: Joaquín
+      family-names: Polonuer
+      orcid: "https://orcid.org/0009-0007-8613-6126"
+    - given-names: Sam
+      family-names: Rodriques
+    - given-names: Andrew
+      family-names: White
+    - given-names: David A.
+      family-names: Clifton
+      orcid: "https://orcid.org/0000-0002-9848-8555"
+    - given-names: Marinka
+      family-names: Zitnik
+      orcid: "https://orcid.org/0000-0001-8530-7228"
+  journal: Scientific Data
+  issn: 2052-4463
+  publisher:
+    name: Springer Science and Business Media LLC
+  year: 2026
+  month: 11
+  doi: 10.1038/s41597-026-08302-z
+  url: "https://doi.org/10.1038/s41597-026-08302-z"
